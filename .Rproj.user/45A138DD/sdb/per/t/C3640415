@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "#--------------------------------------------#\n## Identification via changes in volatility ##\n#--------------------------------------------#\n\n# x  : object of class VAR\n# SB : Structural Break\n\n\nChangesVola <- function(x, SB){\n\n  # likelihood function to optimize\n  LH <- function(S, Tob, TB, Sigma_hat1, k,  Sigma_hat2) {\n    W <- matrix(S[1:(k*k)], nrow = k)\n    Psi <- diag(S[(k*k+1):(k*k+k)])\n    MW <- det(W %*% t(W))\n    MW2 <- det(W %*% Psi %*% t(W))\n    MMM <- W %*% t(W)\n    MMM2 <- W %*% Psi %*% t(W)\n    L <- -(((TB - 1) / 2) * (log(MW) + sum(diag((Sigma_hat1 %*% solve(MMM)))))) - (((Tob - TB + 1) / 2) * (log(MW2) + sum(diag((Sigma_hat2 %*% solve(MMM2))))))\n    return(-L)\n  }\n\n  u_t <- residuals(x)\n  p <- x$p\n  Tob <- x$obs\n  k <-x$K\n\n  TB <- SB - p\n\n  resid1 <- u_t[1:TB-1,]\n  resid2 <- u_t[TB:Tob,]\n  Sigma_hat1 <- (t(resid1) %*% resid1) / (TB-1)\n  Sigma_hat2 <- (t(resid2) %*% resid2) / (Tob-TB+1)\n\n  # Determine starting values for B and Lambda\n  B <- sqrtm((1/Tob)*t(u_t) %*% (u_t)) + matrix(runif(k*k), nrow = k, byrow = T)\n  Lambda <- c(1,1,1)\n  S <- c(cbind(B, Lambda))\n\n  # optimize the likelihood function\n  tryCatch(\n    MLE <- optim(fn = LH, par = S, k = k, TB = TB, Sigma_hat1 = Sigma_hat1,\n                 Sigma_hat2 = Sigma_hat2, Tob = Tob, method = 'L-BFGS-B', hessian = T),\n    error = function(e) NULL)\n\n  if(!is.null(MLE)){\n    B_hat <- matrix(MLE$par[1:(k*k)], nrow = k)\n    Lambda_hat <- diag(MLE$par[(k*k+1):(k*k+k)])\n\n    # obtaining standard errors from inverse fisher information matrix\n    HESS <- solve(MLE$hessian)\n\n    for(i in 1:nrow(HESS)){\n      if(HESS[i,i] < 0){\n        HESS[,i] <- -HESS[,i]\n      }\n    }\n\n    FishObs <- sqrt(diag(HESS))\n    B.SE <- matrix(FishObs[1:(k*k)], k, k)\n    Lambda.SE <- FishObs[(k*k+1):(k*k+k)]*diag(k)\n  }\n  return(list(\n    Lambda = Lambda_hat,\n    Lambda_SE = Lambda.SE,\n    B = B_hat,\n    B_SE = B.SE,\n    n = Tob,\n    InvFish = HESS,\n    Lik = -MLE$value\n  ))\n}\n",
+    "created" : 1481533092198.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4286840364",
+    "id" : "C3640415",
+    "lastKnownWriteTime" : 1481533662,
+    "last_content_update" : 1481533662711,
+    "path" : "~/Schreibtisch/RPackages/SVAR_Identification_Package/R/hello.R",
+    "project_path" : "R/hello.R",
+    "properties" : {
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
