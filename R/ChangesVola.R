@@ -5,20 +5,9 @@
 # x  : object of class VAR
 # SB : Structural Break
 
+library(expm)
 
 ChangesVola <- function(x, SB){
-
-  # likelihood function to optimize
-  LH <- function(S, Tob, TB, Sigma_hat1, k,  Sigma_hat2) {
-    W <- matrix(S[1:(k*k)], nrow = k)
-    Psi <- diag(S[(k*k+1):(k*k+k)])
-    MW <- det(W %*% t(W))
-    MW2 <- det(W %*% Psi %*% t(W))
-    MMM <- W %*% t(W)
-    MMM2 <- W %*% Psi %*% t(W)
-    L <- -(((TB - 1) / 2) * (log(MW) + sum(diag((Sigma_hat1 %*% solve(MMM)))))) - (((Tob - TB + 1) / 2) * (log(MW2) + sum(diag((Sigma_hat2 %*% solve(MMM2))))))
-    return(-L)
-  }
 
   u_t <- residuals(x)
   p <- x$p
@@ -38,8 +27,9 @@ ChangesVola <- function(x, SB){
   S <- c(cbind(B, Lambda))
 
   # optimize the likelihood function
-  tryCatch(
-    MLE <- optim(fn = LH, par = S, k = k, TB = TB, Sigma_hat1 = Sigma_hat1,
+
+    MLE <- tryCatch(
+      optim(fn = LH, par = S, k = k, TB = TB, Sigma_hat1 = Sigma_hat1,
                  Sigma_hat2 = Sigma_hat2, Tob = Tob, method = 'L-BFGS-B', hessian = T),
     error = function(e) NULL)
 
