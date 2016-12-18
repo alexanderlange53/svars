@@ -18,11 +18,11 @@ ChangesVola <- function(x, SB){
 
   resid1 <- u_t[1:TB-1,]
   resid2 <- u_t[TB:Tob,]
-  Sigma_hat1 <- (t(resid1) %*% resid1) / (TB-1)
-  Sigma_hat2 <- (t(resid2) %*% resid2) / (Tob-TB+1)
+  Sigma_hat1 <- (crossprod(resid1)) / (TB-1)
+  Sigma_hat2 <- (crossprod(resid2)) / (Tob-TB+1)
 
   # Determine starting values for B and Lambda
-  B <- sqrtm((1/Tob)*t(u_t) %*% (u_t)) + matrix(runif(k*k), nrow = k, byrow = T)
+  B <- sqrtm((1/Tob)*crossprod(u_t)) + matrix(runif(k*k), nrow = k, byrow = T)
   Lambda <- c(1,1,1)
   S <- c(cbind(B, Lambda))
 
