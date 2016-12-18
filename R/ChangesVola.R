@@ -72,9 +72,9 @@ ChangesVola <- function(x, SB){
 
     # checking if any column in the orderd matrix is empty and replace it with the unused column in the estimated matrix
     if(any(control == 0)){
-      hc <- apply(B_hat_ord, 2, function(x){all(x == 0)})
-      B_hat_ord[, which(hc == TRUE)] <- B_hat[, which(hc == TRUE)]
-      control[which(control == 0)] <- which(hc == TRUE)
+      hc <- sapply(1:k, function(x){any(x == control)})
+      B_hat_ord[, which(control == 0)] <- B_hat[, which(hc == FALSE)]
+      control[which(control == 0)] <- which(hc == FALSE)
     }
 
     # checking for negative values on the main daigonal
