@@ -7,7 +7,14 @@
 
 library(expm)
 
-ChangesVola <- function(x, SB){
+ChangesVola <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
+                        format = NULL, dateVector = NULL){
+
+  if(!is.numeric(SB)){
+
+    SB <- getStructuralBreak(SB = SB, start = start, end = end,
+                             frequency = frequency, format = format, dateVector = dateVector)
+  }
 
   u_t <- residuals(x)
   p <- x$p
