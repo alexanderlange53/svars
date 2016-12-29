@@ -23,10 +23,8 @@ Maintainer: \packageMaintainer{Alexander Lange <alexander.lange@stud.uni-goettin
 \references{
 ~~ Literature or other references for background information ~~
 }
-~~ Optionally other standard keywords, one per line, from file KEYWORDS in the R documentation directory ~~
 \keyword{SVAR, VAR}
 
-}
 \examples{
 ~~ simple examples of the most important functions ~~
 }
