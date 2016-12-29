@@ -1,0 +1,17 @@
+{
+    "contents" : "\\name{hello}\n\\alias{hello}\n\\title{Hello, World!}\n\\usage{\nhello()\n}\n\\description{\nPrints 'Hello, world!'.\n}\n\\examples{\nhello()\n}\n",
+    "created" : 1483023589308.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3093437535",
+    "id" : "6BC24FA3",
+    "lastKnownWriteTime" : 1481538062,
+    "path" : "~/GitHub/SVAR_Identification_Package/man/hello.Rd",
+    "project_path" : "man/hello.Rd",
+    "properties" : {
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "type" : "r_doc"
+}

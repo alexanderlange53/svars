@@ -1,0 +1,18 @@
+{
+    "contents" : "# This internal function provides a numerical value for the structural break based on time input by user\n\ngetStructuralBreak <- function(SB, dateVector = NULL, start = NULL, end = NULL,\n                                   frequency = NULL, format = NULL){\n\nif(is.null(dateVector) & is.null(start) & is.null(end)){\n\n  stop(\"Please provide either a valid number of observation or proper date specifications\")\n}\n\nif(is.null(dateVector)){\n\n       dateVector =  seq(as.Date(start, format = format), as.Date(end, format = format),  frequency)\n  }\n\n    return(which(grepl(as.Date(SB, format = format), dateVector)))\n  }\n\n",
+    "created" : 1483014951307.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "816580290",
+    "id" : "1BDE3E1C",
+    "lastKnownWriteTime" : 1483015012,
+    "path" : "~/GitHub/SVAR_Identification_Package/R/getStructuralBreak.R",
+    "project_path" : "R/getStructuralBreak.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "type" : "r_source"
+}
