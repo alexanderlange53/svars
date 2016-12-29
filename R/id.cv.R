@@ -1,3 +1,21 @@
+#' Changes in Volatility Identification
+#'
+#' Identify B matrix based on changes in Volatility.
+#'
+#' @param x VAR-object. (S)VAR model to determine B matrix for
+#' @param SB integer. Structural break either of type integer as the number of observations which belong to the pre-break period or
+#'                    Date character. If a date character is provided, either a date Vector which contains the time line of the data
+#'                    in corresponding format or then the conventional time parameters need to be provided.
+#' @param dateVector vector. Vector of the time period concerned containing SB
+#' @param start character. Start of the time series (only if dateVector is empty)
+#' @param end character. End of the time series (only if dateVector is empty)
+#' @param frequency character. Frequency of the time series (only if dateVector is empty)
+#' @param format character. Date format (only if dateVector is empty)
+#' @return A list of results
+#'
+#' @export
+
+
 #--------------------------------------------#
 ## Identification via changes in volatility ##
 #--------------------------------------------#
@@ -5,7 +23,6 @@
 # x  : object of class VAR
 # SB : Structural Break
 
-library(expm)
 
 id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
                         format = NULL, dateVector = NULL){
