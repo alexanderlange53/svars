@@ -1,4 +1,23 @@
-#-----------------------------------------#
+#' Chow Test for Structural Break
+#'
+#' The Chow test is applied to a time series an presupposed point of structural break.
+#'
+#' @param Y Data
+#' @param SB integer. Structural break either of type integer as the number of observations which belong to the pre-break period or
+#'                    Date character. If a date character is provided, either a date Vector which contains the time line of the data
+#'                    in corresponding format or then the conventional time parameters need to be provided.
+#' @param nboot ??
+#' @param lags  Maximum number of Lag order
+#' @param dateVector vector. Vector of the time period concerned containing SB
+#' @param start character. Start of the time series (only if dateVector is empty)
+#' @param end character. End of the time series (only if dateVector is empty)
+#' @param frequency character. Frequency of the time series (only if dateVector is empty)
+#' @param format character. Date format (only if dateVector is empty)
+#' @return A list of results
+#'
+#' @export
+#'
+
 ## Chow tests of system structural break ##
 #-----------------------------------------#
 
