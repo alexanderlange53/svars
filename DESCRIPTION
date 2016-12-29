@@ -1,10 +1,13 @@
-Package: SVAR_Identification_Package
+Package: svarIdent
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Data driven SVAR identification of impulse response functions
 Version: 0.1
 Date: 2016-11-21
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Author: Alexander Lange [aut, cre],
+        Bernhard Dalheimer [aut]
+Authors@R: c(person("Alexander", "Lange", role = c("aut", "cre")), person("Bernhard", "Dalheimer", role = c("aut"))
+Maintainer: Alexander Lange <alexander.lange@stud.uni-goettingen.de>
+Description: Implements data driven identification methods for SVAR models. Based on an existing VAR model objct the B matrix is obtained via changes in volatility, least dependent innovations or non gaussian maximum likelihood.
+Depends: vars, expm
+License: GPL (>= 2)
 LazyData: TRUE
