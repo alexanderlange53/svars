@@ -7,7 +7,7 @@
 
 library(expm)
 
-ChangesVola <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
+id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
                         format = NULL, dateVector = NULL){
 
   if(!is.numeric(SB)){
@@ -102,7 +102,7 @@ ChangesVola <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
     B = B_hat_ord,
     B_SE = B.SE,
     n = Tob,
-    InvFish = HESS,
+    Fish = HESS,
     Lik = -MLE$value
   ))
 }
