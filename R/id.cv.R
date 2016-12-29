@@ -196,13 +196,18 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
     Lambda_hat <- diag(diag(Lambda_hat[, control]))
     Lambda.SE <- diag(diag(Lambda.SE[, control]))
 
+    # Testing the estimated SVAR for identification by menas of wald statistic
+    wald <- wald.test(Lambda_hat, HESS)
+
   return(list(
-    Lambda = Lambda_hat,
-    Lambda_SE = Lambda.SE,
-    B = B_hat_ord,
-    B_SE = B.SE,
-    n = Tob,
-    Fish = HESS,
-    Lik = -MLE$value
+    Lambda = Lambda_hat,    # estimated Lambda matrix (unconditional heteroscedasticity)
+    Lambda_SE = Lambda.SE,  # standard errors of Lambda matrix
+    B = B_hat_ord,          # estimated B matrix (unique decomposition of the covariance matrix)
+    B_SE = B.SE,            # standard errors of B matrix
+    n = Tob,                # number of observations
+    Fish = HESS,            # observerd fisher information matrix
+    Lik = -MLEgls$value,    # function value of likelihood
+    wald_statistic = wald,  # results of wald test
+    iteration = counter     # number of gls estimations
   ))
 }
