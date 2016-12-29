@@ -16,7 +16,3 @@ if(is.null(dateVector)){
     return(which(grepl(as.Date(SB, format = format), dateVector)))
   }
 
-
-
-}
-}
