@@ -1,3 +1,5 @@
+#' @export
+
 summary.svarIdent <- function(svarIdentObject, ...){
 
   cat(paste("\n", "Identification Results", "\n", sep = ""))
