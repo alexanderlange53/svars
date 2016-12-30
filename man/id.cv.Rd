@@ -5,7 +5,7 @@
 \title{Changes in Volatility Identification}
 \usage{
 id.cv(x, SB, start = NULL, end = NULL, frequency = NULL, format = NULL,
-  dateVector = NULL)
+  dateVector = NULL, max.iter = 10, crit = 0.05)
 }
 \arguments{
 \item{x}{VAR-object. (S)VAR model to determine B matrix for}
@@ -31,15 +31,16 @@ A list of results
 Identify B matrix based on changes in Volatility.
 }
 \examples{
+\dontrun{
 require(vars)
 # data contains quartlery observations from 1965Q1 to 2008Q3
 # assumed structural break in 1979Q4
 # x = output gap
 # pi = inflation
 # i = interest rates
-
 set.seed(23211)
 v1 <- VAR(USA, lag.max = 10, ic = "AIC" )
 x1 <- id.cv(v1, SB = 60)
+}
 }
 
