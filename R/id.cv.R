@@ -65,7 +65,7 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
     y <- t(x$y)
 
     Z_t <- matrix(0, nrow(y)*p, ncol(y))
-    for(i in 1:ncol(y)-p){
+    for(i in 1:(ncol(y)-p)){
       Z_t[,i] <- c(y[, ((i+1):(i+p))])
     }
 
@@ -188,6 +188,9 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
     for(i in 1:ncol(B_hat_ord)){
       if(B_hat_ord[i,i] < 0){
         B_hat_ord[, i] <- B_hat_ord[, i]*(-1)
+      }
+      if(Lambda_hat[i,i] < 0){
+        Lambda_hat[, i] <- Lambda_hat[, i]*(-1)
       }
     }
 

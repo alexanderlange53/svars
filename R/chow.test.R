@@ -39,6 +39,28 @@ chow.test <- function(Y, SB, nboot = 500, lags = 12, start = NULL, end = NULL,
 
   Full <- Y
 
+  CoeffMat <- function(Var){
+    nY <- Var$K
+    nl <- Var$p
+    if(nY == 2){
+      A_hat <- t(cbind(coef(Var)[[1]][1:(nY*nl),1],
+                       coef(Var)[[2]][1:(nY*nl),1]))
+    }else if(nY == 3){
+      A_hat <- t(cbind(coef(Var)[[1]][1:(nY*nl),1],
+                       coef(Var)[[2]][1:(nY*nl),1], coef(Var)[[3]][1:(nY*nl),1]))
+    }
+    if(nY == 4){
+      A_hat <- t(cbind(coef(Var)[[1]][1:(nY*nl),1],
+                       coef(Var)[[2]][1:(nY*nl),1], coef(Var)[[3]][1:(nY*nl),1],
+                       coef(Var)[[4]][1:(nY*nl),1]))
+    }else{
+      A_hat <- t(cbind(coef(Var)[[1]][1:(nY*nl),1],
+                       coef(Var)[[2]][1:(nY*nl),1], coef(Var)[[3]][1:(nY*nl),1],
+                       coef(Var)[[4]][1:(nY*nl),1], coef(Var)[[5]][1:(nY*nl),1]))
+    }
+    return(A_hat)
+  }
+
   # splitting sample
   sample1 <- Y[1:SB, ]
   sample2 <- Y[(SB+1):nrow(Y), ]
@@ -75,12 +97,12 @@ chow.test <- function(Y, SB, nboot = 500, lags = 12, start = NULL, end = NULL,
   lambda_sp <- (l1 + l2)*(log(det(Sigma)) - log(det((1/(l1 + l2))*(l1*Sigma.1 + l2*Sigma.2))))
 
 
-    lambda_bpB <- rep(NA, nCboot)
-    lambda_spB <- rep(NA, nCboot)
+    lambda_bpB <- rep(NA, nboot)
+    lambda_spB <- rep(NA, nboot)
     TB <- l1
 
     # bootstrapping the teststatistic to obtain empirical distribution
-    for(i in 1:nCboot){
+    for(i in 1:nboot){
       A_hatF <- CoeffMat(VAR.model)
       residF <- residuals(VAR.model)
       BootDataF <- DataGen(A_hatF, Full, residF, sel$selection[1], TB)
@@ -100,7 +122,7 @@ chow.test <- function(Y, SB, nboot = 500, lags = 12, start = NULL, end = NULL,
       lambda_bpB[i] <- (l1 + l2)*log(det(Sigma)) - l1*log(det(Sigma.1)) - l2*log(det(Sigma.2))
       lambda_spB[i] <- (l1 + l2)*(log(det(Sigma)) - log(det((1/(l1 + l2))*(l1*Sigma.1 + l2*Sigma.2))))
 
-      progress(i, nCboot)
+      progress(i, nboot)
     }
 
     K <- VAR.model$K

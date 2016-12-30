@@ -14,7 +14,7 @@ LH <- function(S, Tob, TB, Sigma_hat1, k,  Sigma_hat2) {
       (((Tob - TB + 1) / 2) * (log(MW2) + sum(diag((Sigma_hat2 %*% solve(MMM2))))))
   return(-L)
   }else{
-    return(NA)
+    return(1000000000)
   }
 
 }
