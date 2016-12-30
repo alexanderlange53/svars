@@ -27,11 +27,17 @@
 id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
                         format = NULL, dateVector = NULL, max.iter = 10, crit = 0.05){
 
-  if(!is.numeric(SB)){
+  if(is.numeric(SB)){
+    SBcharacter <- NULL
+  }
 
+  if(!is.numeric(SB)){
+    SBcharacter <- SB
     SB <- getStructuralBreak(SB = SB, start = start, end = end,
                              frequency = frequency, format = format, dateVector = dateVector)
   }
+
+
 
   u_t <- residuals(x)
   p <- x$p
@@ -202,15 +208,20 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
     # Testing the estimated SVAR for identification by menas of wald statistic
     wald <- wald.test(Lambda_hat, HESS)
 
-  return(list(
-    Lambda = Lambda_hat,    # estimated Lambda matrix (unconditional heteroscedasticity)
-    Lambda_SE = Lambda.SE,  # standard errors of Lambda matrix
-    B = B_hat_ord,          # estimated B matrix (unique decomposition of the covariance matrix)
-    B_SE = B.SE,            # standard errors of B matrix
-    n = Tob,                # number of observations
-    Fish = HESS,            # observerd fisher information matrix
-    Lik = -MLEgls$value,    # function value of likelihood
-    wald_statistic = wald,  # results of wald test
-    iteration = counter     # number of gls estimations
-  ))
+  result <- list(
+                 Lambda = Lambda_hat,    # estimated Lambda matrix (unconditional heteroscedasticity)
+                 Lambda_SE = Lambda.SE,  # standard errors of Lambda matrix
+                 B = B_hat_ord,          # estimated B matrix (unique decomposition of the covariance matrix)
+                 B_SE = B.SE,            # standard errors of B matrix
+                 n = Tob,                # number of observations
+                 Fish = HESS,            # observerd fisher information matrix
+                 Lik = -MLEgls$value,    # function value of likelihood
+                 wald_statistic = wald,  # results of wald test
+                 iteration = counter,     # number of gls estimations
+                 method = "Changes in Volatility",
+                 SB = SB,                # Structural Break in number format
+                 SBcharacter             # Structural Break in input character format
+                 )
+  class(result) <- "svarIdent"
+  return(result)
 }
