@@ -8,7 +8,7 @@ summary.svarIdent <- function(svarIdentObject, ...){
   cat("\nMethod: " )
   cat(svarIdentObject$method)
   cat("\nSample size: ")
-  cat(svarIdentObject$Tob)
+  cat(svarIdentObject$n)
   if(svarIdentObject$method ==  "Changes in Volatility"){
   cat("\nStructural Break: At Observation Number ")
  cat(svarIdentObject$SB)
