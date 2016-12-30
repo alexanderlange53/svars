@@ -11,7 +11,22 @@
 #' @param end character. End of the time series (only if dateVector is empty)
 #' @param frequency character. Frequency of the time series (only if dateVector is empty)
 #' @param format character. Date format (only if dateVector is empty)
-#' @return A list of results
+#' @return A list of class "svarIdent" with elements
+#' \itemize{
+#' \item{Lambda}{Estimated unconditional heteroscedasticity Matrix}
+#' \item{Lambda_SE}{Matrix of standard errors of Lambda}
+#' \item{B}{Estimated B matrix, i.e. unique decomposition of the covariance matrix}
+#' \item{B_SE}{Rinderwahn}
+#' \item{n}{Number of observations}
+#' \item{Fish}
+#' \item{Lik}{Function value of likelihood}
+#' \item{wald_statistic}{Results of pairwise Wald tests}
+#' \item{iteration}{Number of GLS estimations}
+#' \item{method}{The applied identifaction method}
+#' \item{SB}{Structural break as number of observation}
+#' \item{SBcharacter}{Structural break as date (if provided in function arguments)}
+#' }
+#'
 #'
 #' @examples
 #' \dontrun{

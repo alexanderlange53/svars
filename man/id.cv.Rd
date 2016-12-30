@@ -25,7 +25,21 @@ in corresponding format or then the conventional time parameters need to be prov
 \item{dateVector}{vector. Vector of the time period concerned containing SB}
 }
 \value{
-A list of results
+A list of class "svarIdent" with elements
+\itemize{
+\item{Lambda}{Estimated unconditional heteroscedasticity Matrix}
+\item{Lambda_SE}{Matrix of standard errors of Lambda}
+\item{B}{Estimated B matrix, i.e. unique decomposition of the covariance matrix}
+\item{B_SE}{Rinderwahn}
+\item{n}{Number of observations}
+\item{Fish}
+\item{Lik}{Function value of likelihood}
+\item{wald_statistic}{Results of pairwise Wald tests}
+\item{iteration}{Number of GLS estimations}
+\item{method}{The applied identifaction method}
+\item{SB}{Structural break as number of observation}
+\item{SBcharacter}{Structural break as date (if provided in function arguments)}
+}
 }
 \description{
 Identify B matrix based on changes in Volatility.
