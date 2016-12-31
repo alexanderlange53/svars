@@ -80,7 +80,11 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
   Sigma_hat2 <- (crossprod(resid2)) / (Tob-TB+1)
 
   # Determine starting values for B and Lambda
-  B <- sqrtm((1/Tob)*crossprod(u_t)) + matrix(runif(k*k), nrow = k, byrow = T)
+  MW <- -1
+  while(MW < 0.5){
+    B <- sqrtm((1/Tob)*crossprod(u_t)) + matrix(runif(k*k), nrow = k, byrow = T)
+    MW <- det(tcrossprod(B))
+  }
   Lambda <- c(1,1,1)
   S <- c(cbind(B, Lambda))
 
@@ -154,7 +158,11 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
       Sigma_hat2gls <- (crossprod(resid2gls)) / (Tob-TB+1)
 
       # Determine starting values for B and Lambda
-      B <- expm::sqrtm((1/Tob)* crossprod(u_tgls)) + matrix(runif(k*k), nrow = k, byrow = T)
+      MW <- -1
+      while(MW < 0.5){
+         B <- expm::sqrtm((1/Tob)* crossprod(u_tgls)) + matrix(runif(k*k), nrow = k, byrow = T)
+         MW <- det(tcrossprod(B))
+      }
       Lambda <- diag(Lambda_hat[[counter]])
       S <- c(cbind(B, Lambda))
 
