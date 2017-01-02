@@ -79,23 +79,29 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
   Sigma_hat1 <- (crossprod(resid1)) / (TB-1)
   Sigma_hat2 <- (crossprod(resid2)) / (Tob-TB+1)
 
-  # Determine starting values for B and Lambda
-  MW <- -1
-  while(MW < 0.5){
-    B <- sqrtm((1/Tob)*crossprod(u_t)) + matrix(runif(k*k), nrow = k, byrow = T)
-    MW <- det(tcrossprod(B))
-  }
-  Lambda <- c(1,1,1)
-  S <- c(cbind(B, Lambda))
+   # Determine starting values for B and Lambda
+   MLE <- NULL
+   counter2 <- 0
+   while(is.null(MLE) & counter2 < 5){
+     MW <- -1
+     while(MW < 0.5){
+       B <- expm::sqrtm((1/Tob)* crossprod(u_t)) + matrix(runif(k*k), nrow = k, byrow = T)
+       MW <- det(tcrossprod(B))
+     }
+     Lambda <- c(1,2,3)
+     S <- c(cbind(B, Lambda))
 
-  # optimize the likelihood function
+     # optimize the likelihood function
+     MLE <- tryCatch(
+       optim(fn = LH, par = S, k = k, TB = TB, Sigma_hat1 = Sigma_hat1,
+             Sigma_hat2 = Sigma_hat2, Tob = Tob, method = 'L-BFGS-B', hessian = T),
+       error = function(e) NULL)
+     counter2 <- counter2 + 1
+     if(counter2 == 5){
+       cat('Algorithm does not converge')
+     }
+   }
 
-    MLE <- tryCatch(
-      optim(fn = LH, par = S, k = k, TB = TB, Sigma_hat1 = Sigma_hat1,
-                 Sigma_hat2 = Sigma_hat2, Tob = Tob, method = 'L-BFGS-B', hessian = T),
-    error = function(e) NULL)
-
-  if(!is.null(MLE)){
     B_hat <- matrix(MLE$par[1:(k*k)], nrow = k)
     Lambda_hat <- diag(MLE$par[(k*k+1):(k*k+k)])
 
@@ -158,19 +164,27 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
       Sigma_hat2gls <- (crossprod(resid2gls)) / (Tob-TB+1)
 
       # Determine starting values for B and Lambda
-      MW <- -1
-      while(MW < 0.5){
-         B <- expm::sqrtm((1/Tob)* crossprod(u_tgls)) + matrix(runif(k*k), nrow = k, byrow = T)
-         MW <- det(tcrossprod(B))
+      MLEgls <- NULL
+      counter2 <- 0
+      while(is.null(MLEgls) & counter2 < 5){
+        MW <- -1
+        while(MW < 0.5){
+          B <- expm::sqrtm((1/Tob)* crossprod(u_tgls)) + matrix(runif(k*k), nrow = k, byrow = T)
+          MW <- det(tcrossprod(B))
+        }
+        Lambda <- diag(Lambda_hat[[counter]])
+        S <- c(cbind(B, Lambda))
+
+        # optimize the likelihood function
+        MLEgls <- tryCatch(
+          optim(fn = LH, par = S, k = k, TB = TB, Sigma_hat1 = Sigma_hat1gls,
+                Sigma_hat2 = Sigma_hat2gls, Tob = Tob, method = 'L-BFGS-B', hessian = T),
+          error = function(e) NULL)
+        counter2 <- counter2 + 1
+        if(counter2 == 5){
+          cat('Algorithm does not converge')
+        }
       }
-      Lambda <- diag(Lambda_hat[[counter]])
-      S <- c(cbind(B, Lambda))
-
-      # optimize the likelihood function
-      MLEgls <- optim(fn = LH, par = S, k = k, TB = TB, Sigma_hat1 = Sigma_hat1gls,
-                      Sigma_hat2 = Sigma_hat2gls, Tob = Tob, method = 'L-BFGS-B', hessian = T)
-
-
 
       B_hatg <- matrix(MLEgls$par[1:(k*k)], nrow = k)
       Lambda_hatg <- diag(MLEgls$par[(k*k+1):(k*k+k)])
@@ -198,7 +212,7 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
     FishObs <- sqrt(diag(HESS))
     B.SE <- matrix(FishObs[1:(k*k)], k, k)
     Lambda.SE <- FishObs[(k*k+1):(k*k+k)]*diag(k)
-  }
+
 
     # ordering the columns with respect to the largest absolute values in each column
     B_hat_ord <- matrix(0, k, k)

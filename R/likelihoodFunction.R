@@ -9,12 +9,12 @@ LH <- function(S, Tob, TB, Sigma_hat1, k,  Sigma_hat2) {
   MMM <- tcrossprod(W)
   MMM2 <- W %*% tcrossprod(Psi, W)
 
-  if(MW > 0 & MW2 > 0){
+  #if(MW > 0 & MW2 > 0){
     L <- -(((TB - 1) / 2) * (log(MW) + sum(diag((Sigma_hat1 %*% solve(MMM)))))) -
       (((Tob - TB + 1) / 2) * (log(MW2) + sum(diag((Sigma_hat2 %*% solve(MMM2))))))
   return(-L)
-  }else{
-    return(1000000000)
-  }
+  #}else{
+  #  return(1000000000)
+  #}
 
 }

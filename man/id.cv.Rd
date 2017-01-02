@@ -52,7 +52,6 @@ require(vars)
 # x = output gap
 # pi = inflation
 # i = interest rates
-set.seed(23211)
 v1 <- VAR(USA, lag.max = 10, ic = "AIC" )
 x1 <- id.cv(v1, SB = 60)
 summary(x1)
