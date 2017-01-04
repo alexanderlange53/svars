@@ -1,7 +1,16 @@
 # likelihood function to optimize
-LH <- function(S, Tob, TB, Sigma_hat1, k,  Sigma_hat2) {
+LH <- function(S, Tob, TB, Sigma_hat1, k,  Sigma_hat2, input_matrix) {
 
   W <- matrix(S[1:(k*k)], nrow = k)
+
+  if(!is.null(input_matrix)){
+     if(!is.matrix(input_matrix)){
+         stop("Please provide a valid input matrix")
+      }
+    inputValues <- !is.na(input_matrix)
+    W[inputValues] <- input_matrix[inputValues]
+      }
+
   Psi <- diag(S[(k*k+1):(k*k+k)])
 
   MW <- det(tcrossprod(W))
