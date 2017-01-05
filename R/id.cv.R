@@ -89,13 +89,13 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
        B <- expm::sqrtm((1/Tob)* crossprod(u_t)) + matrix(runif(k*k), nrow = k, byrow = T)
        MW <- det(tcrossprod(B))
      }
-     Lambda <- c(1,2,3)
+     Lambda <- c(1,1,1)
      S <- c(cbind(B, Lambda))
 
      # optimize the likelihood function
      MLE <- tryCatch(
        optim(fn = LH, par = S, k = k, TB = TB, Sigma_hat1 = Sigma_hat1,
-             Sigma_hat2 = Sigma_hat2, Tob = Tob, method = 'L-BFGS-B', hessian = T),
+             Sigma_hat2 = Sigma_hat2, Tob = Tob, method = 'L-BFGS-B', hessian = T, input_matrix = input_matrix),
        error = function(e) NULL)
      counter2 <- counter2 + 1
      if(counter2 == 5){
@@ -179,7 +179,7 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
         # optimize the likelihood function
         MLEgls <- tryCatch(
           optim(fn = LH, par = S, k = k, TB = TB, Sigma_hat1 = Sigma_hat1gls,
-                Sigma_hat2 = Sigma_hat2gls, Tob = Tob, method = 'L-BFGS-B', hessian = T),
+                Sigma_hat2 = Sigma_hat2gls, Tob = Tob, method = 'L-BFGS-B', hessian = T, input_matrix = input_matrix),
           error = function(e) NULL)
         counter2 <- counter2 + 1
         if(counter2 == 5){
