@@ -5,7 +5,8 @@
 \title{Changes in Volatility Identification}
 \usage{
 id.cv(x, SB, start = NULL, end = NULL, frequency = NULL, format = NULL,
-  dateVector = NULL, max.iter = 10, crit = 0.05)
+  dateVector = NULL, max.iter = 10, crit = 0.05,
+  restriction_matrix = NULL)
 }
 \arguments{
 \item{x}{VAR-object. (S)VAR model to determine B matrix for}
@@ -23,23 +24,23 @@ in corresponding format or then the conventional time parameters need to be prov
 \item{format}{character. Date format (only if dateVector is empty)}
 
 \item{dateVector}{vector. Vector of the time period concerned containing SB}
+
+\item{restriction_matrix}{matrix. A matrix containing presupposed Values and NA for values to be estimated}
 }
 \value{
 A list of class "svarIdent" with elements
-\itemize{
 \item{Lambda}{Estimated unconditional heteroscedasticity Matrix}
 \item{Lambda_SE}{Matrix of standard errors of Lambda}
 \item{B}{Estimated B matrix, i.e. unique decomposition of the covariance matrix}
-\item{B_SE}{Rinderwahn}
+\item{B_SE}{Standard Errors of B matrix}
 \item{n}{Number of observations}
-\item{Fish}
+\item{Fish}{Observerd Fisher information matrix}
 \item{Lik}{Function value of likelihood}
 \item{wald_statistic}{Results of pairwise Wald tests}
 \item{iteration}{Number of GLS estimations}
 \item{method}{The applied identifaction method}
 \item{SB}{Structural break as number of observation}
 \item{SBcharacter}{Structural break as date (if provided in function arguments)}
-}
 }
 \description{
 Identify B matrix based on changes in Volatility.
@@ -52,9 +53,9 @@ require(vars)
 # x = output gap
 # pi = inflation
 # i = interest rates
+set.seed(23211)
 v1 <- VAR(USA, lag.max = 10, ic = "AIC" )
 x1 <- id.cv(v1, SB = 60)
-summary(x1)
 }
 }
 

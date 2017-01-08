@@ -1,13 +1,13 @@
 # likelihood function to optimize
-LH <- function(S, Tob, TB, Sigma_hat1, k,  Sigma_hat2, input_matrix) {
+LH <- function(S, Tob, TB, Sigma_hat1, k,  Sigma_hat2, restriction_matrix) {
 
   W <- matrix(S[1:(k*k)], nrow = k)
 
-  if(!is.null(input_matrix)){
-     if(!is.matrix(input_matrix)){
+  if(!is.null(restriction_matrix)){
+     if(!is.matrix(restriction_matrix)){
          stop("Please provide a valid input matrix")
       }
-    inputValues <- !is.na(input_matrix)
+    inputValues <- !is.na(restriction_matrix)
     W[inputValues] <- input_matrix[inputValues]
       }
 

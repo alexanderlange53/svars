@@ -11,22 +11,21 @@
 #' @param end character. End of the time series (only if dateVector is empty)
 #' @param frequency character. Frequency of the time series (only if dateVector is empty)
 #' @param format character. Date format (only if dateVector is empty)
-#' @param input_matrix matrix.
+#' @param restriction_matrix matrix. A matrix containing presupposed Values and NA for values to be estimated
 #' @return A list of class "svarIdent" with elements
-#' \itemize{
 #' \item{Lambda}{Estimated unconditional heteroscedasticity Matrix}
 #' \item{Lambda_SE}{Matrix of standard errors of Lambda}
 #' \item{B}{Estimated B matrix, i.e. unique decomposition of the covariance matrix}
 #' \item{B_SE}{Standard Errors of B matrix}
 #' \item{n}{Number of observations}
-#' \item{Fish}
+#' \item{Fish}{Observerd Fisher information matrix}
 #' \item{Lik}{Function value of likelihood}
 #' \item{wald_statistic}{Results of pairwise Wald tests}
 #' \item{iteration}{Number of GLS estimations}
 #' \item{method}{The applied identifaction method}
 #' \item{SB}{Structural break as number of observation}
 #' \item{SBcharacter}{Structural break as date (if provided in function arguments)}
-#' }
+#'
 #'
 #'
 #' @examples
@@ -54,7 +53,7 @@
 
 
 id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
-                        format = NULL, dateVector = NULL, max.iter = 10, crit = 0.05, input_matrix = NULL){
+                        format = NULL, dateVector = NULL, max.iter = 10, crit = 0.05, restriction_matrix = NULL){
 
   if(is.numeric(SB)){
     SBcharacter <- NULL
