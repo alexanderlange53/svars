@@ -53,7 +53,7 @@
 
 
 id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
-                        format = NULL, dateVector = NULL, max.iter = 10, crit = 0.05, restriction_matrix = NULL){
+                        format = NULL, dateVector = NULL, max.iter = 15, crit = 0.05, restriction_matrix = NULL){
 
   if(is.numeric(SB)){
     SBcharacter <- NULL
@@ -65,7 +65,16 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
                              frequency = frequency, format = format, dateVector = dateVector)
   }
 
-
+  y_lag_cr <- function(y, lag_length){
+    # create matrix that stores the lags
+    y_lag <- matrix(NA, dim(y)[1],dim(y)[2]*lag_length)
+    for (i in 1:lag_length) {
+      y_lag[(1+i):dim(y)[1],((i*NCOL(y)-NCOL(y))+1):(i*NCOL(y))] <- y[1:(dim(y)[1]-i),(1:NCOL(y))]
+    }
+    # drop first observation
+    y_lag <- as.matrix(y_lag[-(1:lag_length),])
+    out <- list(lags = y_lag)
+  }
 
   u_t <- residuals(x)
   p <- x$p
@@ -94,7 +103,7 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
      # optimize the likelihood function
      MLE <- tryCatch(
        optim(fn = LH, par = S, k = k, TB = TB, Sigma_hat1 = Sigma_hat1,
-             Sigma_hat2 = Sigma_hat2, Tob = Tob, method = 'L-BFGS-B', hessian = T, input_matrix = input_matrix),
+             Sigma_hat2 = Sigma_hat2, Tob = Tob, method = 'L-BFGS-B', hessian = T, restriction_matrix = restriction_matrix),
        error = function(e) NULL)
      counter2 <- counter2 + 1
      if(counter2 == 5){
@@ -104,14 +113,15 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
 
     B_hat <- matrix(MLE$par[1:(k*k)], nrow = k)
     Lambda_hat <- diag(MLE$par[(k*k+1):(k*k+k)])
+    ll <- MLE$value
 
     # estimating again with GLS to obatin a more precise estimation
     y <- t(x$y)
 
-    Z_t <- matrix(0, nrow(y)*p, ncol(y))
-    for(i in 1:(ncol(y)-p)){
-      Z_t[,i] <- c(y[, ((i+1):(i+p))])
-    }
+    yl <- t(y_lag_cr(t(y), p)$lags)
+    y <- y[,-c(1:p)]
+
+    Z_t <- rbind(rep(1, ncol(yl)), yl)
 
     gls1 <- function(Z, Sig){
       G <- kronecker(tcrossprod(Z), Sig)
@@ -125,26 +135,28 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
 
     Lambda_hat <- list(Lambda_hat)
     B_hat <- list(B_hat)
+    ll <- list(ll)
 
     counter <- 1
     Exit <- 1
 
-    while(abs(Exit) > crit & counter < max.iter){
+    while(abs(Exit) > 0.05 & counter < 15){
 
       Sig1 <- solve(tcrossprod(B_hat[[counter]]))
       Sig2 <- solve(B_hat[[counter]]%*%tcrossprod(Lambda_hat[[counter]], B_hat[[counter]]))
 
       GLS1.1 <- rowSums(apply(Z_t[, 1:(TB-1)], 2, gls1, Sig = Sig1))
       GLS1.2 <- rowSums(apply(Z_t[, (TB):ncol(Z_t)], 2, gls1, Sig = Sig2))
-      GLS1 <- solve(matrix(GLS1.1 + GLS1.2, nrow = k*k*p, byrow = F))
+      GLS1 <- solve(matrix(GLS1.1 + GLS1.2, nrow = k*k*p+k, byrow = F))
 
-      GLS2.1 <- matrix(0, nrow = k*k*p, ncol = (TB-1))
-      GLS2.2 <- matrix(0, nrow = k*k*p, ncol = ncol(y))
+      GLS2.1 <- matrix(0, nrow = k*k*p+k, ncol = (TB-1))
+      GLS2.2 <- matrix(0, nrow = k*k*p+k, ncol = ncol(y))
+
 
       for(i in 1:(TB-1)){
         GLS2.1[,i] <- kronecker(Z_t[,i], Sig1)%*%y[,i]
       }
-      for(i in TB:ncol(y)){
+      for(i in TB:ncol(Z_t)){
         GLS2.2[,i] <- kronecker(Z_t[,i], Sig2)%*%y[,i]
       }
 
@@ -168,17 +180,19 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
       counter2 <- 0
       while(is.null(MLEgls) & counter2 < 5){
         MW <- -1
+        #MW2 <- -1
         while(MW < 0.5){
           B <- expm::sqrtm((1/Tob)* crossprod(u_tgls)) + matrix(runif(k*k), nrow = k, byrow = T)
           MW <- det(tcrossprod(B))
+          #MW2 <- det(B %*% tcrossprod(Psi, B))
         }
-        Lambda <- diag(Lambda_hat[[counter]])
-        S <- c(cbind(B, Lambda))
+        #Lambda <- diag(Lambda_hat[[counter]])
+        S <- c(cbind(B, c(1,1,1)))
 
-        # optimize the likelihood function
+        #optimize the likelihood function
         MLEgls <- tryCatch(
           optim(fn = LH, par = S, k = k, TB = TB, Sigma_hat1 = Sigma_hat1gls,
-                Sigma_hat2 = Sigma_hat2gls, Tob = Tob, method = 'L-BFGS-B', hessian = T, input_matrix = input_matrix),
+                Sigma_hat2 = Sigma_hat2gls, Tob = Tob, method = 'L-BFGS-B', hessian = T, restriction_matrix = restriction_matrix),
           error = function(e) NULL)
         counter2 <- counter2 + 1
         if(counter2 == 5){
@@ -186,19 +200,26 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
         }
       }
 
+
       B_hatg <- matrix(MLEgls$par[1:(k*k)], nrow = k)
       Lambda_hatg <- diag(MLEgls$par[(k*k+1):(k*k+k)])
+      ll_g <- MLEgls$value
 
       B_hat <- c(B_hat, list(B_hatg))
       Lambda_hat <- c(Lambda_hat, list(Lambda_hatg))
+      ll <- c(ll, list(ll_g))
 
       counter <- counter +1
-      Exit <- sum(diag(Lambda_hat[[counter]])) - sum(diag(Lambda_hat[[counter - 1]]))
+      #Exit <- sum(diag(Lambda_hat[[counter]])) - sum(diag(Lambda_hat[[counter - 1]]))
+      Exit <- ll[[counter]] - ll[[counter-1]]
     }
 
-    # extracting the last estimates
-    B_hat <- B_hat[[counter]]
-    Lambda_hat <- Lambda_hat[[counter]]
+    # extracting the best estimates
+    ll <- unlist(ll)
+    llf <- ll[which.min(ll)]
+    cc <- which.min(ll)
+    B_hat <- B_hat[[cc]]
+    Lambda_hat <- Lambda_hat[[cc]]
 
     # obtaining standard errors from inverse fisher information matrix
     HESS <- solve(MLEgls$hessian)
@@ -265,7 +286,7 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
                  B_SE = B.SE,            # standard errors of B matrix
                  n = Tob,                # number of observations
                  Fish = HESS,            # observerd fisher information matrix
-                 Lik = -MLEgls$value,    # function value of likelihood
+                 Lik = -llf,    # function value of likelihood
                  wald_statistic = wald,  # results of wald test
                  iteration = counter,     # number of gls estimations
                  method = "Changes in Volatility",
