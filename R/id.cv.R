@@ -94,7 +94,7 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
    while(is.null(MLE) & counter2 < 5){
      MW <- -1
      while(MW < 0.5){
-       B <- expm::sqrtm((1/Tob)* crossprod(u_t)) + matrix(runif(k*k), nrow = k, byrow = T)
+       B <- suppressMessages(expm::sqrtm((1/Tob)* crossprod(u_t))) + matrix(runif(k*k), nrow = k, byrow = T)
        MW <- det(tcrossprod(B))
      }
      Lambda <- c(1,1,1)
@@ -182,7 +182,7 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
         MW <- -1
         #MW2 <- -1
         while(MW < 0.5){
-          B <- expm::sqrtm((1/Tob)* crossprod(u_tgls)) + matrix(runif(k*k), nrow = k, byrow = T)
+          B <- suppressMessages(expm::sqrtm((1/Tob)* crossprod(u_tgls))) + matrix(runif(k*k), nrow = k, byrow = T)
           MW <- det(tcrossprod(B))
           #MW2 <- det(B %*% tcrossprod(Psi, B))
         }
