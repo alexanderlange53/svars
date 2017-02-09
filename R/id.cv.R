@@ -91,7 +91,7 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
    # Determine starting values for B and Lambda
    MLE <- NULL
    counter2 <- 0
-   while(is.null(MLE) & counter2 < 5){
+   while(is.null(MLE) & counter2 < 500){
      MW <- -1
      while(MW < 0.5){
        B <- suppressMessages(expm::sqrtm((1/Tob)* crossprod(u_t))) + matrix(runif(k*k), nrow = k, byrow = T)
@@ -106,7 +106,7 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
              Sigma_hat2 = Sigma_hat2, Tob = Tob, method = 'L-BFGS-B', hessian = T, restriction_matrix = restriction_matrix),
        error = function(e) NULL)
      counter2 <- counter2 + 1
-     if(counter2 == 5){
+     if(counter2 == 500){
        cat('Algorithm does not converge')
      }
    }
@@ -140,7 +140,7 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
     counter <- 1
     Exit <- 1
 
-    while(abs(Exit) > 0.05 & counter < 15){
+    while(abs(Exit) > 0.01 & counter < 20){
 
       Sig1 <- solve(tcrossprod(B_hat[[counter]]))
       Sig2 <- solve(B_hat[[counter]]%*%tcrossprod(Lambda_hat[[counter]], B_hat[[counter]]))
@@ -178,7 +178,7 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
       # Determine starting values for B and Lambda
       MLEgls <- NULL
       counter2 <- 0
-      while(is.null(MLEgls) & counter2 < 5){
+      while(is.null(MLEgls) & counter2 < 500){
         MW <- -1
         #MW2 <- -1
         while(MW < 0.5){
@@ -195,7 +195,7 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
                 Sigma_hat2 = Sigma_hat2gls, Tob = Tob, method = 'L-BFGS-B', hessian = T, restriction_matrix = restriction_matrix),
           error = function(e) NULL)
         counter2 <- counter2 + 1
-        if(counter2 == 5){
+        if(counter2 == 500){
           cat('Algorithm does not converge')
         }
       }
@@ -209,6 +209,12 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
       Lambda_hat <- c(Lambda_hat, list(Lambda_hatg))
       ll <- c(ll, list(ll_g))
 
+      if(counter == 1){
+        GLSE <- list(GLS_hat)
+      }else{
+        GLSE <- c(GLSE, list(GLS_hat))
+      }
+
       counter <- counter +1
       #Exit <- sum(diag(Lambda_hat[[counter]])) - sum(diag(Lambda_hat[[counter - 1]]))
       Exit <- ll[[counter]] - ll[[counter-1]]
@@ -220,6 +226,8 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
     cc <- which.min(ll)
     B_hat <- B_hat[[cc]]
     Lambda_hat <- Lambda_hat[[cc]]
+    GLSE <- GLSE[[cc-1]]
+    GLSE <- matrix(GLSE, nrow = k)
 
     # obtaining standard errors from inverse fisher information matrix
     HESS <- solve(MLEgls$hessian)
@@ -291,6 +299,7 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
                  iteration = counter,     # number of gls estimations
                  method = "Changes in Volatility",
                  SB = SB,                # Structural Break in number format
+                 GLSE = GLSE,
                  SBcharacter             # Structural Break in input character format
                  )
   class(result) <- "svarIdent"
