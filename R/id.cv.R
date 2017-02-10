@@ -36,9 +36,14 @@
 #' # x = output gap
 #' # pi = inflation
 #' # i = interest rates
+#' plot(USA[,1], type = 'l', ylim = c(-8, 17))
+#' lines(USA[,2],col = 'blue')
+#' lines(USA[,3], col = 'red')
+#'
 #' set.seed(23211)
 #' v1 <- VAR(USA, lag.max = 10, ic = "AIC" )
 #' x1 <- id.cv(v1, SB = 60)
+#' summary(x1)
 #' }
 #'
 #' @export
@@ -299,7 +304,8 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
                  iteration = counter,     # number of gls estimations
                  method = "Changes in Volatility",
                  SB = SB,                # Structural Break in number format
-                 GLSE = GLSE,
+                 GLSE = GLSE,            # VAR parameter estimated with gls
+                 type = x$type,          # type of the VAR model e.g 'const'
                  SBcharacter             # Structural Break in input character format
                  )
   class(result) <- "svarIdent"

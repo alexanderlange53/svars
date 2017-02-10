@@ -48,6 +48,8 @@ Identify B matrix based on changes in Volatility.
 \examples{
 \dontrun{
 require(vars)
+require(ggplot2)
+require(reshape2)
 # data contains quartlery observations from 1965Q1 to 2008Q3
 # assumed structural break in 1979Q4
 # x = output gap
@@ -56,6 +58,14 @@ require(vars)
 set.seed(23211)
 v1 <- VAR(USA, lag.max = 10, ic = "AIC" )
 x1 <- id.cv(v1, SB = 60)
+summary(x1)
+
+# switching columns according to sign patter
+x1$B <- x1$B[,c(3,2,1)]
+x1$B[,3] <- x1$B[,3]*(-1)
+
+# Impulse response analysis
+PlotIrf(x1, horizon = 30, scales = 'free_y')
 }
 }
 
