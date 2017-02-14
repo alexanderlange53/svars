@@ -3,3 +3,4 @@
 S3method(summary,svarIdent)
 export(chow.test)
 export(id.cv)
+export(plot.svarIdent)

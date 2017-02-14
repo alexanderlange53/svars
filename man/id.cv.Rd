@@ -5,7 +5,7 @@
 \title{Changes in Volatility Identification}
 \usage{
 id.cv(x, SB, start = NULL, end = NULL, frequency = NULL, format = NULL,
-  dateVector = NULL, max.iter = 10, crit = 0.05,
+  dateVector = NULL, max.iter = 15, crit = 0.05,
   restriction_matrix = NULL)
 }
 \arguments{
@@ -60,12 +60,10 @@ v1 <- VAR(USA, lag.max = 10, ic = "AIC" )
 x1 <- id.cv(v1, SB = 60)
 summary(x1)
 
-# switching columns according to sign patter
 x1$B <- x1$B[,c(3,2,1)]
 x1$B[,3] <- x1$B[,3]*(-1)
 
-# Impulse response analysis
-PlotIrf(x1, horizon = 30, scales = 'free_y')
+plot(x1, horizon = 30, scales = 'free_y')
 }
 }
 
