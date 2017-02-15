@@ -43,12 +43,14 @@
 #' x1 <- id.cv(v1, SB = 60)
 #' summary(x1)
 #'
-# switching columns according to sign patter
+#' # switching columns according to sign patter
 #' x1$B <- x1$B[,c(3,2,1)]
 #' x1$B[,3] <- x1$B[,3]*(-1)
 #'
-# Impulse response analysis
-#' plot(x1, horizon = 30, scales = 'free_y')
+#' # Impulse response analysis
+#' ira <- irf(x1, horizon = 20)
+#'
+#' plot(ira, scales = 'free_y')
 #' }
 #'
 #' @export
