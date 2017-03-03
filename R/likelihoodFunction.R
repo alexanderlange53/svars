@@ -1,15 +1,7 @@
 # likelihood function to optimize
-LH <- function(S, Tob, TB, Sigma_hat1, k,  Sigma_hat2, restriction_matrix) {
+LH <- function(S, Tob, TB, Sigma_hat1, k,  Sigma_hat2) {
 
   W <- matrix(S[1:(k*k)], nrow = k)
-
-  if(!is.null(restriction_matrix)){
-     if(!is.matrix(restriction_matrix)){
-         stop("Please provide a valid input matrix")
-      }
-    inputValues <- !is.na(restriction_matrix)
-    W[inputValues] <- restriction_matrix[inputValues]
-      }
 
   Psi <- diag(S[(k*k+1):(k*k+k)])
 
