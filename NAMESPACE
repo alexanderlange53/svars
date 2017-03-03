@@ -3,5 +3,10 @@
 S3method(summary,svarIdent)
 export(chow.test)
 export(id.cv)
+<<<<<<< HEAD
 export(id.ngml)
 export(plot.svarIdent)
+=======
+export(irf)
+export(plot.irf)
+>>>>>>> a58bfffdcc352caffdc775221d7b9ebc0d6a7ba9

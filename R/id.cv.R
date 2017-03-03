@@ -43,12 +43,14 @@
 #' x1 <- id.cv(v1, SB = 60)
 #' summary(x1)
 #'
-# switching columns according to sign patter
+#' # switching columns according to sign patter
 #' x1$B <- x1$B[,c(3,2,1)]
 #' x1$B[,3] <- x1$B[,3]*(-1)
 #'
-# Impulse response analysis
-#' plot(x1, horizon = 30, scales = 'free_y')
+#' # Impulse response analysis
+#' ira <- irf(x1, horizon = 20)
+#'
+#' plot(ira, scales = 'free_y')
 #' }
 #'
 #' @export
@@ -107,8 +109,14 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
        B <- suppressMessages(expm::sqrtm((1/Tob)* crossprod(u_t))) + matrix(runif(k*k), nrow = k, byrow = T)
        MW <- det(tcrossprod(B))
      }
+
+     B <- c(B)
+     if(!is.null(restriction_matrix)){
+       restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
+       B <- B[1:(length(B)-restrictions)]
+     }
      Lambda <- c(1,1,1)
-     S <- c(cbind(B, Lambda))
+     S <- c(B, Lambda)
 
      # optimize the likelihood function
      MLE <- tryCatch(
