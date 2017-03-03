@@ -11,3 +11,4 @@ Description: Implements data driven identification methods for SVAR models. Base
 Depends: vars, expm, reshape2, ggplot2
 License: GPL (>= 2)
 LazyData: TRUE
+RoxygenNote: 6.0.1
