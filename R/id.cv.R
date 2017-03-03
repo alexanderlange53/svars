@@ -204,7 +204,7 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
         #optimize the likelihood function
         MLEgls <- tryCatch(
           optim(fn = LH, par = S, k = k, TB = TB, Sigma_hat1 = Sigma_hat1gls,
-                Sigma_hat2 = Sigma_hat2gls, Tob = Tob, method = 'L-BFGS-B', hessian = T, restriction_matrix = restriction_matrix),
+                Sigma_hat2 = Sigma_hat2gls, Tob = Tob, method = 'L-BFGS-B', hessian = T),
           error = function(e) NULL)
         counter2 <- counter2 + 1
         if(counter2 == 500){
