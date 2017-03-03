@@ -6,7 +6,7 @@
 #' @param SB integer. Structural break either of type integer as the number of observations which belong to the pre-break period or
 #'                    Date character. If a date character is provided, either a date Vector which contains the time line of the data
 #'                    in corresponding format or then the conventional time parameters need to be provided.
-#' @param dateVector vector. Vector of the time period concerned containing SB
+#' @param dateVector vector. Vector of the time period concerned containing SB.
 #' @param start character. Start of the time series (only if dateVector is empty)
 #' @param end character. End of the time series (only if dateVector is empty)
 #' @param frequency character. Frequency of the time series (only if dateVector is empty)
@@ -107,8 +107,14 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
        B <- suppressMessages(expm::sqrtm((1/Tob)* crossprod(u_t))) + matrix(runif(k*k), nrow = k, byrow = T)
        MW <- det(tcrossprod(B))
      }
+
+     B <- c(B)
+     if(!is.null(restriction_matrix)){
+       restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
+       B <- B[1:(length(B)-restrictions)]
+     }
      Lambda <- c(1,1,1)
-     S <- c(cbind(B, Lambda))
+     S <- c(B, Lambda)
 
      # optimize the likelihood function
      MLE <- tryCatch(
