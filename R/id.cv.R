@@ -331,7 +331,7 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
                  iteration = counter,     # number of gls estimations
                  method = "Changes in Volatility",
                  SB = SB,                # Structural Break in number format
-                 GLSE = GLSE,            # VAR parameter estimated with gls
+                 A_hat = GLSE,            # VAR parameter estimated with gls
                  type = x$type,          # type of the VAR model e.g 'const'
                  SBcharacter             # Structural Break in input character format
                  )

@@ -52,9 +52,9 @@ irf <- function(x, horizon = 20){
   }
 
   if(x$type == 'const'){
-    A_hat <- x$GLSE[,-1]
+    A_hat <- x$A_hat[,-1]
   }else{
-    A_hat <- x$GLSE
+    A_hat <- x$A_hat
   }
 
   B_hat <- x$B

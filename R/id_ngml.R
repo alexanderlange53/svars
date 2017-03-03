@@ -256,7 +256,7 @@ id.ngml <- function(x){
     }
   }
 
-  return(list(B = B_hat_ord,          # estimated B matrix (unique decomposition of the covariance matrix)
+  result <- list(B = B_hat_ord,          # estimated B matrix (unique decomposition of the covariance matrix)
               sigma = sigma_est,      # estimated scale of the standardized B
               sigma_SE = sigma_SE,    # standard errors od the scale
               df = d_freedom,         # estimated degrees of freedom of the distribution
@@ -270,5 +270,6 @@ id.ngml <- function(x){
               n = Tob,                # number of observations
               type = x$type           # type of the VAR model e.g 'const'
               )
-         )
+         class(result) <- "svarIdent"
+         return(result)
 }
