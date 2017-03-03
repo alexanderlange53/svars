@@ -109,14 +109,8 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
        B <- suppressMessages(expm::sqrtm((1/Tob)* crossprod(u_t))) + matrix(runif(k*k), nrow = k, byrow = T)
        MW <- det(tcrossprod(B))
      }
-
-     B <- c(B)
-     if(!is.null(restriction_matrix)){
-       restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
-       B <- B[1:(length(B)-restrictions)]
-     }
      Lambda <- c(1,1,1)
-     S <- c(B, Lambda)
+     S <- c(cbind(B, Lambda))
 
      # optimize the likelihood function
      MLE <- tryCatch(
