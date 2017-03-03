@@ -10,6 +10,7 @@ LH <- function(S, Tob, TB, Sigma_hat1, k,  Sigma_hat2, restriction_matrix) {
     W <- restriction_matrix
   }else{
     W <- matrix(S[1:(k*k)], nrow = k)
+    restrictions = 0
   }
 
   Psi <- diag(S[((k*k+1) - restrictions):((k*k+k)-restrictions)])
@@ -20,8 +21,8 @@ LH <- function(S, Tob, TB, Sigma_hat1, k,  Sigma_hat2, restriction_matrix) {
   MMM2 <- W %*% tcrossprod(Psi, W)
 
   #if(MW > 0 & MW2 > 0){
-    L <- -(((TB - 1) / 2) * (log(MW) + sum(diag((Sigma_hat1 %*% solve(MMM)))))) -
-      (((Tob - TB + 1) / 2) * (log(MW2) + sum(diag((Sigma_hat2 %*% solve(MMM2))))))
+    L <- suppressWarnings(-(((TB - 1) / 2) * (log(MW) + sum(diag((Sigma_hat1 %*% solve(MMM)))))) -
+      (((Tob - TB + 1) / 2) * (log(MW2) + sum(diag((Sigma_hat2 %*% solve(MMM2)))))))
   return(-L)
   #}else{
   #  return(NA)
