@@ -3,6 +3,7 @@
 #' Identify B matrix based on non-Gaussian maximum likelihood.
 #'
 #' @param x VAR-object. (S)VAR model to determine B matrix for
+#' @param stage3 Logical. Whether the VAR parameter should be estimated via non-gaussian maximum likelihood (computationally demanding)
 #' @return A list of class "svarIdent" with elements
 #' \item{B}{Estimated B matrix, i.e. unique decomposition of the covariance matrix}
 #' \item{sigma}{Estimated scale of the standardized B matrix}
@@ -51,7 +52,7 @@
 
 # x  : object of class VAR
 
-id.ngml <- function(x){
+id.ngml <- function(x, stage3 = FALSE){
 
   # likelihood function to optimize
   loglik <-function(theta) {
@@ -201,27 +202,42 @@ id.ngml <- function(x){
   d_SE <- FishObs[(k*k+1):(k*k+k)]
 
   # Estimating VAR parameter 3. stage
-  y <- t(x$y)
-  yl <- t(y_lag_cr(t(y), p)$lags)
-  Z_t <- rbind(rep(1, ncol(yl)), yl)
-  y <- y[,-c(1:p)]
+  if(stage3 == TRUE){
+    y <- t(x$y)
+    yl <- t(y_lag_cr(t(y), p)$lags)
+    Z_t <- rbind(rep(1, ncol(yl)), yl)
+    y <- y[,-c(1:p)]
 
-  A <- matrix(0, nrow = k, ncol = k*p)
-  for(i in 1:k){
-    A[i,] <- coef(x)[[i]][1:(k*p),1]
-  }
-  if(x$type == 'const'){
-    v <- rep(1, k)
+    A <- matrix(0, nrow = k, ncol = k*p)
     for(i in 1:k){
-      v[i] <- coef(x)[[i]][(k*p+1), 1]
+      A[i,] <- coef(x)[[i]][1:(k*p),1]
     }
-    A <- cbind(v, A)
+    if(x$type == 'const'){
+      v <- rep(1, k)
+      for(i in 1:k){
+        v[i] <- coef(x)[[i]][(k*p+1), 1]
+      }
+      A <- cbind(v, A)
+    }
+
+    A <- c(A)
+    maxL2 <- optim(A, loglik2, method = 'BFGS', hessian = TRUE)
+
+    A_hat <- matrix(maxL2$par, nrow = k)
+  }else{
+    A <- matrix(0, nrow = k, ncol = k*p)
+    for(i in 1:k){
+      A[i,] <- coef(x)[[i]][1:(k*p),1]
+    }
+    if(x$type == 'const'){
+      v <- rep(1, k)
+      for(i in 1:k){
+        v[i] <- coef(x)[[i]][(k*p+1), 1]
+      }
+      A_hat <- cbind(v, A)
+    }
   }
 
-  A <- c(A)
-  maxL2 <- optim(A, loglik2, method = 'BFGS', hessian = TRUE)
-
-  A_hat <- matrix(maxL2$par, nrow = k)
 
   # ordering the columns with respect to the largest absolute values in each column
   B_hat_ord <- matrix(0, k, k)

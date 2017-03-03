@@ -23,7 +23,7 @@ in corresponding format or then the conventional time parameters need to be prov
 
 \item{format}{character. Date format (only if dateVector is empty)}
 
-\item{dateVector}{vector. Vector of the time period concerned containing SB}
+\item{dateVector}{vector. Vector of the time period concerned containing SB.}
 
 \item{restriction_matrix}{matrix. A matrix containing presupposed Values and NA for values to be estimated}
 }

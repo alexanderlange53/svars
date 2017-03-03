@@ -4,10 +4,12 @@
 \alias{id.ngml}
 \title{non-Gaussian maximum likelihood Identification}
 \usage{
-id.ngml(x)
+id.ngml(x, stage3 = FALSE)
 }
 \arguments{
 \item{x}{VAR-object. (S)VAR model to determine B matrix for}
+
+\item{stage3}{Logical. Whether the VAR parameter should be estimated via non-gaussian maximum likelihood (computationally demanding)}
 }
 \value{
 A list of class "svarIdent" with elements

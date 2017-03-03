@@ -4,7 +4,6 @@ S3method(summary,svarIdent)
 export(chow.test)
 export(id.cv)
 export(id.ngml)
-export(plot.svarIdent)
 export(irf)
 export(plot.irf)
-
+export(plot.svarIdent)
