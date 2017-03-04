@@ -26,21 +26,21 @@
 #' require(ggplot2)
 #' require(reshape2)
 #' # data contains quartlery observations from 1965Q1 to 2008Q3
-#' # assumed structural break in 1979Q4
 #' # x = output gap
 #' # pi = inflation
 #' # i = interest rates
 #' set.seed(23211)
 #' v1 <- VAR(USA, lag.max = 10, ic = "AIC" )
-#' x1 <- id.mgml(v1)
+#' x1 <- id.ngml(v1)
 #' summary(x1)
 #'
-# switching columns according to sign patter
+#' # switching columns according to sign patter
 #' x1$B <- x1$B[,c(3,2,1)]
 #' x1$B[,3] <- x1$B[,3]*(-1)
 #'
-# Impulse response analysis
-#' plot(x1, horizon = 30, scales = 'free_y')
+#' # Impulse response Analysis
+#' i1 <- irf(x1, horizon = 30)
+#' plot(i1, scales = 'free_y')
 #' }
 #'
 #' @export

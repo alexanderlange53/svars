@@ -12,6 +12,8 @@
 #' @param frequency character. Frequency of the time series (only if dateVector is empty)
 #' @param format character. Date format (only if dateVector is empty)
 #' @param restriction_matrix matrix. A matrix containing presupposed Values and NA for values to be estimated
+#' @param max.iter integer. Number of maximum GLS iterations
+#' @param crit integer. Critical value for the precision of the GLS estimation
 #' @return A list of class "svarIdent" with elements
 #' \item{Lambda}{Estimated unconditional heteroscedasticity Matrix}
 #' \item{Lambda_SE}{Matrix of standard errors of Lambda}
@@ -43,12 +45,13 @@
 #' x1 <- id.cv(v1, SB = 60)
 #' summary(x1)
 #'
-# switching columns according to sign patter
+#' # switching columns according to sign patter
 #' x1$B <- x1$B[,c(3,2,1)]
 #' x1$B[,3] <- x1$B[,3]*(-1)
 #'
-# Impulse response analysis
-#' plot(x1, horizon = 30, scales = 'free_y')
+#' # Impulse response analysis
+#' i1 <- irf(x1, horizon = 30)
+#' plot(i1, scales = 'free_y')
 #' }
 #'
 #' @export

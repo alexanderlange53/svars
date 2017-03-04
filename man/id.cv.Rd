@@ -25,6 +25,10 @@ in corresponding format or then the conventional time parameters need to be prov
 
 \item{dateVector}{vector. Vector of the time period concerned containing SB.}
 
+\item{max.iter}{integer. Number of maximum GLS iterations}
+
+\item{crit}{integer. Critical value for the precision of the GLS estimation}
+
 \item{restriction_matrix}{matrix. A matrix containing presupposed Values and NA for values to be estimated}
 }
 \value{
@@ -60,10 +64,13 @@ v1 <- VAR(USA, lag.max = 10, ic = "AIC" )
 x1 <- id.cv(v1, SB = 60)
 summary(x1)
 
+# switching columns according to sign patter
 x1$B <- x1$B[,c(3,2,1)]
 x1$B[,3] <- x1$B[,3]*(-1)
 
-plot(x1, horizon = 30, scales = 'free_y')
+# Impulse response analysis
+i1 <- irf(x1, horizon = 30)
+plot(i1, scales = 'free_y')
 }
 
 }
