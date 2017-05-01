@@ -14,7 +14,7 @@
 #'
 #' @export
 
-irf <- function(x, horizon = 20){
+imrf <- function(x, horizon = 20){
 
   # Function to calculate matrix potence
   "%^%" <- function(A, n){
