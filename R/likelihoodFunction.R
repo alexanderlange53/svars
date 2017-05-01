@@ -1,5 +1,4 @@
 # likelihood function to optimize
-<<<<<<< HEAD
 LH <- function(S, Tob, TB, Sigma_hat1, k,  Sigma_hat2, restriction_matrix, restrictions) {
 
   if(!is.null(restriction_matrix)){
