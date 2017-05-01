@@ -244,7 +244,7 @@ Lambda.SE <- FishObs[((k*k+1) - restrictions):((k*k+k)-restrictions)]*diag(k)
 # Lambda.SE <- diag(diag(Lambda.SE[, control]))
 
 # Testing the estimated SVAR for identification by menas of wald statistic
-#wald <- wald.test(Lambda_hat, HESS)
+wald <- wald.test(Lambda_hat, HESS, restrictions)
 
 result <- list(
   Lambda = Lambda_hat,    # estimated Lambda matrix (unconditional heteroscedasticity)
@@ -254,7 +254,7 @@ result <- list(
   n = Tob,                # number of observations
   Fish = HESS,            # observerd fisher information matrix
   Lik = -llf,    # function value of likelihood
-  #wald_statistic = wald,  # results of wald test
+  wald_statistic = wald,  # results of wald test
   iteration = counter,     # number of gls estimations
   method = "Changes in Volatility",
   SB = SB,                # Structural Break in number format
