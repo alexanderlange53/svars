@@ -23,8 +23,6 @@ summary.svars <- function(svarsObject, ...){
   cat(svarsObject$restrictions)
   cat("\nLikelihood: ")
   cat(svarsObject$Lik)
-  cat("\nWald Test Statistics: ")
-  cat(svarsObject$wald_statistic)
   cat("\n")
   cat("\nEstimated unconditional Heteroscedasticity Matrix (Lambda):\n")
   print(svarsObject$Lambda)
@@ -34,6 +32,8 @@ summary.svars <- function(svarsObject, ...){
   print(svarsObject$B)
   cat("\nStandard Errors of B:\n")
   print(svarsObject$B_SE)
+  cat("\nPairwise Wald Test:\n")
+  print(svarsObject$wald_statistic)
   if(svarsObject$restrictions > 0){
   cat("\nLikelihood Ratio Test Statistic:")
   cat(svarsObject$lRatioTestStatistic)
