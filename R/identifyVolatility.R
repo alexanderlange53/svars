@@ -47,6 +47,17 @@ ll <- MLE$value
 # estimating again with GLS to obatin a more precise estimation
 y <- t(x$y)
 
+y_lag_cr <- function(y, lag_length){
+  # create matrix that stores the lags
+  y_lag <- matrix(NA, dim(y)[1],dim(y)[2]*lag_length)
+  for (i in 1:lag_length) {
+    y_lag[(1+i):dim(y)[1],((i*NCOL(y)-NCOL(y))+1):(i*NCOL(y))] <- y[1:(dim(y)[1]-i),(1:NCOL(y))]
+  }
+  # drop first observation
+  y_lag <- as.matrix(y_lag[-(1:lag_length),])
+  out <- list(lags = y_lag)
+}
+
 yl <- t(y_lag_cr(t(y), p)$lags)
 y <- y[,-c(1:p)]
 
@@ -233,7 +244,7 @@ Lambda.SE <- FishObs[((k*k+1) - restrictions):((k*k+k)-restrictions)]*diag(k)
 # Lambda.SE <- diag(diag(Lambda.SE[, control]))
 
 # Testing the estimated SVAR for identification by menas of wald statistic
-#wald <- wald.test(Lambda_hat, HESS)
+wald <- wald.test(Lambda_hat, HESS, restrictions)
 
 result <- list(
   Lambda = Lambda_hat,    # estimated Lambda matrix (unconditional heteroscedasticity)
@@ -243,7 +254,7 @@ result <- list(
   n = Tob,                # number of observations
   Fish = HESS,            # observerd fisher information matrix
   Lik = -llf,    # function value of likelihood
-  #wald_statistic = wald,  # results of wald test
+  wald_statistic = wald,  # results of wald test
   iteration = counter,     # number of gls estimations
   method = "Changes in Volatility",
   SB = SB,                # Structural Break in number format

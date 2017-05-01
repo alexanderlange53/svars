@@ -107,6 +107,6 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
                                  Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter)
   }
 
-  class(result) <- "svarIdent"
+  class(result) <- "svars"
  return(result)
 }

@@ -2,7 +2,7 @@
 # Sigma: HESS => Fish
 
 
-wald.test <- function(Lambda, Sigma){
+wald.test <- function(Lambda, Sigma, restrictions){
 
   k <- length(diag(Lambda))
 
@@ -11,11 +11,11 @@ wald.test <- function(Lambda, Sigma){
   betas <- combn(diag(Lambda), 2)
 
   sigmas <- apply(kList, 2, function(x){
-    diag(Sigma[c(k * k + x[1], k * k + x[2]), c(k * k + x[1], k * k + x[2])])
+    diag(Sigma[c(k * k + x[1] - restrictions, k * k + x[2] - restrictions), c(k * k + x[1] - restrictions, k * k + x[2] - restrictions)])
     })
 
   covS <- apply(kList, 2, function(x){
-    Sigma[c(k * k + x[1], k * k + x[2]), c(k * k + x[1], k * k + x[2])][1,2]
+    Sigma[c(k * k + x[1] - restrictions, k * k + x[2] - restrictions), c(k * k + x[1] - restrictions, k * k + x[2] - restrictions)][1,2]
     })
 
   testRes <- lapply(1:(k*(k-1)/2), function(x){

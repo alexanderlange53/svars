@@ -4,7 +4,7 @@
 #'
 #' @param x VAR-object. (S)VAR model to determine B matrix for
 #' @param stage3 Logical. Whether the VAR parameter should be estimated via non-gaussian maximum likelihood (computationally demanding)
-#' @return A list of class "svarIdent" with elements
+#' @return A list of class "svars" with elements
 #' \item{B}{Estimated B matrix, i.e. unique decomposition of the covariance matrix}
 #' \item{sigma}{Estimated scale of the standardized B matrix}
 #' \item{sigma_SE}{Standard errors of the scale}
@@ -289,6 +289,6 @@ id.ngml <- function(x, stage3 = FALSE){
               p = x$p,                # number of lags
               K = x$K                 # number of time series
               )
-         class(result) <- "svarIdent"
+         class(result) <- "svars"
          return(result)
 }
