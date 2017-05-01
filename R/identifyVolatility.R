@@ -258,10 +258,14 @@ result <- list(
   iteration = counter,     # number of gls estimations
   method = "Changes in Volatility",
   SB = SB,                # Structural Break in number format
-  GLSE = GLSE,            # VAR parameter estimated with gls
+  A_hat = GLSE,            # VAR parameter estimated with gls
   type = x$type,          # type of the VAR model e.g 'const'
   SBcharacter = SBcharacter,             # Structural Break in input character format
-  restrictions = restrictions # number of restrictions
+  restrictions = restrictions, # number of restrictions
+  obs = Tob,              # number of observations
+  y = x$y,                # Data
+  p = x$p,                # number of lags
+  K = x$K                 # number of time series
 )
 return(result)
 

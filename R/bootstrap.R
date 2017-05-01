@@ -56,7 +56,12 @@ wild.boot <- function(x, radermacher = FALSE, horizon, nboot){
 
     Sigma_u_star <- crossprod(residuals(varb))/(obs - 1 - k * p)
 
-    temp <- id.ngml(varb)
+    if(x$method == "Non-Gaussian maximum likelihood"){
+      temp <- id.ngml(varb)
+    }else{
+      temp <- id.cv(varb, SB = x$SB)
+    }
+
     Pstar <- temp$B
 
     Pstar1 <- sqrt.f(Pstar, Sigma_u_star)
