@@ -1,3 +1,11 @@
+#'Bootstrapping procedure
+#'
+#'Calculating confidance bands for impulse response via wild bootsrap
+#'
+#'@param x SVAR object of class "svars"
+#'@param horizon Number of observations in time to be included in
+#'@param nboot Number of bootstrap iterations
+#'
 #'@export
 
 
