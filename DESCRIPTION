@@ -1,6 +1,6 @@
-Package: svarIdent
+Package: svars
 Type: Package
-Title: Data driven SVAR identification of impulse response functions
+Title: Data driven SVAR identification of impact matrix for impulse response functions
 Version: 0.1
 Date: 2016-11-21
 Author: Alexander Lange [aut, cre],
