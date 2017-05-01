@@ -1,20 +1,6 @@
-#' Impulse Response Function
-#'
-#' Calculation of impulse response function for a given identified SVAR object
-#'
-#' @param x SVAR object of class "svarIdent"
-#' @param horizon Number of observations in time to be included in
-#'
-#' @examples
-#' \dontrun{
-#'
-#' x2 <- irf(x1, horizon = 20)
-#' plot(x2)
-#' }
-#'
 #' @export
 
-imrf <- function(x, horizon = 20){
+plot.svarIdent <- function(x, horizon = 20, scales = 'fixed',..., base){
 
   # Function to calculate matrix potence
   "%^%" <- function(A, n){
@@ -52,9 +38,9 @@ imrf <- function(x, horizon = 20){
   }
 
   if(x$type == 'const'){
-    A_hat <- x$A_hat[,-1]
+    A_hat <- x$GLSE[,-1]
   }else{
-    A_hat <- x$A_hat
+    A_hat <- x$GLSE
   }
 
   B_hat <- x$B
@@ -70,7 +56,11 @@ imrf <- function(x, horizon = 20){
       impulse[,cc] <- IR[i,j,]
     }
   }
-  impulse <- list(irf = as.data.frame(impulse))
-  class(impulse) <- "irf"
-  return(impulse)
+
+
+  impulse <- as.data.frame(impulse)
+  impulse <- melt(impulse, id = 'V1')
+  ggplot(impulse, aes(x = V1, y = value)) + geom_line() + geom_hline(yintercept = 0, color = 'red') + facet_wrap(~variable, scales = scales) +
+    theme_bw()
 }
+

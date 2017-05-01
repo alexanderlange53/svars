@@ -18,7 +18,7 @@ wald.test <- function(Lambda, Sigma){
     Sigma[c(k * k + x[1], k * k + x[2]), c(k * k + x[1], k * k + x[2])][1,2]
     })
 
-  testRes <- lapply(1:k, function(x){
+  testRes <- lapply(1:(k*(k-1)/2), function(x){
     round(1 - pchisq((betas[, x]%*%c(1, -1))^2 / (sum(sigmas[,x]) - 2 * covS[x]), 1), 2)
     })
 
