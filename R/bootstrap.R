@@ -1,3 +1,6 @@
+#'@export
+
+
 wild.boot <- function(x, radermacher = FALSE, horizon, nboot){
   # x: vars object
   # B: estimated covariance matrix from true data set
