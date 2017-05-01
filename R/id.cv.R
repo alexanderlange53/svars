@@ -336,7 +336,11 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
                  SB = SB,                # Structural Break in number format
                  A_hat = GLSE,            # VAR parameter estimated with gls
                  type = x$type,          # type of the VAR model e.g 'const'
-                 SBcharacter             # Structural Break in input character format
+                 SBcharacter,             # Structural Break in input character format
+                 obs = Tob,              # number of observations
+                 y = x$y,                # Data
+                 p = x$p,                # number of lags
+                 K = x$K                 # number of time series
                  )
   class(result) <- "svarIdent"
   return(result)

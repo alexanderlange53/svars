@@ -1,4 +1,4 @@
-wild.boot <- function(x, B, radermacher = FALSE, horizon, nboot){
+wild.boot <- function(x, radermacher = FALSE, horizon, nboot){
   # x: vars object
   # B: estimated covariance matrix from true data set
   # radermacher: wether the bootstraop work with radermacher distance
@@ -29,9 +29,14 @@ wild.boot <- function(x, B, radermacher = FALSE, horizon, nboot){
   p <- x$p
   obs <- x$obs
   k <- x$K
+  B <- x$B
 
   # calculating covariance from actual VAR
-  Sigma_u_hat_old <- 1 / crossprod(residuals(x))/(obs - 1 - k * p)
+  A <- x$A_hat
+  Z <- t(y_lag_cr(y, p)$lags)
+  Z <-rbind(rep(1, ncol(Z)), Z)
+  u <- t(y[-c(1:p),]) - A %*% Z
+  Sigma_u_hat_old <- 1 / tcrossprod(u)/(obs - 1 - k * p)
 
   # creating new error terms
   errors <- list()
@@ -43,27 +48,17 @@ wild.boot <- function(x, B, radermacher = FALSE, horizon, nboot){
     errors[[i]] <- residuals(x) * my
   }
 
+  # Bootstrapfunction
   bootf <- function(Ustar1){
-    Z <- t(y_lag_cr(y, p)$lags)
-    Z <-rbind(rep(1, ncol(Z)), Z)
-    A <- matrix(0, nrow = k, ncol = k*p)
-    for(i in 1:k){
-      A[i,] <- coef(x)[[i]][1:(k*p),1]
-    }
-    if(x$type == 'const'){
-      v <- rep(1, k)
-      for(i in 1:k){
-        v[i] <- coef(x)[[i]][(k*p+1), 1]
-      }
-      A <- cbind(v, A)
-    }
 
     Ystar <- A %*% Z + t(Ustar1)
+    varb <- VAR(Ystar, p = p)
+
     Bstar <- Ystar %*% t(Z) %*% solve(Z %*% t(Z))
     Ustar <- t(y[-c(1:p),]) - Bstar %*% Z
-    Sigma_u_star <- 1 / (obs - k * p)  * tcrossprod(Ustar)
+    Sigma_u_star <- 1 / tcrossprod(u)/(obs - 1 - k * p)
 
-    temp <- LD4 <- LDIw(Ustar, p = p, iter = 30, t0 = 1500, nlimit = 150, t_min = 0.0001, r = 0.6, matrices = 60,
+    temp <- LDIw(Ustar, p = p, iter = 30, t0 = 1500, nlimit = 150, t_min = 0.0001, r = 0.6, matrices = 60,
                         lower = TRUE, upper = F, symmetric = T, cores = 12, dd)
     Pstar <- temp$B
 

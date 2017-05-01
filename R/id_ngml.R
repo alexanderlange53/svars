@@ -283,8 +283,11 @@ id.ngml <- function(x, stage3 = FALSE){
               B_stand_SE = B.SE ,     # standard errors
               Lik = -ll,              # value of maximum likelihood
               method = "Non-Gaussian maximum likelihood",
-              n = Tob,                # number of observations
-              type = x$type           # type of the VAR model e.g 'const'
+              obs = Tob,              # number of observations
+              type = x$type,          # type of the VAR model e.g 'const'
+              y = x$y,                # Data
+              p = x$p,                # number of lags
+              K = x$K                 # number of time series
               )
          class(result) <- "svarIdent"
          return(result)
