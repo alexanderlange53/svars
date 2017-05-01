@@ -89,17 +89,20 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
   Sigma_hat2 <- (crossprod(resid2)) / (Tob-TB+1)
 
   if(!is.null(restriction_matrix)){
-   # resultUnrestricted <- identifyVolatility(x, SB, Tob = Tob, u_t = u_t, k = k, restriction_matrix = NULL,
-    #                             Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter)
-    resultRestricted <- identifyVolatility(x, SB, Tob = Tob, u_t = u_t, k = k, restriction_matrix = restriction_matrix,
+   resultUnrestricted <- identifyVolatility(x, SB, Tob = Tob, u_t = u_t, k = k, restriction_matrix = NULL,
+                                 Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter)
+    result <- identifyVolatility(x, SB, Tob = Tob, u_t = u_t, k = k, restriction_matrix = restriction_matrix,
                                            Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter)
 
-    result <- resultRestricted
+    lRatioTestStatistic = 2 * (resultUnrestricted$Lik - result$Lik)
+    pValue = round(1 - pchisq(lRatioTestStatistic, result$restrictions), 4)
+
+    result$lRatioTestStatistic = lRatioTestStatistic
+    result$lRatioTestPValue = pValue
   }else{
     result <- identifyVolatility(x, SB, Tob = Tob, u_t = u_t, k = k, restriction_matrix = restriction_matrix,
                                  Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter)
   }
-
 
   class(result) <- "svarIdent"
  return(result)

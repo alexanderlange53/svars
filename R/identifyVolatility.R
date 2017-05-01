@@ -23,7 +23,8 @@ while(is.null(MLE) & counter2 < 500){
   # optimize the likelihood function
   MLE <- tryCatch(
    optim(fn = LH, par = S, k = k, TB = TB, Sigma_hat1 = Sigma_hat1,
-          Sigma_hat2 = Sigma_hat2, Tob = Tob, method = "BFGS", hessian = T, restriction_matrix = restriction_matrix, restrictions = restrictions),
+          Sigma_hat2 = Sigma_hat2, Tob = Tob, method = "L-BFGS-B", hessian = T, restriction_matrix = restriction_matrix,
+         restrictions = restrictions),
     error = function(e) NULL)
   counter2 <- counter2 + 1
   if(counter2 == 500){
@@ -248,7 +249,8 @@ result <- list(
   SB = SB,                # Structural Break in number format
   GLSE = GLSE,            # VAR parameter estimated with gls
   type = x$type,          # type of the VAR model e.g 'const'
-  SBcharacter = SBcharacter             # Structural Break in input character format
+  SBcharacter = SBcharacter,             # Structural Break in input character format
+  restrictions = restrictions # number of restrictions
 )
 return(result)
 
