@@ -141,10 +141,28 @@ id.ngml <- function(x, stage3 = FALSE){
   ########### starting the computations ------------------------------------------------------------------------
 
   # getting informations from VAR estimation
-  u <- residuals(x)
-  p <- x$p
-  Tob <- x$obs
-  k <-x$K
+
+  if (class(x) == "ca.jo") {
+    x_ols <- cajools(x)
+    u <- residuals(x_ols)
+    p <- x@lag
+    Tob <- nrow(u)
+    k <- ncol(u)
+    x_y <- x@x
+    coef_x <- coef(x_ols)
+    coef_x <- rbind(coef_x[row.names(coef_x) != "constant",], constant = coef_x["constant",])
+    coef_x <- lapply(seq_len(ncol(coef_x)), function(i) coef_x[, i, drop = F])
+    type <- "const" # TODO: deal with trend cases properly
+  } else {
+    u <- residuals(x)
+    p <- x$p
+    Tob <- x$obs
+    k <- x$K
+    x_y <- x$y
+    coef_x <- coef(x)
+    type <- x$type
+  }
+
   residY <- u
 
   # calculating the covariance matrix
@@ -200,19 +218,19 @@ id.ngml <- function(x, stage3 = FALSE){
 
   # Estimating VAR parameter 3. stage
   if(stage3 == TRUE){
-    y <- t(x$y)
+    y <- t(x_y)
     yl <- t(y_lag_cr(t(y), p)$lags)
     Z_t <- rbind(rep(1, ncol(yl)), yl)
     y <- y[,-c(1:p)]
 
     A <- matrix(0, nrow = k, ncol = k*p)
     for(i in 1:k){
-      A[i,] <- coef(x)[[i]][1:(k*p),1]
+      A[i,] <- coef_x[[i]][1:(k*p),1]
     }
-    if(x$type == 'const'){
+    if(type == 'const'){
       v <- rep(1, k)
       for(i in 1:k){
-        v[i] <- coef(x)[[i]][(k*p+1), 1]
+        v[i] <- coef_x[[i]][(k*p+1), 1]
       }
       A <- cbind(v, A)
     }
@@ -224,12 +242,13 @@ id.ngml <- function(x, stage3 = FALSE){
   }else{
     A <- matrix(0, nrow = k, ncol = k*p)
     for(i in 1:k){
-      A[i,] <- coef(x)[[i]][1:(k*p),1]
+      A[i,] <- coef_x[[i]][1:(k*p),1]
     }
-    if(x$type == 'const'){
+    A_hat <- A
+    if(type == 'const'){
       v <- rep(1, k)
       for(i in 1:k){
-        v[i] <- coef(x)[[i]][(k*p+1), 1]
+        v[i] <- coef_x[[i]][(k*p+1), 1]
       }
       A_hat <- cbind(v, A)
     }
@@ -269,7 +288,7 @@ id.ngml <- function(x, stage3 = FALSE){
     }
   }
 
-  result <- list(B = B_hat_ord,          # estimated B matrix (unique decomposition of the covariance matrix)
+  result <- list(B = B_hat_ord,       # estimated B matrix (unique decomposition of the covariance matrix)
               sigma = sigma_est,      # estimated scale of the standardized B
               sigma_SE = sigma_SE,    # standard errors od the scale
               df = d_freedom,         # estimated degrees of freedom of the distribution
@@ -281,10 +300,10 @@ id.ngml <- function(x, stage3 = FALSE){
               Lik = -ll,              # value of maximum likelihood
               method = "Non-Gaussian maximum likelihood",
               obs = Tob,              # number of observations
-              type = x$type,          # type of the VAR model e.g 'const'
-              y = x$y,                # Data
-              p = x$p,                # number of lags
-              K = x$K                 # number of time series
+              type = type,            # type of the VAR model e.g 'const'
+              y = x_y,                # Data
+              p = p,                  # number of lags
+              K = k                   # number of time series
               )
          class(result) <- "svars"
          return(result)
