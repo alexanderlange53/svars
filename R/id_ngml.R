@@ -144,29 +144,30 @@ id.ngml <- function(x, stage3 = FALSE){
   ########### starting the computations ------------------------------------------------------------------------
 
   # getting informations from VAR estimation
+  u <- residuals(x)
+  p <- x$p
+  Tob <- x$obs
+  k <- x$K
+  residY <- u
 
-  if (class(x) == "ca.jo") {
-    x_ols <- cajools(x)
-    u <- residuals(x_ols)
-    p <- x@lag
-    Tob <- nrow(u)
-    k <- ncol(u)
-    x_y <- x@x
-    coef_x <- coef(x_ols)
-    coef_x <- rbind(coef_x[row.names(coef_x) != "constant",], constant = coef_x["constant",])
-    coef_x <- lapply(seq_len(ncol(coef_x)), function(i) coef_x[, i, drop = F])
-    type <- "const" # TODO: deal with trend cases properly
+  if (class(x) == "vec2var") {
+    # TODO: trend cases
+
+    coef_x <- vector("list", length = k)
+    names(coef_x) <- colnames(x$y)
+
+    for (i in seq_len(k)) {
+      for (j in seq_len(p)) coef_x[[i]] <- c(coef_x[[i]], x$A[[j]][i,])
+      coef_x[[i]] <- c(coef_x[[i]], x$deterministic[i,])
+    }
+
+    coef_x <- lapply(coef_x, matrix)
+
+    type <- "const"
   } else {
-    u <- residuals(x)
-    p <- x$p
-    Tob <- x$obs
-    k <- x$K
-    x_y <- x$y
     coef_x <- coef(x)
     type <- x$type
   }
-
-  residY <- u
 
   # calculating the covariance matrix
   Sigma_hat <- crossprod(residY)/(Tob-1-k*p)
@@ -221,7 +222,7 @@ id.ngml <- function(x, stage3 = FALSE){
 
   # Estimating VAR parameter 3. stage
   if(stage3 == TRUE){
-    y <- t(x_y)
+    y <- t(x$y)
     yl <- t(y_lag_cr(t(y), p)$lags)
     Z_t <- rbind(rep(1, ncol(yl)), yl)
     y <- y[,-c(1:p)]
@@ -304,9 +305,9 @@ id.ngml <- function(x, stage3 = FALSE){
               method = "Non-Gaussian maximum likelihood",
               obs = Tob,              # number of observations
               type = type,            # type of the VAR model e.g 'const'
-              y = x_y,                # Data
-              p = p,                  # number of lags
-              K = k                   # number of time series
+              y = x$y,                # Data
+              p = x$p,                # number of lags
+              K = x$K                 # number of time series
               )
          class(result) <- "svars"
          return(result)
