@@ -1,18 +1,18 @@
 #'Bootstrapping procedure
 #'
-#'Calculating confidance bands for impulse response via wild bootsrap
+#'Calculating confidance bands for impulse response via moving block bootsrap
 #'
 #'@param x SVAR object of class "svars"
+#'@param b.length length of each block
 #'@param horizon Number of observations in time to be included in
 #'@param nboot Number of bootstrap iterations
 #'
 #'@export
 
 
-wild.boot <- function(x, radermacher = FALSE, horizon, nboot){
+mb.boot <- function(x, b.length = 15, horizon, nboot){
   # x: vars object
   # B: estimated covariance matrix from true data set
-  # radermacher: wether the bootstraop work with radermacher distance
   # horizon: Time horizon for Irf
   # nboot: number of bootstrap replications
 
@@ -51,12 +51,35 @@ wild.boot <- function(x, radermacher = FALSE, horizon, nboot){
 
   # creating new error terms
   errors <- list()
+
+  # creating blocks
+  N <- obs/b.length
+  blocks <- array(NA, c(b.length, k, obs - b.length + 1))
+  for(i in 0:(obs-b.length)){
+    blocks[,,(i+1)] <- u[(i+1):(i+b.length),]
+  }
+
   for(i in 1:nboot){
-    my <- rnorm(n = ncol(y))
-    if (radermacher == TRUE) {
-      my <- (my > 0) - (my < 0)
+    epsilon.star <- matrix(0, b.length*ceiling(N), ncol(u))
+    epsilon.star <- list()
+    # stacking randomly selected blocks at each other
+    for(kk in 1:ceiling(N)){
+      epsilon.star[[kk]] <- blocks[,,floor(runif(1, 1, obs-b.length+2))]
     }
-    errors[[i]] <- u * my
+    epsilon.star <- do.call('rbind', epsilon.star)
+
+    # centering new errors
+    for(s in 1:b.length){
+      b.mean <- colSums(epsilon.star[1 : (s+(obs - b.length)),])/(obs - b.length +1)
+      for(j in 0:floor(N)){
+        epsilon.star[j*b.length + s,] <- epsilon.star[j*b.length + s,] - b.mean
+      }
+    }
+
+    # cutting of unnecessary observations
+    epsilon.star <- epsilon.star[1:obs,]
+
+    errors[[i]] <- epsilon.star
   }
 
   # Bootstrapfunction
