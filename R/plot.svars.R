@@ -1,6 +1,6 @@
 #' @export
 
-plot.svars <- function(x, horizon = 20, scales = 'fixed',..., base){
+plot.svars <- function(x, horizon = 20, scales = 'free_y',..., base){
 
   # Function to calculate matrix potence
   "%^%" <- function(A, n){

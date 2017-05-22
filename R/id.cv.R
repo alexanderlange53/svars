@@ -32,9 +32,6 @@
 #'
 #' @examples
 #' \dontrun{
-#' require(vars)
-#' require(ggplot2)
-#' require(reshape2)
 #' # data contains quartlery observations from 1965Q1 to 2008Q3
 #' # assumed structural break in 1979Q4
 #' # x = output gap

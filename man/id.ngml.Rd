@@ -32,9 +32,6 @@ Identify B matrix based on non-Gaussian maximum likelihood.
 }
 \examples{
 \dontrun{
-require(vars)
-require(ggplot2)
-require(reshape2)
 # data contains quartlery observations from 1965Q1 to 2008Q3
 # x = output gap
 # pi = inflation

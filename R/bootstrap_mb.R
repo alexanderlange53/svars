@@ -7,6 +7,26 @@
 #'@param horizon Number of observations in time to be included in
 #'@param nboot Number of bootstrap iterations
 #'
+#' @examples
+#' \dontrun{
+#' # data contains quartlery observations from 1965Q1 to 2008Q3
+#' # x = output gap
+#' # pi = inflation
+#' # i = interest rates
+#' set.seed(23211)
+#' v1 <- VAR(USA, lag.max = 10, ic = "AIC" )
+#' x1 <- id.ngml(v1)
+#' summary(x1)
+#'
+#' # switching columns according to sign patter
+#' x1$B <- x1$B[,c(3,2,1)]
+#' x1$B[,3] <- x1$B[,3]*(-1)
+#'
+#' # Impulse response Analysis with confidence bands
+#' bb <- mb.boot(x1, b.length = 15, nboot = 100, horizon = 30)
+#' plot(bb, lowerq = 0.05, upperq = 0.95)
+#' }
+#'
 #'@export
 
 
@@ -55,6 +75,7 @@ mb.boot <- function(x, b.length = 15, horizon, nboot){
   # creating blocks
   N <- obs/b.length
   blocks <- array(NA, c(b.length, k, obs - b.length + 1))
+  u <- t(u)
   for(i in 0:(obs-b.length)){
     blocks[,,(i+1)] <- u[(i+1):(i+b.length),]
   }
@@ -79,13 +100,13 @@ mb.boot <- function(x, b.length = 15, horizon, nboot){
     # cutting of unnecessary observations
     epsilon.star <- epsilon.star[1:obs,]
 
-    errors[[i]] <- epsilon.star
+    errors[[i]] <- t(epsilon.star)
   }
 
   # Bootstrapfunction
   bootf <- function(Ustar1){
 
-    Ystar <- t(A %*% Z + Ustar1)
+    Ystar <- as.data.frame(t(A %*% Z + Ustar1))
     varb <- VAR(Ystar, p = p)
 
     Sigma_u_star <- crossprod(residuals(varb))/(obs - 1 - k * p)
@@ -115,8 +136,10 @@ mb.boot <- function(x, b.length = 15, horizon, nboot){
   ## Impulse response of actual model
   ip <- imrf(x, horizon = horizon)
 
-  return(list(true = ip,
-              bootstrap = bootstraps))
+  result <- list(true = ip,
+                 bootstrap = bootstraps)
+  class(result) <- 'boot'
+  return(result)
 }
 
 
