@@ -1,4 +1,4 @@
-# testing if all the the elements on the main daigonal of Lambda are different to each other
+# Testing if all elements on the main daigonal of Lambda are different to each other
 # Sigma: HESS => Fish
 
 

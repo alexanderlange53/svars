@@ -1,34 +1,34 @@
 #' Changes in Volatility Identification
 #'
-#' Identify B matrix based on changes in Volatility.
+#' Identify instantaneous repsonse matrix B in SVAR models based on changes in volatility.
 #'
-#' @param x VAR-object. (S)VAR model to determine B matrix for
-#' @param SB integer. Structural break either of type integer as the number of observations which belong to the pre-break period or
-#'                    Date character. If a date character is provided, either a date Vector which contains the time line of the data
-#'                    in corresponding format or then the conventional time parameters need to be provided.
-#' @param dateVector vector. Vector of the time period concerned containing SB.
-#' @param start character. Start of the time series (only if dateVector is empty)
-#' @param end character. End of the time series (only if dateVector is empty)
-#' @param frequency character. Frequency of the time series (only if dateVector is empty)
-#' @param format character. Date format (only if dateVector is empty)
-#' @param restriction_matrix matrix. A matrix containing presupposed Values and NA for values to be estimated
-#' @param max.iter integer. Number of maximum GLS iterations
-#' @param crit integer. Critical value for the precision of the GLS estimation
-#' @return A list of class "svarIdent" with elements
-#' \item{Lambda}{Estimated unconditional heteroscedasticity Matrix}
+#' @param x VAR-object. (S)VAR model to be identified
+#' @param SB Integer. Structural break: either of type integer (number of observations in the pre-break period) or
+#'                    date character. If a date character is provided, either a date vector containing the whole time line
+#'                    in the corresponding format or conventional time parameters need to be provided
+#' @param dateVector Vector. Vector of all time periods containing SB in corresponding format
+#' @param start Character. Start of the time series (only if dateVector is empty)
+#' @param end Character. End of the time series (only if dateVector is empty)
+#' @param frequency Character. Frequency of the time series (only if dateVector is empty)
+#' @param format Character. Date format (only if dateVector is empty)
+#' @param restriction_matrix Matrix. A matrix containing presupposed Values, NA if no restriction is imposed (values to be estimated)
+#' @param max.iter Integer. Number of maximum GLS iterations
+#' @param crit Integer. Critical value for the precision of the GLS estimation
+#' @return A list of class "svars" with elements
+#' \item{Lambda}{Estimated unconditional heteroscedasticity matrix}
 #' \item{Lambda_SE}{Matrix of standard errors of Lambda}
-#' \item{B}{Estimated B matrix, i.e. unique decomposition of the covariance matrix}
-#' \item{B_SE}{Standard Errors of B matrix}
+#' \item{B}{Estimated instantaneous response matrix B, i.e. unique decomposition of the covariance matrix of reduced form residuals}
+#' \item{B_SE}{Standard errors of matrix B}
 #' \item{n}{Number of observations}
 #' \item{Fish}{Observerd Fisher information matrix}
 #' \item{Lik}{Function value of likelihood}
 #' \item{wald_statistic}{Results of pairwise Wald tests}
 #' \item{iteration}{Number of GLS estimations}
-#' \item{method}{The applied identifaction method}
-#' \item{SB}{Structural break as number of observation}
-#' \item{SBcharacter}{Structural break as date (if provided in function arguments)}
+#' \item{method}{Method applied for identification}
+#' \item{SB}{Structural break (number of observations)}
+#' \item{SBcharacter}{Structural break (date; if provided in function arguments)}
 #'
-#'
+#' @references 
 #'
 #' @examples
 #' \dontrun{
@@ -47,7 +47,7 @@
 #' x1$B[,3] <- x1$B[,3]*(-1)
 #'
 #' # Impulse response analysis
-#' i1 <- irf(x1, horizon = 30)
+#' i1 <- imrf(x1, horizon = 30)
 #' plot(i1, scales = 'free_y')
 #' }
 #'
@@ -59,7 +59,7 @@
 #--------------------------------------------#
 
 # x  : object of class VAR
-# SB : Structural Break
+# SB : structural break
 
 
 id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,

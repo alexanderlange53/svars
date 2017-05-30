@@ -1,14 +1,14 @@
-#' Impulse Response Function
+#' Impulse Response Functions for SVAR Models
 #'
-#' Calculation of impulse response function for a given identified SVAR object
+#' Calculation of impulse response functions for an identified SVAR object
 #'
-#' @param x SVAR object of class "svarIdent"
-#' @param horizon Number of observations in time to be included in
+#' @param x SVAR object of class "svars"
+#' @param horizon Time horizon for the impulse responses
 #'
 #' @examples
 #' \dontrun{
 #'
-#' x2 <- irf(x1, horizon = 20)
+#' x2 <- imrf(x1, horizon = 20)
 #' plot(x2)
 #' }
 #'

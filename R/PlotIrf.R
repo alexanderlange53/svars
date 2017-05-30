@@ -1,6 +1,6 @@
 PlotIrf <- function(x, horizon = 20, scales = 'fixed'){
 
-  # Function to calculate matrix potence
+  # function to calculate matrix potence
   "%^%" <- function(A, n){
     if(n == 1){
       A

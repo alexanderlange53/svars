@@ -1,29 +1,38 @@
 #' Chow Test for Structural Break
 #'
-#' The Chow test is applied to a time series an presupposed point of structural break.
+#' The Chow test is applied to a time series with a presupposed structural break.
 #'
 #' @param Y Data
-#' @param SB integer. Structural break either of type integer as the number of observations which belong to the pre-break period or
-#'                    Date character. If a date character is provided, either a date Vector which contains the time line of the data
-#'                    in corresponding format or then the conventional time parameters need to be provided.
+#' @param SB integer. Structural break: either of type integer (number of observations in the pre-break period) or
+#'                    date character. If a date character is provided, either a date vector containing the whole time line
+#'                    in the corresponding format or conventional time parameters need to be provided
 #' @param nboot ??
-#' @param lags  Maximum number of Lag order
-#' @param dateVector vector. Vector of the time period concerned containing SB
+#' @param lags  Maximum number of lag order
+#' @param dateVector vector. Vector of all time periods containing SB in corresponding format
 #' @param start character. Start of the time series (only if dateVector is empty)
 #' @param end character. End of the time series (only if dateVector is empty)
 #' @param frequency character. Frequency of the time series (only if dateVector is empty)
 #' @param format character. Date format (only if dateVector is empty)
-#' @return A list of results
-#'
+#' 
+#' @return A list with elements
+#' \item{lambda_bp}{Test statistic of the Chow test with break point}
+#' \item{testcrit_bp}{Critical value of the test statistic lambda_bp}
+#' \item{p.value_bp}{p-value of the test statistic lambda_bp}
+#' \item{lambda_sp}{Test statistic of the Chow test with sample split}
+#' \item{testcrit_sp}{Critival value of the test statistic lambda_sp}
+#' \item{p.value_sp}{p-value of the test statistic lambda_sp}
+#' 
+#' @references 
+#' 
 #' @export
 #'
 
 ## Chow tests of system structural break ##
 #-----------------------------------------#
 
-# Y     : Data
-# SB    : Structural Break
-# nboot : number of Bootstrap iterations
+# Y     : data
+# SB    : structural break
+# nboot : number of bootstrap iterations
 # lags  : maximum lag order
 
 chow.test <- function(Y, SB, nboot = 500, lags = 12, start = NULL, end = NULL,

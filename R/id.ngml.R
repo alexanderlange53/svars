@@ -1,28 +1,29 @@
-#' non-Gaussian maximum likelihood Identification
+#' Non-Gaussian maximum likelihood identification
 #'
-#' Identify B matrix based on non-Gaussian maximum likelihood.
+#' Identify the instantaneous response matrix B in SVAR models based on non-Gaussian maximum likelihood.
 #'
-#' @param x VAR-object. (S)VAR model to determine B matrix for
-#' @param stage3 Logical. Whether the VAR parameter should be estimated via non-gaussian maximum likelihood (computationally demanding)
+#' @param x VAR-object. (S)VAR model to be identified
+#' @param stage3 Logical. If stage3="TRUE", the VAR parameters are estimated via non-gaussian maximum likelihood (computationally demanding)
 #' @return A list of class "svars" with elements
-#' \item{B}{Estimated B matrix, i.e. unique decomposition of the covariance matrix}
+#' \item{B}{Estimated instanstaneous response matrix B, i.e. unique decomposition of the covariance matrix of reduced form errors}
 #' \item{sigma}{Estimated scale of the standardized B matrix}
 #' \item{sigma_SE}{Standard errors of the scale}
 #' \item{df}{Estimated degrees freedom}
 #' \item{df_SE}{Standard errors of the degrees of freedom}
-#' \item{Fish}{Observerd Fisher information matrix}
+#' \item{Fish}{Observed Fisher information matrix}
 #' \item{A_hat}{Estimated VAR parameter}
 #' \item{B_stand}{Estimated standardized B matrix}
 #' \item{B_stand_SE}{Standard errors of standardized B matrix}
 #' \item{Lik}{Function value of likelihood}
-#' \item{method}{The applied identifaction method}
+#' \item{method}{Method applied for identifaction}
 #' \item{n}{Number of observations}
 #' \item{type}{Type of the VAR model, e.g. 'const'}
 #'
+#'@references Lanne, M., Meitz, M., Saikkonen, P., 2017. Identification and estimation of non-Gaussian structural vector autoregressions. J. Econometrics 196 (2), 288-304.
 #'
 #' @examples
 #' \dontrun{
-#' # data contains quartlery observations from 1965Q1 to 2008Q3
+#' # data contains quarterly observations from 1965Q1 to 2008Q3
 #' # x = output gap
 #' # pi = inflation
 #' # i = interest rates
@@ -31,12 +32,12 @@
 #' x1 <- id.ngml(v1)
 #' summary(x1)
 #'
-#' # switching columns according to sign patter
+#' # switching columns according to sign pattern
 #' x1$B <- x1$B[,c(3,2,1)]
 #' x1$B[,3] <- x1$B[,3]*(-1)
 #'
-#' # Impulse response Analysis
-#' i1 <- irf(x1, horizon = 30)
+#' # impulse response analysis
+#' i1 <- imrf(x1, horizon = 30)
 #' plot(i1, scales = 'free_y')
 #' }
 #'
