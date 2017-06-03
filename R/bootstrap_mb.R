@@ -1,15 +1,15 @@
-#'Bootstrapping procedure
+#'Bootstrap for IRFs of identified SVARs
 #'
 #'Calculating confidance bands for impulse response via moving block bootsrap
 #'
 #'@param x SVAR object of class "svars"
-#'@param b.length length of each block
-#'@param horizon Number of observations in time to be included in
+#'@param b.length Length of each block
+#'@param horizon Time horizon of impulse response functions
 #'@param nboot Number of bootstrap iterations
 #'
 #' @examples
 #' \dontrun{
-#' # data contains quartlery observations from 1965Q1 to 2008Q3
+#' # data contains quarterly observations from 1965Q1 to 2008Q3
 #' # x = output gap
 #' # pi = inflation
 #' # i = interest rates
@@ -22,7 +22,7 @@
 #' x1$B <- x1$B[,c(3,2,1)]
 #' x1$B[,3] <- x1$B[,3]*(-1)
 #'
-#' # Impulse response Analysis with confidence bands
+#' # impulse response analysis with confidence bands
 #' bb <- mb.boot(x1, b.length = 15, nboot = 100, horizon = 30)
 #' plot(bb, lowerq = 0.05, upperq = 0.95)
 #' }
