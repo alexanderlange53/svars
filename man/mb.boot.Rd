@@ -2,16 +2,16 @@
 % Please edit documentation in R/bootstrap_mb.R
 \name{mb.boot}
 \alias{mb.boot}
-\title{Bootstrapping procedure}
+\title{Bootstrap for IRFs of identified SVARs}
 \usage{
 mb.boot(x, b.length = 15, horizon, nboot)
 }
 \arguments{
 \item{x}{SVAR object of class "svars"}
 
-\item{b.length}{length of each block}
+\item{b.length}{Length of each block}
 
-\item{horizon}{Number of observations in time to be included in}
+\item{horizon}{Time horizon of impulse response functions}
 
 \item{nboot}{Number of bootstrap iterations}
 }
@@ -20,7 +20,7 @@ Calculating confidance bands for impulse response via moving block bootsrap
 }
 \examples{
 \dontrun{
-# data contains quartlery observations from 1965Q1 to 2008Q3
+# data contains quarterly observations from 1965Q1 to 2008Q3
 # x = output gap
 # pi = inflation
 # i = interest rates
@@ -33,7 +33,7 @@ summary(x1)
 x1$B <- x1$B[,c(3,2,1)]
 x1$B[,3] <- x1$B[,3]*(-1)
 
-# Impulse response Analysis with confidence bands
+# impulse response analysis with confidence bands
 bb <- mb.boot(x1, b.length = 15, nboot = 100, horizon = 30)
 plot(bb, lowerq = 0.05, upperq = 0.95)
 }
