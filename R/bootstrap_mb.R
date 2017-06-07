@@ -6,6 +6,7 @@
 #'@param b.length Length of each block
 #'@param horizon Time horizon of impulse response functions
 #'@param nboot Number of bootstrap iterations
+#'@param nc Number of processor cores (Not available on windows machines)
 #'
 #' @examples
 #' \dontrun{
@@ -30,7 +31,7 @@
 #'@export
 
 
-mb.boot <- function(x, b.length = 15, horizon, nboot){
+mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1){
   # x: vars object
   # B: estimated covariance matrix from true data set
   # horizon: Time horizon for Irf
@@ -131,7 +132,7 @@ mb.boot <- function(x, b.length = 15, horizon, nboot){
     return(ip)
   }
 
-  bootstraps <- pblapply(errors, bootf)
+  bootstraps <- pblapply(errors, bootf, cl = nc)
 
   ## Impulse response of actual model
   ip <- imrf(x, horizon = horizon)

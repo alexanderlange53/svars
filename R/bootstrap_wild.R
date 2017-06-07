@@ -6,6 +6,7 @@
 #'@param radermacher If radermacher="TRUE", the radermacher distribution is used to generate the bootstrap samples
 #'@param horizon Time horizon of impulse response functions
 #'@param nboot Number of bootstrap iterations
+#'@param nc Number of processor cores (Not available on windows machines)
 #'
 #' @examples
 #' \dontrun{
@@ -31,7 +32,7 @@
 #'@export
 
 
-wild.boot <- function(x, radermacher = FALSE, horizon, nboot){
+wild.boot <- function(x, radermacher = FALSE, horizon, nboot, nc){
   # x: vars object
   # B: estimated covariance matrix from true data set
   # radermacher: wether the bootstraop work with radermacher distance
@@ -109,7 +110,7 @@ wild.boot <- function(x, radermacher = FALSE, horizon, nboot){
     return(ip)
   }
 
-  bootstraps <- pblapply(errors, bootf)
+  bootstraps <- pblapply(errors, bootf, cl = nc)
 
   ## Impulse response of actual model
   ip <- imrf(x, horizon = horizon)
