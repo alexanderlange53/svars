@@ -305,7 +305,8 @@ id.ngml <- function(x, stage3 = FALSE){
               type = type,            # type of the VAR model e.g 'const'
               y = x$y,                # Data
               p = x$p,                # number of lags
-              K = x$K                 # number of time series
+              K = x$K,                # number of time series
+              stage3 = stage3
               )
          class(result) <- "svars"
          return(result)

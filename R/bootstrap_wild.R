@@ -91,7 +91,7 @@ wild.boot <- function(x, radermacher = FALSE, horizon, nboot, nc){
     Sigma_u_star <- crossprod(residuals(varb))/(obs - 1 - k * p)
 
     if(x$method == "Non-Gaussian maximum likelihood"){
-      temp <- id.ngml(varb)
+      temp <- id.ngml(varb, stage3 = x$stage3)
     }else{
       temp <- id.cv(varb, SB = x$SB)
     }

@@ -113,7 +113,7 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1){
     Sigma_u_star <- crossprod(residuals(varb))/(obs - 1 - k * p)
 
     if(x$method == "Non-Gaussian maximum likelihood"){
-      temp <- id.ngml(varb)
+      temp <- id.ngml(varb, stage3 = x$stage3)
     }else{
       temp <- id.cv(varb, SB = x$SB)
     }
