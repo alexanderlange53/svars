@@ -32,7 +32,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' # data contains quartlery observations from 1965Q1 to 2008Q3
+#' # data contains quartlery observations from 1965Q1 to 2008Q2
 #' # assumed structural break in 1979Q4
 #' # x = output gap
 #' # pi = inflation
@@ -49,6 +49,21 @@
 #' # Impulse response analysis
 #' i1 <- imrf(x1, horizon = 30)
 #' plot(i1, scales = 'free_y')
+#'
+#' # Restrictions
+#' # Assuming that the interest rate doesn't influence the output gap on impact
+#' restMat <- matrix(rep(NA, 9), ncol = 3)
+#' restMat[1,3] <- 0
+#' x2 <- id.cv(v1, SB = 60, restriction_matrix = restMat)
+#'
+#' #Structural brake via Dates
+#' # given that time series vector with dates is available
+#' dateVector = seq(as.Date("1965/1/1"), as.Date("2008/6/1"), "quarter")
+#' x3 <- id.cv(v1, SB = "1985-01-01", format = "%Y-%m-%d", dateVector = dateVector)
+#'
+#' # or pass sequence arguments directly
+#' x4 <- id.cv(v1, SB = "1985-01-01", format = "%Y-%m-%d", start = "1965-01-01", end = "2008-06-01",
+#' frequency = "quarter")
 #' }
 #'
 #' @export
@@ -65,6 +80,11 @@
 id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
                         format = NULL, dateVector = NULL, max.iter = 15, crit = 0.05, restriction_matrix = NULL){
 
+  u_t <- residuals(x)
+  p <- x$p
+  Tob <- x$obs
+  k <-x$K
+
   if(is.numeric(SB)){
     SBcharacter <- NULL
   }
@@ -72,14 +92,9 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
   if(!is.numeric(SB)){
     SBcharacter <- SB
     SB <- getStructuralBreak(SB = SB, start = start, end = end,
-                             frequency = frequency, format = format, dateVector = dateVector)
+                             frequency = frequency, format = format, dateVector = dateVector, Tob = Tob, p = p)
   }
 
-
-  u_t <- residuals(x)
-  p <- x$p
-  Tob <- x$obs
-  k <-x$K
 
   TB <- SB - p
 
