@@ -16,7 +16,7 @@ while(is.null(MLE) & counter2 < 500){
     restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
     B <- B[1:(length(B)-restrictions)]
   }
-  Lambda <- c(1,1,1)
+  Lambda <- rep(1, k)
   S <- c(B, Lambda)
 
 
@@ -132,7 +132,7 @@ while(abs(Exit) > 0.01 & counter < 20){
       restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
       B <- B[1:(length(B)-restrictions)]
     }
-    Lambda <- c(1,1,1)
+    Lambda <- rep(1, k)
     S <- c(B, Lambda)
 
     #optimize the likelihood function
@@ -168,7 +168,7 @@ while(abs(Exit) > 0.01 & counter < 20){
     GLSE <- c(GLSE, list(GLS_hat))
   }
 
-  counter <- counter +1
+  counter <- counter + 1
   #Exit <- sum(diag(Lambda_hat[[counter]])) - sum(diag(Lambda_hat[[counter - 1]]))
   Exit <- ll[[counter]] - ll[[counter-1]]
 }

@@ -28,7 +28,7 @@
 #' \item{SB}{Structural break (number of observations)}
 #' \item{SBcharacter}{Structural break (date; if provided in function arguments)}
 #'
-#' @references 
+#' @references
 #'
 #' @examples
 #' \dontrun{
@@ -100,6 +100,7 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
     result$lRatioTestStatistic = lRatioTestStatistic
     result$lRatioTestPValue = pValue
   }else{
+    restriction_matrix <- NULL
     result <- identifyVolatility(x, SB, Tob = Tob, u_t = u_t, k = k, restriction_matrix = restriction_matrix,
                                  Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter)
   }
