@@ -72,14 +72,17 @@ wild.boot <- function(x, radermacher = FALSE, horizon, nboot, nc){
   u <- t(y[-c(1:p),]) - A %*% Z
   Sigma_u_hat_old <- tcrossprod(u)/(obs - 1 - k * p)
 
+  ub <- u
+
   # creating new error terms
   errors <- list()
   for(i in 1:nboot){
+    ub <- u
     my <- rnorm(n = ncol(y))
     if (radermacher == TRUE) {
       my <- (my > 0) - (my < 0)
     }
-    errors[[i]] <- u * my
+    errors[[i]] <- ub * my
   }
 
   # Bootstrapfunction

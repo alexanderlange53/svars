@@ -13,7 +13,7 @@
 #' @param end character. End of the time series (only if dateVector is empty)
 #' @param frequency character. Frequency of the time series (only if dateVector is empty)
 #' @param format character. Date format (only if dateVector is empty)
-#' 
+#'
 #' @return A list with elements
 #' \item{lambda_bp}{Test statistic of the Chow test with break point}
 #' \item{testcrit_bp}{Critical value of the test statistic lambda_bp}
@@ -21,9 +21,9 @@
 #' \item{lambda_sp}{Test statistic of the Chow test with sample split}
 #' \item{testcrit_sp}{Critival value of the test statistic lambda_sp}
 #' \item{p.value_sp}{p-value of the test statistic lambda_sp}
-#' 
-#' @references 
-#' 
+#'
+#' @references
+#'
 #' @export
 #'
 
@@ -35,7 +35,7 @@
 # nboot : number of bootstrap iterations
 # lags  : maximum lag order
 
-chow.test <- function(Y, SB, nboot = 500, lags = 12, start = NULL, end = NULL,
+chow.test <- function(Y, SB, p, nboot = 500, lags = 12, start = NULL, end = NULL,
                       frequency = NULL, format = NULL, dateVector = NULL){
   # Null Hypothesis of no Sample Split is rejected for large lambda
 
@@ -48,45 +48,16 @@ chow.test <- function(Y, SB, nboot = 500, lags = 12, start = NULL, end = NULL,
 
   Full <- Y
 
-  CoeffMat <- function(Var){
-    nY <- Var$K
-    nl <- Var$p
-    if(nY == 2){
-      A_hat <- t(cbind(coef(Var)[[1]][1:(nY*nl),1],
-                       coef(Var)[[2]][1:(nY*nl),1]))
-    }else if(nY == 3){
-      A_hat <- t(cbind(coef(Var)[[1]][1:(nY*nl),1],
-                       coef(Var)[[2]][1:(nY*nl),1], coef(Var)[[3]][1:(nY*nl),1]))
-    }
-    if(nY == 4){
-      A_hat <- t(cbind(coef(Var)[[1]][1:(nY*nl),1],
-                       coef(Var)[[2]][1:(nY*nl),1], coef(Var)[[3]][1:(nY*nl),1],
-                       coef(Var)[[4]][1:(nY*nl),1]))
-    }else{
-      A_hat <- t(cbind(coef(Var)[[1]][1:(nY*nl),1],
-                       coef(Var)[[2]][1:(nY*nl),1], coef(Var)[[3]][1:(nY*nl),1],
-                       coef(Var)[[4]][1:(nY*nl),1], coef(Var)[[5]][1:(nY*nl),1]))
-    }
-    return(A_hat)
-  }
-
   # splitting sample
   sample1 <- Y[1:SB, ]
   sample2 <- Y[(SB+1):nrow(Y), ]
 
-  # selecting VAR orders
-  sel <- VARselect(Full, lag.max = lags)
-  if(any(sel$criteria[,sel$selection[1]] == -Inf) | any(is.na(sel$criteria[,sel$selection[1]]))){
-    sel$selection[1] <- sel$selection[1] - 2
-  }
-  if(sel$selection[1] == 1){
-    sel$selection[1] <- sel$selection[1] + 1
-  }
+
 
   # estimating VAR for pre and post SB and for full series
-  VAR.model <- VAR(Full, p = sel$selection[1])
-  VAR1.model <- VAR(sample1, p = sel$selection[1])
-  VAR2.model <- VAR(sample2, p = sel$selection[1])
+  VAR.model <- VAR(Full, p = p)
+  VAR1.model <- VAR(sample1, p = p)
+  VAR2.model <- VAR(sample2, p = p)
 
   l1 <- VAR1.model$obs
   l2 <- VAR2.model$obs
@@ -111,9 +82,37 @@ chow.test <- function(Y, SB, nboot = 500, lags = 12, start = NULL, end = NULL,
     TB <- l1
 
     # bootstrapping the teststatistic to obtain empirical distribution
+    # obtaining VAR parameter
+    coef_x <- coef(VAR.model)
+    type <- VAR.model$type
+
+    A <- matrix(0, nrow = VAR.model$K, ncol = VAR.model$K* p)
+    for(i in 1:VAR.model$K){
+      A[i,] <- coef_x[[i]][1:(VAR.model$K*p),1]
+    }
+    A_hat <- A
+    if(type == 'const'){
+      v <- rep(1, VAR.model$K)
+      for(i in 1:VAR.model$K){
+        v[i] <- coef_x[[i]][(VAR.model$K*p+1), 1]
+      }
+      A_hat <- cbind(v, A)
+    }
+
+    residF <- residuals(VAR.model)
+
+    # creating new error terms
+    errors <- list()
     for(i in 1:nboot){
-      A_hatF <- CoeffMat(VAR.model)
-      residF <- residuals(VAR.model)
+      my <- rnorm(n = ncol(Y))
+      if (radermacher == TRUE) {
+        my <- (my > 0) - (my < 0)
+      }
+      errors[[i]] <- u * my
+    }
+
+    for(i in 1:nboot){
+
       BootDataF <- DataGen(A_hatF, Full, residF, sel$selection[1], TB)
       BootData1 <- BootDataF[1:(l1+sel$selection[1]),]
       BootData2 <- BootDataF[(l1+sel$selection[1]+1):nrow(BootDataF),]
