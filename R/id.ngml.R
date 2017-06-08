@@ -141,11 +141,7 @@ id.ngml <- function(x, stage3 = FALSE){
 
   ########### starting the computations ------------------------------------------------------------------------
 
-  # getting informations from VAR estimation
-  u <- residuals(x)
-  p <- x$p
-  Tob <- x$obs
-  k <- x$K
+
   residY <- u
 
   if (class(x) == "vec2var") {
