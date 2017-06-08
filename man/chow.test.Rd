@@ -4,7 +4,7 @@
 \alias{chow.test}
 \title{Chow Test for Structural Break}
 \usage{
-chow.test(Y, SB, nboot = 500, lags = 12, start = NULL, end = NULL,
+chow.test(Y, SB, p, nboot = 500, start = NULL, end = NULL,
   frequency = NULL, format = NULL, dateVector = NULL)
 }
 \arguments{
@@ -14,9 +14,7 @@ chow.test(Y, SB, nboot = 500, lags = 12, start = NULL, end = NULL,
 date character. If a date character is provided, either a date vector containing the whole time line
 in the corresponding format or conventional time parameters need to be provided}
 
-\item{nboot}{??}
-
-\item{lags}{Maximum number of lag order}
+\item{nboot}{number of bootrstrap iterations to obtain quantiles and p-values}
 
 \item{start}{character. Start of the time series (only if dateVector is empty)}
 
@@ -27,6 +25,8 @@ in the corresponding format or conventional time parameters need to be provided}
 \item{format}{character. Date format (only if dateVector is empty)}
 
 \item{dateVector}{vector. Vector of all time periods containing SB in corresponding format}
+
+\item{lags}{Maximum number of lag order}
 }
 \value{
 A list with elements

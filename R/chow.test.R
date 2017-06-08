@@ -6,7 +6,7 @@
 #' @param SB integer. Structural break: either of type integer (number of observations in the pre-break period) or
 #'                    date character. If a date character is provided, either a date vector containing the whole time line
 #'                    in the corresponding format or conventional time parameters need to be provided
-#' @param nboot ??
+#' @param nboot number of bootrstrap iterations to obtain quantiles and p-values
 #' @param lags  Maximum number of lag order
 #' @param dateVector vector. Vector of all time periods containing SB in corresponding format
 #' @param start character. Start of the time series (only if dateVector is empty)
@@ -35,7 +35,7 @@
 # nboot : number of bootstrap iterations
 # lags  : maximum lag order
 
-chow.test <- function(Y, SB, p, nboot = 500, lags = 12, start = NULL, end = NULL,
+chow.test <- function(Y, SB, p, nboot = 500, start = NULL, end = NULL,
                       frequency = NULL, format = NULL, dateVector = NULL){
   # Null Hypothesis of no Sample Split is rejected for large lambda
 
@@ -45,14 +45,29 @@ chow.test <- function(Y, SB, p, nboot = 500, lags = 12, start = NULL, end = NULL
                              frequency = frequency, format = format, dateVector = dateVector)
   }
 
+  # function to create Z matrix
+  y_lag_cr <- function(y, lag_length){
+    # create matrix that stores the lags
+    y_lag <- matrix(NA, dim(y)[1],dim(y)[2]*lag_length)
+    for (i in 1:lag_length) {
+      y_lag[(1+i):dim(y)[1],((i*NCOL(y)-NCOL(y))+1):(i*NCOL(y))] <- y[1:(dim(y)[1]-i),(1:NCOL(y))]
+    }
+    # drop first observation
+    y_lag <- as.matrix(y_lag[-(1:lag_length),])
+    out <- list(lags = y_lag)
+  }
 
+  sqrt.f <- function(Pstar, Sigma_u_star){
+    yy <- suppressMessages(sqrtm(Sigma_u_hat_old))%*%solve(suppressMessages(sqrtm(Sigma_u_star)))%*%Pstar
+    return(yy)
+  }
+
+  Y <- as.matrix(Y)
   Full <- Y
 
   # splitting sample
   sample1 <- Y[1:SB, ]
   sample2 <- Y[(SB+1):nrow(Y), ]
-
-
 
   # estimating VAR for pre and post SB and for full series
   VAR.model <- VAR(Full, p = p)
@@ -99,27 +114,34 @@ chow.test <- function(Y, SB, p, nboot = 500, lags = 12, start = NULL, end = NULL
       A_hat <- cbind(v, A)
     }
 
+    Z <- t(y_lag_cr(Y, p)$lags)
+    Z <-rbind(rep(1, ncol(Z)), Z)
+
     residF <- residuals(VAR.model)
 
-    # creating new error terms
-    errors <- list()
+    # creating new data
+    datFull <- list()
     for(i in 1:nboot){
+      u <- residF
       my <- rnorm(n = ncol(Y))
       if (radermacher == TRUE) {
         my <- (my > 0) - (my < 0)
       }
-      errors[[i]] <- u * my
+      et <- u * my
+      Ystar <- t(A_hat %*% Z + t(et))
+      datFull[[i]] <- Ystar
     }
 
     for(i in 1:nboot){
+      xx <- datFull[[i]]
+      # splitting sample
+      sample1 <- xx[1:SB, ]
+      sample2 <- xx[(SB+1):nrow(xx), ]
 
-      BootDataF <- DataGen(A_hatF, Full, residF, sel$selection[1], TB)
-      BootData1 <- BootDataF[1:(l1+sel$selection[1]),]
-      BootData2 <- BootDataF[(l1+sel$selection[1]+1):nrow(BootDataF),]
-
-      VARB.model <- VAR(BootDataF, p = sel$selection[1])
-      VARB1.model <- VAR(BootData1, p = sel$selection[1])
-      VARB2.model <- VAR(BootData2, p = sel$selection[1])
+      VARB.model <- VAR(xx, p = p)
+      VARB1.model <- VAR(sample1, p = p)
+      VARB2.model <- VAR(sample2, p = p)
+      ll <- nrow(xx) - p
 
       Sigma.1 <- (1/l1)*t(residuals(VARB1.model))%*%(residuals(VARB1.model))
       Sigma.2 <- (1/l2)*t(residuals(VARB2.model))%*%(residuals(VARB2.model))
@@ -129,13 +151,13 @@ chow.test <- function(Y, SB, p, nboot = 500, lags = 12, start = NULL, end = NULL
 
       lambda_bpB[i] <- (l1 + l2)*log(det(Sigma)) - l1*log(det(Sigma.1)) - l2*log(det(Sigma.2))
       lambda_spB[i] <- (l1 + l2)*(log(det(Sigma)) - log(det((1/(l1 + l2))*(l1*Sigma.1 + l2*Sigma.2))))
-
-      progress(i, nboot)
     }
 
+
+
     K <- VAR.model$K
-    df_bp <- sel$selection[1]*K^2 + K + (K*(K + 1))/2
-    df_sp <- sel$selection[1]*K^2 + K
+    df_bp <- p*K^2 + K + (K*(K + 1))/2
+    df_sp <- p*K^2 + K
 
     # obtainind critical values an p-values for both tests
     testcrit_bp <- quantile(lambda_bpB, probs = 0.95)
@@ -146,7 +168,12 @@ chow.test <- function(Y, SB, p, nboot = 500, lags = 12, start = NULL, end = NULL
     EmpDist_sp <- ecdf(lambda_spB)
     p.value_sp <- 1 - EmpDist_sp(lambda_sp)
 
-    return(list(lambda_bp, testcrit_bp, p.value_bp,
-                lambda_sp, testcrit_sp, p.value_sp))
+    return(list(lambda_bp,    # Teststatistik for break point test
+                testcrit_bp,  # critical value for 95% quantile
+                p.value_bp,   # p-value
+                lambda_sp,    # teststatistik for sample split
+                testcrit_sp,  # critical value for 95% quantile
+                p.value_sp    # p-value
+                ))
 
 }
