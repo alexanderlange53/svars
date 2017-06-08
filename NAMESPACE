@@ -3,6 +3,7 @@
 S3method(summary,svars)
 export(chow.test)
 export(id.cv)
+export(id.ldi)
 export(id.ngml)
 export(imrf)
 export(mb.boot)
