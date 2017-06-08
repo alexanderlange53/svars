@@ -3,6 +3,10 @@
 getStructuralBreak <- function(SB, dateVector = NULL, start = NULL, end = NULL,
                                    frequency = NULL, format = NULL){
 
+  if(format = NULL){
+    stop("Format is missing with no default")
+  }
+
 if(is.null(dateVector) & is.null(start) & is.null(end)){
 
   stop("Please provide either a valid number of observation or proper date specifications")
