@@ -114,8 +114,10 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1){
 
     if(x$method == "Non-Gaussian maximum likelihood"){
       temp <- id.ngml(varb, stage3 = x$stage3)
-    }else{
+    }else if(x$method == "Changes in Volatility"){
       temp <- id.cv(varb, SB = x$SB)
+    }else{
+      temp <- id.ldi(varb)
     }
 
     Pstar <- temp$B
