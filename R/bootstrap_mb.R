@@ -91,12 +91,12 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1){
     epsilon.star <- do.call('rbind', epsilon.star)
 
     # centering new errors
-    for(s in 1:b.length){
-      b.mean <- colSums(epsilon.star[1 : (s+(obs - b.length)),])/(obs - b.length +1)
-      for(j in 0:floor(N)){
-        epsilon.star[j*b.length + s,] <- epsilon.star[j*b.length + s,] - b.mean
-      }
-    }
+    # for(s in 1:b.length){
+    #   b.mean <- colSums(epsilon.star[1 : (s+(obs - b.length)),])/(obs - b.length +1)
+    #   for(j in 0:floor(N)){
+    #     epsilon.star[j*b.length + s,] <- epsilon.star[j*b.length + s,] - b.mean
+    #   }
+    # }
 
     # cutting of unnecessary observations
     epsilon.star <- epsilon.star[1:obs,]
@@ -131,16 +131,38 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1){
     temp$B <- Pstar
 
     ip <- imrf(temp, horizon = horizon)
-    return(ip)
+    return(list(ip, Pstar))
   }
 
   bootstraps <- pblapply(errors, bootf, cl = nc)
+
+  Bs <- array(0, c(k,k,nboot))
+  ipb <- list()
+  for(i in 1:nboot){
+    Bs[,,i] <- bootstraps[[i]][[2]]
+    ipb[[i]] <- bootstraps[[i]][[1]]
+  }
+
+  # Calculating Standard errors for LDI methods
+  if(x$method == "Least dependent innovations"){
+    SE <- matrix(0,k,k)
+    for(i in 1:k){
+      for(j in 1:k){
+        SE[i,j] <-  sum((Bs[i,j,] - sum(Bs[i,j,])/nboot)^2)/nboot
+      }
+    }
+
+    SE <- sqrt(SE)
+  }else{
+    SE <- NULL
+  }
 
   ## Impulse response of actual model
   ip <- imrf(x, horizon = horizon)
 
   result <- list(true = ip,
-                 bootstrap = bootstraps)
+                 bootstrap = ipb,
+                 SE = SE)
   class(result) <- 'boot'
   return(result)
 }

@@ -91,7 +91,7 @@ wild.boot <- function(x, radermacher = FALSE, horizon, nboot, nc){
     Ystar <- t(A %*% Z + Ustar1)
     varb <- VAR(Ystar, p = p)
 
-    Sigma_u_star <- crossprod(residuals(varb))/(obs - 1 - k * p)
+    Sigma_u_star <- crossprod(residuals(varb))/(ncol(Ustar1) - 1 - k * p)
 
     if(x$method == "Non-Gaussian maximum likelihood"){
       temp <- id.ngml(varb, stage3 = x$stage3)
@@ -112,16 +112,37 @@ wild.boot <- function(x, radermacher = FALSE, horizon, nboot, nc){
     temp$B <- Pstar
 
     ip <- imrf(temp, horizon = horizon)
-    return(ip)
+    return(list(ip, Pstar))
   }
 
   bootstraps <- pblapply(errors, bootf, cl = nc)
 
+  Bs <- array(0, c(k,k,nboot))
+  ipb <- list()
+  for(i in 1:nboot){
+    Bs[,,i] <- bootstraps[[i]][[2]]
+    ipb[[i]] <- bootstraps[[i]][[1]]
+  }
+
+  # Calculating Standard errors for LDI methods
+  if(x$method == "Least dependent innovations"){
+    SE <- matrix(0,k,k)
+    for(i in 1:k){
+      for(j in 1:k){
+        SE[i,j] <-  sum((Bs[i,j,] - sum(Bs[i,j,])/nboot)^2)/nboot
+      }
+    }
+
+    SE <- sqrt(SE)
+  }else{
+    SE <- NULL
+  }
   ## Impulse response of actual model
   ip <- imrf(x, horizon = horizon)
 
   result <- list(true = ip,
-                 bootstrap = bootstraps)
+                 bootstrap = ipb,
+                 SE = SE)
   class(result) <- 'boot'
   return(result)
 }
