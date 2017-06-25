@@ -76,7 +76,7 @@ id.cvm <- function(x, iter = 500, dd = NULL, cores = 1){
   ########### starting the computations ------------------------------------------------------------------------
 
   # Defining number of starting rotation angles
-  theta_rot <- matrix(runif(k*iter, 0, (pi*2)), k, iter)
+  theta_rot <- matrix(runif((k*(k-1)/2)*iter, 0, pi), (k*(k-1)/2), iter)
 
   # start vectors for iterative optimization approach
   startvec_list <- as.list(as.data.frame(theta_rot))
@@ -98,7 +98,7 @@ id.cvm <- function(x, iter = 500, dd = NULL, cores = 1){
 
     erg_list <- pblapply(X = startvec_list,
                        FUN = optim,
-                       fn = testlik_3dim,
+                       fn = testlik,
                        gr = NULL,
                        faklow = faklow1,
                        u = u,
