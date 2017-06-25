@@ -118,7 +118,7 @@ id.cvm <- function(x, iter = 500, dd = NULL, cores = 1){
 
     # calculating B matrix with optimal rotation angle
     par_min <- params[ , which.min(logliks)]
-    B_hat <- rmat(par_min, u, faklow1)
+    B_hat <- rmat(par_min, faklow1)
 
     logs <- logliks/(10000000)
   # obtaining VAR parameter

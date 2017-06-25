@@ -39,7 +39,7 @@ testlik_3dim <- function(theta, faklow, u, dd){
 
 
 # function to compute the optimal B matrix
-rotmat_3dim <- function(pv, y, faklow){
+rotmat_3dim <- function(pv, faklow){
 
   pos <- pv[1]
   rotmat12 <- diag(3)
