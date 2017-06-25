@@ -7,6 +7,8 @@
 #'@param horizon Time horizon of impulse response functions
 #'@param nboot Number of bootstrap iterations
 #'@param nc Number of processor cores (Not available on windows machines)
+#'@param dd object of class 'indepTestDist'. A simulated independent sample of the same size as the data. If not supplied the function calculates it
+#'@param iter number of randomized starting points for optimization
 #'
 #' @examples
 #' \dontrun{
@@ -31,12 +33,14 @@
 #'@export
 
 
-mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1){
+mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, iter = 300){
   # x: vars object
   # B: estimated covariance matrix from true data set
   # horizon: Time horizon for Irf
   # nboot: number of bootstrap replications
-
+  if(x$method == 'CvM' & is.null(dd)){
+    dd <- copula::indepTestSim(Tob, k, verbose=F)
+  }
 
   # function to create Z matrix
   y_lag_cr <- function(y, lag_length){
@@ -91,12 +95,12 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1){
     epsilon.star <- do.call('rbind', epsilon.star)
 
     # centering new errors
-    # for(s in 1:b.length){
-    #   b.mean <- colSums(epsilon.star[1 : (s+(obs - b.length)),])/(obs - b.length +1)
-    #   for(j in 0:floor(N)){
-    #     epsilon.star[j*b.length + s,] <- epsilon.star[j*b.length + s,] - b.mean
-    #   }
-    # }
+    for(s in 1:b.length){
+      b.mean <- colSums(epsilon.star[1 : (s+(obs - b.length)),])/(obs - b.length +1)
+      for(j in 0:floor(N)){
+        epsilon.star[j*b.length + s,] <- epsilon.star[j*b.length + s,] - b.mean
+      }
+    }
 
     # cutting of unnecessary observations
     epsilon.star <- epsilon.star[1:obs,]
@@ -116,6 +120,8 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1){
       temp <- id.ngml(varb, stage3 = x$stage3)
     }else if(x$method == "Changes in Volatility"){
       temp <- id.cv(varb, SB = x$SB)
+    }else if(x$method == "CvM"){
+      temp <- id.cvm(varb, iter = iter, cores = 1, dd)
     }else{
       temp <- id.ldi(varb)
     }
