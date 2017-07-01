@@ -6,9 +6,9 @@ wald.test <- function(Lambda, Sigma, restrictions){
 
   k <- length(diag(Lambda))
 
-  kList <- combn(1:k, 2)
+  kList <- matrix(combn(1:k, 2), nrow = 2)
 
-  betas <- combn(diag(Lambda), 2)
+  betas <- matrix(combn(diag(Lambda), 2), nrow = 2)
 
   sigmas <- apply(kList, 2, function(x){
     diag(Sigma[c(k * k + x[1] - restrictions, k * k + x[2] - restrictions), c(k * k + x[1] - restrictions, k * k + x[2] - restrictions)])
@@ -26,7 +26,7 @@ wald.test <- function(Lambda, Sigma, restrictions){
     round((betas[, x]%*%c(1, -1))^2 / (sum(sigmas[,x]) - 2 * covS[x]),2)
   })
 
-  combinations = combn(1:k,2)
+  combinations = matrix(combn(1:k,2), nrow = 2)
 
   H.Null = apply(combinations, 2, FUN = function(x){
     paste("lambda_", x[1], "=", "lambda_", x[2], sep = "")
