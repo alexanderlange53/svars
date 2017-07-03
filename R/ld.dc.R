@@ -1,4 +1,4 @@
-#' Least dependent innovations identification
+#' Least dependent innovations identification based on distance covariance matrix
 #'
 #' Identify the instantaneous response matrix B in SVAR models based on least dependent innovations.
 #'
@@ -19,7 +19,7 @@
 #' # i = interest rates
 #' set.seed(23211)
 #' v1 <- VAR(USA, lag.max = 10, ic = "AIC" )
-#' x1 <- id.ldi(v1)
+#' x1 <- id.dc(v1)
 #' summary(x1)
 #'
 #' # switching columns according to sign pattern
@@ -38,7 +38,7 @@
 ## Identification via least dependent innovations ##
 #--------------------------------------------------#
 
-id.ldi <- function(x){
+id.dc <- function(x){
 
   # getting informations from VAR estimation
   u <- residuals(x)
@@ -95,7 +95,7 @@ id.ldi <- function(x){
 
   result <- list(B = P,       # estimated B matrix (unique decomposition of the covariance matrix)
               A_hat = A_hat,  # estimated VAR parameter
-              method =        "Least dependent innovations",
+              method =        "DC",
               obs = Tob,      # number of observations
               type = type,    # type of the VAR model e.g 'const'
               y = x$y,        # Data

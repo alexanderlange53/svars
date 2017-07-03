@@ -4,7 +4,8 @@
 \alias{wild.boot}
 \title{Bootstrap for IRFs of identified SVARs}
 \usage{
-wild.boot(x, radermacher = FALSE, horizon, nboot, nc)
+wild.boot(x, radermacher = FALSE, horizon, nboot, nc, dd = NULL,
+  iter = 300)
 }
 \arguments{
 \item{x}{SVAR object of class "svars"}
@@ -16,6 +17,10 @@ wild.boot(x, radermacher = FALSE, horizon, nboot, nc)
 \item{nboot}{Number of bootstrap iterations}
 
 \item{nc}{Number of processor cores (Not available on windows machines)}
+
+\item{dd}{object of class 'indepTestDist'. A simulated independent sample of the same size as the data. If not supplied the function calculates it}
+
+\item{iter}{number of randomized starting points for optimization}
 }
 \description{
 Calculating confidance bands for impulse response functions via wild bootsrap techniques

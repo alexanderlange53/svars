@@ -4,7 +4,7 @@
 \alias{mb.boot}
 \title{Bootstrap for IRFs of identified SVARs}
 \usage{
-mb.boot(x, b.length = 15, horizon, nboot, nc = 1)
+mb.boot(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, iter = 300)
 }
 \arguments{
 \item{x}{SVAR object of class "svars"}
@@ -16,6 +16,10 @@ mb.boot(x, b.length = 15, horizon, nboot, nc = 1)
 \item{nboot}{Number of bootstrap iterations}
 
 \item{nc}{Number of processor cores (Not available on windows machines)}
+
+\item{dd}{object of class 'indepTestDist'. A simulated independent sample of the same size as the data. If not supplied the function calculates it}
+
+\item{iter}{number of randomized starting points for optimization}
 }
 \description{
 Calculating confidance bands for impulse response via moving block bootsrap

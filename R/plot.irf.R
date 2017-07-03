@@ -1,6 +1,6 @@
 #' @export
 
-plot.irf <- function(x, scales = "fixed", ..., base){
+plot.irf <- function(x, scales = "free_y", ..., base){
 
   impulse <- melt(x$irf, id = 'V1')
   ggplot(impulse, aes(x = V1, y = value)) + geom_line() + geom_hline(yintercept = 0, color = 'red') +

@@ -7,6 +7,8 @@
 #'@param horizon Time horizon of impulse response functions
 #'@param nboot Number of bootstrap iterations
 #'@param nc Number of processor cores (Not available on windows machines)
+#'@param dd object of class 'indepTestDist'. A simulated independent sample of the same size as the data. If not supplied the function calculates it
+#'@param iter number of randomized starting points for optimization
 #'
 #' @examples
 #' \dontrun{
@@ -32,12 +34,15 @@
 #'@export
 
 
-wild.boot <- function(x, radermacher = FALSE, horizon, nboot, nc){
+wild.boot <- function(x, radermacher = FALSE, horizon, nboot, nc, dd = NULL, iter = 300){
   # x: vars object
   # B: estimated covariance matrix from true data set
   # radermacher: wether the bootstraop work with radermacher distance
   # horizon: Time horizon for Irf
   # nboot: number of bootstrap replications
+  if(x$method == 'CvM' & is.null(dd)){
+    dd <- copula::indepTestSim(Tob, k, verbose=F)
+  }
 
 
   # function to create Z matrix
@@ -97,6 +102,8 @@ wild.boot <- function(x, radermacher = FALSE, horizon, nboot, nc){
       temp <- id.ngml(varb, stage3 = x$stage3)
     }else if(x$method == "Changes in Volatility"){
       temp <- id.cv(varb, SB = x$SB)
+    }else if(x$method == "CvM"){
+      temp <- id.cvm(varb, iter = iter, cores = 1, dd)
     }else{
       temp <- id.ldi(varb)
     }
