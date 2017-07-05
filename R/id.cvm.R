@@ -81,17 +81,6 @@ id.cvm <- function(x, iter = 500, dd = NULL, cores = 1){
   # start vectors for iterative optimization approach
   startvec_list <- as.list(as.data.frame(theta_rot))
 
-    if(k == 3){
-      testlik <- testlik_3dim
-      rmat <- rotmat_3dim
-    }else if(k == 4){
-      testlik <- testlik_4dim
-      rmat <- rotmat_4dim
-    }else if(k == 5){
-      testlik <- testlik_5dim
-      rmat <- rotmat_5dim
-    }
-
     if(is.null(dd)){
       dd <- indepTestSim(Tob, k, verbose=F)
     }
@@ -103,9 +92,9 @@ id.cvm <- function(x, iter = 500, dd = NULL, cores = 1){
                        faklow = faklow1,
                        u = u,
                        dd = dd,
-                       method = "Nelder-Mead",
-                       lower = -Inf,
-                       upper = Inf,
+                       method = ifelse(k == 2, "Brent", "Nelder-Mead"),
+                       lower = ifelse(k == 2, -.Machine$double.xmax/2, -Inf),
+                       upper = ifelse(k == 2, .Machine$double.xmax/2, Inf),
                        control = list(maxit = 1000),
                        hessian = FALSE, cl = cores)
 
@@ -114,11 +103,11 @@ id.cvm <- function(x, iter = 500, dd = NULL, cores = 1){
     logliks <- sapply(erg_list, "[[", "value")
 
     # print corresponding parameter vectors column-wise in a matrix
-    params <- sapply(erg_list, "[[", "par")
+    params <- sapply(erg_list, "[[", "par", simplify = FALSE)
 
     # calculating B matrix with optimal rotation angle
-    par_min <- params[ , which.min(logliks)]
-    B_hat <- rmat(par_min, faklow1)
+    par_min <- params[[which.min(logliks)]]
+    B_hat <- rotmat(par_min, faklow1)
 
     logs <- logliks/(10000000)
   # obtaining VAR parameter
