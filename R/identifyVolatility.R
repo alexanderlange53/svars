@@ -5,7 +5,7 @@ identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, restriction_ma
   MLE<- NULL
   counter2 <- 0
   #restriction_matrix = restriction_matrix
-while(is.null(MLE) & counter2 < 5000){
+while(is.null(MLE) & counter2 < 10000){
   MW <- -1
   while(MW < 0.5){
     B <- suppressMessages(expm::sqrtm((1/Tob)* crossprod(u_t))) + matrix(runif(k*k), nrow = k, byrow = T)
@@ -38,7 +38,7 @@ while(is.null(MLE) & counter2 < 5000){
       MLE <- NULL
     }
   }
-  if(counter2 == 5000){
+  if(counter2 == 10000){
     cat('Algorithm does not converge')
   }
 }
@@ -129,7 +129,7 @@ while(abs(Exit) > 0.01 & counter < max.iter){
   # Determine starting values for B and Lambda
   MLEgls <- NULL
   counter2 <- 0
-  while(is.null(MLEgls) & counter2 < 5000){
+  while(is.null(MLEgls) & counter2 < 10000){
     MW <- -1
     #MW2 <- -1
     while(MW < 0.5){
@@ -162,7 +162,7 @@ while(abs(Exit) > 0.01 & counter < max.iter){
         MLE <- NULL
       }
     }
-    if(counter2 == 5000){
+    if(counter2 == 10000){
       cat('Algorithm does not converge')
     }
   }
