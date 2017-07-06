@@ -28,6 +28,16 @@ while(is.null(MLE) & counter2 < 5000){
          restrictions = restrictions),
     error = function(e) NULL)
   counter2 <- counter2 + 1
+  if(!is.null(MLE)){
+    if(!is.null(restriction_matrix)){
+        Lam <- diag(MLE$par[(sum(naElements) + 1):length(MLE$par)])
+    }else{
+      Lam <- diag(MLE$par[(k*k+1):(k*k+k)])
+    }
+    if(any(Lam < 0)){
+      MLE <- NULL
+    }
+  }
   if(counter2 == 5000){
     cat('Algorithm does not converge')
   }
@@ -142,6 +152,16 @@ while(abs(Exit) > 0.01 & counter < max.iter){
             Sigma_hat2 = Sigma_hat2gls, Tob = Tob, method = 'L-BFGS-B', hessian = T, restriction_matrix = restriction_matrix, restrictions = restrictions),
       error = function(e) NULL)
     counter2 <- counter2 + 1
+    if(!is.null(MLE)){
+      if(!is.null(restriction_matrix)){
+        Lam <- diag(MLE$par[(sum(naElements) + 1):length(MLE$par)])
+      }else{
+        Lam <- diag(MLE$par[(k*k+1):(k*k+k)])
+      }
+      if(any(Lam < 0)){
+        MLE <- NULL
+      }
+    }
     if(counter2 == 5000){
       cat('Algorithm does not converge')
     }
