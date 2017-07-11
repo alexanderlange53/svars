@@ -62,12 +62,14 @@ imrf <- function(x, horizon = 20){
   IR <- IrF(A_hat, B_hat, horizon)
 
   impulse <- matrix(0, ncol = dim(IR)[2]^2 + 1, nrow = dim(IR)[3])
+  colnames(impulse) <- rep("V1", ncol(impulse))
   cc <- 1
   impulse[,1] <- seq(1, dim(IR)[3])
   for(i in 1:dim(IR)[2]){
     for(j in 1:dim(IR)[2]){
       cc <- cc + 1
       impulse[,cc] <- IR[i,j,]
+      colnames(impulse)[cc] <- paste("shock", j, "->", colnames(x$y)[i])
     }
   }
   impulse <- list(irf = as.data.frame(impulse))
