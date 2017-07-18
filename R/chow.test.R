@@ -1,13 +1,13 @@
 #' Chow Test for Structural Break
 #'
-#' The Chow test is applied to a time series with a presupposed structural break.
+#' The Chow test is applied to a multivariate time series with a presupposed structural break.
 #'
 #' @param Y Data of multivariate time series
 #' @param SB Integer or date character. The structural break is specified either by an integer (number of observations in the pre-break period) or
 #'                    a date character. If a date character is provided, either a date vector containing the whole time line
-#'                    in the corresponding format (see examples) or common time parameters need to be provided
+#'                    in the corresponding format or common time parameters need to be provided
 #' @param p Integer. Number of lags.
-#' @param nboot Number of bootrstrap iterations to calculate quantiles and p-values
+#' @param nboot Integer. Number of bootstrap iterations to calculate quantiles and p-values
 #' @param rademacher If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples
 #' @param dateVector Vector. Vector of time periods containing SB in corresponding format
 #' @param start Character. Start of the time series (only if dateVector is empty)
@@ -181,10 +181,10 @@ chow.test <- function(Y, SB, p, nboot = 500, rademacher="FALSE",start = NULL, en
     EmpDist_sp <- ecdf(lambda_spB)
     p.value_sp <- 1 - EmpDist_sp(lambda_sp)
 
-    return(list(lambda_bp,    # test statistik for break point test
+    return(list(lambda_bp,    # test statistic for break point test
                 testcrit_bp,  # critical value for 95% quantile
                 p.value_bp,   # p-value
-                lambda_sp,    # test statistik for sample split
+                lambda_sp,    # test statistic for sample split
                 testcrit_sp,  # critical value for 95% quantile
                 p.value_sp    # p-value
                 ))
