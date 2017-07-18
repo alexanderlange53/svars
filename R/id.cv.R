@@ -28,7 +28,7 @@
 #' \item{SB}{Structural break (number of observations)}
 #' \item{SBcharacter}{Structural break (date; if provided in function arguments)}
 #'
-#' @references
+#' @references Rigobon, R., 2003. Identification through Heteroskedasticity The Review of Economics and Statistics, 85, 777-792.
 #'
 #' @examples
 #' \dontrun{

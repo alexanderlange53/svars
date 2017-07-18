@@ -2,17 +2,17 @@
 #'
 #' The Chow test is applied to a time series with a presupposed structural break.
 #'
-#' @param Y Data
-#' @param SB integer. Structural break: either of type integer (number of observations in the pre-break period) or
-#'                    date character. If a date character is provided, either a date vector containing the whole time line
-#'                    in the corresponding format or conventional time parameters need to be provided
-#' @param nboot number of bootrstrap iterations to obtain quantiles and p-values
+#' @param Y Data of multivariate time series
+#' @param SB Integer or date character. The structural break is specified either by an integer (number of observations in the pre-break period) or
+#'                    a date character. If a date character is provided, either a date vector containing the whole time line
+#'                    in the corresponding format (see examples) or common time parameters need to be provided
+#' @param nboot Number of bootrstrap iterations to calculate quantiles and p-values
 #' @param lags  Maximum number of lag order
-#' @param dateVector vector. Vector of all time periods containing SB in corresponding format
-#' @param start character. Start of the time series (only if dateVector is empty)
-#' @param end character. End of the time series (only if dateVector is empty)
-#' @param frequency character. Frequency of the time series (only if dateVector is empty)
-#' @param format character. Date format (only if dateVector is empty)
+#' @param dateVector Vector. Vector of time periods containing SB in corresponding format
+#' @param start Character. Start of the time series (only if dateVector is empty)
+#' @param end Character. End of the time series (only if dateVector is empty)
+#' @param frequency Character. Frequency of the time series (only if dateVector is empty)
+#' @param format Character. Date format (only if dateVector is empty)
 #'
 #' @return A list with elements
 #' \item{lambda_bp}{Test statistic of the Chow test with break point}
@@ -22,7 +22,7 @@
 #' \item{testcrit_sp}{Critival value of the test statistic lambda_sp}
 #' \item{p.value_sp}{p-value of the test statistic lambda_sp}
 #'
-#' @references
+#' @references Lütkepohl, H., 2005. New introduction to multiple time series analysis Springer-Verlag, Berlin.
 #'
 #' @export
 #'
@@ -107,7 +107,7 @@ chow.test <- function(Y, SB, p, nboot = 500, start = NULL, end = NULL,
     TB <- l1
 
 
-    # bootstrapping the teststatistic to obtain empirical distribution
+    # bootstrapping the test statistic to obtain empirical distribution
     # obtaining VAR parameter
     coef_x <- coef(VAR.model)
     type <- VAR.model$type
