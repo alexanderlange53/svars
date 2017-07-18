@@ -2,17 +2,17 @@
 #'
 #' The Chow test is applied to a time series with a presupposed structural break.
 #'
-#' @param Y Data
-#' @param SB integer. Structural break: either of type integer (number of observations in the pre-break period) or
-#'                    date character. If a date character is provided, either a date vector containing the whole time line
-#'                    in the corresponding format or conventional time parameters need to be provided
-#' @param nboot ??
+#' @param Y Data of multivariate time series
+#' @param SB Integer or date character. The structural break is specified either by an integer (number of observations in the pre-break period) or
+#'                    a date character. If a date character is provided, either a date vector containing the whole time line
+#'                    in the corresponding format (see examples) or common time parameters need to be provided
+#' @param nboot Number of bootstrap iterations
 #' @param lags  Maximum number of lag order
-#' @param dateVector vector. Vector of all time periods containing SB in corresponding format
-#' @param start character. Start of the time series (only if dateVector is empty)
-#' @param end character. End of the time series (only if dateVector is empty)
-#' @param frequency character. Frequency of the time series (only if dateVector is empty)
-#' @param format character. Date format (only if dateVector is empty)
+#' @param dateVector Vector. Vector of time periods containing SB in corresponding format
+#' @param start Character. Start of the time series (only if dateVector is empty)
+#' @param end Character. End of the time series (only if dateVector is empty)
+#' @param frequency Character. Frequency of the time series (only if dateVector is empty)
+#' @param format Character. Date format (only if dateVector is empty)
 #' 
 #' @return A list with elements
 #' \item{lambda_bp}{Test statistic of the Chow test with break point}
@@ -22,7 +22,8 @@
 #' \item{testcrit_sp}{Critival value of the test statistic lambda_sp}
 #' \item{p.value_sp}{p-value of the test statistic lambda_sp}
 #' 
-#' @references 
+#' @references Lütkepohl, H., 2005. New introduction to multiple time series analysis Springer-Verlag, Berlin.
+#' 
 #' 
 #' @export
 #'
@@ -37,7 +38,7 @@
 
 chow.test <- function(Y, SB, nboot = 500, lags = 12, start = NULL, end = NULL,
                       frequency = NULL, format = NULL, dateVector = NULL){
-  # Null Hypothesis of no Sample Split is rejected for large lambda
+  # Null hypothesis of no sample split is rejected for large values of lambda
 
   if(!is.numeric(SB)){
 
@@ -83,7 +84,7 @@ chow.test <- function(Y, SB, nboot = 500, lags = 12, start = NULL, end = NULL,
     sel$selection[1] <- sel$selection[1] + 1
   }
 
-  # estimating VAR for pre and post SB and for full series
+  # estimating VAR for pre and post SB and for the full series
   VAR.model <- VAR(Full, p = sel$selection[1])
   VAR1.model <- VAR(sample1, p = sel$selection[1])
   VAR2.model <- VAR(sample2, p = sel$selection[1])
@@ -100,8 +101,8 @@ chow.test <- function(Y, SB, nboot = 500, lags = 12, start = NULL, end = NULL,
     (1/l2)*t(residuals(VAR.model)[(ll-l2+1):ll,])%*%(residuals(VAR.model)[(ll-l2+1):ll,])
 
   # calculating the test statistic
-  # lambda_bp : teststatistic for break point (tests for change in covariance in addition)
-  # lambda_SP : teststatistic for structural break (tests only for parameter change)
+  # lambda_bp : test statistic for break point (tests for change in covariance in addition)
+  # lambda_SP : test statistic for structural break (tests only for parameter change)
   lambda_bp <- (l1 + l2)*log(det(Sigma)) - l1*log(det(Sigma.1)) - l2*log(det(Sigma.2))
   lambda_sp <- (l1 + l2)*(log(det(Sigma)) - log(det((1/(l1 + l2))*(l1*Sigma.1 + l2*Sigma.2))))
 
@@ -110,7 +111,7 @@ chow.test <- function(Y, SB, nboot = 500, lags = 12, start = NULL, end = NULL,
     lambda_spB <- rep(NA, nboot)
     TB <- l1
 
-    # bootstrapping the teststatistic to obtain empirical distribution
+    # bootstrapping the test statistic to obtain the empirical distribution
     for(i in 1:nboot){
       A_hatF <- CoeffMat(VAR.model)
       residF <- residuals(VAR.model)
@@ -138,7 +139,7 @@ chow.test <- function(Y, SB, nboot = 500, lags = 12, start = NULL, end = NULL,
     df_bp <- sel$selection[1]*K^2 + K + (K*(K + 1))/2
     df_sp <- sel$selection[1]*K^2 + K
 
-    # obtainind critical values an p-values for both tests
+    # obtaining critical values and p-values for both tests
     testcrit_bp <- quantile(lambda_bpB, probs = 0.95)
     EmpDist_bp <- ecdf(lambda_bpB)
     p.value_bp <- 1 - EmpDist_bp(lambda_bp)

@@ -1,17 +1,17 @@
 #' Changes in Volatility Identification
 #'
-#' Identify instantaneous repsonse matrix B in SVAR models based on changes in volatility.
+#' Identify instantaneous response matrix B in SVAR models based on changes in volatility.
 #'
 #' @param x VAR-object. (S)VAR model to be identified
-#' @param SB Integer. Structural break: either of type integer (number of observations in the pre-break period) or
-#'                    date character. If a date character is provided, either a date vector containing the whole time line
-#'                    in the corresponding format or conventional time parameters need to be provided
-#' @param dateVector Vector. Vector of all time periods containing SB in corresponding format
+#' @param SB Integer or date character. The structural break is specified either by an integer (number of observations in the pre-break period) or
+#'                    a date character. If a date character is provided, either a date vector containing the whole time line
+#'                    in the corresponding format (see examples) or common time parameters need to be provided
+#' @param dateVector Vector. Vector of time periods containing SB in corresponding format
 #' @param start Character. Start of the time series (only if dateVector is empty)
 #' @param end Character. End of the time series (only if dateVector is empty)
 #' @param frequency Character. Frequency of the time series (only if dateVector is empty)
 #' @param format Character. Date format (only if dateVector is empty)
-#' @param restriction_matrix Matrix. A matrix containing presupposed Values, NA if no restriction is imposed (values to be estimated)
+#' @param restriction_matrix Matrix. A matrix containing presupposed values for matrix B, NA if no restriction is imposed (values to be estimated)
 #' @param max.iter Integer. Number of maximum GLS iterations
 #' @param crit Integer. Critical value for the precision of the GLS estimation
 #' @return A list of class "svars" with elements
@@ -28,7 +28,7 @@
 #' \item{SB}{Structural break (number of observations)}
 #' \item{SBcharacter}{Structural break (date; if provided in function arguments)}
 #'
-#' @references 
+#' @references Rigobon, R., 2003. Identification through Heteroskedasticity The Review of Economics and Statistics, 85, 777-792.
 #'
 #' @examples
 #' \dontrun{
