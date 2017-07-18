@@ -3,7 +3,7 @@
 #'Calculating confidance bands for impulse response functions via wild bootsrap techniques
 #'
 #'@param x SVAR object of class "svars"
-#'@param radermacher If radermacher="TRUE", the radermacher distribution is used to generate the bootstrap samples
+#'@param rademacher If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples
 #'@param horizon Time horizon of impulse response functions
 #'@param nboot Number of bootstrap iterations
 #'@param nc Number of processor cores (Not available on windows machines)
@@ -26,7 +26,7 @@
 #' x1$B[,3] <- x1$B[,3]*(-1)
 #'
 #' # impulse response analysis with confidence bands
-#' bb <- wild.boot(x1, radermacher = T, nboot = 100, horizon = 30)
+#' bb <- wild.boot(x1, rademacher = T, nboot = 100, horizon = 30)
 #' plot(bb, lowerq = 0.16, upperq = 0.84)
 #' }
 #'
@@ -34,10 +34,10 @@
 #'@export
 
 
-wild.boot <- function(x, radermacher = FALSE, horizon, nboot, nc, dd = NULL, iter = 300){
+wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc, dd = NULL, iter = 300){
   # x: vars object
   # B: estimated covariance matrix from true data set
-  # radermacher: wether the bootstraop work with radermacher distance
+  # rademacher: wether the bootstraop work with rademacher distance
   # horizon: Time horizon for Irf
   # nboot: number of bootstrap replications
   if(x$method == 'CvM' & is.null(dd)){
@@ -84,7 +84,7 @@ wild.boot <- function(x, radermacher = FALSE, horizon, nboot, nc, dd = NULL, ite
   for(i in 1:nboot){
     ub <- u
     my <- rnorm(n = ncol(y))
-    if (radermacher == TRUE) {
+    if (rademacher == TRUE) {
       my <- (my > 0) - (my < 0)
     }
     errors[[i]] <- ub * my
