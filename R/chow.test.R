@@ -6,8 +6,9 @@
 #' @param SB Integer or date character. The structural break is specified either by an integer (number of observations in the pre-break period) or
 #'                    a date character. If a date character is provided, either a date vector containing the whole time line
 #'                    in the corresponding format (see examples) or common time parameters need to be provided
+#' @param p Integer. Number of lags.
 #' @param nboot Number of bootrstrap iterations to calculate quantiles and p-values
-#' @param lags  Maximum number of lag order
+#' @param rademacher If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples
 #' @param dateVector Vector. Vector of time periods containing SB in corresponding format
 #' @param start Character. Start of the time series (only if dateVector is empty)
 #' @param end Character. End of the time series (only if dateVector is empty)
@@ -35,7 +36,7 @@
 # nboot : number of bootstrap iterations
 # lags  : maximum lag order
 
-chow.test <- function(Y, SB, p, nboot = 500, start = NULL, end = NULL,
+chow.test <- function(Y, SB, p, nboot = 500, rademacher="FALSE",start = NULL, end = NULL,
                       frequency = NULL, format = NULL, dateVector = NULL){
   # Null hypothesis of no sample split is rejected for large values of lambda
 
@@ -136,7 +137,7 @@ chow.test <- function(Y, SB, p, nboot = 500, start = NULL, end = NULL,
     for(i in 1:nboot){
       u <- residF
       my <- rnorm(n = ncol(Y))
-      if (radermacher == TRUE) {
+      if (rademacher == TRUE) {
         my <- (my > 0) - (my < 0)
       }
       et <- u * my
@@ -180,10 +181,10 @@ chow.test <- function(Y, SB, p, nboot = 500, start = NULL, end = NULL,
     EmpDist_sp <- ecdf(lambda_spB)
     p.value_sp <- 1 - EmpDist_sp(lambda_sp)
 
-    return(list(lambda_bp,    # Teststatistik for break point test
+    return(list(lambda_bp,    # test statistik for break point test
                 testcrit_bp,  # critical value for 95% quantile
                 p.value_bp,   # p-value
-                lambda_sp,    # teststatistik for sample split
+                lambda_sp,    # test statistik for sample split
                 testcrit_sp,  # critical value for 95% quantile
                 p.value_sp    # p-value
                 ))
