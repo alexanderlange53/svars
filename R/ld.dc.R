@@ -10,6 +10,8 @@
 #' \item{n}{Number of observations}
 #' \item{type}{Type of the VAR model, e.g. 'const'}
 #'
+#'@references Matteson, D. S. & Tsay, R. S., 2013. Independent Component Analysis via Distance Covariance, pre-print
+#'      Szekely, G. J.; Rizzo, M. L. & Bakirov, N. K., 2007. Measuring and testing dependence by correlation of distances Ann. Statist., 35, 2769-2794
 #'
 #' @examples
 #' \dontrun{
