@@ -34,11 +34,13 @@ summary.svars <- function(svarsObject, ...){
   print(svarsObject$B_SE)
   cat("\nPairwise Wald Test:\n")
   print(svarsObject$wald_statistic)
+  if(svarsObject$method ==  "Changes in Volatility"){
   if(svarsObject$restrictions > 0){
   cat("\nLikelihood Ratio Test Statistic:")
   cat(svarsObject$lRatioTestStatistic)
   cat(", p-value:")
   cat(svarsObject$lRatioTestPValue)
+    }
   }
   #cat("\nObserverd fisher information matrix:\n")
   #print(svarsObject$Fish)

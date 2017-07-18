@@ -4,19 +4,17 @@
 \alias{chow.test}
 \title{Chow Test for Structural Break}
 \usage{
-chow.test(Y, SB, nboot = 500, lags = 12, start = NULL, end = NULL,
+chow.test(Y, SB, p, nboot = 500, start = NULL, end = NULL,
   frequency = NULL, format = NULL, dateVector = NULL)
 }
 \arguments{
 \item{Y}{Data}
 
-\item{SB}{integer. Structural break either of type integer as the number of observations which belong to the pre-break period or
-Date character. If a date character is provided, either a date Vector which contains the time line of the data
-in corresponding format or then the conventional time parameters need to be provided.}
+\item{SB}{integer. Structural break: either of type integer (number of observations in the pre-break period) or
+date character. If a date character is provided, either a date vector containing the whole time line
+in the corresponding format or conventional time parameters need to be provided}
 
-\item{nboot}{??}
-
-\item{lags}{Maximum number of Lag order}
+\item{nboot}{number of bootrstrap iterations to obtain quantiles and p-values}
 
 \item{start}{character. Start of the time series (only if dateVector is empty)}
 
@@ -26,11 +24,22 @@ in corresponding format or then the conventional time parameters need to be prov
 
 \item{format}{character. Date format (only if dateVector is empty)}
 
-\item{dateVector}{vector. Vector of the time period concerned containing SB}
+\item{dateVector}{vector. Vector of all time periods containing SB in corresponding format}
+
+\item{lags}{Maximum number of lag order}
 }
 \value{
-A list of results
+A list with elements
+\item{lambda_bp}{Test statistic of the Chow test with break point}
+\item{testcrit_bp}{Critical value of the test statistic lambda_bp}
+\item{p.value_bp}{p-value of the test statistic lambda_bp}
+\item{lambda_sp}{Test statistic of the Chow test with sample split}
+\item{testcrit_sp}{Critival value of the test statistic lambda_sp}
+\item{p.value_sp}{p-value of the test statistic lambda_sp}
 }
 \description{
-The Chow test is applied to a time series an presupposed point of structural break.
+The Chow test is applied to a time series with a presupposed structural break.
+}
+\references{
+
 }

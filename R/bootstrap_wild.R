@@ -6,6 +6,9 @@
 #'@param radermacher If radermacher="TRUE", the radermacher distribution is used to generate the bootstrap samples
 #'@param horizon Time horizon of impulse response functions
 #'@param nboot Number of bootstrap iterations
+#'@param nc Number of processor cores (Not available on windows machines)
+#'@param dd object of class 'indepTestDist'. A simulated independent sample of the same size as the data. If not supplied the function calculates it
+#'@param iter number of randomized starting points for optimization
 #'
 #' @examples
 #' \dontrun{
@@ -31,12 +34,15 @@
 #'@export
 
 
-wild.boot <- function(x, radermacher = FALSE, horizon, nboot){
+wild.boot <- function(x, radermacher = FALSE, horizon, nboot, nc, dd = NULL, iter = 300){
   # x: vars object
   # B: estimated covariance matrix from true data set
   # radermacher: wether the bootstraop work with radermacher distance
   # horizon: Time horizon for Irf
   # nboot: number of bootstrap replications
+  if(x$method == 'CvM' & is.null(dd)){
+    dd <- copula::indepTestSim(Tob, k, verbose=F)
+  }
 
 
   # function to create Z matrix
@@ -71,14 +77,17 @@ wild.boot <- function(x, radermacher = FALSE, horizon, nboot){
   u <- t(y[-c(1:p),]) - A %*% Z
   Sigma_u_hat_old <- tcrossprod(u)/(obs - 1 - k * p)
 
+  ub <- u
+
   # creating new error terms
   errors <- list()
   for(i in 1:nboot){
+    ub <- u
     my <- rnorm(n = ncol(y))
     if (radermacher == TRUE) {
       my <- (my > 0) - (my < 0)
     }
-    errors[[i]] <- u * my
+    errors[[i]] <- ub * my
   }
 
   # Bootstrapfunction
@@ -87,12 +96,16 @@ wild.boot <- function(x, radermacher = FALSE, horizon, nboot){
     Ystar <- t(A %*% Z + Ustar1)
     varb <- VAR(Ystar, p = p)
 
-    Sigma_u_star <- crossprod(residuals(varb))/(obs - 1 - k * p)
+    Sigma_u_star <- crossprod(residuals(varb))/(ncol(Ustar1) - 1 - k * p)
 
     if(x$method == "Non-Gaussian maximum likelihood"){
-      temp <- id.ngml(varb)
-    }else{
+      temp <- id.ngml(varb, stage3 = x$stage3)
+    }else if(x$method == "Changes in Volatility"){
       temp <- id.cv(varb, SB = x$SB)
+    }else if(x$method == "CvM"){
+      temp <- id.cvm(varb, iter = iter, cores = 1, dd)
+    }else{
+      temp <- id.ldi(varb)
     }
 
     Pstar <- temp$B
@@ -106,16 +119,37 @@ wild.boot <- function(x, radermacher = FALSE, horizon, nboot){
     temp$B <- Pstar
 
     ip <- imrf(temp, horizon = horizon)
-    return(ip)
+    return(list(ip, Pstar))
   }
 
-  bootstraps <- pblapply(errors, bootf)
+  bootstraps <- pblapply(errors, bootf, cl = nc)
 
+  Bs <- array(0, c(k,k,nboot))
+  ipb <- list()
+  for(i in 1:nboot){
+    Bs[,,i] <- bootstraps[[i]][[2]]
+    ipb[[i]] <- bootstraps[[i]][[1]]
+  }
+
+  # Calculating Standard errors for LDI methods
+  if(x$method == "Least dependent innovations"){
+    SE <- matrix(0,k,k)
+    for(i in 1:k){
+      for(j in 1:k){
+        SE[i,j] <-  sum((Bs[i,j,] - sum(Bs[i,j,])/nboot)^2)/nboot
+      }
+    }
+
+    SE <- sqrt(SE)
+  }else{
+    SE <- NULL
+  }
   ## Impulse response of actual model
   ip <- imrf(x, horizon = horizon)
 
   result <- list(true = ip,
-                 bootstrap = bootstraps)
+                 bootstrap = ipb,
+                 SE = SE)
   class(result) <- 'boot'
   return(result)
 }

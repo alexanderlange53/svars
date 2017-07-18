@@ -145,8 +145,27 @@ id.ngml <- function(x, stage3 = FALSE){
   u <- residuals(x)
   p <- x$p
   Tob <- x$obs
-  k <-x$K
+  k <- x$K
   residY <- u
+
+  if (class(x) == "vec2var") {
+    # TODO: trend cases
+
+    coef_x <- vector("list", length = k)
+    names(coef_x) <- colnames(x$y)
+
+    for (i in seq_len(k)) {
+      for (j in seq_len(p)) coef_x[[i]] <- c(coef_x[[i]], x$A[[j]][i,])
+      coef_x[[i]] <- c(coef_x[[i]], x$deterministic[i,])
+    }
+
+    coef_x <- lapply(coef_x, matrix)
+
+    type <- "const"
+  } else {
+    coef_x <- coef(x)
+    type <- x$type
+  }
 
   # calculating the covariance matrix
   Sigma_hat <- crossprod(residY)/(Tob-1-k*p)
@@ -208,12 +227,12 @@ id.ngml <- function(x, stage3 = FALSE){
 
     A <- matrix(0, nrow = k, ncol = k*p)
     for(i in 1:k){
-      A[i,] <- coef(x)[[i]][1:(k*p),1]
+      A[i,] <- coef_x[[i]][1:(k*p),1]
     }
-    if(x$type == 'const'){
+    if(type == 'const'){
       v <- rep(1, k)
       for(i in 1:k){
-        v[i] <- coef(x)[[i]][(k*p+1), 1]
+        v[i] <- coef_x[[i]][(k*p+1), 1]
       }
       A <- cbind(v, A)
     }
@@ -225,12 +244,13 @@ id.ngml <- function(x, stage3 = FALSE){
   }else{
     A <- matrix(0, nrow = k, ncol = k*p)
     for(i in 1:k){
-      A[i,] <- coef(x)[[i]][1:(k*p),1]
+      A[i,] <- coef_x[[i]][1:(k*p),1]
     }
-    if(x$type == 'const'){
+    A_hat <- A
+    if(type == 'const'){
       v <- rep(1, k)
       for(i in 1:k){
-        v[i] <- coef(x)[[i]][(k*p+1), 1]
+        v[i] <- coef_x[[i]][(k*p+1), 1]
       }
       A_hat <- cbind(v, A)
     }
@@ -270,7 +290,7 @@ id.ngml <- function(x, stage3 = FALSE){
     }
   }
 
-  result <- list(B = B_hat_ord,          # estimated B matrix (unique decomposition of the covariance matrix)
+  result <- list(B = B_hat_ord,       # estimated B matrix (unique decomposition of the covariance matrix)
               sigma = sigma_est,      # estimated scale of the standardized B
               sigma_SE = sigma_SE,    # standard errors od the scale
               df = d_freedom,         # estimated degrees of freedom of the distribution
@@ -282,10 +302,11 @@ id.ngml <- function(x, stage3 = FALSE){
               Lik = -ll,              # value of maximum likelihood
               method = "Non-Gaussian maximum likelihood",
               obs = Tob,              # number of observations
-              type = x$type,          # type of the VAR model e.g 'const'
+              type = type,            # type of the VAR model e.g 'const'
               y = x$y,                # Data
               p = x$p,                # number of lags
-              K = x$K                 # number of time series
+              K = x$K,                # number of time series
+              stage3 = stage3
               )
          class(result) <- "svars"
          return(result)

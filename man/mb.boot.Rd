@@ -2,25 +2,31 @@
 % Please edit documentation in R/bootstrap_mb.R
 \name{mb.boot}
 \alias{mb.boot}
-\title{Bootstrapping procedure}
+\title{Bootstrap for IRFs of identified SVARs}
 \usage{
-mb.boot(x, b.length = 15, horizon, nboot)
+mb.boot(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, iter = 300)
 }
 \arguments{
 \item{x}{SVAR object of class "svars"}
 
-\item{b.length}{length of each block}
+\item{b.length}{Length of each block}
 
-\item{horizon}{Number of observations in time to be included in}
+\item{horizon}{Time horizon of impulse response functions}
 
 \item{nboot}{Number of bootstrap iterations}
+
+\item{nc}{Number of processor cores (Not available on windows machines)}
+
+\item{dd}{object of class 'indepTestDist'. A simulated independent sample of the same size as the data. If not supplied the function calculates it}
+
+\item{iter}{number of randomized starting points for optimization}
 }
 \description{
 Calculating confidance bands for impulse response via moving block bootsrap
 }
 \examples{
 \dontrun{
-# data contains quartlery observations from 1965Q1 to 2008Q3
+# data contains quarterly observations from 1965Q1 to 2008Q3
 # x = output gap
 # pi = inflation
 # i = interest rates
@@ -33,7 +39,7 @@ summary(x1)
 x1$B <- x1$B[,c(3,2,1)]
 x1$B[,3] <- x1$B[,3]*(-1)
 
-# Impulse response Analysis with confidence bands
+# impulse response analysis with confidence bands
 bb <- mb.boot(x1, b.length = 15, nboot = 100, horizon = 30)
 plot(bb, lowerq = 0.05, upperq = 0.95)
 }

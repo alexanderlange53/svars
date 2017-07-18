@@ -9,49 +9,49 @@ id.cv(x, SB, start = NULL, end = NULL, frequency = NULL, format = NULL,
   restriction_matrix = NULL)
 }
 \arguments{
-\item{x}{VAR-object. (S)VAR model to determine B matrix for}
+\item{x}{VAR-object. (S)VAR model to be identified}
 
-\item{SB}{integer. Structural break either of type integer as the number of observations which belong to the pre-break period or
-Date character. If a date character is provided, either a date Vector which contains the time line of the data
-in corresponding format or then the conventional time parameters need to be provided.}
+\item{SB}{Integer. Structural break: either of type integer (number of observations in the pre-break period) or
+date character. If a date character is provided, either a date vector containing the whole time line
+in the corresponding format or conventional time parameters need to be provided}
 
-\item{start}{character. Start of the time series (only if dateVector is empty)}
+\item{start}{Character. Start of the time series (only if dateVector is empty)}
 
-\item{end}{character. End of the time series (only if dateVector is empty)}
+\item{end}{Character. End of the time series (only if dateVector is empty)}
 
-\item{frequency}{character. Frequency of the time series (only if dateVector is empty)}
+\item{frequency}{Character. Frequency of the time series (only if dateVector is empty)}
 
-\item{format}{character. Date format (only if dateVector is empty)}
+\item{format}{Character. Date format (only if dateVector is empty)}
 
-\item{dateVector}{vector. Vector of the time period concerned containing SB.}
+\item{dateVector}{Vector. Vector of all time periods containing SB in corresponding format}
 
-\item{max.iter}{integer. Number of maximum GLS iterations}
+\item{max.iter}{Integer. Number of maximum GLS iterations}
 
-\item{crit}{integer. Critical value for the precision of the GLS estimation}
+\item{crit}{Integer. Critical value for the precision of the GLS estimation}
 
-\item{restriction_matrix}{matrix. A matrix containing presupposed Values and NA for values to be estimated}
+\item{restriction_matrix}{Matrix. A matrix containing presupposed Values, NA if no restriction is imposed (values to be estimated)}
 }
 \value{
-A list of class "svarIdent" with elements
-\item{Lambda}{Estimated unconditional heteroscedasticity Matrix}
+A list of class "svars" with elements
+\item{Lambda}{Estimated unconditional heteroscedasticity matrix}
 \item{Lambda_SE}{Matrix of standard errors of Lambda}
-\item{B}{Estimated B matrix, i.e. unique decomposition of the covariance matrix}
-\item{B_SE}{Standard Errors of B matrix}
+\item{B}{Estimated instantaneous response matrix B, i.e. unique decomposition of the covariance matrix of reduced form residuals}
+\item{B_SE}{Standard errors of matrix B}
 \item{n}{Number of observations}
 \item{Fish}{Observerd Fisher information matrix}
 \item{Lik}{Function value of likelihood}
 \item{wald_statistic}{Results of pairwise Wald tests}
 \item{iteration}{Number of GLS estimations}
-\item{method}{The applied identifaction method}
-\item{SB}{Structural break as number of observation}
-\item{SBcharacter}{Structural break as date (if provided in function arguments)}
+\item{method}{Method applied for identification}
+\item{SB}{Structural break (number of observations)}
+\item{SBcharacter}{Structural break (date; if provided in function arguments)}
 }
 \description{
-Identify B matrix based on changes in Volatility.
+Identify instantaneous repsonse matrix B in SVAR models based on changes in volatility.
 }
 \examples{
 \dontrun{
-# data contains quartlery observations from 1965Q1 to 2008Q3
+# data contains quartlery observations from 1965Q1 to 2008Q2
 # assumed structural break in 1979Q4
 # x = output gap
 # pi = inflation
@@ -66,8 +66,26 @@ x1$B <- x1$B[,c(3,2,1)]
 x1$B[,3] <- x1$B[,3]*(-1)
 
 # Impulse response analysis
-i1 <- irf(x1, horizon = 30)
+i1 <- imrf(x1, horizon = 30)
 plot(i1, scales = 'free_y')
+
+# Restrictions
+# Assuming that the interest rate doesn't influence the output gap on impact
+restMat <- matrix(rep(NA, 9), ncol = 3)
+restMat[1,3] <- 0
+x2 <- id.cv(v1, SB = 60, restriction_matrix = restMat)
+
+#Structural brake via Dates
+# given that time series vector with dates is available
+dateVector = seq(as.Date("1965/1/1"), as.Date("2008/6/1"), "quarter")
+x3 <- id.cv(v1, SB = "1985-01-01", format = "\%Y-\%m-\%d", dateVector = dateVector)
+
+# or pass sequence arguments directly
+x4 <- id.cv(v1, SB = "1985-01-01", format = "\%Y-\%m-\%d", start = "1965-01-01", end = "2008-06-01",
+frequency = "quarter")
 }
+
+}
+\references{
 
 }

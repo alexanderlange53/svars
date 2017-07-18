@@ -1,10 +1,11 @@
 identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, restriction_matrix = restriction_matrix,
-                                    Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter){
+                                    Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
+                                     max.iter){
 
   MLE<- NULL
   counter2 <- 0
   #restriction_matrix = restriction_matrix
-while(is.null(MLE) & counter2 < 500){
+while(is.null(MLE) & counter2 < 10000){
   MW <- -1
   while(MW < 0.5){
     B <- suppressMessages(expm::sqrtm((1/Tob)* crossprod(u_t))) + matrix(runif(k*k), nrow = k, byrow = T)
@@ -16,7 +17,7 @@ while(is.null(MLE) & counter2 < 500){
     restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
     B <- B[1:(length(B)-restrictions)]
   }
-  Lambda <- c(1,1,1)
+  Lambda <- rep(1, k)
   S <- c(B, Lambda)
 
 
@@ -27,7 +28,17 @@ while(is.null(MLE) & counter2 < 500){
          restrictions = restrictions),
     error = function(e) NULL)
   counter2 <- counter2 + 1
-  if(counter2 == 500){
+  if(!is.null(MLE)){
+    if(!is.null(restriction_matrix)){
+        Lam <- diag(MLE$par[(sum(naElements) + 1):length(MLE$par)])
+    }else{
+      Lam <- diag(MLE$par[(k*k+1):(k*k+k)])
+    }
+    if(any(Lam < 0)){
+      MLE <- NULL
+    }
+  }
+  if(counter2 == 10000){
     cat('Algorithm does not converge')
   }
 }
@@ -80,7 +91,7 @@ ll <- list(ll)
 counter <- 1
 Exit <- 1
 
-while(abs(Exit) > 0.01 & counter < 20){
+while(abs(Exit) > 0.01 & counter < max.iter){
 
   Sig1 <- solve(tcrossprod(B_hat[[counter]]))
   Sig2 <- solve(B_hat[[counter]]%*%tcrossprod(Lambda_hat[[counter]], B_hat[[counter]]))
@@ -118,7 +129,7 @@ while(abs(Exit) > 0.01 & counter < 20){
   # Determine starting values for B and Lambda
   MLEgls <- NULL
   counter2 <- 0
-  while(is.null(MLEgls) & counter2 < 500){
+  while(is.null(MLEgls) & counter2 < 10000){
     MW <- -1
     #MW2 <- -1
     while(MW < 0.5){
@@ -132,7 +143,7 @@ while(abs(Exit) > 0.01 & counter < 20){
       restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
       B <- B[1:(length(B)-restrictions)]
     }
-    Lambda <- c(1,1,1)
+    Lambda <- rep(1, k)
     S <- c(B, Lambda)
 
     #optimize the likelihood function
@@ -141,7 +152,17 @@ while(abs(Exit) > 0.01 & counter < 20){
             Sigma_hat2 = Sigma_hat2gls, Tob = Tob, method = 'L-BFGS-B', hessian = T, restriction_matrix = restriction_matrix, restrictions = restrictions),
       error = function(e) NULL)
     counter2 <- counter2 + 1
-    if(counter2 == 500){
+    if(!is.null(MLE)){
+      if(!is.null(restriction_matrix)){
+        Lam <- diag(MLE$par[(sum(naElements) + 1):length(MLE$par)])
+      }else{
+        Lam <- diag(MLE$par[(k*k+1):(k*k+k)])
+      }
+      if(any(Lam < 0)){
+        MLE <- NULL
+      }
+    }
+    if(counter2 == 10000){
       cat('Algorithm does not converge')
     }
   }
@@ -168,7 +189,7 @@ while(abs(Exit) > 0.01 & counter < 20){
     GLSE <- c(GLSE, list(GLS_hat))
   }
 
-  counter <- counter +1
+  counter <- counter + 1
   #Exit <- sum(diag(Lambda_hat[[counter]])) - sum(diag(Lambda_hat[[counter - 1]]))
   Exit <- ll[[counter]] - ll[[counter-1]]
 }

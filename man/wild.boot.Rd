@@ -2,25 +2,32 @@
 % Please edit documentation in R/bootstrap_wild.R
 \name{wild.boot}
 \alias{wild.boot}
-\title{Bootstrapping procedure}
+\title{Bootstrap for IRFs of identified SVARs}
 \usage{
-wild.boot(x, radermacher = FALSE, horizon, nboot)
+wild.boot(x, radermacher = FALSE, horizon, nboot, nc, dd = NULL,
+  iter = 300)
 }
 \arguments{
 \item{x}{SVAR object of class "svars"}
 
-\item{radermacher}{wether or not radermacher distribution should be used}
+\item{radermacher}{If radermacher="TRUE", the radermacher distribution is used to generate the bootstrap samples}
 
-\item{horizon}{Number of observations in time to be included in}
+\item{horizon}{Time horizon of impulse response functions}
 
 \item{nboot}{Number of bootstrap iterations}
+
+\item{nc}{Number of processor cores (Not available on windows machines)}
+
+\item{dd}{object of class 'indepTestDist'. A simulated independent sample of the same size as the data. If not supplied the function calculates it}
+
+\item{iter}{number of randomized starting points for optimization}
 }
 \description{
-Calculating confidance bands for impulse response via wild bootsrap
+Calculating confidance bands for impulse response functions via wild bootsrap techniques
 }
 \examples{
 \dontrun{
-# data contains quartlery observations from 1965Q1 to 2008Q3
+# data contains quarterly observations from 1965Q1 to 2008Q3
 # x = output gap
 # pi = inflation
 # i = interest rates
@@ -33,7 +40,7 @@ summary(x1)
 x1$B <- x1$B[,c(3,2,1)]
 x1$B[,3] <- x1$B[,3]*(-1)
 
-# Impulse response Analysis with confidence bands
+# impulse response analysis with confidence bands
 bb <- wild.boot(x1, radermacher = T, nboot = 100, horizon = 30)
 plot(bb, lowerq = 0.16, upperq = 0.84)
 }
