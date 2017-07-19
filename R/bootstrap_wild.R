@@ -1,6 +1,6 @@
-#'Bootstrap for IRFs of identified SVARs
+#'Wild bootstrap for IRFs of identified SVARs
 #'
-#'Calculating confidance bands for impulse response functions via wild bootsrap techniques
+#'Calculating confidance bands for impulse response functions via wild bootstrap techniques (Goncales and Kilian, 2004).
 #'
 #'@param x SVAR object of class "svars"
 #'@param rademacher If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples
@@ -9,6 +9,8 @@
 #'@param nc Number of processor cores (Not available on windows machines)
 #'@param dd object of class 'indepTestDist'. A simulated independent sample of the same size as the data. If not supplied the function calculates it
 #'@param iter number of randomized starting points for optimization
+#'
+#'@references Goncalves, S., Kilian, L., 2004. Bootstrapping autoregressions with conditional heteroskedasticity of unknown form. Journal of Econometrics 123, 89-120.
 #'
 #' @examples
 #' \dontrun{

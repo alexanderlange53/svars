@@ -1,6 +1,6 @@
-#'Bootstrap for IRFs of identified SVARs
+#'Moving block bootstrap for IRFs of identified SVARs
 #'
-#'Calculating confidance bands for impulse response via moving block bootsrap
+#'Calculating confidance bands for impulse response via moving block bootstrap
 #'
 #'@param x SVAR object of class "svars"
 #'@param b.length Length of each block

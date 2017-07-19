@@ -1,6 +1,6 @@
 #' Chow Test for Structural Break
 #'
-#' The Chow test for structural change is implemented as sample-split and break-point test (see Lütkepohl and Krätzig, 2004, p. 135). A multivariate time series and the presupposed structural break need to be provided.
+#' The Chow test for structural change is implemented as sample-split and break-point test (see Luetkepohl and Kraetzig, 2004, p. 135). A multivariate time series and the presupposed structural break need to be provided.
 #'
 #' @param Y Data of multivariate time series
 #' @param SB Integer or date character. The structural break is specified either by an integer (number of observations in the pre-break period) or
@@ -23,8 +23,8 @@
 #' \item{testcrit_sp}{Critival value of the test statistic lambda_sp}
 #' \item{p.value_sp}{p-value of the test statistic lambda_sp}
 #'
-#' @references Lütkepohl, H., 2005. New introduction to multiple time series analysis, Springer-Verlag, Berlin.
-#'      Lütkepohl, H., Krätzig, M., 2004. Applied Time Series Econometrics, Cambridge University Press, Cambridge. 
+#' @references Luetkepohl, H., 2005. New introduction to multiple time series analysis, Springer-Verlag, Berlin.
+#'      Luetkepohl, H., Kraetzig, M., 2004. Applied time series econometrics, Cambridge University Press, Cambridge.
 #' @export
 #'
 

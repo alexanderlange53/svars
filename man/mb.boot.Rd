@@ -2,7 +2,7 @@
 % Please edit documentation in R/bootstrap_mb.R
 \name{mb.boot}
 \alias{mb.boot}
-\title{Bootstrap for IRFs of identified SVARs}
+\title{Moving block bootstrap for IRFs of identified SVARs}
 \usage{
 mb.boot(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, iter = 300)
 }
@@ -22,7 +22,7 @@ mb.boot(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, iter = 300)
 \item{iter}{number of randomized starting points for optimization}
 }
 \description{
-Calculating confidance bands for impulse response via moving block bootsrap
+Calculating confidance bands for impulse response via moving block bootstrap
 }
 \examples{
 \dontrun{
