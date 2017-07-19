@@ -30,9 +30,10 @@ while(is.null(MLE) & counter2 < 10000){
   counter2 <- counter2 + 1
   if(!is.null(MLE)){
     if(!is.null(restriction_matrix)){
+        naElements <- is.na(restriction_matrix)
         Lam <- diag(MLE$par[(sum(naElements) + 1):length(MLE$par)])
     }else{
-      Lam <- diag(MLE$par[(k*k+1):(k*k+k)])
+        Lam <- diag(MLE$par[(k*k+1):(k*k+k)])
     }
     if(any(Lam < 0)){
       MLE <- NULL
@@ -154,6 +155,7 @@ while(abs(Exit) > 0.01 & counter < max.iter){
     counter2 <- counter2 + 1
     if(!is.null(MLE)){
       if(!is.null(restriction_matrix)){
+        naElements <- is.na(restriction_matrix)
         Lam <- diag(MLE$par[(sum(naElements) + 1):length(MLE$par)])
       }else{
         Lam <- diag(MLE$par[(k*k+1):(k*k+k)])
@@ -219,50 +221,10 @@ B.SE[naElements] <- FishObs[1:unRestrictions]
 Lambda.SE <- FishObs[((k*k+1) - restrictions):((k*k+k)-restrictions)]*diag(k)
 }else{
   FishObs <- sqrt(diag(HESS))
-  B.SE <- matrix(FishObs[1:k*k], k,k)
+  B.SE <- matrix(FishObs[1:(k*k)], k,k)
   Lambda.SE <- diag(FishObs[(k*k+1):(k*k+k)])
 }
 
-# # ordering the columns with respect to the largest absolute values in each column
-# B_hat_ord <- matrix(0, k, k)
-# control <- rep(0, k)
-# for(i in 1:ncol(B_hat)){
-#   for(j in 1:ncol(B_hat)){
-#     if(which.max(abs(B_hat[, j])) == i){
-#       if(control[i] == 0){
-#         control[i] <- j
-#         B_hat_ord[, i] <-B_hat[, j]
-#       }else{
-#         if(max(B_hat[, j]) > max(B_hat[, control[i]])){
-#           control[i] <- j
-#           B_hat_ord[, i] <-B_hat[, j]
-#         }
-#       }
-#     }
-#   }
-# }
-#
-# # checking if any column in the orderd matrix is empty and replace it with the unused column in the estimated matrix
-# if(any(control == 0)){
-#   hc <- sapply(1:k, function(x){any(x == control)})
-#   B_hat_ord[, which(control == 0)] <- B_hat[, which(hc == FALSE)]
-#   control[which(control == 0)] <- which(hc == FALSE)
-# }
-#
-# # checking for negative values on the main daigonal
-# for(i in 1:ncol(B_hat_ord)){
-#   if(B_hat_ord[i,i] < 0){
-#     B_hat_ord[, i] <- B_hat_ord[, i]*(-1)
-#   }
-#   if(Lambda_hat[i,i] < 0){
-#     Lambda_hat[, i] <- Lambda_hat[, i]*(-1)
-#   }
-# }
-#
-# # reordering the lambda and S.E. matrices in the same way
-# B.SE <- B.SE[, control]
-# Lambda_hat <- diag(diag(Lambda_hat[, control]))
-# Lambda.SE <- diag(diag(Lambda.SE[, control]))
 
 # Testing the estimated SVAR for identification by menas of wald statistic
 wald <- wald.test(Lambda_hat, HESS, restrictions)
