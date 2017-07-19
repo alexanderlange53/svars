@@ -1,12 +1,12 @@
 #' Chow Test for Structural Break
 #'
-#' The Chow test is applied to a multivariate time series with a presupposed structural break.
+#' The Chow test for structural change is implemented as sample-split and break-point test (see Lütkepohl and Krätzig, 2004, p. 135). A multivariate time series and the presupposed structural break need to be provided.
 #'
 #' @param Y Data of multivariate time series
 #' @param SB Integer or date character. The structural break is specified either by an integer (number of observations in the pre-break period) or
 #'                    a date character. If a date character is provided, either a date vector containing the whole time line
 #'                    in the corresponding format or common time parameters need to be provided
-#' @param p Integer. Number of lags.
+#' @param p Integer. Number of lags included in the presumed VAR model
 #' @param nboot Integer. Number of bootstrap iterations to calculate quantiles and p-values
 #' @param rademacher If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples
 #' @param dateVector Vector. Vector of time periods containing SB in corresponding format
@@ -23,8 +23,8 @@
 #' \item{testcrit_sp}{Critival value of the test statistic lambda_sp}
 #' \item{p.value_sp}{p-value of the test statistic lambda_sp}
 #'
-#' @references Lütkepohl, H., 2005. New introduction to multiple time series analysis Springer-Verlag, Berlin.
-#'
+#' @references Lütkepohl, H., 2005. New introduction to multiple time series analysis, Springer-Verlag, Berlin.
+#'      Lütkepohl, H., Krätzig, M., 2004. Applied Time Series Econometrics, Cambridge University Press, Cambridge. 
 #' @export
 #'
 
