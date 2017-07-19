@@ -2,15 +2,15 @@
 % Please edit documentation in R/bootstrap_wild.R
 \name{wild.boot}
 \alias{wild.boot}
-\title{Bootstrap for IRFs of identified SVARs}
+\title{Wild bootstrap for IRFs of identified SVARs}
 \usage{
-wild.boot(x, radermacher = FALSE, horizon, nboot, nc, dd = NULL,
+wild.boot(x, rademacher = FALSE, horizon, nboot, nc, dd = NULL,
   iter = 300)
 }
 \arguments{
 \item{x}{SVAR object of class "svars"}
 
-\item{radermacher}{If radermacher="TRUE", the radermacher distribution is used to generate the bootstrap samples}
+\item{rademacher}{If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples}
 
 \item{horizon}{Time horizon of impulse response functions}
 
@@ -23,7 +23,7 @@ wild.boot(x, radermacher = FALSE, horizon, nboot, nc, dd = NULL,
 \item{iter}{number of randomized starting points for optimization}
 }
 \description{
-Calculating confidance bands for impulse response functions via wild bootsrap techniques
+Calculating confidance bands for impulse response functions via wild bootstrap techniques (Goncales and Kilian, 2004).
 }
 \examples{
 \dontrun{
@@ -41,9 +41,12 @@ x1$B <- x1$B[,c(3,2,1)]
 x1$B[,3] <- x1$B[,3]*(-1)
 
 # impulse response analysis with confidence bands
-bb <- wild.boot(x1, radermacher = T, nboot = 100, horizon = 30)
+bb <- wild.boot(x1, rademacher = T, nboot = 100, horizon = 30)
 plot(bb, lowerq = 0.16, upperq = 0.84)
 }
 
 
+}
+\references{
+Goncalves, S., Kilian, L., 2004. Bootstrapping autoregressions with conditional heteroskedasticity of unknown form. Journal of Econometrics 123, 89-120.
 }

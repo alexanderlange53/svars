@@ -1,18 +1,19 @@
 #' Chow Test for Structural Break
 #'
-#' The Chow test is applied to a time series with a presupposed structural break.
+#' The Chow test for structural change is implemented as sample-split and break-point test (see Luetkepohl and Kraetzig, 2004, p. 135). A multivariate time series and the presupposed structural break need to be provided.
 #'
-#' @param Y Data
-#' @param SB integer. Structural break: either of type integer (number of observations in the pre-break period) or
-#'                    date character. If a date character is provided, either a date vector containing the whole time line
-#'                    in the corresponding format or conventional time parameters need to be provided
-#' @param nboot number of bootrstrap iterations to obtain quantiles and p-values
-#' @param lags  Maximum number of lag order
-#' @param dateVector vector. Vector of all time periods containing SB in corresponding format
-#' @param start character. Start of the time series (only if dateVector is empty)
-#' @param end character. End of the time series (only if dateVector is empty)
-#' @param frequency character. Frequency of the time series (only if dateVector is empty)
-#' @param format character. Date format (only if dateVector is empty)
+#' @param Y Data of multivariate time series
+#' @param SB Integer or date character. The structural break is specified either by an integer (number of observations in the pre-break period) or
+#'                    a date character. If a date character is provided, either a date vector containing the whole time line
+#'                    in the corresponding format or common time parameters need to be provided
+#' @param p Integer. Number of lags included in the presumed VAR model
+#' @param nboot Integer. Number of bootstrap iterations to calculate quantiles and p-values
+#' @param rademacher If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples
+#' @param dateVector Vector. Vector of time periods containing SB in corresponding format
+#' @param start Character. Start of the time series (only if dateVector is empty)
+#' @param end Character. End of the time series (only if dateVector is empty)
+#' @param frequency Character. Frequency of the time series (only if dateVector is empty)
+#' @param format Character. Date format (only if dateVector is empty)
 #'
 #' @return A list with elements
 #' \item{lambda_bp}{Test statistic of the Chow test with break point}
@@ -22,8 +23,8 @@
 #' \item{testcrit_sp}{Critival value of the test statistic lambda_sp}
 #' \item{p.value_sp}{p-value of the test statistic lambda_sp}
 #'
-#' @references
-#'
+#' @references Luetkepohl, H., 2005. New introduction to multiple time series analysis, Springer-Verlag, Berlin.
+#'      Luetkepohl, H., Kraetzig, M., 2004. Applied time series econometrics, Cambridge University Press, Cambridge.
 #' @export
 #'
 
@@ -35,9 +36,9 @@
 # nboot : number of bootstrap iterations
 # lags  : maximum lag order
 
-chow.test <- function(Y, SB, p, nboot = 500, start = NULL, end = NULL,
+chow.test <- function(Y, SB, p, nboot = 500, rademacher="FALSE",start = NULL, end = NULL,
                       frequency = NULL, format = NULL, dateVector = NULL){
-  # Null Hypothesis of no Sample Split is rejected for large lambda
+  # Null hypothesis of no sample split is rejected for large values of lambda
 
   if(!is.numeric(SB)){
 
@@ -69,6 +70,16 @@ chow.test <- function(Y, SB, p, nboot = 500, start = NULL, end = NULL,
   sample1 <- Y[1:SB, ]
   sample2 <- Y[(SB+1):nrow(Y), ]
 
+  # selecting VAR orders
+  sel <- VARselect(Full, lag.max = lags)
+  if(any(sel$criteria[,sel$selection[1]] == -Inf) | any(is.na(sel$criteria[,sel$selection[1]]))){
+    sel$selection[1] <- sel$selection[1] - 2
+  }
+  if(sel$selection[1] == 1){
+    sel$selection[1] <- sel$selection[1] + 1
+  }
+
+
   # estimating VAR for pre and post SB and for full series
   VAR.model <- VAR(Full, p = p)
   VAR1.model <- VAR(sample1, p = p)
@@ -86,8 +97,8 @@ chow.test <- function(Y, SB, p, nboot = 500, start = NULL, end = NULL,
     (1/l2)*t(residuals(VAR.model)[(ll-l2+1):ll,])%*%(residuals(VAR.model)[(ll-l2+1):ll,])
 
   # calculating the test statistic
-  # lambda_bp : teststatistic for break point (tests for change in covariance in addition)
-  # lambda_SP : teststatistic for structural break (tests only for parameter change)
+  # lambda_bp : test statistic for break point (tests for change in covariance in addition)
+  # lambda_SP : test statistic for structural break (tests only for parameter change)
   lambda_bp <- (l1 + l2)*log(det(Sigma)) - l1*log(det(Sigma.1)) - l2*log(det(Sigma.2))
   lambda_sp <- (l1 + l2)*(log(det(Sigma)) - log(det((1/(l1 + l2))*(l1*Sigma.1 + l2*Sigma.2))))
 
@@ -96,7 +107,8 @@ chow.test <- function(Y, SB, p, nboot = 500, start = NULL, end = NULL,
     lambda_spB <- rep(NA, nboot)
     TB <- l1
 
-    # bootstrapping the teststatistic to obtain empirical distribution
+
+    # bootstrapping the test statistic to obtain empirical distribution
     # obtaining VAR parameter
     coef_x <- coef(VAR.model)
     type <- VAR.model$type
@@ -121,10 +133,11 @@ chow.test <- function(Y, SB, p, nboot = 500, start = NULL, end = NULL,
 
     # creating new data
     datFull <- list()
+
     for(i in 1:nboot){
       u <- residF
       my <- rnorm(n = ncol(Y))
-      if (radermacher == TRUE) {
+      if (rademacher == TRUE) {
         my <- (my > 0) - (my < 0)
       }
       et <- u * my
@@ -159,7 +172,7 @@ chow.test <- function(Y, SB, p, nboot = 500, start = NULL, end = NULL,
     df_bp <- p*K^2 + K + (K*(K + 1))/2
     df_sp <- p*K^2 + K
 
-    # obtainind critical values an p-values for both tests
+    # obtaining critical values and p-values for both tests
     testcrit_bp <- quantile(lambda_bpB, probs = 0.95)
     EmpDist_bp <- ecdf(lambda_bpB)
     p.value_bp <- 1 - EmpDist_bp(lambda_bp)
@@ -168,10 +181,10 @@ chow.test <- function(Y, SB, p, nboot = 500, start = NULL, end = NULL,
     EmpDist_sp <- ecdf(lambda_spB)
     p.value_sp <- 1 - EmpDist_sp(lambda_sp)
 
-    return(list(lambda_bp,    # Teststatistik for break point test
+    return(list(lambda_bp,    # test statistic for break point test
                 testcrit_bp,  # critical value for 95% quantile
                 p.value_bp,   # p-value
-                lambda_sp,    # teststatistik for sample split
+                lambda_sp,    # test statistic for sample split
                 testcrit_sp,  # critical value for 95% quantile
                 p.value_sp    # p-value
                 ))

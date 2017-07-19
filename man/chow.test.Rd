@@ -4,29 +4,31 @@
 \alias{chow.test}
 \title{Chow Test for Structural Break}
 \usage{
-chow.test(Y, SB, p, nboot = 500, start = NULL, end = NULL,
-  frequency = NULL, format = NULL, dateVector = NULL)
+chow.test(Y, SB, p, nboot = 500, rademacher = "FALSE", start = NULL,
+  end = NULL, frequency = NULL, format = NULL, dateVector = NULL)
 }
 \arguments{
-\item{Y}{Data}
+\item{Y}{Data of multivariate time series}
 
-\item{SB}{integer. Structural break: either of type integer (number of observations in the pre-break period) or
-date character. If a date character is provided, either a date vector containing the whole time line
-in the corresponding format or conventional time parameters need to be provided}
+\item{SB}{Integer or date character. The structural break is specified either by an integer (number of observations in the pre-break period) or
+a date character. If a date character is provided, either a date vector containing the whole time line
+in the corresponding format or common time parameters need to be provided}
 
-\item{nboot}{number of bootrstrap iterations to obtain quantiles and p-values}
+\item{p}{Integer. Number of lags included in the presumed VAR model}
 
-\item{start}{character. Start of the time series (only if dateVector is empty)}
+\item{nboot}{Integer. Number of bootstrap iterations to calculate quantiles and p-values}
 
-\item{end}{character. End of the time series (only if dateVector is empty)}
+\item{rademacher}{If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples}
 
-\item{frequency}{character. Frequency of the time series (only if dateVector is empty)}
+\item{start}{Character. Start of the time series (only if dateVector is empty)}
 
-\item{format}{character. Date format (only if dateVector is empty)}
+\item{end}{Character. End of the time series (only if dateVector is empty)}
 
-\item{dateVector}{vector. Vector of all time periods containing SB in corresponding format}
+\item{frequency}{Character. Frequency of the time series (only if dateVector is empty)}
 
-\item{lags}{Maximum number of lag order}
+\item{format}{Character. Date format (only if dateVector is empty)}
+
+\item{dateVector}{Vector. Vector of time periods containing SB in corresponding format}
 }
 \value{
 A list with elements
@@ -38,8 +40,9 @@ A list with elements
 \item{p.value_sp}{p-value of the test statistic lambda_sp}
 }
 \description{
-The Chow test is applied to a time series with a presupposed structural break.
+The Chow test for structural change is implemented as sample-split and break-point test (see Luetkepohl and Kraetzig, 2004, p. 135). A multivariate time series and the presupposed structural break need to be provided.
 }
 \references{
-
+Luetkepohl, H., 2005. New introduction to multiple time series analysis, Springer-Verlag, Berlin.
+     Luetkepohl, H., Kraetzig, M., 2004. Applied time series econometrics, Cambridge University Press, Cambridge.
 }
