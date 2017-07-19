@@ -1,14 +1,16 @@
-#'Bootstrap for IRFs of identified SVARs
+#'Wild bootstrap for IRFs of identified SVARs
 #'
-#'Calculating confidance bands for impulse response functions via wild bootsrap techniques
+#'Calculating confidance bands for impulse response functions via wild bootstrap techniques (Goncales and Kilian, 2004).
 #'
 #'@param x SVAR object of class "svars"
-#'@param radermacher If radermacher="TRUE", the radermacher distribution is used to generate the bootstrap samples
+#'@param rademacher If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples
 #'@param horizon Time horizon of impulse response functions
 #'@param nboot Number of bootstrap iterations
 #'@param nc Number of processor cores (Not available on windows machines)
 #'@param dd object of class 'indepTestDist'. A simulated independent sample of the same size as the data. If not supplied the function calculates it
 #'@param iter number of randomized starting points for optimization
+#'
+#'@references Goncalves, S., Kilian, L., 2004. Bootstrapping autoregressions with conditional heteroskedasticity of unknown form. Journal of Econometrics 123, 89-120.
 #'
 #' @examples
 #' \dontrun{
@@ -26,7 +28,7 @@
 #' x1$B[,3] <- x1$B[,3]*(-1)
 #'
 #' # impulse response analysis with confidence bands
-#' bb <- wild.boot(x1, radermacher = T, nboot = 100, horizon = 30)
+#' bb <- wild.boot(x1, rademacher = T, nboot = 100, horizon = 30)
 #' plot(bb, lowerq = 0.16, upperq = 0.84)
 #' }
 #'
@@ -34,10 +36,10 @@
 #'@export
 
 
-wild.boot <- function(x, radermacher = FALSE, horizon, nboot, nc, dd = NULL, iter = 300){
+wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc, dd = NULL, iter = 300){
   # x: vars object
   # B: estimated covariance matrix from true data set
-  # radermacher: wether the bootstraop work with radermacher distance
+  # rademacher: wether the bootstraop work with rademacher distance
   # horizon: Time horizon for Irf
   # nboot: number of bootstrap replications
   if(x$method == 'CvM' & is.null(dd)){
@@ -84,7 +86,7 @@ wild.boot <- function(x, radermacher = FALSE, horizon, nboot, nc, dd = NULL, ite
   for(i in 1:nboot){
     ub <- u
     my <- rnorm(n = ncol(y))
-    if (radermacher == TRUE) {
+    if (rademacher == TRUE) {
       my <- (my > 0) - (my < 0)
     }
     errors[[i]] <- ub * my

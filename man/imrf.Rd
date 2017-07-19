@@ -12,7 +12,7 @@ imrf(x, horizon = 20)
 \item{horizon}{Time horizon for the impulse responses}
 }
 \description{
-Calculation of impulse response functions for an identified SVAR object
+Calculation of impulse response functions for an identified SVAR object 'svars' derived by function id.cvm( ),id.cv( ),id.dc( ) or id.ngml( ).
 }
 \examples{
 \dontrun{

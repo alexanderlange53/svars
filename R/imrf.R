@@ -1,6 +1,6 @@
 #' Impulse Response Functions for SVAR Models
 #'
-#' Calculation of impulse response functions for an identified SVAR object
+#' Calculation of impulse response functions for an identified SVAR object 'svars' derived by function id.cvm( ),id.cv( ),id.dc( ) or id.ngml( ).
 #'
 #' @param x SVAR object of class "svars"
 #' @param horizon Time horizon for the impulse responses
