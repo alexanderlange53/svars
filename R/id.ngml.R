@@ -287,7 +287,7 @@ id.ngml <- function(x, stage3 = FALSE){
     control[which(control == 0)] <- which(hc == FALSE)
   }
 
-  # checking for negative values on the main daigonal
+  # checking for negative values on the main diagonal
   for(i in 1:ncol(B_hat_ord)){
     if(B_hat_ord[i,i] < 0){
       B_hat_ord[, i] <- B_hat_ord[, i]*(-1)
@@ -296,16 +296,16 @@ id.ngml <- function(x, stage3 = FALSE){
 
   result <- list(B = B_hat_ord,       # estimated B matrix (unique decomposition of the covariance matrix)
               sigma = sigma_est,      # estimated scale of the standardized B
-              sigma_SE = sigma_SE,    # standard errors od the scale
+              sigma_SE = sigma_SE,    # standard errors of the scale
               df = d_freedom,         # estimated degrees of freedom of the distribution
               df_SE = d_SE,           # standard errors of the degrees of freedom
-              Fish = HESS,            # observerd fisher information matrix
+              Fish = HESS,            # observed fisher information matrix
               A_hat = A_hat,          # estimated VAR parameter
               B_stand = B_stand_est,  # estimated standardized B matrix
               B_stand_SE = B.SE ,     # standard errors
               Lik = -ll,              # value of maximum likelihood
               method = "Non-Gaussian maximum likelihood",
-              obs = Tob,              # number of observations
+              n = Tob,              # number of observations
               type = type,            # type of the VAR model e.g 'const'
               y = x$y,                # Data
               p = x$p,                # number of lags
