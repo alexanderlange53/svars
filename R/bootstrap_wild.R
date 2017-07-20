@@ -27,7 +27,7 @@
 #' x1$B <- x1$B[,c(3,2,1)]
 #' x1$B[,3] <- x1$B[,3]*(-1)
 #'
-#' # impulse response analysis with confidence bands
+#' # impulse response analysis with confidence bands (linux users need to provide a valid nc argument)
 #' bb <- wild.boot(x1, rademacher = T, nboot = 100, horizon = 30)
 #' plot(bb, lowerq = 0.16, upperq = 0.84)
 #' }
@@ -37,6 +37,9 @@
 
 
 wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc, dd = NULL, iter = 300){
+  if(exists("nc") & Sys.info()[1] == "Linux"){
+    stop("Please specifiy the number of processor cores (nc)")
+  }
   # x: vars object
   # B: estimated covariance matrix from true data set
   # rademacher: wether the bootstraop work with rademacher distance
