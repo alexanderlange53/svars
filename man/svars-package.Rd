@@ -33,7 +33,7 @@
       \item Simone Maxand
       \item Bernhard Dalheimer \email{bernhard.dalheimer@uni-goettingen.de}
     }
+    }
 
 
-\keyword{ ts, VAR, SVAR, ECM, VECM }
 
