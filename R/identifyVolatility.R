@@ -245,7 +245,6 @@ result <- list(
   type = x$type,          # type of the VAR model e.g 'const'
   SBcharacter = SBcharacter,             # Structural Break in input character format
   restrictions = restrictions, # number of restrictions
-  obs = Tob,              # number of observations
   y = x$y,                # Data
   p = x$p,                # number of lags
   K = x$K                 # number of time series

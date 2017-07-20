@@ -100,8 +100,8 @@ id.dc <- function(x){
 
   result <- list(B = P,       # estimated B matrix (unique decomposition of the covariance matrix)
               A_hat = A_hat,  # estimated VAR parameter
-              method =        "DC",
-              obs = Tob,      # number of observations
+              method =        "Distance covariances",
+              n = Tob,        # number of observations
               type = type,    # type of the VAR model e.g 'const'
               y = x$y,        # Data
               p = x$p,        # number of lags

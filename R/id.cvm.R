@@ -133,8 +133,8 @@ id.cvm <- function(x, iter = 500, dd = NULL, cores = 1){
 
   result <- list(B = B_hat,       # estimated B matrix (unique decomposition of the covariance matrix)
                  A_hat = A_hat,  # estimated VAR parameter
-                 method =        "CvM",
-                 obs = Tob,      # number of observations
+                 method =        "Cramer-von Mises distance",
+                 n = Tob,      # number of observations
                  type = type,    # type of the VAR model e.g 'const'
                  y = x$y,        # Data
                  p = x$p,        # number of lags
