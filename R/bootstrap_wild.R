@@ -27,7 +27,7 @@
 #' x1$B <- x1$B[,c(3,2,1)]
 #' x1$B[,3] <- x1$B[,3]*(-1)
 #'
-#' # impulse response analysis with confidence bands (linux users need to provide a valid nc argument)
+#' # impulse response analysis with confidence bands
 #' bb <- wild.boot(x1, rademacher = T, nboot = 100, horizon = 30)
 #' plot(bb, lowerq = 0.16, upperq = 0.84)
 #' }
@@ -36,16 +36,14 @@
 #'@export
 
 
-wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc, dd = NULL, iter = 300){
-  if(exists("nc") & Sys.info()[1] == "Linux"){
-    stop("Please specifiy the number of processor cores (nc)")
-  }
+wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, iter = 300){
+
   # x: vars object
   # B: estimated covariance matrix from true data set
   # rademacher: wether the bootstraop work with rademacher distance
   # horizon: Time horizon for Irf
   # nboot: number of bootstrap replications
-  if(x$method == 'CvM' & is.null(dd)){
+  if(x$method == "Cramer-von Mises distance" & is.null(dd)){
     dd <- copula::indepTestSim(Tob, k, verbose=F)
   }
 
@@ -107,7 +105,7 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc, dd = NULL, iter
       temp <- id.ngml(varb, stage3 = x$stage3)
     }else if(x$method == "Changes in Volatility"){
       temp <- id.cv(varb, SB = x$SB)
-    }else if(x$method == "CvM"){
+    }else if(x$method == "Cramer-von Mises distance"){
       temp <- id.cvm(varb, iter = iter, cores = 1, dd)
     }else{
       temp <- id.ldi(varb)

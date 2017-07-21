@@ -38,7 +38,7 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, iter = 
   # B: estimated covariance matrix from true data set
   # horizon: Time horizon for Irf
   # nboot: number of bootstrap replications
-  if(x$method == 'CvM' & is.null(dd)){
+  if(x$method == "Cramer-von Mises distance" & is.null(dd)){
     dd <- copula::indepTestSim(Tob, k, verbose=F)
   }
 
@@ -120,7 +120,7 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, iter = 
       temp <- id.ngml(varb, stage3 = x$stage3)
     }else if(x$method == "Changes in Volatility"){
       temp <- id.cv(varb, SB = x$SB)
-    }else if(x$method == "CvM"){
+    }else if(x$method == "Cramer-von Mises distance"){
       temp <- id.cvm(varb, iter = iter, cores = 1, dd)
     }else{
       temp <- id.ldi(varb)
