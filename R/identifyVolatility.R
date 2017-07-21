@@ -1,4 +1,4 @@
-identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, restriction_matrix = restriction_matrix,
+identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y,restriction_matrix = restriction_matrix,
                                     Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
                                      max.iter){
 
@@ -57,7 +57,7 @@ if(!is.null(restriction_matrix)){
 ll <- MLE$value
 
 # estimating again with GLS to obatin a more precise estimation
-y <- t(x$y)
+#y <- t(x$y)
 
 y_lag_cr <- function(y, lag_length){
   # create matrix that stores the lags
@@ -245,9 +245,9 @@ result <- list(
   type = x$type,          # type of the VAR model e.g 'const'
   SBcharacter = SBcharacter,             # Structural Break in input character format
   restrictions = restrictions, # number of restrictions
-  y = x$y,                # Data
-  p = x$p,                # number of lags
-  K = x$K                 # number of time series
+  y = t(y),                # Data
+  p = p,                # number of lags
+  K = k                 # number of time series
 )
 return(result)
 

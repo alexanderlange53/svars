@@ -83,10 +83,24 @@
 id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
                         format = NULL, dateVector = NULL, max.iter = 50, crit = 0.05, restriction_matrix = NULL){
 
+  if(is.null(residuals(x))){
+    stop("No residuals retrieved from model")
+  }
   u_t <- residuals(x)
+  Tob <- nrow(u_t)
+  k <- ncol(u_t)
+  if(length(class(x)) == 1 & class(x) == "varest"){
   p <- x$p
-  Tob <- x$obs
-  k <-x$K
+  y <- t(x$y)
+  }else if(class(x)[length(class(x))] == "nlVar"){
+    p <- x$lag
+    y <- t(x$model[, 1:k])
+  }else if(class(x) == "list"){
+    p <- x$order
+    y <- t(x$data)
+  }else{
+    stop("Object class is not supported")
+  }
 
   if(is.numeric(SB)){
     SBcharacter <- NULL
@@ -107,10 +121,10 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
   Sigma_hat2 <- (crossprod(resid2)) / (Tob-TB+1)
 
   if(!is.null(restriction_matrix)){
-   resultUnrestricted <- identifyVolatility(x, SB, Tob = Tob, u_t = u_t, k = k, restriction_matrix = NULL,
+   resultUnrestricted <- identifyVolatility(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = NULL,
                                  Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
                                  max.iter = max.iter)
-    result <- identifyVolatility(x, SB, Tob = Tob, u_t = u_t, k = k, restriction_matrix = restriction_matrix,
+    result <- identifyVolatility(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = restriction_matrix,
                                            Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
                                  max.iter = max.iter)
 
@@ -121,7 +135,7 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
     result$lRatioTestPValue = pValue
   }else{
     restriction_matrix <- NULL
-    result <- identifyVolatility(x, SB, Tob = Tob, u_t = u_t, k = k, restriction_matrix = restriction_matrix,
+    result <- identifyVolatility(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = restriction_matrix,
                                  Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
                                  max.iter = max.iter)
   }
