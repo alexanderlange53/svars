@@ -40,7 +40,7 @@ summary(x1)
 x1$B <- x1$B[,c(3,2,1)]
 x1$B[,3] <- x1$B[,3]*(-1)
 
-# impulse response analysis with confidence bands (linux users need to provide a valid nc argument)
+# impulse response analysis with confidence bands
 bb <- wild.boot(x1, rademacher = T, nboot = 100, horizon = 30)
 plot(bb, lowerq = 0.16, upperq = 0.84)
 }
