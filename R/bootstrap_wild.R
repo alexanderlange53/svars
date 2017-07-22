@@ -36,7 +36,7 @@
 #'@export
 
 
-wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc, dd = NULL, iter = 300){
+wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc  = 1, dd = NULL, iter = 300){
   # x: vars object
   # B: estimated covariance matrix from true data set
   # rademacher: wether the bootstraop work with rademacher distance
