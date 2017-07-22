@@ -146,30 +146,91 @@ id.ngml <- function(x, stage3 = FALSE){
   ########### starting the computations ------------------------------------------------------------------------
 
   # getting informations from VAR estimation
+  # u <- residuals(x)
+  # p <- x$p
+  # Tob <- x$obs
+  # k <- x$K
+  # residY <- u
+
+
+  if(is.null(residuals(x))){
+    stop("No residuals retrieved from model")
+  }
   u <- residuals(x)
-  p <- x$p
-  Tob <- x$obs
-  k <- x$K
+  Tob <- nrow(u)
+  k <- ncol(u)
   residY <- u
 
-  if (class(x) == "vec2var") {
-    # TODO: trend cases
+  if(length(class(x)) == 1 & "varest" %in% class(x)){
+    p <- x$p
+    y <- t(x$y)
+    type = x$type
+    coef_x = coef(x)
+  }else if(class(x)[length(class(x))] == "nlVar"){
+    p <- x$lag
+    y <- t(x$model[, 1:k])
+    coef_x <- t(coef(x))
 
-    coef_x <- vector("list", length = k)
-    names(coef_x) <- colnames(x$y)
-
-    for (i in seq_len(k)) {
-      for (j in seq_len(p)) coef_x[[i]] <- c(coef_x[[i]], x$A[[j]][i,])
-      coef_x[[i]] <- c(coef_x[[i]], x$deterministic[i,])
+    if(rownames(coef_x)[1] == "Intercept"){
+      coef_x <- coef_x[c(2:nrow(coef_x),1),]
+      type = "const"
+    }else if(rownames(coef_x)[1] == "Trend"){
+      coef_x <- coef_x[c(2:nrow(coef_x),1),]
+      type <- "trend"
     }
+    if(rownames(coef_x)[1] %in% c("Intercept", "Trend")){
+      coef_x <- coef_x[c(2:nrow(coef_x),1),]
+      type <- "both"
+    }
+    coef_x <- split(coef_x, rep(1:ncol(coef_x), each = nrow(coef_x)))
+    coef_x <- lapply(coef_x, as.matrix)
+  }else if(class(x) == "list"){
+    p <- x$order
+    y <- t(x$data)
+    coef_x <- x$coef
+    if(x$cnst == TRUE){
+      coef_x <- coef_x[c(2:nrow(coef_x),1),]
+      type = "const"
+    }
+    coef_x <- split(coef_x, rep(1:ncol(coef_x), each = nrow(coef_x)))
+    coef_x <- lapply(coef_x, as.matrix)
 
-    coef_x <- lapply(coef_x, matrix)
+    }else if(class(x) == "vec2var"){
+      coef_x <- vector("list", length = k)
+      names(coef_x) <- colnames(x$y)
+      p <- x$p
+      y <- t(x$y)
 
-    type <- "const"
-  } else {
-    coef_x <- coef(x)
-    type <- x$type
+      for (i in seq_len(k)) {
+        for (j in seq_len(p)) coef_x[[i]] <- c(coef_x[[i]], x$A[[j]][i,])
+        coef_x[[i]] <- c(coef_x[[i]], x$deterministic[i,])
+      }
+      coef_x <- lapply(coef_x, matrix)
+      type <- "const"
+
+  }else{
+    stop("Object class is not supported")
   }
+
+
+  # if (class(x) == "vec2var") {
+  #   # TODO: trend cases
+  #
+  #   coef_x <- vector("list", length = k)
+  #   names(coef_x) <- colnames(x$y)
+  #
+  #   for (i in seq_len(k)) {
+  #     for (j in seq_len(p)) coef_x[[i]] <- c(coef_x[[i]], x$A[[j]][i,])
+  #     coef_x[[i]] <- c(coef_x[[i]], x$deterministic[i,])
+  #   }
+  #
+  #   coef_x <- lapply(coef_x, matrix)
+  #
+  #   type <- "const"
+  # } else {
+  #   coef_x <- coef(x)
+  #   type <- x$type
+  # }
 
   # calculating the covariance matrix
   Sigma_hat <- crossprod(residY)/(Tob-1-k*p)
@@ -224,7 +285,7 @@ id.ngml <- function(x, stage3 = FALSE){
 
   # Estimating VAR parameter 3. stage
   if(stage3 == TRUE){
-    y <- t(x$y)
+    #y <- t(x$y)
     yl <- t(y_lag_cr(t(y), p)$lags)
     Z_t <- rbind(rep(1, ncol(yl)), yl)
     y <- y[,-c(1:p)]
@@ -307,9 +368,9 @@ id.ngml <- function(x, stage3 = FALSE){
               method = "Non-Gaussian maximum likelihood",
               n = Tob,              # number of observations
               type = type,            # type of the VAR model e.g 'const'
-              y = x$y,                # Data
-              p = x$p,                # number of lags
-              K = x$K,                # number of time series
+              y = t(y),                # Data
+              p = p,                # number of lags
+              K = k,                # number of time series
               stage3 = stage3
               )
          class(result) <- "svars"

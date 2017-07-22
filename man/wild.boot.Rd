@@ -4,7 +4,7 @@
 \alias{wild.boot}
 \title{Wild bootstrap for IRFs of identified SVARs}
 \usage{
-wild.boot(x, rademacher = FALSE, horizon, nboot, nc, dd = NULL,
+wild.boot(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL,
   iter = 300)
 }
 \arguments{

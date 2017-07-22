@@ -36,13 +36,15 @@
 #'@export
 
 
-wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc  = 1, dd = NULL, iter = 300){
+
+wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, iter = 300){
+
   # x: vars object
   # B: estimated covariance matrix from true data set
   # rademacher: wether the bootstraop work with rademacher distance
   # horizon: Time horizon for Irf
   # nboot: number of bootstrap replications
-  if(x$method == 'CvM' & is.null(dd)){
+  if(x$method == "Cramer-von Mises distance" & is.null(dd)){
     dd <- copula::indepTestSim(Tob, k, verbose=F)
   }
 
@@ -104,7 +106,7 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc  = 1, dd = NULL,
       temp <- id.ngml(varb, stage3 = x$stage3)
     }else if(x$method == "Changes in Volatility"){
       temp <- id.cv(varb, SB = x$SB)
-    }else if(x$method == "CvM"){
+    }else if(x$method == "Cramer-von Mises distance"){
       temp <- id.cvm(varb, iter = iter, cores = 1, dd)
     }else{
       temp <- id.ldi(varb)

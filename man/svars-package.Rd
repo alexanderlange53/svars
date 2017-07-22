@@ -22,10 +22,10 @@
     \code{id.cvm} \tab Independence-based identification of SVAR models based on Cramer-von Mises distance.
   }
 
-  All of these functions require an estimated var object. Currently the classes 'vars' and 'ca.jo' are supported.
+  All of these functions require an estimated var object. Currently the classes 'vars' and 'vec2var' from the \code{vars} package,     'nlVar' from the \code{tsDyn} package as well as the list from \code{MTS} package are supported.
   Besides these core functions, some additional tools to calculate confidence bands for impulse response functions using
-  bootstrapping techniques as well as the Chow-Test for structural change. The USA dataset is used to showcase the functionalities
-  in examples throughout the package.
+  bootstrapping techniques as well as the Chow-Test for structural change. The \code{USA} dataset is used to showcase the
+  functionalties in examples throughout the package.
 }
 \author{
     \itemize{
@@ -33,7 +33,7 @@
       \item Simone Maxand
       \item Bernhard Dalheimer \email{bernhard.dalheimer@uni-goettingen.de}
     }
+    }
 
 
-\keyword{ ts, VAR, SVAR, ECM, VECM }
 
