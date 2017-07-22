@@ -63,7 +63,7 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, iter = 
   # gathering informations from vars object
   y <- x$y
   p <- x$p
-  obs <- x$obs
+  obs <- x$n
   k <- x$K
   B <- x$B
 

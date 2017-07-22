@@ -70,7 +70,7 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
   # gathering informations from vars object
   y <- x$y
   p <- x$p
-  obs <- x$obs
+  obs <- x$n
   k <- x$K
   B <- x$B
 
