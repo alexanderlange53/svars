@@ -35,7 +35,7 @@ plot.boot <- function(x, scales = "free_y", lowerq = 0.16, upperq = 0.84, ..., b
 
   ggplot(impulse, aes(x = V1, y = value)) +  geom_ribbon(aes(x = lower$V1, ymin= lower$value, ymax= upper$value), alpha=.7, fill = 'grey') +
     geom_line() + geom_hline(yintercept = 0, color = 'red') +
-    facet_wrap(~variable, scales = scales) +
+    facet_wrap(~variable, scales = scales, labeller = label_parsed) +
     xlab("Observation Time") + ylab("Response") +
     theme_bw()
 }

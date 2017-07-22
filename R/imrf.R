@@ -69,7 +69,7 @@ imrf <- function(x, horizon = 20){
     for(j in 1:dim(IR)[2]){
       cc <- cc + 1
       impulse[,cc] <- IR[i,j,]
-      colnames(impulse)[cc] <- paste("shock", j, "->", colnames(x$y)[i])
+      colnames(impulse)[cc] <- paste("epsilon[",colnames(x$y)[j],"]", "%->%", colnames(x$y)[i])
     }
   }
   impulse <- list(irf = as.data.frame(impulse))
