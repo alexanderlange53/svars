@@ -109,7 +109,7 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
     }else if(x$method == "Cramer-von Mises distance"){
       temp <- id.cvm(varb, iter = iter, cores = 1, dd)
     }else{
-      temp <- id.ldi(varb)
+      temp <- id.dc(varb)
     }
 
     Pstar <- temp$B
@@ -136,7 +136,7 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
   }
 
   # Calculating Standard errors for LDI methods
-  if(x$method == "Least dependent innovations"){
+  if(x$method == "Cramer-von Mises distance" | x$method == "Distance covariances"){
     SE <- matrix(0,k,k)
     for(i in 1:k){
       for(j in 1:k){

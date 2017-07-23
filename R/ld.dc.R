@@ -160,7 +160,7 @@ id.dc <- function(x){
               method =        "Distance covariances",
               n = Tob,        # number of observations
               type = type,    # type of the VAR model e.g 'const'
-              y = y,        # Data
+              y = t(y),        # Data
               p = p,        # number of lags
               K = k         # number of time series
               )

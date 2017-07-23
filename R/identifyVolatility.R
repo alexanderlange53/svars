@@ -71,6 +71,7 @@ y_lag_cr <- function(y, lag_length){
 }
 
 yl <- t(y_lag_cr(t(y), p)$lags)
+yret <- y
 y <- y[,-c(1:p)]
 
 Z_t <- rbind(rep(1, ncol(yl)), yl)
@@ -245,7 +246,7 @@ result <- list(
   type = x$type,          # type of the VAR model e.g 'const'
   SBcharacter = SBcharacter,             # Structural Break in input character format
   restrictions = restrictions, # number of restrictions
-  y = t(y),                # Data
+  y = t(yret),                # Data
   p = p,                # number of lags
   K = k                 # number of time series
 )
