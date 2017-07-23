@@ -39,7 +39,7 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, iter = 
   # horizon: Time horizon for Irf
   # nboot: number of bootstrap replications
   if(x$method == "Cramer-von Mises distance" & is.null(dd)){
-    dd <- copula::indepTestSim(Tob, k, verbose=F)
+    dd <- copula::indepTestSim(x$n, x$K, verbose=F)
   }
 
   # function to create Z matrix

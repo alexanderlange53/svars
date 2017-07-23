@@ -45,7 +45,7 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
   # horizon: Time horizon for Irf
   # nboot: number of bootstrap replications
   if(x$method == "Cramer-von Mises distance" & is.null(dd)){
-    dd <- copula::indepTestSim(Tob, k, verbose=F)
+    dd <- copula::indepTestSim(x$n, x$K, verbose=F)
   }
 
 
