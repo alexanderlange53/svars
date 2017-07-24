@@ -1,7 +1,8 @@
 #' @export
 
-summary.svars <- function(svarsObject, ...){
+summary.svars <- function(object, ...){
 
+  svarsObject <- object
   cat(paste("\n", "Identification Results", "\n", sep = ""))
   underScore <- paste(rep("-", nchar("Identification Results")), collapse = "")
   cat(underScore, "\n")
