@@ -58,3 +58,6 @@ Herwartz, H., 2015. Structural VAR modelling with independent innovations - An a
  Comon, P., 1994. Independent component analysis, A new concept?, Signal Processing, 36, 287-314\cr
  Genest, C. & Remillard, B., 2004. Tests of independence and randomness based on the empirical copula process, Test, 13, 335-370\cr
 }
+\seealso{
+For alternative identification approaches see \code{\link{id.cv}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
+}

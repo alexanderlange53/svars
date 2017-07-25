@@ -29,11 +29,11 @@ in the corresponding format (see examples) or common time parameters need to be 
 
 \item{crit}{Integer. Critical value for the precision of the GLS estimation}
 
-\item{restriction_matrix}{Matrix. A matrix containing presupposed values for matrix B, NA if no restriction is imposed (values to be estimated)}
+\item{restriction_matrix}{Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)}
 }
 \value{
 A list of class "svars" with elements
-\item{Lambda}{Estimated unconditional heteroscedasticity matrix}
+\item{Lambda}{Estimated unconditional heteroscedasticity matrix \eqn{\Lambda}}
 \item{Lambda_SE}{Matrix of standard errors of Lambda}
 \item{B}{Estimated instantaneous response matrix B, i.e. unique decomposition of the covariance matrix of reduced form residuals}
 \item{B_SE}{Standard errors of matrix B}
@@ -90,5 +90,9 @@ frequency = "quarter")
 
 }
 \references{
-Rigobon, R., 2003. Identification through Heteroskedasticity. The Review of Economics and Statistics, 85, 777-792.
+Rigobon, R., 2003. Identification through Heteroskedasticity. The Review of Economics and Statistics, 85, 777-792.\cr
+ Herwartz, H. & Ploedt, M., 2016. Simulation Evidence on Theory-based and Statistical Identification under Volatility Breaks Oxford Bulletin of Economics and Statistics, 78, 94-112.
+}
+\seealso{
+For alternative identification approaches see \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
 }

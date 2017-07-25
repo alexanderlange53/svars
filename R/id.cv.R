@@ -14,11 +14,11 @@
 #' @param end Character. End of the time series (only if dateVector is empty)
 #' @param frequency Character. Frequency of the time series (only if dateVector is empty)
 #' @param format Character. Date format (only if dateVector is empty)
-#' @param restriction_matrix Matrix. A matrix containing presupposed values for matrix B, NA if no restriction is imposed (values to be estimated)
+#' @param restriction_matrix Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)
 #' @param max.iter Integer. Number of maximum GLS iterations
 #' @param crit Integer. Critical value for the precision of the GLS estimation
 #' @return A list of class "svars" with elements
-#' \item{Lambda}{Estimated unconditional heteroscedasticity matrix}
+#' \item{Lambda}{Estimated unconditional heteroscedasticity matrix \eqn{\Lambda}}
 #' \item{Lambda_SE}{Matrix of standard errors of Lambda}
 #' \item{B}{Estimated instantaneous response matrix B, i.e. unique decomposition of the covariance matrix of reduced form residuals}
 #' \item{B_SE}{Standard errors of matrix B}
@@ -31,8 +31,11 @@
 #' \item{SB}{Structural break (number of observations)}
 #' \item{SBcharacter}{Structural break (date; if provided in function arguments)}
 #'
-#' @references Rigobon, R., 2003. Identification through Heteroskedasticity. The Review of Economics and Statistics, 85, 777-792.
-#'
+#' @references Rigobon, R., 2003. Identification through Heteroskedasticity. The Review of Economics and Statistics, 85, 777-792.\cr
+#'  Herwartz, H. & Ploedt, M., 2016. Simulation Evidence on Theory-based and Statistical Identification under Volatility Breaks Oxford Bulletin of Economics and Statistics, 78, 94-112.
+#' 
+#' @seealso For alternative identification approaches see \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
+#' 
 #' @examples
 #' \dontrun{
 #' # data contains quartlery observations from 1965Q1 to 2008Q2

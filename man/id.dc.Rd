@@ -49,3 +49,6 @@ Matteson, D. S. & Tsay, R. S., 2013. Independent Component Analysis via Distance
      Szekely, G. J.; Rizzo, M. L. & Bakirov, N. K., 2007. Measuring and testing dependence by correlation of distances Ann. Statist., 35, 2769-2794\cr
      Comon, P., 1994. Independent component analysis, A new concept?, Signal Processing, 36, 287-314
 }
+\seealso{
+For alternative identification approaches see \code{\link{id.cvm}}, \code{\link{id.cv}} or \code{\link{id.ngml}}
+}

@@ -21,5 +21,5 @@
 
 \format{A \code{data.frame} containing 174 observations on 3 variables.}
 
-\source{??}
+\source{Herwartz, H. & Plödt, M., 2016. Simulation Evidence on Theory-based and Statistical Identification under Volatility Breaks, Oxford Bulletin of Economics and Statistics, 78, 94-112. data originally from FRED database of the Federal Reserve Bank of St. Louis}
 
