@@ -27,8 +27,8 @@ A list of class "svars" with elements
 \description{
 Given an estimated VAR model, this function applies independence-based identification for the instantaneous response matrix B of the corresponding SVAR model
 \deqn{y_t=c_t+A_1 y_{t-1}+...+A_p y_{t-p}+u_t   =c_t+A_1 y_{t-1}+...+A_p y_{t-p}+B \epsilon_t.}
-Matrix B corresponds to the unique decomposition of the least squares covariance matrix \eqn{\Sigma_u=B B'} if the vector of structural shocks \eqn{\epsilon_t} contains at most one Gaussian shock (Comon, 94).
-A nonparamtric dependence measure, the Cramer-von Mises distance (Genest and Remillard, 2004), determines least dependent structural shocks. The algorithm described in Herwartz and Ploedt (2016) is applied to calculate the matrix B.
+Matrix B corresponds to the unique decomposition of the least squares covariance matrix \eqn{\Sigma_u=B B'} if the vector of structural shocks \eqn{\epsilon_t} contains at most one Gaussian shock (Comon, 1994).
+A nonparametric dependence measure, the Cramer-von Mises distance (Genest and Remillard, 2004), determines least dependent structural shocks. The algorithm described in Herwartz and Ploedt (2016) is applied to calculate the matrix B.
 }
 \examples{
 \dontrun{
