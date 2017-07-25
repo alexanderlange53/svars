@@ -25,6 +25,11 @@
 #'
 #' @references Luetkepohl, H., 2005. New introduction to multiple time series analysis, Springer-Verlag, Berlin.
 #'      Luetkepohl, H., Kraetzig, M., 2004. Applied time series econometrics, Cambridge University Press, Cambridge.
+#'@examples
+#' \dontrun{
+#' # Testing for structural break in USA data
+#' chow.test(USA, SB = 65, p = 6)
+#' }
 #' @export
 #'
 
@@ -69,16 +74,6 @@ chow.test <- function(Y, SB, p, nboot = 500, rademacher="FALSE",start = NULL, en
   # splitting sample
   sample1 <- Y[1:SB, ]
   sample2 <- Y[(SB+1):nrow(Y), ]
-
-  # selecting VAR orders
-  sel <- VARselect(Full, lag.max = lags)
-  if(any(sel$criteria[,sel$selection[1]] == -Inf) | any(is.na(sel$criteria[,sel$selection[1]]))){
-    sel$selection[1] <- sel$selection[1] - 2
-  }
-  if(sel$selection[1] == 1){
-    sel$selection[1] <- sel$selection[1] + 1
-  }
-
 
   # estimating VAR for pre and post SB and for full series
   VAR.model <- VAR(Full, p = p)
@@ -181,12 +176,12 @@ chow.test <- function(Y, SB, p, nboot = 500, rademacher="FALSE",start = NULL, en
     EmpDist_sp <- ecdf(lambda_spB)
     p.value_sp <- 1 - EmpDist_sp(lambda_sp)
 
-    return(list(lambda_bp,    # test statistic for break point test
-                testcrit_bp,  # critical value for 95% quantile
-                p.value_bp,   # p-value
-                lambda_sp,    # test statistic for sample split
-                testcrit_sp,  # critical value for 95% quantile
-                p.value_sp    # p-value
+    return(list(lambda_bp = lambda_bp,      # test statistic for break point test
+                testcrit_bp = testcrit_bp,  # critical value for 95% quantile
+                p.value_bp = p.value_bp,    # p-value
+                lambda_sp = lambda_sp,      # test statistic for sample split
+                testcrit_sp = testcrit_sp,  # critical value for 95% quantile
+                p.value_sp = p.value_sp     # p-value
                 ))
 
 }

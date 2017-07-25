@@ -10,6 +10,8 @@
 #'@param dd object of class 'indepTestDist'. A simulated independent sample of the same size as the data. If not supplied the function calculates it
 #'@param iter number of randomized starting points for optimization
 #'
+#'@references Brüggemann, R., Jentsch, C., and Carsten, T. (2016). Inference in vars with conditional heteroskedasticity of unknown form. Journal of Econometrics
+#'
 #' @examples
 #' \dontrun{
 #' # data contains quarterly observations from 1965Q1 to 2008Q3

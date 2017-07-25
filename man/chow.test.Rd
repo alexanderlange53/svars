@@ -42,6 +42,12 @@ A list with elements
 \description{
 The Chow test for structural change is implemented as sample-split and break-point test (see Luetkepohl and Kraetzig, 2004, p. 135). A multivariate time series and the presupposed structural break need to be provided.
 }
+\examples{
+\dontrun{
+# Testing for structural break in USA data
+chow.test(USA, SB = 65, p = 6)
+}
+}
 \references{
 Luetkepohl, H., 2005. New introduction to multiple time series analysis, Springer-Verlag, Berlin.
      Luetkepohl, H., Kraetzig, M., 2004. Applied time series econometrics, Cambridge University Press, Cambridge.
