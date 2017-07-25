@@ -17,12 +17,12 @@ mb.boot(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, iter = 300)
 
 \item{nc}{Number of processor cores (Not available on windows machines)}
 
-\item{dd}{object of class 'indepTestDist'. A simulated independent sample of the same size as the data. If not supplied the function calculates it}
+\item{dd}{Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.  If not supplied, it will be culculated by the function}
 
-\item{iter}{number of randomized starting points for optimization}
+\item{iter}{Number of randomized starting points for optimization}
 }
 \description{
-Calculating confidance bands for impulse response via moving block bootstrap
+Calculating confidence bands for impulse response via moving block bootstrap
 }
 \examples{
 \dontrun{

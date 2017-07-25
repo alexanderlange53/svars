@@ -1,14 +1,14 @@
 #'Moving block bootstrap for IRFs of identified SVARs
 #'
-#'Calculating confidance bands for impulse response via moving block bootstrap
+#'Calculating confidence bands for impulse response via moving block bootstrap
 #'
 #'@param x SVAR object of class "svars"
 #'@param b.length Length of each block
 #'@param horizon Time horizon of impulse response functions
 #'@param nboot Number of bootstrap iterations
 #'@param nc Number of processor cores (Not available on windows machines)
-#'@param dd object of class 'indepTestDist'. A simulated independent sample of the same size as the data. If not supplied the function calculates it
-#'@param iter number of randomized starting points for optimization
+#'@param dd Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.  If not supplied, it will be culculated by the function
+#'@param iter Number of randomized starting points for optimization
 #'
 #'@references Brüggemann, R., Jentsch, C., and Carsten, T. (2016). Inference in vars with conditional heteroskedasticity of unknown form. Journal of Econometrics
 #'

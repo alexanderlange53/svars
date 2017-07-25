@@ -12,18 +12,18 @@ wild.boot(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL,
 
 \item{rademacher}{If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples}
 
-\item{horizon}{Time horizon of impulse response functions}
+\item{horizon}{Time horizon for impulse response functions}
 
 \item{nboot}{Number of bootstrap iterations}
 
 \item{nc}{Number of processor cores (Not available on windows machines)}
 
-\item{dd}{object of class 'indepTestDist'. A simulated independent sample of the same size as the data. If not supplied the function calculates it}
+\item{dd}{Object of class 'indepTestDist'. A simulated independent sample of the same size as the data. If not supplied, it will be culculated by the function}
 
-\item{iter}{number of randomized starting points for optimization}
+\item{iter}{Number of randomized starting points for optimization}
 }
 \description{
-Calculating confidance bands for impulse response functions via wild bootstrap techniques (Goncales and Kilian, 2004).
+Calculating confidence bands for impulse response functions via wild bootstrap techniques (Goncalves and Kilian, 2004).
 }
 \examples{
 \dontrun{
