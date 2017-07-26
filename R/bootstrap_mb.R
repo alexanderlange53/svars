@@ -10,6 +10,8 @@
 #'@param dd Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.  If not supplied, it will be culculated by the function
 #'@param iter Number of randomized starting points for optimization
 #'
+#'@seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}
+#'
 #' @examples
 #' \dontrun{
 #' # data contains quarterly observations from 1965Q1 to 2008Q3
