@@ -10,9 +10,9 @@
   \cr
   Quarterly observations from 1965Q1 to 2008Q3:
   \tabular{ll}{
-    x \tab\tab Percentage log-deviation of real GDP \cr
-    pi \tab\tab Annualized quarter-on-quarter growth of the GDP deflator \cr
-    i \tab\tab Interest rate on Federal funds \cr
+    x \tab Percentage log-deviation of real GDP \cr
+    pi \tab Annualized quarter-on-quarter growth of the GDP deflator \cr
+    i \tab Interest rate on Federal funds \cr
   }
 A more detailed description of the data and a corresponding VAR model implementation can be found in Herwartz & Plödt (2016).
 }
