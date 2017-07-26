@@ -8,13 +8,13 @@
 
 \description{The time series of output gap (x), inflation (pi) and interest rate (r) are taken from the FRED database and transformed as in Herwartz & Plödt (2016). The trivariate time series model is commonly used to analyze monetary policy shocks. 
   \cr
-  Quarterly observations from 1965Q1 to 2008Q3
+  Quarterly observations from 1965Q1 to 2008Q3:
   \tabular{ll}{
-    x \tab Percentage log-deviation of real GDP \cr
-    pi \tab Annualized quarter-on-quarter growth of the GDP de???ator \cr
-    i \tab Interest rate on Federal funds \cr
+    x \tab\tab Percentage log-deviation of real GDP \cr
+    pi \tab\tab Annualized quarter-on-quarter growth of the GDP deflator \cr
+    i \tab\tab Interest rate on Federal funds \cr
   }
-A more detailed description of the data and a VAR model implementation can be found in Herwartz & Plödt (2016).
+A more detailed description of the data and a corresponding VAR model implementation can be found in Herwartz & Plödt (2016).
 }
 
 \usage{USA}
