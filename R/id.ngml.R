@@ -285,6 +285,22 @@ id.ngml <- function(x, stage3 = FALSE){
   sigma_SE <- FishObs[(k*k-k+1):(k*k)]
   d_SE <- FishObs[(k*k+1):(k*k+k)]
 
+  # getting variances and covariances for S.E. of non stand B
+  covariance <- HESS[1:(k*k-k),((k*k-k+1):(k*k))]
+  B.SE.2 <- diag(sigma_SE)
+
+
+  jj <- 0
+  for(i in 1:k){
+    for(j in 1:k){
+      if(i != j){
+        jj <- jj + 1
+        B.SE.2[j,i] <- sqrt(2*covariance[jj,i]^2 + (B.SE[j,i]^2 + B_stand_est[j,i]^2)*(sigma_SE[i]^2 + sigma_est[i]^2) -
+                       (covariance[jj, i] + B_stand_est[j,i] * sigma_est[i])^2)
+      }
+    }
+  }
+
   # Estimating VAR parameter 3. stage
   if(stage3 == TRUE){
     #y <- t(x$y)
@@ -358,6 +374,7 @@ id.ngml <- function(x, stage3 = FALSE){
   }
 
   result <- list(B = B_hat_ord,       # estimated B matrix (unique decomposition of the covariance matrix)
+              B_SE = B.SE.2,          # standard errors
               sigma = sigma_est,      # estimated scale of the standardized B
               sigma_SE = sigma_SE,    # standard errors of the scale
               df = d_freedom,         # estimated degrees of freedom of the distribution
