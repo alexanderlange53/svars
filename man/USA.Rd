@@ -21,5 +21,6 @@ A more detailed description of the data and a VAR model implementation can be fo
 
 \format{A \code{data.frame} containing 174 observations on 3 variables.}
 
-\source{Herwartz, H. & Plödt, M., 2016. Simulation Evidence on Theory-based and Statistical Identification under Volatility Breaks, Oxford Bulletin of Economics and Statistics, 78, 94-112. Data originally from FRED database of the Federal Reserve Bank of St. Louis.}
+\source{Herwartz, H. & Plödt, M., 2016. Simulation Evidence on Theory-based and Statistical Identification under Volatility Breaks, Oxford Bulletin of Economics and Statistics, 78, 94-112.\cr
+Data originally from FRED database of the Federal Reserve Bank of St. Louis.}
 
