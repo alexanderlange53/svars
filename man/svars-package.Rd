@@ -1,10 +1,9 @@
 \name{svars-package}
 \alias{svars-package}
 \alias{svars}
-\title{Data driven SVAR identification of impact matrix for impulse response functions}
+\title{Data-driven identification of structural VAR models}
 \description{
-  This package Implements data driven identification methods for SVAR models. Based on an existing VAR model
-  objct the B matrix may be obtained via changes in volatility, least dependent innovations or non gaussian maximum likelihood.
+  This package implements data-driven identification methods for structural vector autoregressive (SVAR) models. Based on an existing VAR model object, the structural impact matrix B may be obtained via changes in volatility, least dependent innovations or non-Gaussian maximum likelihood.
   .\cr
   }
 \details{
@@ -24,13 +23,13 @@
 
   All of these functions require an estimated var object. Currently the classes 'vars' and 'vec2var' from the \code{vars} package,     'nlVar' from the \code{tsDyn} package as well as the list from \code{MTS} package are supported.
   Besides these core functions, some additional tools to calculate confidence bands for impulse response functions using
-  bootstrapping techniques as well as the Chow-Test for structural change. The \code{USA} dataset is used to showcase the
+  bootstrap techniques as well as the Chow-Test for structural change are implemented. The \code{USA} dataset is used to showcase the
   functionalties in examples throughout the package.
 }
 \author{
     \itemize{
       \item Alexander Lange \email{alexander.lange@stud.uni-goettingen.de}
-      \item Simone Maxand
+      \item Simone Maxand   \email{smaxand@uni-goettingen.de}
       \item Bernhard Dalheimer \email{bernhard.dalheimer@uni-goettingen.de}
     }
     }
