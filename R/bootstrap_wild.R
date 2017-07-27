@@ -12,6 +12,8 @@
 #'
 #'@references Goncalves, S., Kilian, L., 2004. Bootstrapping autoregressions with conditional heteroskedasticity of unknown form. Journal of Econometrics 123, 89-120.
 #'
+#'@seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}
+#'
 #' @examples
 #' \dontrun{
 #' # data contains quarterly observations from 1965Q1 to 2008Q3
