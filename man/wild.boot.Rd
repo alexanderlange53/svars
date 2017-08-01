@@ -50,3 +50,6 @@ plot(bb, lowerq = 0.16, upperq = 0.84)
 \references{
 Goncalves, S., Kilian, L., 2004. Bootstrapping autoregressions with conditional heteroskedasticity of unknown form. Journal of Econometrics 123, 89-120.
 }
+\seealso{
+\code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}
+}
