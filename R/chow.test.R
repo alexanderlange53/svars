@@ -30,6 +30,17 @@
 #' # Testing for structural break in USA data
 #' z1 = chow.test(USA, SB = 65, p = 6)
 #' summary(z1)
+#'
+#' Structural brake via Dates
+#' given that time series vector with dates is available
+#' dateVector = seq(as.Date("1965/1/1"), as.Date("2008/6/1"), "quarter")
+#' z2 <- chow.test(USA, SB = "1985-01-01", p = 6, format = "%Y-%m-%d", dateVector = dateVector)
+#' summary(z2)
+#'
+#' # alternatively pass sequence arguments directly
+#' z3 <- chow.test(USA, SB = "1985-01-01", p = 6, format = "%Y-%m-%d", start = "1965-01-01", end = "2008-06-01",
+#'            frequency = "quarter")
+#'
 #' }
 #' @export
 #'
@@ -45,7 +56,7 @@
 chow.test <- function(Y, SB, p, nboot = 500, rademacher="FALSE",start = NULL, end = NULL,
                       frequency = NULL, format = NULL, dateVector = NULL){
   # Null hypothesis of no sample split is rejected for large values of lambda
-
+  Tob <- nrow(Y) - p
   if(is.numeric(SB)){
     SBcharacter <- NULL
   }
