@@ -6,7 +6,8 @@
 #' A nonparametric dependence measure, the distance covariance (Szekely et al, 2007), determines least dependent structural shocks. The algorithm described in Matteson and Tsay (2013) is applied to calculate the matrix B.
 #'
 #' @param x An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object
-#' @return A list of class "svars" with elements
+#' @param PIT Logical. If PIT='TRUE', the distribution and density of the independent components are estimated using gaussian kernel density estimates
+#'  @return A list of class "svars" with elements
 #' \item{B}{Estimated structural impact matrix B, i.e. unique decomposition of the covariance matrix of reduced form errors}
 #' \item{A_hat}{Estimated VAR parameter}
 #' \item{method}{Method applied for identifaction}
@@ -45,7 +46,7 @@
 ## Identification via least dependent innovations ##
 #--------------------------------------------------#
 
-id.dc <- function(x){
+id.dc <- function(x, PIT=FALSE){
 
   # getting informations from VAR estimation
   # u <- residuals(x)
@@ -138,7 +139,7 @@ id.dc <- function(x){
 
   # minimize dCov with 'steadyICA'
   u_chol <- t(solve(P_chol)%*%t(u))
-  ICA <- steadyICA(u_chol, symmetric=TRUE)
+  ICA <- steadyICA(u_chol, symmetric=TRUE, PIT=PIT)
 
   # structural matrix Sigma_u = BB'
   P <- P_chol%*%ICA$W
