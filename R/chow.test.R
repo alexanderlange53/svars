@@ -28,7 +28,8 @@
 #'@examples
 #' \dontrun{
 #' # Testing for structural break in USA data
-#' chow.test(USA, SB = 65, p = 6)
+#' z1 = chow.test(USA, SB = 65, p = 6)
+#' summary(z1)
 #' }
 #' @export
 #'
@@ -45,10 +46,14 @@ chow.test <- function(Y, SB, p, nboot = 500, rademacher="FALSE",start = NULL, en
                       frequency = NULL, format = NULL, dateVector = NULL){
   # Null hypothesis of no sample split is rejected for large values of lambda
 
-  if(!is.numeric(SB)){
+  if(is.numeric(SB)){
+    SBcharacter <- NULL
+  }
 
+  if(!is.numeric(SB)){
+    SBcharacter <- SB
     SB <- getStructuralBreak(SB = SB, start = start, end = end,
-                             frequency = frequency, format = format, dateVector = dateVector)
+                             frequency = frequency, format = format, dateVector = dateVector, Tob = Tob, p = p)
   }
 
   # function to create Z matrix
@@ -176,12 +181,18 @@ chow.test <- function(Y, SB, p, nboot = 500, rademacher="FALSE",start = NULL, en
     EmpDist_sp <- ecdf(lambda_spB)
     p.value_sp <- 1 - EmpDist_sp(lambda_sp)
 
-    return(list(lambda_bp = lambda_bp,      # test statistic for break point test
-                testcrit_bp = testcrit_bp,  # critical value for 95% quantile
-                p.value_bp = p.value_bp,    # p-value
-                lambda_sp = lambda_sp,      # test statistic for sample split
-                testcrit_sp = testcrit_sp,  # critical value for 95% quantile
-                p.value_sp = p.value_sp     # p-value
-                ))
+    chowTest <- list(lambda_bp = lambda_bp,      # test statistic for break point test
+                     testcrit_bp = testcrit_bp,  # critical value for 95% quantile
+                     p.value_bp = p.value_bp,    # p-value
+                     lambda_sp = lambda_sp,      # test statistic for sample split
+                     testcrit_sp = testcrit_sp,  # critical value for 95% quantile
+                     p.value_sp = p.value_sp,     # p-value
+                     SB = SB,                     # Structural breakpoint
+                     SBcharacter = SBcharacter,   # Structural Break as character
+                     p = p
+                     )
+    class(chowTest) <- "chow"
+
+    return(chowTest)
 
 }

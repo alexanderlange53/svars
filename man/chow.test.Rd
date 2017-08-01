@@ -45,7 +45,8 @@ The Chow test for structural change is implemented as sample-split and break-poi
 \examples{
 \dontrun{
 # Testing for structural break in USA data
-chow.test(USA, SB = 65, p = 6)
+z1 = chow.test(USA, SB = 65, p = 6)
+summary(z1)
 }
 }
 \references{

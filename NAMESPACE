@@ -2,6 +2,7 @@
 
 S3method(plot,boot)
 S3method(plot,irf)
+S3method(summary,chow)
 S3method(summary,svars)
 export(chow.test)
 export(id.cv)
