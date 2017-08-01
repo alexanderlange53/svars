@@ -165,7 +165,8 @@ id.dc <- function(x, PIT=FALSE){
               type = type,    # type of the VAR model e.g 'const'
               y = t(y),        # Data
               p = p,        # number of lags
-              K = k         # number of time series
+              K = k,         # number of time series
+              PIT=PIT
               )
   class(result) <- "svars"
   return(result)

@@ -4,18 +4,18 @@
 \alias{id.dc}
 \title{Independence-based identification of SVAR models based on distance covariances}
 \usage{
-id.dc(x)
+id.dc(x, PIT = FALSE)
 }
 \arguments{
 \item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object}
-}
-\value{
-A list of class "svars" with elements
+
+\item{PIT}{Logical. If PIT='TRUE', the distribution and density of the independent components are estimated using gaussian kernel density estimates
+ @return A list of class "svars" with elements
 \item{B}{Estimated structural impact matrix B, i.e. unique decomposition of the covariance matrix of reduced form errors}
 \item{A_hat}{Estimated VAR parameter}
 \item{method}{Method applied for identifaction}
 \item{n}{Number of observations}
-\item{type}{Type of the VAR model, e.g. 'const'}
+\item{type}{Type of the VAR model, e.g. 'const'}}
 }
 \description{
 Given an estimated VAR model, this function applies independence-based identification for the structural impact matrix B of the corresponding SVAR model

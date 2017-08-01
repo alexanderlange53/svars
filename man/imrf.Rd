@@ -22,3 +22,6 @@ plot(x2)
 }
 
 }
+\seealso{
+\code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}
+}

@@ -2,7 +2,6 @@
 
 S3method(plot,boot)
 S3method(plot,irf)
-S3method(summary,svars)
 export(chow.test)
 export(id.cv)
 export(id.cvm)
@@ -10,4 +9,5 @@ export(id.dc)
 export(id.ngml)
 export(imrf)
 export(mb.boot)
+export(summary.svars)
 export(wild.boot)
