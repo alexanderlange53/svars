@@ -127,7 +127,7 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, iter = 
     }else if(x$method == "Cramer-von Mises distance"){
       temp <- id.cvm(varb, iter = iter, cores = 1, dd)
     }else{
-      temp <- id.dc(varb)
+      temp <- id.dc(varb, PIT=x$PIT)
     }
 
     Pstar <- temp$B
