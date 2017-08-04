@@ -33,9 +33,9 @@
 #'
 #' @references Rigobon, R., 2003. Identification through Heteroskedasticity. The Review of Economics and Statistics, 85, 777-792.\cr
 #'  Herwartz, H. & Ploedt, M., 2016. Simulation Evidence on Theory-based and Statistical Identification under Volatility Breaks Oxford Bulletin of Economics and Statistics, 78, 94-112.
-#' 
+#'
 #' @seealso For alternative identification approaches see \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
-#' 
+#'
 #' @examples
 #' \dontrun{
 #' # data contains quartlery observations from 1965Q1 to 2008Q2
@@ -72,6 +72,7 @@
 #' frequency = "quarter")
 #' }
 #'
+#' @importFrom steadyICA steadyICA
 #' @export
 
 
@@ -92,13 +93,16 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
   u_t <- residuals(x)
   Tob <- nrow(u_t)
   k <- ncol(u_t)
-  if(length(class(x)) == 1 & class(x) == "varest"){
+  if(inherits(x, "varest")){
   p <- x$p
   y <- t(x$y)
-  }else if(class(x)[length(class(x))] == "nlVar"){
+  }else if(inherits(x, "nlVar")){
+    if(inherits(x, "VECM")){
+      stop("id.cv is not available for VECMs")
+    }
     p <- x$lag
     y <- t(x$model[, 1:k])
-  }else if(class(x) == "list"){
+  }else if(inherits(x, "list")){
     p <- x$order
     y <- t(x$data)
   }else{
