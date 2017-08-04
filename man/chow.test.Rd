@@ -55,8 +55,9 @@ z2 <- chow.test(USA, SB = "1985-01-01", p = 6, format = "\%Y-\%m-\%d", dateVecto
 summary(z2)
 
 # alternatively pass sequence arguments directly
-z3 <- chow.test(USA, SB = "1985-01-01", p = 6, format = "\%Y-\%m-\%d", start = "1965-01-01", end = "2008-06-01",
-           frequency = "quarter")
+z3 <- chow.test(USA, SB = "1985-01-01", p = 6, format = "\%Y-\%m-\%d",
+                start = "1965-01-01", end = "2008-06-01",
+                frequency = "quarter")
 
 }
 }

@@ -38,10 +38,16 @@
 #' summary(z2)
 #'
 #' # alternatively pass sequence arguments directly
-#' z3 <- chow.test(USA, SB = "1985-01-01", p = 6, format = "%Y-%m-%d", start = "1965-01-01", end = "2008-06-01",
-#'            frequency = "quarter")
+#' z3 <- chow.test(USA, SB = "1985-01-01", p = 6, format = "%Y-%m-%d",
+#'                 start = "1965-01-01", end = "2008-06-01",
+#'                 frequency = "quarter")
 #'
 #' }
+#' @import stats
+#' @importFrom utils combn
+#' @importFrom vars VAR
+#' @importFrom expm sqrtm
+#'
 #' @export
 #'
 
@@ -80,7 +86,7 @@ chow.test <- function(Y, SB, p, nboot = 500, rademacher="FALSE",start = NULL, en
   }
 
   sqrt.f <- function(Pstar, Sigma_u_star){
-    yy <- suppressMessages(sqrtm(Sigma_u_hat_old))%*%solve(suppressMessages(sqrtm(Sigma_u_star)))%*%Pstar
+    yy <- suppressMessages(sqrtm(~Sigma_u_hat_old))%*%solve(suppressMessages(sqrtm(Sigma_u_star)))%*%Pstar
     return(yy)
   }
 

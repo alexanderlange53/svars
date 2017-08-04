@@ -9,7 +9,7 @@ Author: Alexander Lange [aut, cre],
 Authors@R: c(person("Alexander", "Lange", role = c("aut", "cre")), person("Bernhard", "Dalheimer", role = c("aut")), person("Simone", "Maxand", role = c("aut")))
 Maintainer: Alexander Lange <alexander.lange@stud.uni-goettingen.de>
 Description: Implements data-driven identification methods for SVAR models. Based on an existing VAR model object, the structural impact matrix is obtained via changes in volatility, least dependent innovations or non-Gaussian maximum likelihood.
-Depends: vars, expm, reshape2, ggplot2, copula, clue, pbapply, steadyICA
+Imports: vars, expm, reshape2, ggplot2, copula, clue, pbapply, steadyICA, tsDyn
 License: GPL (>= 2)
 LazyData: TRUE
 RoxygenNote: 6.0.1
