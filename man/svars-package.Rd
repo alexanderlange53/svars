@@ -30,7 +30,7 @@
     \itemize{
       \item Alexander Lange \email{alexander.lange@stud.uni-goettingen.de}
       \item Bernhard Dalheimer \email{bernhard.dalheimer@uni-goettingen.de}
-      \item Helmut Herwartz \email{"hherwartz@uni-goettingen.de}
+      \item Helmut Herwartz \email{hherwartz@uni-goettingen.de}
       \item Simone Maxand   \email{smaxand@uni-goettingen.de}
 
     }
