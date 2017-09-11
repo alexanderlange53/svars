@@ -12,7 +12,7 @@
 #'
 #'@seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}
 #'
-#'@references Brüggemann, R., Jentsch, C., and Carsten, T. (2016). Inference in vars with conditional heteroskedasticity of unknown form. Journal of Econometrics
+#'@references Br\"ggemann, R., Jentsch, C., and Carsten, T. (2016). Inference in vars with conditional heteroskedasticity of unknown form. Journal of Econometrics
 #'
 #' @examples
 #' \dontrun{
@@ -34,7 +34,8 @@
 #' plot(bb, lowerq = 0.05, upperq = 0.95)
 #' }
 #'
-#'@export
+#' @importFrom expm expm
+#' @export
 
 
 mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, iter = 300){
@@ -127,7 +128,7 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, iter = 
     }else if(x$method == "Cramer-von Mises distance"){
       temp <- id.cvm(varb, iter = iter, cores = 1, dd)
     }else{
-      temp <- id.dc(varb)
+      temp <- id.dc(varb, PIT=x$PIT)
     }
 
     Pstar <- temp$B

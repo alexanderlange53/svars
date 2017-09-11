@@ -4,10 +4,12 @@
 \alias{id.dc}
 \title{Independence-based identification of SVAR models based on distance covariances}
 \usage{
-id.dc(x)
+id.dc(x, PIT = FALSE)
 }
 \arguments{
 \item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object}
+
+\item{PIT}{Logical. If PIT='TRUE', the distribution and density of the independent components are estimated using gaussian kernel density estimates}
 }
 \value{
 A list of class "svars" with elements

@@ -46,7 +46,7 @@
 #' i1 <- imrf(x1, horizon = 30)
 #' plot(i1, scales = 'free_y')
 #' }
-#'
+#' @importFrom tsDyn VARrep
 #' @export
 
 
@@ -163,30 +163,34 @@ id.ngml <- function(x, stage3 = FALSE){
   k <- ncol(u)
   residY <- u
 
-  if(length(class(x)) == 1 & "varest" %in% class(x)){
+  if(inherits(x, "varest")){
     p <- x$p
     y <- t(x$y)
     type = x$type
     coef_x = coef(x)
-  }else if(class(x)[length(class(x))] == "nlVar"){
+  }else if(inherits(x, "nlVar")){
     p <- x$lag
     y <- t(x$model[, 1:k])
     coef_x <- t(coef(x))
 
-    if(rownames(coef_x)[1] == "Intercept"){
+    if(inherits(x, "VECM")){
+     coef_x <- t(VARrep(x))
+    }
+
+    if(rownames(coef_x)[1] %in% c("Intercept", "constant")){
       coef_x <- coef_x[c(2:nrow(coef_x),1),]
       type = "const"
     }else if(rownames(coef_x)[1] == "Trend"){
       coef_x <- coef_x[c(2:nrow(coef_x),1),]
       type <- "trend"
     }
-    if(rownames(coef_x)[1] %in% c("Intercept", "Trend")){
+    if(rownames(coef_x)[1] %in% c("Intercept", "constant", "Trend")){
       coef_x <- coef_x[c(2:nrow(coef_x),1),]
       type <- "both"
     }
     coef_x <- split(coef_x, rep(1:ncol(coef_x), each = nrow(coef_x)))
     coef_x <- lapply(coef_x, as.matrix)
-  }else if(class(x) == "list"){
+  }else if(inherits(x, "list")){
     p <- x$order
     y <- t(x$data)
     coef_x <- x$coef
@@ -197,7 +201,7 @@ id.ngml <- function(x, stage3 = FALSE){
     coef_x <- split(coef_x, rep(1:ncol(coef_x), each = nrow(coef_x)))
     coef_x <- lapply(coef_x, as.matrix)
 
-    }else if(class(x) == "vec2var"){
+    }else if(inherits(x, "vec2var")){
       coef_x <- vector("list", length = k)
       names(coef_x) <- colnames(x$y)
       p <- x$p

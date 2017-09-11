@@ -45,6 +45,9 @@
 #' plot(i1, scales = 'free_y')
 #' }
 #'
+#' @importFrom copula indepTestSim
+#' @importFrom pbapply pblapply
+#'
 #' @export
 
 
@@ -81,6 +84,7 @@ id.cvm <- function(x, iter = 500, dd = NULL, cores = 1){
   #   coef_x <- coef(x)
   #   type <- x$type
   # }
+
   if(is.null(residuals(x))){
     stop("No residuals retrieved from model")
   }
@@ -88,31 +92,34 @@ id.cvm <- function(x, iter = 500, dd = NULL, cores = 1){
   Tob <- nrow(u)
   k <- ncol(u)
   residY <- u
-
-  if(length(class(x)) == 1 & "varest" %in% class(x)){
+  if(inherits(x, "varest")){
     p <- x$p
     y <- t(x$y)
     type = x$type
     coef_x = coef(x)
-  }else if(class(x)[length(class(x))] == "nlVar"){
+  }else if(inherits(x, "nlVar")){
     p <- x$lag
     y <- t(x$model[, 1:k])
     coef_x <- t(coef(x))
 
-    if(rownames(coef_x)[1] == "Intercept"){
+    if(inherits(x, "VECM")){
+      coef_x <- t(VARrep(x))
+    }
+
+    if(rownames(coef_x)[1] %in% c("Intercept", "constant")){
       coef_x <- coef_x[c(2:nrow(coef_x),1),]
       type = "const"
     }else if(rownames(coef_x)[1] == "Trend"){
       coef_x <- coef_x[c(2:nrow(coef_x),1),]
       type <- "trend"
     }
-    if(rownames(coef_x)[1] %in% c("Intercept", "Trend")){
+    if(rownames(coef_x)[1] %in% c("Intercept", "constant", "Trend")){
       coef_x <- coef_x[c(2:nrow(coef_x),1),]
       type <- "both"
     }
     coef_x <- split(coef_x, rep(1:ncol(coef_x), each = nrow(coef_x)))
     coef_x <- lapply(coef_x, as.matrix)
-  }else if(class(x) == "list"){
+  }else if(inherits(x, "list")){
     p <- x$order
     y <- t(x$data)
     coef_x <- x$coef
@@ -123,7 +130,7 @@ id.cvm <- function(x, iter = 500, dd = NULL, cores = 1){
     coef_x <- split(coef_x, rep(1:ncol(coef_x), each = nrow(coef_x)))
     coef_x <- lapply(coef_x, as.matrix)
 
-  }else if(class(x) == "vec2var"){
+  }else if(inherits(x, "vec2var")){
     coef_x <- vector("list", length = k)
     names(coef_x) <- colnames(x$y)
     p <- x$p
@@ -199,9 +206,9 @@ id.cvm <- function(x, iter = 500, dd = NULL, cores = 1){
                  method =        "Cramer-von Mises distance",
                  n = Tob,      # number of observations
                  type = type,    # type of the VAR model e.g 'const'
-                 y = x$y,        # Data
-                 p = x$p,        # number of lags
-                 K = x$K,        # number of time series
+                 y = y,        # Data
+                 p = p,        # number of lags
+                 K = k,        # number of time series
                  test.stats = sort(logs) # teststatistics
   )
   class(result) <- "svars"

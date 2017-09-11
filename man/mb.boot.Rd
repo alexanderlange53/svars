@@ -46,7 +46,10 @@ plot(bb, lowerq = 0.05, upperq = 0.95)
 
 }
 \references{
-Brüggemann, R., Jentsch, C., and Carsten, T. (2016). Inference in vars with conditional heteroskedasticity of unknown form. Journal of Econometrics
+Br\"ggemann, R., Jentsch, C., and Carsten, T. (2016). Inference in vars with conditional heteroskedasticity of unknown form. Journal of Econometrics
+}
+\seealso{
+\code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}
 }
 \seealso{
 \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}

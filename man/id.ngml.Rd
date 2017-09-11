@@ -52,7 +52,6 @@ x1$B[,3] <- x1$B[,3]*(-1)
 i1 <- imrf(x1, horizon = 30)
 plot(i1, scales = 'free_y')
 }
-
 }
 \references{
 Lanne, M., Meitz, M., Saikkonen, P., 2017. Identification and estimation of non-Gaussian structural vector autoregressions. J. Econometrics 196 (2), 288-304.\cr
