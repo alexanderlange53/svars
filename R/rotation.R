@@ -1,10 +1,22 @@
+check_res <- function(res, b) {
+  dim(b) <- c(length(b), 1)
+  tmp <- as.vector(res %*% b)
+  all(abs(tmp) < 1e-3)
+}
+
+
 # function which rotates the B matrix and calculates the indpendence of the structural errors
-testlik <- function(theta, faklow, u, dd) {
+testlik <- function(theta, faklow, u, dd, res) {
 
   temp_l <- rotmat(theta, faklow)
+
+  if (! is.null(res)) {
+    if (! check_res(res, temp_l)) return(Inf)
+  }
+
   ser_low <- tcrossprod(u, solve(temp_l))
   ddtest <- copula::indepTest(ser_low, dd)
-  ddtest$global.statistic * 10000000
+  ddtest$global.statistic # * 10000000
 
 }
 
