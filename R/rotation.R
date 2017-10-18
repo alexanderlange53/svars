@@ -1,10 +1,12 @@
+
 # function which rotates the B matrix and calculates the indpendence of the structural errors
 testlik <- function(theta, faklow, u, dd) {
 
   temp_l <- rotmat(theta, faklow)
+
   ser_low <- tcrossprod(u, solve(temp_l))
   ddtest <- copula::indepTest(ser_low, dd)
-  ddtest$global.statistic * 10000000
+  ddtest$global.statistic # * 10000000
 
 }
 

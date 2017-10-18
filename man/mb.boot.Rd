@@ -51,6 +51,3 @@ Br\"ggemann, R., Jentsch, C., and Carsten, T. (2016). Inference in vars with con
 \seealso{
 \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}
 }
-\seealso{
-\code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}
-}
