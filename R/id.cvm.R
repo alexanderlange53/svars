@@ -22,6 +22,9 @@
 #' \item{rotation_angles}{Rotation angles, whch lead to maximum independence}
 #' \item{inc}{Indicator. 1 = second optimization increased the estimation prcision. 0 = second optimization did not increase the estimation precision}
 #' \item{test.stats}{Computed test statistics of independence test}
+#' \item{iter1}{Number of iterations of first optimization}
+#' \item{test1}{Minimum teststatistic from first optimization}
+#' \item{test2}{Minimum teststatistic from second optimization}
 #'
 #'@references Herwartz, H., 2015. Structural VAR modelling with independent innovations - An analysis of macroeconomic dynamics in the euro area based on a novel identification scheme\cr
 #'  Herwartz, H. & Ploedt, M., 2016. The macroeconomic effects of oil price shocks: Evidence from a statistical identification approach, Journal of International Money and Finance, 61, 30-44\cr
@@ -220,7 +223,10 @@ id.cvm <- function(x, dd = NULL, itermax = 500, steptol = 100, iter2 = 75){
                  K = k,            # number of time series
                  rotation_angles = par_o, # optimal rotation angles
                  inc = inc,        # wether the second optimization improved the estimation
-                 test.stats = logs # teststatistics
+                 test.stats = logs,# minimum teststatistic obtained
+                 iter1 =  de_res$optim$iter, # number of iterations of first optimization
+                 test1 = de_res$optim$bestval, # minimum teststatistic from first optimization
+                 test2 = min(logliks) # minimum teststatistic from second optimization
   )
 
   class(result) <- "svars"

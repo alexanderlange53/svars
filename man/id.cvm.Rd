@@ -30,6 +30,9 @@ A list of class "svars" with elements
 \item{rotation_angles}{Rotation angles, whch lead to maximum independence}
 \item{inc}{Indicator. 1 = second optimization increased the estimation prcision. 0 = second optimization did not increase the estimation precision}
 \item{test.stats}{Computed test statistics of independence test}
+\item{iter1}{Number of iterations of first optimization}
+\item{test1}{Minimum teststatistic from first optimization}
+\item{test2}{Minimum teststatistic from second optimization}
 }
 \description{
 Given an estimated VAR model, this function applies independence-based identification for the structural impact matrix B of the corresponding SVAR model
