@@ -54,7 +54,6 @@
 ## Identification via non-Gaussian maximum likelihood ##
 #------------------------------------------------------#
 
-# x  : object of class VAR
 
 id.ngml <- function(x, stage3 = FALSE){
 
@@ -147,13 +146,6 @@ id.ngml <- function(x, stage3 = FALSE){
 
   ########### starting the computations ------------------------------------------------------------------------
 
-  # getting informations from VAR estimation
-  # u <- residuals(x)
-  # p <- x$p
-  # Tob <- x$obs
-  # k <- x$K
-  # residY <- u
-
 
   if(is.null(residuals(x))){
     stop("No residuals retrieved from model")
@@ -217,26 +209,6 @@ id.ngml <- function(x, stage3 = FALSE){
   }else{
     stop("Object class is not supported")
   }
-
-
-  # if (class(x) == "vec2var") {
-  #   # TODO: trend cases
-  #
-  #   coef_x <- vector("list", length = k)
-  #   names(coef_x) <- colnames(x$y)
-  #
-  #   for (i in seq_len(k)) {
-  #     for (j in seq_len(p)) coef_x[[i]] <- c(coef_x[[i]], x$A[[j]][i,])
-  #     coef_x[[i]] <- c(coef_x[[i]], x$deterministic[i,])
-  #   }
-  #
-  #   coef_x <- lapply(coef_x, matrix)
-  #
-  #   type <- "const"
-  # } else {
-  #   coef_x <- coef(x)
-  #   type <- x$type
-  # }
 
   # calculating the covariance matrix
   Sigma_hat <- crossprod(residY)/(Tob-1-k*p)
