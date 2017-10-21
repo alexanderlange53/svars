@@ -4,7 +4,8 @@
 \alias{mb.boot}
 \title{Moving block bootstrap for IRFs of identified SVARs}
 \usage{
-mb.boot(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, iter = 300)
+mb.boot(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL,
+  itermax = 300, steptol = 200, iter2 = 50)
 }
 \arguments{
 \item{x}{SVAR object of class "svars"}

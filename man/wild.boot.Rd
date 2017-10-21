@@ -5,7 +5,7 @@
 \title{Wild bootstrap for IRFs of identified SVARs}
 \usage{
 wild.boot(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL,
-  iter = 300)
+  itermax = 300, steptol = 200, iter2 = 50)
 }
 \arguments{
 \item{x}{SVAR object of class "svars"}
