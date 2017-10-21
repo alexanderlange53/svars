@@ -20,7 +20,11 @@ mb.boot(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL,
 
 \item{dd}{Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.  If not supplied, it will be culculated by the function}
 
-\item{iter}{Number of randomized starting points for optimization}
+\item{itermax}{Maximum number of iterations for DEoptim}
+
+\item{steptol}{Tolerance for steps without improvement for DEoptim}
+
+\item{iter2}{Number of iterations for the second optimization}
 }
 \description{
 Calculating confidence bands for impulse response via moving block bootstrap

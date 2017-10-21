@@ -8,7 +8,9 @@
 #'@param nboot Number of bootstrap iterations
 #'@param nc Number of processor cores (Not available on windows machines)
 #'@param dd Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.  If not supplied, it will be culculated by the function
-#'@param iter Number of randomized starting points for optimization
+#'@param itermax Maximum number of iterations for DEoptim
+#'@param steptol Tolerance for steps without improvement for DEoptim
+#'@param iter2 Number of iterations for the second optimization
 #'
 #'@seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}
 #'

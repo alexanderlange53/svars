@@ -8,7 +8,9 @@
 #'@param nboot Number of bootstrap iterations
 #'@param nc Number of processor cores (Not available on windows machines)
 #'@param dd Object of class 'indepTestDist'. A simulated independent sample of the same size as the data. If not supplied, it will be culculated by the function
-#'@param iter Number of randomized starting points for optimization
+#'@param itermax Maximum number of iterations for DEoptim
+#'@param steptol Tolerance for steps without improvement for DEoptim
+#'@param iter2 Number of iterations for the second optimization
 #'
 #'@references Goncalves, S., Kilian, L., 2004. Bootstrapping autoregressions with conditional heteroskedasticity of unknown form. Journal of Econometrics 123, 89-120.
 #'
