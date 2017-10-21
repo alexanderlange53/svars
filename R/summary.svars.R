@@ -70,7 +70,11 @@ summary.svars <- function(object, ...){
  }else if(svarsObject$method == "Cramer-von Mises distance"){
    cat("\n")
    cat("\nEstimated B Matrix (unique decomposition of the covariance matrix): \n")
-   print(svarsObject$B)
+   printCoefmat(svarsObject$B)
+   cat("\nRotation Angles: ")
+   cat(svarsObject$rotation_angles, "\n")
+   cat("Cramer-von Mises test statistic: ")
+   cat(svarsObject$test.stats)
   }
 
 
