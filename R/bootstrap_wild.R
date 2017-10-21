@@ -39,7 +39,7 @@
 
 
 
-wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, iter = 300){
+wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, itermax = 300, steptol = 200, iter2 = 50){
 
   # x: vars object
   # B: estimated covariance matrix from true data set
@@ -109,7 +109,7 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
     }else if(x$method == "Changes in Volatility"){
       temp <- id.cv(varb, SB = x$SB)
     }else if(x$method == "Cramer-von Mises distance"){
-      temp <- id.cvm(varb, iter = iter, cores = 1, dd)
+      temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
     }else{
       temp <- id.dc(varb, PIT=x$PIT)
     }

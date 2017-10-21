@@ -38,7 +38,7 @@
 #' @export
 
 
-mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, iter = 300){
+mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL,  itermax = 300, steptol = 200, iter2 = 50){
   # x: vars object
   # B: estimated covariance matrix from true data set
   # horizon: Time horizon for Irf
@@ -126,7 +126,7 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, iter = 
     }else if(x$method == "Changes in Volatility"){
       temp <- id.cv(varb, SB = x$SB)
     }else if(x$method == "Cramer-von Mises distance"){
-      temp <- id.cvm(varb, iter = iter, cores = 1, dd)
+      temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
     }else{
       temp <- id.dc(varb, PIT=x$PIT)
     }

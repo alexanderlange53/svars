@@ -218,7 +218,7 @@ id.cvm <- function(x, dd = NULL, itermax = 500, steptol = 100, iter2 = 75){
                  method = "Cramer-von Mises distance",
                  n = Tob,          # number of observations
                  type = type,      # type of the VAR model e.g 'const'
-                 y = y,            # Data
+                 y = t(y),            # Data
                  p = p,            # number of lags
                  K = k,            # number of time series
                  rotation_angles = par_o, # optimal rotation angles
