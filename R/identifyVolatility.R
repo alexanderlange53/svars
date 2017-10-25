@@ -1,4 +1,4 @@
-identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y,restriction_matrix = restriction_matrix,
+identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = restriction_matrix,
                                     Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
                                      max.iter){
 
@@ -74,7 +74,16 @@ yl <- t(y_lag_cr(t(y), p)$lags)
 yret <- y
 y <- y[,-c(1:p)]
 
-Z_t <- rbind(rep(1, ncol(yl)), yl)
+if(x$type == 'const'){
+  Z_t <- rbind(rep(1, ncol(yl)), yl)
+}else if(x$type == 'trend'){
+  Z_t <- rbind(seq(1, ncol(yl)), yl)
+}else if(x$type == 'both'){
+  Z_t <- rbind(rep(1, ncol(yl)), seq(1, ncol(yl)), yl)
+}else{
+  Z_t <- yl
+}
+
 
 gls1 <- function(Z, Sig){
   G <- kronecker(tcrossprod(Z), Sig)
@@ -100,11 +109,20 @@ while(abs(Exit) > 0.01 & counter < max.iter){
 
   GLS1.1 <- rowSums(apply(Z_t[, 1:(TB-1)], 2, gls1, Sig = Sig1))
   GLS1.2 <- rowSums(apply(Z_t[, (TB):ncol(Z_t)], 2, gls1, Sig = Sig2))
-  GLS1 <- solve(matrix(GLS1.1 + GLS1.2, nrow = k*k*p+k, byrow = F))
 
-  GLS2.1 <- matrix(0, nrow = k*k*p+k, ncol = (TB-1))
-  GLS2.2 <- matrix(0, nrow = k*k*p+k, ncol = ncol(y))
-
+  if(x$type == 'none'){
+    GLS1 <- solve(matrix(GLS1.1 + GLS1.2, nrow = k*k*p, byrow = F))
+    GLS2.1 <- matrix(0, nrow = k*k*p, ncol = (TB-1))
+    GLS2.2 <- matrix(0, nrow = k*k*p, ncol = ncol(y))
+  }else if(x$type == 'const' | x$type == 'trend'){
+    GLS1 <- solve(matrix(GLS1.1 + GLS1.2, nrow = k*k*p+k, byrow = F))
+    GLS2.1 <- matrix(0, nrow = k*k*p+k, ncol = (TB-1))
+    GLS2.2 <- matrix(0, nrow = k*k*p+k, ncol = ncol(y))
+  }else if(x$type == 'both'){
+    GLS1 <- solve(matrix(GLS1.1 + GLS1.2, nrow = k*k*p+k+k, byrow = F))
+    GLS2.1 <- matrix(0, nrow = k*k*p+k+k, ncol = (TB-1))
+    GLS2.2 <- matrix(0, nrow = k*k*p+k+k, ncol = ncol(y))
+  }
 
   for(i in 1:(TB-1)){
     GLS2.1[,i] <- kronecker(Z_t[,i], Sig1)%*%y[,i]
@@ -233,11 +251,11 @@ wald <- wald.test(Lambda_hat, HESS, restrictions)
 result <- list(
   Lambda = Lambda_hat,    # estimated Lambda matrix (unconditional heteroscedasticity)
   Lambda_SE = Lambda.SE,  # standard errors of Lambda matrix
-  B = B_hat,          # estimated B matrix (unique decomposition of the covariance matrix)
+  B = B_hat,              # estimated B matrix (unique decomposition of the covariance matrix)
   B_SE = B.SE,            # standard errors of B matrix
   n = Tob,                # number of observations
   Fish = HESS,            # observerd fisher information matrix
-  Lik = -llf,    # function value of likelihood
+  Lik = -llf,             # function value of likelihood
   wald_statistic = wald,  # results of wald test
   iteration = counter,     # number of gls estimations
   method = "Changes in Volatility",

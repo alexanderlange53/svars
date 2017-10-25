@@ -159,7 +159,7 @@ id.cvm <- function(x, dd = NULL, itermax = 500, steptol = 100, iter2 = 75){
                     u = u, dd = dd)
 
   ## Second step of optimization. Creating randomized starting angles around the optimized angles
-  theta_rot <- matrix(rnorm(n = (k*(k-1)/2)*iter2, mean = de_res$optim$bestmem, sd = 0.5), (k*(k-1)/2), iter2)
+  theta_rot <- matrix(rnorm(n = (k*(k-1)/2)*iter2, mean = de_res$optim$bestmem, sd = 0.3), (k*(k-1)/2), iter2)
   theta_rot <- cbind(theta_rot, de_res$optim$bestmem)
   # start vectors for iterative optimization approach
   startvec_list <- as.list(as.data.frame(theta_rot))
@@ -211,6 +211,28 @@ id.cvm <- function(x, dd = NULL, itermax = 500, steptol = 100, iter2 = 75){
     }
 
     A_hat <- cbind(v, A)
+  }else if (type == "trend"){
+    trend <- rep(1, k)
+
+    for(i in 1:k){
+      trend[i] <- coef_x[[i]][(k*p+1), 1]
+    }
+
+    A_hat <- cbind(trend, A)
+  }else if(type == "both"){
+    v <- rep(1, k)
+
+    for(i in 1:k){
+      v[i] <- coef_x[[i]][(k*p+1), 1]
+    }
+
+    trend <- rep(1, k)
+
+    for(i in 1:k){
+      trend[i] <- coef_x[[i]][(k*p+2), 1]
+    }
+
+    A_hat <- cbind(v, trend, A)
   }
 
   result <- list(B = B_hat,        # estimated B matrix (unique decomposition of the covariance matrix)

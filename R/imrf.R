@@ -55,6 +55,10 @@ imrf <- function(x, horizon = 20){
 
   if(x$type == 'const'){
     A_hat <- x$A_hat[,-1]
+  }else if(x$type == 'trend'){
+    A_hat <- x$A_hat[,-1]
+  }else if(x$type == 'both'){
+    A_hat <- x$A_hat[,-c(1,2)]
   }else{
     A_hat <- x$A_hat
   }
