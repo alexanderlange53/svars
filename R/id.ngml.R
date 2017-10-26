@@ -350,7 +350,7 @@ id.ngml <- function(x, stage3 = FALSE){
       trend <- rep(1, k)
 
       for(i in 1:k){
-        trend[i] <- coef_x[[i]][(k*p+2), 1]
+        trend[i] <- coef_x[[i]][(k*p+1), 1]
       }
 
       A_hat <- cbind(trend, A)
