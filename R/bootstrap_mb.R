@@ -77,7 +77,17 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL,  iterma
   # calculating covariance from actual VAR
   A <- x$A_hat
   Z <- t(y_lag_cr(y, p)$lags)
-  Z <-rbind(rep(1, ncol(Z)), Z)
+
+  if(x$type == 'const'){
+    Z <- rbind(rep(1, ncol(Z)), Z)
+  }else if(x$type == 'trend'){
+    Z <- rbind(seq(1, ncol(Z)), Z)
+  }else if(x$type == 'both'){
+    Z <- rbind(rep(1, ncol(Z)), seq(1, ncol(Z)), Z)
+  }else{
+    Z <- Z
+  }
+
   u <- t(y[-c(1:p),]) - A %*% Z
   Sigma_u_hat_old <- tcrossprod(u)/(obs - 1 - k * p)
 
