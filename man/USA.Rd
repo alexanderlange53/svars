@@ -10,7 +10,7 @@
   \cr
   Quarterly observations from 1965Q1 to 2008Q3:
   \tabular{ll}{
-    x \tab Percentage log-deviation of real GDP \cr
+    x \tab Percentage log-deviation of real GDP  wrt the estimate of potential output by the Congressional Budget Ofﬁce\cr
     pi \tab Annualized quarter-on-quarter growth of the GDP deflator \cr
     i \tab Interest rate on Federal funds \cr
   }

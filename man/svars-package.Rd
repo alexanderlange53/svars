@@ -6,7 +6,7 @@
   This package implements data-driven identification methods for structural vector autoregressive (SVAR) models. Based on an existing VAR model object, the structural impact matrix B may be obtained via changes in volatility, least dependent innovations or non-Gaussian maximum likelihood.\cr
   }
 \details{
-  The main functions to retrieve B matrices are:
+  The main functions to retrieve structural impact matrices are:
     \tabular{ll}{
       \code{id.cv} \tab Identification via changes in volatility,
     }

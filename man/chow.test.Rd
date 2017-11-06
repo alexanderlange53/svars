@@ -8,7 +8,7 @@ chow.test(Y, SB, p, nboot = 500, rademacher = "FALSE", start = NULL,
   end = NULL, frequency = NULL, format = NULL, dateVector = NULL)
 }
 \arguments{
-\item{Y}{Data of multivariate time series}
+\item{Y}{Data of multivariate time series in matrix form}
 
 \item{SB}{Integer or date character. The structural break is specified either by an integer (number of observations in the pre-break period) or
 a date character. If a date character is provided, either a date vector containing the whole time line
