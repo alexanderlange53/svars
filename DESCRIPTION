@@ -1,12 +1,12 @@
 Package: svars
 Type: Package
 Title: Data-driven identification of SVAR models
-Version: 0.1
-Date: 2016-11-21
+Version: 1.0.0
+Date: 2017-11-07
 Author: Alexander Lange [aut, cre],
         Bernhard Dalheimer [aut],
-        Helmut Herwartz [aut]
-        Simone Maxand [aut]
+        Helmut Herwartz [aut],
+        Simone Maxand [aut],
         Hannes Riebl [ctb]
 Authors@R: c(person("Alexander", "Lange", role = c("aut", "cre"), email = "alexander.lange@uni-goettingen.de"), person("Bernhard", "Dalheimer", role = c("aut"), email = "bernhard.dalheimer@uni-goettingen.de"), person("Helmut", "Herwartz", role = c("aut"), email = "hherwartz@uni-goettingen.de"), person("Simone", "Maxand", role = c("aut"), email = "smaxand@uni-goettingen.de"), person("Hannes", "Riebl", role = c("ctb")))
 Maintainer: Alexander Lange <alexander.lange@uni-goettingen.de>
