@@ -41,7 +41,7 @@ Matrix B corresponds to the unique decomposition of the least squares covariance
 A nonparametric dependence measure, the Cramer-von Mises distance (Genest and Remillard, 2004), determines least dependent structural shocks. The minimum is optained by a two step optimization algorithm similar to the technique described in Herwartz and Ploedt (2016).
 }
 \examples{
-\dontrun{
+\donttest{
 # data contains quarterly observations from 1965Q1 to 2008Q3
 # x = output gap
 # pi = inflation

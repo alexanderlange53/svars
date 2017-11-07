@@ -43,13 +43,13 @@ A list with elements
 The Chow test for structural change is implemented as sample-split and break-point test (see Luetkepohl and Kraetzig, 2004, p. 135). A multivariate time series and the presupposed structural break need to be provided.
 }
 \examples{
-\dontrun{
+\donttest{
 # Testing for structural break in USA data
 z1 = chow.test(USA, SB = 65, p = 6)
 summary(z1)
 
-Structural brake via Dates
-given that time series vector with dates is available
+#Structural brake via Dates
+#given that time series vector with dates is available
 dateVector = seq(as.Date("1965/1/1"), as.Date("2008/6/1"), "quarter")
 z2 <- chow.test(USA, SB = "1985-01-01", p = 6, format = "\%Y-\%m-\%d", dateVector = dateVector)
 summary(z2)

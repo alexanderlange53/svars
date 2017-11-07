@@ -8,8 +8,9 @@
 #' @seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}
 #'
 #' @examples
-#' \dontrun{
-#'
+#' \donttest{
+#' v1 <- VAR(USA, lag.max = 10, ic = "AIC" )
+#' x1 <- id.ngml(v1)
 #' x2 <- imrf(x1, horizon = 20)
 #' plot(x2)
 #' }

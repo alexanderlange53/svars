@@ -26,7 +26,7 @@ Matrix B corresponds to the unique decomposition of the least squares covariance
 A nonparametric dependence measure, the distance covariance (Szekely et al, 2007), determines least dependent structural shocks. The algorithm described in Matteson and Tsay (2013) is applied to calculate the matrix B.
 }
 \examples{
-\dontrun{
+\donttest{
 # data contains quarterly observations from 1965Q1 to 2008Q3
 # x = output gap
 # pi = inflation

@@ -34,7 +34,7 @@ Matrix B corresponds to the unique decomposition of the least squares covariance
 A likelihood function of independent t-distributed structural shocks \eqn{\epsilon_t=B^{-1}u_t} is maximized with respect to the entries of B and the degrees of freedom of the t-distribution (Lanne et al., 2017).
 }
 \examples{
-\dontrun{
+\donttest{
 # data contains quarterly observations from 1965Q1 to 2008Q3
 # x = output gap
 # pi = inflation

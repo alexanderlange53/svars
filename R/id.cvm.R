@@ -34,7 +34,7 @@
 #' @seealso For alternative identification approaches see \code{\link{id.cv}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # data contains quarterly observations from 1965Q1 to 2008Q3
 #' # x = output gap
 #' # pi = inflation

@@ -30,7 +30,7 @@ mb.boot(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL,
 Calculating confidence bands for impulse response via moving block bootstrap
 }
 \examples{
-\dontrun{
+\donttest{
 # data contains quarterly observations from 1965Q1 to 2008Q3
 # x = output gap
 # pi = inflation

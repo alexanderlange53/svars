@@ -37,14 +37,14 @@
 #' @seealso For alternative identification approaches see \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
 #'
 #' @examples
-#' \dontrun{
+#'
 #' # data contains quartlery observations from 1965Q1 to 2008Q2
 #' # assumed structural break in 1979Q4
 #' # x = output gap
 #' # pi = inflation
 #' # i = interest rates
 #' set.seed(23211)
-#' v1 <- VAR(USA, lag.max = 10, ic = "AIC" )
+#' v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
 #' x1 <- id.cv(v1, SB = 60)
 #' summary(x1)
 #'
@@ -70,7 +70,7 @@
 #' # or pass sequence arguments directly
 #' x4 <- id.cv(v1, SB = "1985-01-01", format = "%Y-%m-%d", start = "1965-01-01", end = "2008-06-01",
 #' frequency = "quarter")
-#' }
+#'
 #'
 #' @importFrom steadyICA steadyICA
 #' @export

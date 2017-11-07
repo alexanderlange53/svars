@@ -15,8 +15,9 @@ imrf(x, horizon = 20)
 Calculation of impulse response functions for an identified SVAR object 'svars' derived by function id.cvm( ),id.cv( ),id.dc( ) or id.ngml( ).
 }
 \examples{
-\dontrun{
-
+\donttest{
+v1 <- VAR(USA, lag.max = 10, ic = "AIC" )
+x1 <- id.ngml(v1)
 x2 <- imrf(x1, horizon = 20)
 plot(x2)
 }

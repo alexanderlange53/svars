@@ -30,7 +30,7 @@ wild.boot(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL,
 Calculating confidence bands for impulse response functions via wild bootstrap techniques (Goncalves and Kilian, 2004).
 }
 \examples{
-\dontrun{
+\donttest{
 # data contains quarterly observations from 1965Q1 to 2008Q3
 # x = output gap
 # pi = inflation
