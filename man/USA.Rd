@@ -10,7 +10,7 @@
   \cr
   Quarterly observations from 1965Q1 to 2008Q3:
   \tabular{ll}{
-    x \tab Percentage log-deviation of real GDP  wrt the estimate of potential output by the Congressional Budget Ofﬁce\cr
+    x \tab Percentage log-deviation of real GDP wrt the estimate of potential output by the Congressional Budget Office \cr
     pi \tab Annualized quarter-on-quarter growth of the GDP deflator \cr
     i \tab Interest rate on Federal funds \cr
   }
@@ -21,6 +21,6 @@ A more detailed description of the data and a corresponding VAR model implementa
 
 \format{A \code{data.frame} containing 174 observations on 3 variables.}
 
-\source{Herwartz, H. & Ploedt, M., 2016. Simulation Evidence on Theory-based and Statistical Identification under Volatility Breaks, Oxford Bulletin of Economics and Statistics, 78, 94-112.\cr
+\source{Herwartz, H. & Ploedt, M., 2016. Simulation Evidence on Theory-based and Statistical Identification under Volatility Breaks, Oxford Bulletin of Economics and Statistics, 78, 94-112. \cr
 Data originally from FRED database of the Federal Reserve Bank of St. Louis.}
 
