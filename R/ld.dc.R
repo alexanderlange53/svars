@@ -20,13 +20,13 @@
 #'      Szekely, G. J.; Rizzo, M. L. & Bakirov, N. K., 2007. Measuring and testing dependence by correlation of distances Ann. Statist., 35, 2769-2794\cr
 #'      Comon, P., 1994. Independent component analysis, A new concept?, Signal Processing, 36, 287-314
 #' @examples
-#' \donttest{
+#'
 #' # data contains quarterly observations from 1965Q1 to 2008Q3
 #' # x = output gap
 #' # pi = inflation
 #' # i = interest rates
 #' set.seed(23211)
-#' v1 <- VAR(USA, lag.max = 10, ic = "AIC" )
+#' v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
 #' x1 <- id.dc(v1)
 #' summary(x1)
 #'
@@ -37,7 +37,7 @@
 #' # impulse response analysis
 #' i1 <- imrf(x1, horizon = 30)
 #' plot(i1, scales = 'free_y')
-#' }
+#'
 #'
 #' @export
 
