@@ -2,7 +2,7 @@ Package: svars
 Type: Package
 Title: Data-Driven Identification of SVAR Models
 Version: 1.0.0
-Date: 2017-11-07
+Date: 2017-11-08
 Author: Alexander Lange [aut, cre],
         Bernhard Dalheimer [aut],
         Helmut Herwartz [aut],
@@ -10,7 +10,10 @@ Author: Alexander Lange [aut, cre],
         Hannes Riebl [ctb]
 Authors@R: c(person("Alexander", "Lange", role = c("aut", "cre"), email = "alexander.lange@uni-goettingen.de"), person("Bernhard", "Dalheimer", role = c("aut"), email = "bernhard.dalheimer@uni-goettingen.de"), person("Helmut", "Herwartz", role = c("aut"), email = "hherwartz@uni-goettingen.de"), person("Simone", "Maxand", role = c("aut"), email = "smaxand@uni-goettingen.de"), person("Hannes", "Riebl", role = c("ctb")))
 Maintainer: Alexander Lange <alexander.lange@uni-goettingen.de>
-Description: Implements data-driven identification methods for SVAR models. Based on an existing VAR model object, the structural impact matrix is obtained via changes in volatility, least dependent innovations or non-Gaussian maximum likelihood.
+Description: Implements data-driven identification methods for structural vector autoregressive (SVAR) models. 
+             Based on an existing VAR model object (provided by e.g. VAR() from the 'vars' package), the structural 
+             impact matrix is obtained via data-driven identification techniques (i.e. changes in volatility (Rigobon, R. (2003) <doi:10.1162/003465303772815727>), 
+             least dependent innovations (Herwartz, H., Ploedt, M., (2016) <doi:10.1016/j.jimonfin.2015.11.001>) or non-Gaussian maximum likelihood (Lanne, M., Meitz, M., Saikkonen, P. (2017) <doi:10.1016/j.jeconom.2016.06.002>).
 Imports: vars, expm, reshape2, ggplot2, copula, clue, pbapply, steadyICA, tsDyn, DEoptim
 License: GPL (>= 2)
 LazyData: TRUE
