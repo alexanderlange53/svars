@@ -53,7 +53,7 @@ Given an estimated VAR model, this function applies changes in volatility to ide
 Matrix B corresponds to the decomposition of the pre-break covariance matrix \eqn{\Sigma_1=B B'}. The post-break covariance corresponds to \eqn{\Sigma_2=B\Lambda B'} where \eqn{\Lambda} is the estimated unconditional heteroskedasticity matrix.
 }
 \examples{
-
+\donttest{
 # data contains quartlery observations from 1965Q1 to 2008Q2
 # assumed structural break in 1979Q4
 # x = output gap
@@ -87,7 +87,7 @@ x3 <- id.cv(v1, SB = "1985-01-01", format = "\%Y-\%m-\%d", dateVector = dateVect
 x4 <- id.cv(v1, SB = "1985-01-01", format = "\%Y-\%m-\%d", start = "1965-01-01", end = "2008-06-01",
 frequency = "quarter")
 
-
+}
 }
 \references{
 Rigobon, R., 2003. Identification through Heteroskedasticity. The Review of Economics and Statistics, 85, 777-792.\cr
