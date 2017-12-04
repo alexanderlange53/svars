@@ -101,7 +101,8 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
   errors <- list()
   for(i in 1:nboot){
     ub <- u
-    my <- rnorm(n = ncol(y))
+    #my <- rnorm(n = ncol(y))
+    my <- rnorm(1)
     if (rademacher == TRUE) {
       my <- (my > 0) - (my < 0)
     }
