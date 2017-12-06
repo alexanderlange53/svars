@@ -101,21 +101,31 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
   errors <- list()
   for(i in 1:nboot){
     ub <- u
-    #my <- rnorm(n = ncol(y))
-    my <- rnorm(1)
+    my <- rnorm(n = ncol(u))
+    #my <- rnorm(1)
     if (rademacher == TRUE) {
       my <- (my > 0) - (my < 0)
     }
-    errors[[i]] <- ub * my
+    errors[[i]] <- ub* my
   }
 
   # Bootstrapfunction
   bootf <- function(Ustar1){
 
     Ystar <- t(A %*% Z + Ustar1)
-    varb <- VAR(Ystar, p = p)
 
-    Sigma_u_star <- crossprod(residuals(varb))/(ncol(Ustar1) - 1 - k * p)
+    Bstar <- t(Ystar) %*% t(Z) %*% solve(Z %*% t(Z))
+
+    Ustar <- t(y[-c(1:p),]) - Bstar %*% Z
+
+    Sigma_u_star <- tcrossprod(Ustar)/(ncol(Ustar1) - 1 - k * p)
+
+    varb <- list(y = y,
+                 coef_x = Bstar,
+                 residuals = t(Ustar),
+                 p = p,
+                 type = x$type)
+    class(varb) <- 'var.boot'
 
     if(x$method == "Non-Gaussian maximum likelihood"){
       temp <- id.ngml(varb, stage3 = x$stage3)
@@ -129,13 +139,13 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
 
     Pstar <- temp$B
 
-    Pstar1 <- sqrt.f(Pstar, Sigma_u_star)
-    diag_sigma_root <- diag(diag(suppressMessages(expm(B))))
+     Pstar1 <- sqrt.f(Pstar, Sigma_u_star)
+     diag_sigma_root <- diag(diag(suppressMessages(expm(B))))
 
-    frobP <- frobICA_mod(t(solve(diag_sigma_root)%*%Pstar1), t(solve(diag_sigma_root)%*%B), standardize=TRUE)
-    Pstar <- Pstar1%*%frobP$perm
+     frobP <- frobICA_mod(t(solve(diag_sigma_root)%*%Pstar1), t(solve(diag_sigma_root)%*%B), standardize=TRUE)
+     Pstar <- Pstar1%*%frobP$perm
 
-    temp$B <- Pstar
+     temp$B <- Pstar
 
     ip <- imrf(temp, horizon = horizon)
     return(list(ip, Pstar))

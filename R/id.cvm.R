@@ -68,16 +68,28 @@
 id.cvm <- function(x, dd = NULL, itermax = 500, steptol = 100, iter2 = 75){
 
 
-  if(is.null(residuals(x))){
-    stop("No residuals retrieved from model")
+  # if(is.null(residuals(x))){
+  #   stop("No residuals retrieved from model")
+  # }
+
+  if(inherits(x, "var.boot")){
+    u <- x$residuals
+    Tob <- nrow(u)
+    k <- ncol(u)
+    residY <- u
+  }else{
+    u <- residuals(x)
+    Tob <- nrow(u)
+    k <- ncol(u)
+    residY <- u
   }
 
-  u <- residuals(x)
-  Tob <- nrow(u)
-  k <- ncol(u)
-  residY <- u
-
-  if(inherits(x, "varest")){
+  if(inherits(x, "var.boot")){
+    p <- x$p
+    y <- t(x$y)
+    type = x$type
+    coef_x = x$coef_x
+  }else if(inherits(x, "varest")){
     p <- x$p
     y <- t(x$y)
     type = x$type
@@ -195,44 +207,47 @@ id.cvm <- function(x, dd = NULL, itermax = 500, steptol = 100, iter2 = 75){
   B_hat <- rotmat(par_o, faklow1)
 
   # obtaining VAR parameter
-  A <- matrix(0, nrow = k, ncol = k*p)
-
-  for(i in 1:k){
-    A[i,] <- coef_x[[i]][1:(k*p),1]
-  }
-
-  A_hat <- A
-
-  if(type == "const"){
-    v <- rep(1, k)
-
+  if(inherits(x, "var.boot")){
+    A_hat <- coef_x
+  }else{
+    A <- matrix(0, nrow = k, ncol = k*p)
     for(i in 1:k){
-      v[i] <- coef_x[[i]][(k*p+1), 1]
+      A[i,] <- coef_x[[i]][1:(k*p),1]
     }
 
-    A_hat <- cbind(v, A)
-  }else if (type == "trend"){
-    trend <- rep(1, k)
+    A_hat <- A
 
-    for(i in 1:k){
-      trend[i] <- coef_x[[i]][(k*p+1), 1]
+    if(type == "const"){
+      v <- rep(1, k)
+
+      for(i in 1:k){
+        v[i] <- coef_x[[i]][(k*p+1), 1]
+      }
+
+      A_hat <- cbind(v, A)
+    }else if (type == "trend"){
+      trend <- rep(1, k)
+
+      for(i in 1:k){
+        trend[i] <- coef_x[[i]][(k*p+1), 1]
+      }
+
+      A_hat <- cbind(trend, A)
+    }else if(type == "both"){
+      v <- rep(1, k)
+
+      for(i in 1:k){
+        v[i] <- coef_x[[i]][(k*p+1), 1]
+      }
+
+      trend <- rep(1, k)
+
+      for(i in 1:k){
+        trend[i] <- coef_x[[i]][(k*p+2), 1]
+      }
+
+      A_hat <- cbind(v, trend, A)
     }
-
-    A_hat <- cbind(trend, A)
-  }else if(type == "both"){
-    v <- rep(1, k)
-
-    for(i in 1:k){
-      v[i] <- coef_x[[i]][(k*p+1), 1]
-    }
-
-    trend <- rep(1, k)
-
-    for(i in 1:k){
-      trend[i] <- coef_x[[i]][(k*p+2), 1]
-    }
-
-    A_hat <- cbind(v, trend, A)
   }
 
   result <- list(B = B_hat,        # estimated B matrix (unique decomposition of the covariance matrix)

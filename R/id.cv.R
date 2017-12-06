@@ -87,13 +87,28 @@
 id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
                         format = NULL, dateVector = NULL, max.iter = 50, crit = 0.05, restriction_matrix = NULL){
 
-  if(is.null(residuals(x))){
-    stop("No residuals retrieved from model")
+  # if(is.null(residuals(x))){
+  #   stop("No residuals retrieved from model")
+  # }
+
+  if(inherits(x, "var.boot")){
+    u_t <- x$residuals
+    Tob <- nrow(u_t)
+    k <- ncol(u_t)
+    residY <- u_t
+  }else{
+    u_t <- residuals(x)
+    Tob <- nrow(u_t)
+    k <- ncol(u_t)
+    residY <- u_t
   }
-  u_t <- residuals(x)
-  Tob <- nrow(u_t)
-  k <- ncol(u_t)
-  if(inherits(x, "varest")){
+
+  if(inherits(x, "var.boot")){
+    p <- x$p
+    y <- t(x$y)
+    type = x$type
+    coef_x = x$coef_x
+  }else if(inherits(x, "varest")){
   p <- x$p
   y <- t(x$y)
   }else if(inherits(x, "nlVar")){
