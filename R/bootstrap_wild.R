@@ -140,7 +140,7 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
     Pstar <- temp$B
 
      Pstar1 <- sqrt.f(Pstar, Sigma_u_star)
-     diag_sigma_root <- diag(diag(suppressMessages(expm(B))))
+     diag_sigma_root <- diag(diag(suppressMessages(sqrtm(Sigma_u_hat_old))))
 
      frobP <- frobICA_mod(t(solve(diag_sigma_root)%*%Pstar1), t(solve(diag_sigma_root)%*%B), standardize=TRUE)
      Pstar <- Pstar1%*%frobP$perm
