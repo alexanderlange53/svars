@@ -14,7 +14,7 @@
 #'
 #'@seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}
 #'
-#'@references Brueggemann, R., Jentsch, C., and Carsten, T. (2016). Inference in vars with conditional heteroskedasticity of unknown form. Journal of Econometrics 191, 69-85.
+#'@references Brueggemann, R., Jentsch, C., and Trenkler, C. (2016). Inference in VARs with conditional heteroskedasticity of unknown form. Journal of Econometrics 191, 69-85.
 #'
 #' @examples
 #' \donttest{
