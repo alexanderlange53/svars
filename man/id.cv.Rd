@@ -38,7 +38,7 @@ A list of class "svars" with elements
 \item{B}{Estimated structural impact matrix B, i.e. unique decomposition of the covariance matrix of reduced form residuals}
 \item{B_SE}{Standard errors of matrix B}
 \item{n}{Number of observations}
-\item{Fish}{Observerd Fisher information matrix}
+\item{Fish}{Observed Fisher information matrix}
 \item{Lik}{Function value of likelihood}
 \item{wald_statistic}{Results of pairwise Wald tests}
 \item{iteration}{Number of GLS estimations}

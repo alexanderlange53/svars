@@ -20,7 +20,7 @@
 #' \item{testcrit_bp}{Critical value of the test statistic lambda_bp}
 #' \item{p.value_bp}{p-value of the test statistic lambda_bp}
 #' \item{lambda_sp}{Test statistic of the Chow test with sample split}
-#' \item{testcrit_sp}{Critival value of the test statistic lambda_sp}
+#' \item{testcrit_sp}{Critical value of the test statistic lambda_sp}
 #' \item{p.value_sp}{p-value of the test statistic lambda_sp}
 #'
 #' @references Luetkepohl, H., 2005. New introduction to multiple time series analysis, Springer-Verlag, Berlin.

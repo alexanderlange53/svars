@@ -18,7 +18,7 @@ wild.boot(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL,
 
 \item{nc}{Number of processor cores (Not available on windows machines)}
 
-\item{dd}{Object of class 'indepTestDist'. A simulated independent sample of the same size as the data. If not supplied, it will be culculated by the function}
+\item{dd}{Object of class 'indepTestDist'. A simulated independent sample of the same size as the data. If not supplied, it will be calculated by the function}
 
 \item{itermax}{Maximum number of iterations for DEoptim}
 
