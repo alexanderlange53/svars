@@ -17,8 +17,8 @@
 #' \item{n}{Number of observations}
 #' \item{type}{Type of the VAR model, e.g. 'const'}
 #' \item{y}{Data}
-#' \item{p}{number of included lags}
-#' \item{K}{number of included time series}
+#' \item{p}{Number of included lags}
+#' \item{K}{Number of included time series}
 #' \item{rotation_angles}{Rotation angles, which lead to maximum independence}
 #' \item{inc}{Indicator. 1 = second optimization increased the estimation precision. 0 = second optimization did not increase the estimation precision}
 #' \item{test.stats}{Computed test statistics of independence test}
