@@ -2,7 +2,11 @@
 #' @importFrom reshape2 melt
 #' @S3method plot fevd
 
-plot.fevd <- function(x){
+plot.fevd <- function(x, ...){
+
+  V1 <- NULL
+  value <- NULL
+  Variables <- NULL
 
     fe <- data.frame(V1 = seq(1, nrow(x[[1]])),
                      Variables = c(sapply(names(x), rep, nrow(x[[1]]))), sapply(x, unlist))
