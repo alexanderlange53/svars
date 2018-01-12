@@ -73,7 +73,7 @@ id.ngml <- function(x, stage3 = FALSE){
       return(B_hat)
     }
 
-    if(all(sigma >0) & det(B_hat(beta))>0 & all(lambda > 0)){
+    if(all(sigma >0) & det(B_hat(beta))>0 & all(lambda > 2)){
 
       logl <- rep(0, Tob)
 
@@ -89,7 +89,7 @@ id.ngml <- function(x, stage3 = FALSE){
       }
 
       l_t <- function(uu, sigma, lambda, mid1, beta){
-        l <-  sum(log(dt((sigma)^(-1) * (mid1 %*% uu), lambda ))) - log(det(B_hat(beta))) - sum(log(sigma))
+        l <-  sum(log(dt( ((sigma)^(-1))*sqrt(lambda/(lambda - 2)) * (mid1 %*% uu), lambda ))) - log(det(B_hat(beta))) - sum(log(sigma*sqrt((lambda - 2)/lambda)))
         return(l)
       }
 
@@ -107,30 +107,30 @@ id.ngml <- function(x, stage3 = FALSE){
 
   loglik2 <-function(A) {
 
-      logl <- rep(0, Tob)
+    logl <- rep(0, Tob)
 
-      term1 <- apply(Z_t, 2, resid.ls, k = k, A = A)
-      uu <- t(y) - t(term1)
+    term1 <- apply(Z_t, 2, resid.ls, k = k, A = A)
+    uu <- t(y) - t(term1)
 
-      mid <- il %*% kronecker(diag(k), solve(B_stand_est))
-      midd <- mid[rows, ]
-      mid1 <- matrix(0, nrow = k, ncol = k)
-      for(i in 1:k){
-        if(i == 1){
-          mid1[1, 1:k] <- midd[1, 1:k]
-        }else{
-          mid1[i, 1:k] <- midd[i, ((k+1+k*(i-2)):(i*k))]
-        }
+    mid <- il %*% kronecker(diag(k), solve(B_stand_est))
+    midd <- mid[rows, ]
+    mid1 <- matrix(0, nrow = k, ncol = k)
+    for(i in 1:k){
+      if(i == 1){
+        mid1[1, 1:k] <- midd[1, 1:k]
+      }else{
+        mid1[i, 1:k] <- midd[i, ((k+1+k*(i-2)):(i*k))]
       }
+    }
 
-      l_t <- function(uu, mid1){
-        l <-  sum(log(dt((sigma_est)^(-1) * (mid1 %*% uu), d_freedom ))) - log(det(B_stand_est)) - sum(log(sigma_est))
-        return(l)
-      }
+    l_t <- function(uu, mid1){
+      l <-  sum(log( dt(((sigma)^(-1))*sqrt(lambda/(lambda - 2)) * (mid1 %*% uu), d_freedom ))) - log(det(B_stand_est)) - sum(log(sigma*sqrt((lambda - 2)/lambda)))
+      return(l)
+    }
 
-      logl <- sum(apply(X = uu, MARGIN = 1, FUN = l_t, mid1 = mid1))
+    logl <- sum(apply(X = uu, MARGIN = 1, FUN = l_t, mid1 = mid1))
 
-      return(-logl)
+    return(-logl)
   }
 
   y_lag_cr <- function(y, lag_length){
@@ -178,7 +178,7 @@ id.ngml <- function(x, stage3 = FALSE){
     coef_x <- t(coef(x))
 
     if(inherits(x, "VECM")){
-     coef_x <- t(VARrep(x))
+      coef_x <- t(VARrep(x))
     }
 
     if(rownames(coef_x)[1] %in% c("Intercept", "constant")){
@@ -205,18 +205,18 @@ id.ngml <- function(x, stage3 = FALSE){
     coef_x <- split(coef_x, rep(1:ncol(coef_x), each = nrow(coef_x)))
     coef_x <- lapply(coef_x, as.matrix)
 
-    }else if(inherits(x, "vec2var")){
-      coef_x <- vector("list", length = k)
-      names(coef_x) <- colnames(x$y)
-      p <- x$p
-      y <- t(x$y)
+  }else if(inherits(x, "vec2var")){
+    coef_x <- vector("list", length = k)
+    names(coef_x) <- colnames(x$y)
+    p <- x$p
+    y <- t(x$y)
 
-      for (i in seq_len(k)) {
-        for (j in seq_len(p)) coef_x[[i]] <- c(coef_x[[i]], x$A[[j]][i,])
-        coef_x[[i]] <- c(coef_x[[i]], x$deterministic[i,])
-      }
-      coef_x <- lapply(coef_x, matrix)
-      type <- "const"
+    for (i in seq_len(k)) {
+      for (j in seq_len(p)) coef_x[[i]] <- c(coef_x[[i]], x$A[[j]][i,])
+      coef_x[[i]] <- c(coef_x[[i]], x$deterministic[i,])
+    }
+    coef_x <- lapply(coef_x, matrix)
+    type <- "const"
 
   }else{
     stop("Object class is not supported")
@@ -284,7 +284,7 @@ id.ngml <- function(x, stage3 = FALSE){
       if(i != j){
         jj <- jj + 1
         B.SE.2[j,i] <- sqrt(2*covariance[jj,i]^2 + (B.SE[j,i]^2 + B_stand_est[j,i]^2)*(sigma_SE[i]^2 + sigma_est[i]^2) -
-                       (covariance[jj, i] + B_stand_est[j,i] * sigma_est[i])^2)
+                              (covariance[jj, i] + B_stand_est[j,i] * sigma_est[i])^2)
       }
     }
   }
@@ -426,24 +426,24 @@ id.ngml <- function(x, stage3 = FALSE){
   }
 
   result <- list(B = B_hat_ord,       # estimated B matrix (unique decomposition of the covariance matrix)
-              B_SE = B.SE.2,          # standard errors
-              sigma = sigma_est,      # estimated scale of the standardized B
-              sigma_SE = sigma_SE,    # standard errors of the scale
-              df = d_freedom,         # estimated degrees of freedom of the distribution
-              df_SE = d_SE,           # standard errors of the degrees of freedom
-              Fish = HESS,            # observed fisher information matrix
-              A_hat = A_hat,          # estimated VAR parameter
-              B_stand = B_stand_est,  # estimated standardized B matrix
-              B_stand_SE = B.SE ,     # standard errors
-              Lik = -ll,              # value of maximum likelihood
-              method = "Non-Gaussian maximum likelihood",
-              n = Tob,              # number of observations
-              type = type,            # type of the VAR model e.g 'const'
-              y = t(y),                # Data
-              p = p,                # number of lags
-              K = k,                # number of time series
-              stage3 = stage3
-              )
-         class(result) <- "svars"
-         return(result)
+                 B_SE = B.SE.2,          # standard errors
+                 sigma = sigma_est,      # estimated scale of the standardized B
+                 sigma_SE = sigma_SE,    # standard errors of the scale
+                 df = d_freedom,         # estimated degrees of freedom of the distribution
+                 df_SE = d_SE,           # standard errors of the degrees of freedom
+                 Fish = HESS,            # observed fisher information matrix
+                 A_hat = A_hat,          # estimated VAR parameter
+                 B_stand = B_stand_est,  # estimated standardized B matrix
+                 B_stand_SE = B.SE ,     # standard errors
+                 Lik = -ll,              # value of maximum likelihood
+                 method = "Non-Gaussian maximum likelihood",
+                 n = Tob,              # number of observations
+                 type = type,            # type of the VAR model e.g 'const'
+                 y = t(y),                # Data
+                 p = p,                # number of lags
+                 K = k,                # number of time series
+                 stage3 = stage3
+  )
+  class(result) <- "svars"
+  return(result)
 }
