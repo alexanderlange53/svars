@@ -105,17 +105,17 @@ id.cvm <- function(x, dd = NULL, itermax = 500, steptol = 100, iter2 = 75){
 
     if(rownames(coef_x)[1] %in% c("Intercept", "constant")){
       coef_x <- coef_x[c(2:nrow(coef_x),1),]
-      type = "const"
+    #  type = "const"
     }else if(rownames(coef_x)[1] == "Trend"){
       coef_x <- coef_x[c(2:nrow(coef_x),1),]
-      type <- "trend"
+     # type <- "trend"
     }
 
     if(rownames(coef_x)[1] %in% c("Intercept", "constant", "Trend")){
       coef_x <- coef_x[c(2:nrow(coef_x),1),]
-      type <- "both"
+      #type <- "both"
     }
-
+    type <- x$include
     coef_x <- split(coef_x, rep(1:ncol(coef_x), each = nrow(coef_x)))
     coef_x <- lapply(coef_x, as.matrix)
   }else if(inherits(x, "list")){
