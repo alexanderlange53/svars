@@ -57,6 +57,7 @@
 
 id.ngml <- function(x, stage3 = FALSE){
 
+
   # likelihood function to optimize
   loglik <-function(theta) {
 
@@ -123,7 +124,7 @@ id.ngml <- function(x, stage3 = FALSE){
       }
     }
 
-    l_t <- function(uu, mid1){
+    l_t <- function(uu, mid1, lambda = lambda){
       l <-  sum(log( dt(((sigma)^(-1))*sqrt(lambda/(lambda - 2)) * (mid1 %*% uu), d_freedom ))) - log(det(B_stand_est)) - sum(log(sigma*sqrt((lambda - 2)/lambda)))
       return(l)
     }

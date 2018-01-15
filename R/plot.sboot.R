@@ -1,4 +1,4 @@
-#' @S3method plot boot
+#' @S3method plot sboot
 
 plot.sboot <- function(x, scales = "free_y", lowerq = 0.16, upperq = 0.84, ..., base){
 
