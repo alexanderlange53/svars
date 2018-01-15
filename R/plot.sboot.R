@@ -1,6 +1,6 @@
 #' @S3method plot boot
 
-plot.boot <- function(x, scales = "free_y", lowerq = 0.16, upperq = 0.84, ..., base){
+plot.sboot <- function(x, scales = "free_y", lowerq = 0.16, upperq = 0.84, ..., base){
 
   impulse <- melt(x$true$irf, id = 'V1')
   confidence <- x$bootstrap

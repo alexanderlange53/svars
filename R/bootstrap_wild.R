@@ -179,7 +179,7 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
   result <- list(true = ip,
                  bootstrap = ipb,
                  SE = SE)
-  class(result) <- 'boot'
+  class(result) <- 'sboot'
   return(result)
 }
 

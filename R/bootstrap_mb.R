@@ -196,7 +196,7 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL,  iterma
   result <- list(true = ip,
                  bootstrap = ipb,
                  SE = SE)
-  class(result) <- 'boot'
+  class(result) <- 'sboot'
   return(result)
 }
 
