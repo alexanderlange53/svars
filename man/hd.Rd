@@ -16,7 +16,7 @@ Calculation of historical decomposition for an identified SVAR object 'svars' de
 }
 \examples{
 \donttest{
-v1 <- VAR(USA, lag.max = 10, ic = "AIC" )
+v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
 x1 <- id.dc(v1)
 x2 <- hd(x1, series = 2)
 plot(x2)

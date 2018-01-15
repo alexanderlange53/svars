@@ -36,7 +36,7 @@ Calculating confidence bands for impulse response via moving block bootstrap
 # pi = inflation
 # i = interest rates
 set.seed(23211)
-v1 <- VAR(USA, lag.max = 10, ic = "AIC" )
+v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
 x1 <- id.ngml(v1)
 summary(x1)
 
