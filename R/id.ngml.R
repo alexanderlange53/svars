@@ -124,8 +124,8 @@ id.ngml <- function(x, stage3 = FALSE){
       }
     }
 
-    l_t <- function(uu, mid1, lambda = lambda){
-      l <-  sum(log( dt(((sigma)^(-1))*sqrt(lambda/(lambda - 2)) * (mid1 %*% uu), d_freedom ))) - log(det(B_stand_est)) - sum(log(sigma*sqrt((lambda - 2)/lambda)))
+    l_t <- function(uu, mid1){
+      l <-  sum(log( dt(((sigma_est)^(-1))*sqrt(d_freedom/(d_freedom - 2)) * (mid1 %*% uu), d_freedom ))) - log(det(B_stand_est)) - sum(log(sigma_est*sqrt((d_freedom - 2)/d_freedom)))
       return(l)
     }
 
