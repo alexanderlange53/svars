@@ -190,12 +190,22 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL,  iterma
     SE <- NULL
   }
 
+  # Calculating Bootstrap means
+  boot.mean <- matrix(0,k,k)
+  for(i in 1:k){
+    for(j in 1:k){
+      boot.mean[i,j] <-  mean(Bs[i,j, ])
+    }
+  }
+
+
   ## Impulse response of actual model
   ip <- imrf(x, horizon = horizon)
 
   result <- list(true = ip,
                  bootstrap = ipb,
-                 SE = SE)
+                 SE = SE,
+                 boot.mean = boot.mean)
   class(result) <- 'sboot'
   return(result)
 }
