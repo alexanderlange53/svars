@@ -5,7 +5,7 @@
 \title{Wild bootstrap for IRFs of identified SVARs}
 \usage{
 wild.boot(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL,
-  itermax = 300, steptol = 200, iter2 = 50)
+  signrest = NULL, itermax = 300, steptol = 200, iter2 = 50)
 }
 \arguments{
 \item{x}{SVAR object of class "svars"}
@@ -18,13 +18,25 @@ wild.boot(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL,
 
 \item{nc}{Number of processor cores (Not available on windows machines)}
 
-\item{dd}{Object of class 'indepTestDist'. A simulated independent sample of the same size as the data. If not supplied, it will be calculated by the function}
+\item{dd}{Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.
+roxIf not supplied, it will be calculated by the function}
+
+\item{signrest}{A list containing vectors with the sign pattern of a specific shock,
+which should be tested on the apperance in the bootstrap. If no list is supplied,
+then the function counts the frequency of bootstrapped covariance decompositions that have the same sign pattern as the point estimate.}
 
 \item{itermax}{Maximum number of iterations for DEoptim}
 
 \item{steptol}{Tolerance for steps without improvement for DEoptim}
 
 \item{iter2}{Number of iterations for the second optimization}
+}
+\value{
+A list of class "sboot" with elements
+\item{boot_mean}{Mean of bootstrapped covariance decompositions}
+\item{sign_complete}{Frequency of appearance of the complete sign pattern in all bootstrapped covaraince decompositions}
+\item{sign_part}{Frequency of appearance of single shocks according to a specific sign pattern
+ in all bootstrapped covaraince decompositions}
 }
 \description{
 Calculating confidence bands for impulse response functions via wild bootstrap techniques (Goncalves and Kilian, 2004).
@@ -37,16 +49,16 @@ Calculating confidence bands for impulse response functions via wild bootstrap t
 # i = interest rates
 set.seed(23211)
 v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
-x1 <- id.ngml(v1)
+x1 <- id.dc(v1)
 summary(x1)
 
-# switching columns according to sign patter
-x1$B <- x1$B[,c(3,2,1)]
-x1$B[,3] <- x1$B[,3]*(-1)
-
 # impulse response analysis with confidence bands
-bb <- wild.boot(x1, rademacher = T, nboot = 100, horizon = 30)
-plot(bb, lowerq = 0.16, upperq = 0.84)
+# Checking how often theory based impact relations appear
+signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+bb <- wild.boot(x1, rademacher = T, nboot = 500, horizon = 30, nc = 1, signrest = signrest)
+bb$boot_mean
+bb$sign_complete
+bb$sign_part
 }
 
 

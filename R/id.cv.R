@@ -64,7 +64,7 @@
 #'
 #' #Structural brake via Dates
 #' # given that time series vector with dates is available
-#' dateVector = seq(as.Date("1965/1/1"), as.Date("2008/6/1"), "quarter")
+#' dateVector = seq(as.Date("1965/1/1"), as.Date("2008/7/1"), "quarter")
 #' x3 <- id.cv(v1, SB = "1985-01-01", format = "%Y-%m-%d", dateVector = dateVector)
 #'
 #' # or pass sequence arguments directly

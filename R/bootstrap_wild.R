@@ -7,10 +7,19 @@
 #'@param horizon Time horizon for impulse response functions
 #'@param nboot Number of bootstrap iterations
 #'@param nc Number of processor cores (Not available on windows machines)
-#'@param dd Object of class 'indepTestDist'. A simulated independent sample of the same size as the data. If not supplied, it will be calculated by the function
+#'@param dd Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.
+#'roxIf not supplied, it will be calculated by the function
+#'@param signrest A list containing vectors with the sign pattern of a specific shock,
+#'which should be tested on the apperance in the bootstrap. If no list is supplied,
+#'then the function counts the frequency of bootstrapped covariance decompositions that have the same sign pattern as the point estimate.
 #'@param itermax Maximum number of iterations for DEoptim
 #'@param steptol Tolerance for steps without improvement for DEoptim
 #'@param iter2 Number of iterations for the second optimization
+#' @return A list of class "sboot" with elements
+#' \item{boot_mean}{Mean of bootstrapped covariance decompositions}
+#' \item{sign_complete}{Frequency of appearance of the complete sign pattern in all bootstrapped covaraince decompositions}
+#' \item{sign_part}{Frequency of appearance of single shocks according to a specific sign pattern
+#'  in all bootstrapped covaraince decompositions}
 #'
 #'@references Goncalves, S., Kilian, L., 2004. Bootstrapping autoregressions with conditional heteroskedasticity of unknown form. Journal of Econometrics 123, 89-120.
 #'
@@ -24,16 +33,17 @@
 #' # i = interest rates
 #' set.seed(23211)
 #' v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
-#' x1 <- id.ngml(v1)
+#' x1 <- id.dc(v1)
 #' summary(x1)
 #'
-#' # switching columns according to sign patter
-#' x1$B <- x1$B[,c(3,2,1)]
-#' x1$B[,3] <- x1$B[,3]*(-1)
-#'
 #' # impulse response analysis with confidence bands
-#' bb <- wild.boot(x1, rademacher = T, nboot = 100, horizon = 30)
-#' plot(bb, lowerq = 0.16, upperq = 0.84)
+#' # Checking how often theory based impact relations appear
+#' signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#' bb <- wild.boot(x1, rademacher = T, nboot = 500, horizon = 30, nc = 1, signrest = signrest)
+#' bb$boot_mean
+#' bb$sign_complete
+#' bb$sign_part
+# 'plot(bb, lowerq = 0.16, upperq = 0.84)
 #' }
 #'
 #'
@@ -41,7 +51,7 @@
 
 
 
-wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, itermax = 300, steptol = 200, iter2 = 50){
+wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, signrest = NULL, itermax = 300, steptol = 200, iter2 = 50){
 
   # x: vars object
   # B: estimated covariance matrix from true data set
@@ -51,7 +61,6 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
   if(x$method == "Cramer-von Mises distance" & is.null(dd)){
     dd <- copula::indepTestSim(x$n, x$K, verbose=F)
   }
-
 
   # function to create Z matrix
   y_lag_cr <- function(y, lag_length){
@@ -77,6 +86,10 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
   obs <- x$n
   k <- x$K
   B <- x$B
+
+  if(length(signrest) > k){
+    stop('too many sign restrictions')
+  }
 
   # calculating covariance from actual VAR
   A <- x$A_hat
@@ -130,13 +143,14 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
     if(x$method == "Non-Gaussian maximum likelihood"){
       temp <- id.ngml(varb, stage3 = x$stage3)
     }else if(x$method == "Changes in Volatility"){
-      temp <- id.cv(varb, SB = x$SB)
+      temp <- tryCatch(id.cv(varb, SB = x$SB,max.iter = 5000), error = function(e) NULL)
     }else if(x$method == "Cramer-von Mises distance"){
       temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
     }else{
       temp <- id.dc(varb, PIT=x$PIT)
     }
 
+    if(!is.null(temp)){
     Pstar <- temp$B
 
      Pstar1 <- sqrt.f(Pstar, Sigma_u_star)
@@ -149,13 +163,23 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
 
     ip <- imrf(temp, horizon = horizon)
     return(list(ip, Pstar))
+    }else{
+      return(NA)
+    }
   }
 
   bootstraps <- pblapply(errors, bootf, cl = nc)
 
-  Bs <- array(0, c(k,k,nboot))
+  delnull  <-  function(x){
+    x[unlist(lapply(x, length) != 0)]
+  }
+
+  bootstraps <- lapply(bootstraps, function (x)x[any(!is.na(x))])
+  bootstraps <- delnull(bootstraps)
+
+  Bs <- array(0, c(k,k,length(bootstraps)))
   ipb <- list()
-  for(i in 1:nboot){
+  for(i in 1:length(bootstraps)){
     Bs[,,i] <- bootstraps[[i]][[2]]
     ipb[[i]] <- bootstraps[[i]][[1]]
   }
@@ -170,6 +194,7 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
     }
 
     SE <- sqrt(SE)
+    rownames(SE) <- rownames(x$B)
   }else{
     SE <- NULL
   }
@@ -182,13 +207,72 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
     }
   }
 
+  rownames(boot.mean) <- rownames(x$B)
+
+  # Checking for signs
+  if(is.null(signrest)){
+    sign.mat <- matrix(FALSE, nrow = k, ncol = k)
+    sign.complete <- 0
+    sign.part <- rep(0, times = k)
+
+    for(i in 1:length(bootstraps)){
+
+      pBs <- permutation(Bs[,,i])
+      sign.mat <-lapply(pBs, function(z){sapply(1:k, function(ii){all(z[,ii]/abs(z[,ii])  == x$B[,ii]/abs(x$B[,ii])) | all(z[,ii]/abs(z[,ii])  == x$B[,ii]/abs(x$B[,ii])*(-1))})})
+
+      if(any(unlist(lapply(sign.mat, function(sign.mat)all(sign.mat == TRUE))))){
+        sign.complete <- sign.complete + 1
+      }
+
+      for(j in 1:k){
+        check <- rep(FALSE, k)
+        for(l in 1:k){
+          check[l] <- any(all(pBs[[1]][,l]/abs(pBs[[1]][,l]) == x$B[,j]/abs(x$B)[,j]) | all(pBs[[1]][,l]/abs(pBs[[1]][,l]) == x$B[,j]/abs(x$B)[,j]*(-1)))
+        }
+        if(sum(check) == 1){
+          sign.part[[j]] <- sign.part[[j]] + 1
+        }
+      }
+    }
+  }else{
+    nrest <- length(signrest)
+    sign.part <- rep(list(0), nrest )
+    sign.complete <- 0
+    for(j in 1:length(bootstraps)){
+      check.full <- 0
+      for(i in 1:nrest){
+        check <- rep(FALSE, k)
+        for(l in 1:k){
+          check[l] <- any(all(Bs[,l,j]/abs(Bs[,l,j]) == signrest[[i]]) | all(Bs[,l,j]/abs(Bs[,l,j]) == signrest[[i]]*(-1)))
+        }
+        if(sum(check) == 1){
+          sign.part[[i]] <- sign.part[[i]] + 1
+          check.full <- check.full + 1
+        }
+      }
+      if(check.full == nrest){
+        sign.complete <- sign.complete + 1
+      }
+    }
+    names(sign.part) <- names(signrest)
+  }
+
+
+
   ## Impulse response of actual model
   ip <- imrf(x, horizon = horizon)
 
   result <- list(true = ip,
                  bootstrap = ipb,
                  SE = SE,
-                 boot.mean = boot.mean)
+                 nboot = nboot,
+                 rademacher = rademacher,
+                 point_estimate = x$B,
+                 boot_mean = boot.mean,
+                 signrest = signrest,
+                 sign_complete = sign.complete,
+                 sign_part = sign.part,
+                 method = 'Wild bootstrap')
   class(result) <- 'sboot'
   return(result)
 }
