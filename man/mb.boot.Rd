@@ -56,9 +56,8 @@ summary(x1)
 # Checking how often theory based impact relations appear
 signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
 bb <- mb.boot(x1, b.length = 15, nboot = 500, horizon = 30, nc = 1, signrest = signrest)
-bb$boot_mean
-bb$sign_complete
-bb$sign_part
+summary(bb)
+plot(bb, lowerq = 0.16, upperq = 0.84)
 }
 
 }
