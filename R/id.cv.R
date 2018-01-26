@@ -7,8 +7,8 @@
 #' The post-break covariance corresponds to \eqn{\Sigma_2=B\Lambda B'} where \eqn{\Lambda} is the estimated unconditional heteroskedasticity matrix.
 #'
 #' @param x An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object
-#' @param SB Integer or date character. The structural break is specified either by an integer (number of observations in the pre-break period) or
-#'                    a date character. If a date character is provided, either a date vector containing the whole time line
+#' @param SB Integer, vector or date character. The structural break is specified either by an integer (number of observations in the pre-break period),
+#'                    a vector of ts() frequencies if a ts object is used in the VAR or a date character. If a date character is provided, either a date vector containing the whole time line
 #'                    in the corresponding format (see examples) or common time parameters need to be provided
 #' @param dateVector Vector. Vector of time periods containing SB in corresponding format
 #' @param start Character. Start of the time series (only if dateVector is empty)
@@ -72,6 +72,9 @@
 #' x4 <- id.cv(v1, SB = "1985-01-01", format = "%Y-%m-%d", start = "1965-01-01", end = "2008-06-01",
 #' frequency = "quarter")
 #'
+#' # or provide ts date format (For quarterly, monthly, weekly and daily frequencies only)
+#' x5 <- id.cv(v1, SB = c(1985, 1))
+#'
 #' }
 #' @importFrom steadyICA steadyICA
 #' @export
@@ -134,6 +137,23 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
     SB <- getStructuralBreak(SB = SB, start = start, end = end,
                              frequency = frequency, format = format, dateVector = dateVector, Tob = Tob, p = p)
   }
+
+    if(length(SB) != 1 & inherits(x$y, "ts")){
+      SBts = SB
+      SB = dim(window(x$y, end = SB))[1]
+      if(frequency(x$y == 4)){
+        SBcharacter = paste(SBts[1], " Q", SBts[2], sep = "")
+      }else if(frequency(x$y == 12)){
+        SBcharacter = paste(SBts[1], " M", SBts[2], sep = "")
+      }else if(frequency(x$y == 52)){
+        SBcharacter = paste(SBts[1], " W", SBts[2], sep = "")
+      }else if(frequency(x$y == 365.25)){
+        SBcharacter = paste(SBts[1], "-", SBts[2], "-", SBts[3], sep = "")
+      }else{
+        SBcharacter = NULL
+      }
+
+    }
 
 
   TB <- SB - p

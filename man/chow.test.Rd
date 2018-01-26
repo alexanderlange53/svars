@@ -10,8 +10,8 @@ chow.test(Y, SB, p, nboot = 500, rademacher = "FALSE", start = NULL,
 \arguments{
 \item{Y}{Data of multivariate time series in matrix form}
 
-\item{SB}{Integer or date character. The structural break is specified either by an integer (number of observations in the pre-break period) or
-a date character. If a date character is provided, either a date vector containing the whole time line
+\item{SB}{Integer, vector or date character. The structural break is specified either by an integer (number of observations in the pre-break period),
+a vector of ts() frequencies if a ts object is used in the VAR or a date character. If a date character is provided, either a date vector containing the whole time line
 in the corresponding format or common time parameters need to be provided}
 
 \item{p}{Integer. Number of lags included in the presumed VAR model}
@@ -59,6 +59,8 @@ z3 <- chow.test(USA, SB = "1985-01-01", p = 6, format = "\%Y-\%m-\%d",
                 start = "1965-01-01", end = "2008-06-01",
                 frequency = "quarter")
 
+# or provide ts date format (For quarterly, monthly, weekly and daily frequencies only)
+z4 <- chow.test(USA, SB = c(1985,1), p = 6)
 }
 }
 \references{
