@@ -50,7 +50,8 @@ A list of class "svars" with elements
 Given an estimated VAR model, this function applies changes in volatility to identify the structural impact matrix B of the corresponding SVAR model
 \deqn{y_t=c_t+A_1 y_{t-1}+...+A_p y_{t-p}+u_t
 =c_t+A_1 y_{t-1}+...+A_p y_{t-p}+B \epsilon_t.}
-Matrix B corresponds to the decomposition of the pre-break covariance matrix \eqn{\Sigma_1=B B'}. The post-break covariance corresponds to \eqn{\Sigma_2=B\Lambda B'} where \eqn{\Lambda} is the estimated unconditional heteroskedasticity matrix.
+Matrix B corresponds to the decomposition of the pre-break covariance matrix \eqn{\Sigma_1=B B'}.
+The post-break covariance corresponds to \eqn{\Sigma_2=B\Lambda B'} where \eqn{\Lambda} is the estimated unconditional heteroskedasticity matrix.
 }
 \examples{
 \donttest{

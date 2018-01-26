@@ -182,29 +182,20 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
     ipb[[i]] <- bootstraps[[i]][[1]]
   }
 
+  # calculating covariance matrix of vectorized bootstrap matrices
+  v.b <-  matrix(Bs, ncol = k^2, byrow = T)
+  cov.bs <- cov(v.b)
+
   # Calculating Standard errors for LDI methods
   if(x$method == "Cramer-von Mises distance" | x$method == "Distance covariances"){
-    SE <- matrix(0,k,k)
-    for(i in 1:k){
-      for(j in 1:k){
-        SE[i,j] <-  sum((Bs[i,j,] - sum(Bs[i,j,])/nboot)^2)/nboot
-      }
-    }
-
-    SE <- sqrt(SE)
+    SE <- matrix(sqrt(diag(cov.bs)),k,k)
     rownames(SE) <- rownames(x$B)
   }else{
     SE <- NULL
   }
 
   # Calculating Bootstrap means
-  boot.mean <- matrix(0,k,k)
-  for(i in 1:k){
-    for(j in 1:k){
-      boot.mean[i,j] <-  mean(Bs[i,j, ])
-    }
-  }
-
+  boot.mean <- matrix(colMeans(v.b),k,k)
   rownames(boot.mean) <- rownames(x$B)
 
   # Checking for signs
@@ -270,6 +261,7 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
                  signrest = signrest,
                  sign_complete = sign.complete,
                  sign_part = sign.part,
+                 cov_bs = cov.bs,
                  method = 'Wild bootstrap')
   class(result) <- 'sboot'
   return(result)
