@@ -141,7 +141,7 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
     if(x$method == "Non-Gaussian maximum likelihood"){
       temp <- id.ngml(varb, stage3 = x$stage3)
     }else if(x$method == "Changes in Volatility"){
-      temp <- tryCatch(id.cv(varb, SB = x$SB,max.iter = 5000), error = function(e) NULL)
+      temp <- tryCatch(id.cv(varb, SB = x$SB), error = function(e) NULL)
     }else if(x$method == "Cramer-von Mises distance"){
       temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
     }else{
@@ -230,9 +230,10 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
     for(j in 1:length(bootstraps)){
       check.full <- 0
       for(i in 1:nrest){
-        check <- rep(FALSE, k)
+        check <- rep(FALSE, length(signrest[[i]][!is.na(signrest[[i]])]))
         for(l in 1:k){
-          check[l] <- any(all(Bs[,l,j]/abs(Bs[,l,j]) == signrest[[i]]) | all(Bs[,l,j]/abs(Bs[,l,j]) == signrest[[i]]*(-1)))
+          check[l] <- any(all(Bs[!is.na(signrest[[i]]),l,j]/abs(Bs[!is.na(signrest[[i]]),l,j]) == signrest[[i]][!is.na(signrest[[i]])]) |
+                            all(Bs[!is.na(signrest[[i]]),l,j]/abs(Bs[!is.na(signrest[[i]]),l,j]) == signrest[[i]][!is.na(signrest[[i]])]*(-1)))
         }
         if(sum(check) == 1){
           sign.part[[i]] <- sign.part[[i]] + 1
