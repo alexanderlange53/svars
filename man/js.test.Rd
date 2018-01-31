@@ -26,9 +26,9 @@ where matrix B* is the bootstrap estimation of the structural parameters.
 \examples{
 \donttest{
 # data contains quarterly observations from 1965Q1 to 2008Q3
-x = output gap
-pi = inflation
-i = interest rates
+# x = output gap
+# pi = inflation
+# i = interest rates
 v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
 x1 <- id.dc(v1)
 
