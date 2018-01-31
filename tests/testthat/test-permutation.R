@@ -43,5 +43,5 @@ test_that("3x3 permutation works", {
 })
 
 test_that("1x1 permutation works", {
-  expect_equal(as.matrix(1), permutation(as.matrix(1)))
+  expect_equal(list(as.matrix(1)), permutation(as.matrix(1)))
 })
