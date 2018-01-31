@@ -21,9 +21,8 @@ mb.boot(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL,
 \item{dd}{Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.
 If not supplied, it will be calculated by the function}
 
-\item{signrest}{A list containing vectors with the sign pattern of a specific shock,
-which should be tested on the apperance in the bootstrap. If no list is supplied,
-then the function counts the frequency of bootstrapped covariance decompositions that have the same sign pattern as the point estimate.}
+\item{signrest}{A list with vectors containing 1 and -1, e.g. c(1,-1,1), indicating a sign pattern of specific shocks to be tested
+with the help of the bootstrap samples.}
 
 \item{itermax}{Maximum number of iterations for DEoptim}
 
@@ -34,9 +33,10 @@ then the function counts the frequency of bootstrapped covariance decompositions
 \value{
 A list of class "sboot" with elements
 \item{boot_mean}{Mean of bootstrapped covariance decompositions}
-\item{sign_complete}{Frequency of appearance of the complete sign pattern in all bootstrapped covaraince decompositions}
-\item{sign_part}{Frequency of appearance of single shocks according to a specific sign pattern
- in all bootstrapped covaraince decompositions}
+\item{sign_complete}{Frequency of bootstrapped covariance decompositions which conform the complete predetermined sign pattern. If signrest=NULL,
+ the frequency of bootstrapped covariance decompositions that hold the same sign pattern as the point estimate is provided.}
+\item{sign_part}{Frequency of single shocks in all bootstrapped covariance decompositions which accord to a specific predetermined sign pattern
+ }
 }
 \description{
 Calculating confidence bands for impulse response via moving block bootstrap

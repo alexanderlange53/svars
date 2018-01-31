@@ -1,8 +1,8 @@
-#' Chi square test for joint hypothesis testing
+#' Chi-square test for joint hypotheses
 #'
-#' the test statistic is calculated as
-#' \deqn{(Rvec(\widehat{B}) - r)'R(\widehat{\mbox{Cov}}[vec(B^*)])^{-1}R'(Rvec(\widehat{b} - r)) \sim \chi^2_J},
-#' where matrix B* is the bootstrap estimation of the structural parameters.
+#' Based on an existing bootstrap object, the test statistic allows to test joint hypotheses for selected entries of the structural matrix B. The test statistic reads as
+#' \deqn{(Rvec(\widehat{B}) - r)'R(\widehat{\mbox{Cov}}[vec(B^*)])^{-1}R'(Rvec(\widehat{b} - r)) \sim \chi^2_J,}
+#' where \eqn{\widehat{\mbox{Cov}}[vec(B^*)]} is the estimated covariance of vectorized bootstrap estimates of structural parameters. The composite null hypothesis is \eqn{H_0: Rvec(B)= r}.
 #'
 #' @param x Object of class 'sboot'
 #' @param R A J*K^2 selection matrix, where J is the number of hypotheses and K the number of time series.
