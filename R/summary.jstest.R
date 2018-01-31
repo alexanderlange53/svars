@@ -1,5 +1,4 @@
 #' @S3method summary jstest
-#' @export
 
 summary.jstest <- function(object, ...){
 
