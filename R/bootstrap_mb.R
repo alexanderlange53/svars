@@ -23,8 +23,9 @@
 #'
 #' @seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}
 #'
-#' @references Brueggemann, R., Jentsch, C., and Trenkler, C. (2016). Inference in VARs with conditional heteroskedasticity of unknown form. Journal of Econometrics 191, 69-85.
-#'
+#' @references Brueggemann, R., Jentsch, C., and Trenkler, C. (2016). Inference in VARs with conditional heteroskedasticity of unknown form. Journal of Econometrics 191, 69-85.\cr
+#'   Herwartz, H., 2017. Hodges Lehmann detection of structural shocks -
+#'        An analysis of macroeconomic dynamics in the Euro Area, Oxford Bulletin of Economics and Statistics
 #' @examples
 #' \donttest{
 #' # data contains quarterly observations from 1965Q1 to 2008Q3
