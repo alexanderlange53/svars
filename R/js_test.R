@@ -37,7 +37,7 @@
 #' @export
 #'
 
-joint.significance <- function(x, R, r = NULL){
+js.test <- function(x, R, r = NULL){
 
   if(class(x)!= 'sboot'){
     stop("Please provide an object of class 'sboot'")
