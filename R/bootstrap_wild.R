@@ -9,17 +9,18 @@
 #'@param nc Number of processor cores (Not available on windows machines)
 #'@param dd Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.
 #'roxIf not supplied, it will be calculated by the function
-#'@param signrest A list containing vectors with the sign pattern of a specific shock,
-#'which should be tested on the apperance in the bootstrap. If no list is supplied,
-#'then the function counts the frequency of bootstrapped covariance decompositions that have the same sign pattern as the point estimate.
+#'@param signrest A list with vectors containing 1 and -1, e.g. c(1,-1,1), indicating a sign pattern of specific shocks to be tested
+#' with the help of the bootstrap samples.
 #'@param itermax Maximum number of iterations for DEoptim
 #'@param steptol Tolerance for steps without improvement for DEoptim
 #'@param iter2 Number of iterations for the second optimization
 #' @return A list of class "sboot" with elements
 #' \item{boot_mean}{Mean of bootstrapped covariance decompositions}
 #' \item{sign_complete}{Frequency of appearance of the complete sign pattern in all bootstrapped covaraince decompositions}
-#' \item{sign_part}{Frequency of appearance of single shocks according to a specific sign pattern
-#'  in all bootstrapped covaraince decompositions}
+#' \item{sign_part}{Frequency of bootstrapped covariance decompositions which conform the complete predetermined sign pattern. If signrest=NULL,
+#'  the frequency of bootstrapped covariance decompositions that hold the same sign pattern as the point estimate is provided.}
+#' \item{sign_part}{Frequency of single shocks in all bootstrapped covariance decompositions which accord to a specific predetermined sign pattern
+#'  }
 #'
 #'@references Goncalves, S., Kilian, L., 2004. Bootstrapping autoregressions with conditional heteroskedasticity of unknown form. Journal of Econometrics 123, 89-120.
 #'
