@@ -42,6 +42,24 @@ test_that("3x3 permutation works", {
 
 })
 
+test_that("2x2 permutation works", {
+  res <- permutation(diag(2))
+  expect_length(res, 2)
+
+  m <- matrix(c(1, 0,
+                0, 1), ncol = 2, byrow = TRUE)
+
+  expect_equal(sum(sapply(res, function(perm) all(m == perm))), 1)
+
+  m <- matrix(c(0, 1,
+                1, 0), ncol = 2, byrow = TRUE)
+
+  expect_equal(sum(sapply(res, function(perm) all(m == perm))), 1)
+
+
+})
+
+
 test_that("1x1 permutation works", {
   expect_equal(list(as.matrix(1)), permutation(as.matrix(1)))
 })
