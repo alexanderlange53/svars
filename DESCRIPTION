@@ -18,3 +18,4 @@ Imports: vars, expm, reshape2, ggplot2, copula, clue, pbapply, steadyICA, tsDyn,
 License: GPL (>= 2)
 LazyData: TRUE
 RoxygenNote: 6.0.1
+Suggests: testthat
