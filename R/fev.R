@@ -7,6 +7,8 @@
 #'
 #' @seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}
 #'
+#' @references Kilian, L., Luetkepohl, H., 2017. Structural Vector Autoregressive Analysis, Cambridge University Press.
+#'
 #' @examples
 #' \donttest{
 #' v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
