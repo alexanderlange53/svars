@@ -166,10 +166,10 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
   if(!is.null(restriction_matrix)){
    resultUnrestricted <- identifyVolatility(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = NULL,
                                  Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
-                                 max.iter = max.iter)
+                                 max.iter = max.iter, crit = crit)
     result <- identifyVolatility(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = restriction_matrix,
                                            Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
-                                 max.iter = max.iter)
+                                 max.iter = max.iter, crit = crit)
 
     lRatioTestStatistic = 2 * (resultUnrestricted$Lik - result$Lik)
     pValue = round(1 - pchisq(lRatioTestStatistic, result$restrictions), 4)
@@ -180,7 +180,7 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
     restriction_matrix <- NULL
     result <- identifyVolatility(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = restriction_matrix,
                                  Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
-                                 max.iter = max.iter)
+                                 max.iter = max.iter, crit = crit)
   }
 
   class(result) <- "svars"

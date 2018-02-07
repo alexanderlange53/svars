@@ -1,6 +1,6 @@
 identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = restriction_matrix,
                                     Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
-                                     max.iter){
+                                     max.iter, crit = crit){
 
   MLE<- NULL
   counter2 <- 0
@@ -102,7 +102,7 @@ ll <- list(ll)
 counter <- 1
 Exit <- 1
 
-while(abs(Exit) > 0.01 & counter < max.iter){
+while(abs(Exit) > crit & counter < max.iter){
 
   Sig1 <- solve(tcrossprod(B_hat[[counter]]))
   Sig2 <- solve(B_hat[[counter]]%*%tcrossprod(Lambda_hat[[counter]], B_hat[[counter]]))
