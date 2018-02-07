@@ -11,11 +11,13 @@ wald.test <- function(Lambda, Sigma, restrictions){
   betas <- matrix(combn(diag(Lambda), 2), nrow = 2)
 
   sigmas <- apply(kList, 2, function(x){
-    diag(Sigma[c(k * k + x[1] - restrictions, k * k + x[2] - restrictions), c(k * k + x[1] - restrictions, k * k + x[2] - restrictions)])
+    diag(Sigma[c(k * k + x[1] - restrictions, k * k + x[2] - restrictions),
+               c(k * k + x[1] - restrictions, k * k + x[2] - restrictions)])
     })
 
   covS <- apply(kList, 2, function(x){
-    Sigma[c(k * k + x[1] - restrictions, k * k + x[2] - restrictions), c(k * k + x[1] - restrictions, k * k + x[2] - restrictions)][1,2]
+    Sigma[c(k * k + x[1] - restrictions, k * k + x[2] - restrictions),
+          c(k * k + x[1] - restrictions, k * k + x[2] - restrictions)][1,2]
     })
 
   P.Value <- lapply(1:(k*(k-1)/2), function(x){

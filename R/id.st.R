@@ -1,6 +1,89 @@
-id.st <- function(x, c_lower = 0.25, c_upper = 0.75, c_step = 5,
-                  gamma_lower = -3.5, gamma_upper = 3.5, gamma_step = 0.5,
-                  crit = 0.01, max.iter = 50){
+#' Identification of SVAR models by means of a smooth transition of volatility
+#'
+#' Given an estimated VAR model, this function identifies the structural impact matrix B of the corresponding SVAR model
+#' by means of smooth transition
+#' \deqn{y_t=c_t+A_1 y_{t-1}+...+A_p y_{t-p}+u_t
+#' =c_t+A_1 y_{t-1}+...+A_p y_{t-p}+B \epsilon_t.}
+#' Matrix B corresponds to the decomposition of the pre-break covariance matrix \eqn{\Sigma_1=B B'}.
+#' The post-break covariance corresponds to \eqn{\Sigma_2=B\Lambda B'} where \eqn{\Lambda} is the estimated unconditional heteroskedasticity matrix.
+#'
+#' @param x An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object
+#' @param nc Number of processor cores (Not available on windows machines).
+#'           Note the smooth transition model is computationally extremely demanding.
+#' @param c_lower Start point where the algorithm starts to search for the volatility shift.
+#'                Defalt is 0.3*(Total number of observations)
+#' @param c_upper End point where the algorithm stops to search for the volatility shift.
+#'                Defalt is 0.7*(Total number of observations)
+#' @param c_step Step width of c, default is 5.
+#' @param gamma_lower Lower bound for gamma. Small values indicate a flat transition function. Default is -3
+#' @param gamma_upper Upper bound for gamma. Large values indicate a steep transition function. Default is 2
+#' @param gamma_step Step width of gamma, default is 0.5
+#' @param max.iter Integer. Number of maximum GLS iterations
+#' @param crit Integer. Critical value for the precision of the GLS estimation
+#' @return A list of class "svars" with elements
+#' \item{Lambda}{Estimated heteroscedasticity matrix \eqn{\Lambda}}
+#' \item{Lambda_SE}{Matrix of standard errors of Lambda}
+#' \item{B}{Estimated structural impact matrix B, i.e. unique decomposition of the covariance matrix of reduced form residuals}
+#' \item{B_SE}{Standard errors of matrix B}
+#' \item{n}{Number of observations}
+#' \item{Fish}{Observed Fisher information matrix}
+#' \item{Lik}{Function value of likelihood}
+#' \item{wald_statistic}{Results of pairwise Wald tests}
+#' \item{iteration}{Number of GLS estimations}
+#' \item{method}{Method applied for identification}
+#' \item{SB}{Structural break (number of observations)}
+#' \item{SBcharacter}{Structural break (date; if provided in function arguments)}
+#'
+#' @references Rigobon, R., 2003. Identification through Heteroskedasticity. The Review of Economics and Statistics, 85, 777-792.\cr
+#'  Herwartz, H. & Ploedt, M., 2016. Simulation Evidence on Theory-based and Statistical Identification under Volatility Breaks Oxford Bulletin of Economics and Statistics, 78, 94-112.
+#'
+#' @seealso For alternative identification approaches see \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
+#'
+#' @examples
+#' \donttest{
+#' # data contains quartlery observations from 1965Q1 to 2008Q2
+#' # assumed structural break in 1979Q4
+#' # x = output gap
+#' # pi = inflation
+#' # i = interest rates
+#' set.seed(23211)
+#' v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
+#' x1 <- id.st(v1,)
+#' summary(x1)
+#'
+#' # switching columns according to sign patter
+#' x1$B <- x1$B[,c(3,2,1)]
+#' x1$B[,3] <- x1$B[,3]*(-1)
+#'
+#' # Impulse response analysis
+#' i1 <- imrf(x1, horizon = 30)
+#' plot(i1, scales = 'free_y')
+#'
+#' # Restrictions
+#' # Assuming that the interest rate doesn't influence the output gap on impact
+#' restMat <- matrix(rep(NA, 9), ncol = 3)
+#' restMat[1,3] <- 0
+#' x2 <- id.cv(v1, SB = 60, restriction_matrix = restMat)
+#'
+#' #Structural brake via Dates
+#' # given that time series vector with dates is available
+#' dateVector = seq(as.Date("1965/1/1"), as.Date("2008/7/1"), "quarter")
+#' x3 <- id.cv(v1, SB = "1985-01-01", format = "%Y-%m-%d", dateVector = dateVector)
+#'
+#' # or pass sequence arguments directly
+#' x4 <- id.cv(v1, SB = "1985-01-01", format = "%Y-%m-%d", start = "1965-01-01", end = "2008-06-01",
+#' frequency = "quarter")
+#'
+#' # or provide ts date format (For quarterly, monthly, weekly and daily frequencies only)
+#' x5 <- id.cv(v1, SB = c(1985, 1))
+#'
+#' }
+#' @importFrom steadyICA steadyICA
+#' @export
+
+id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5,
+                  gamma_lower = -3, gamma_upper = 2, gamma_step = 0.5,
+                  max.iter = 50, crit = 0.01){
 
   # Gathering informations from reduced form model
   if(inherits(x, "var.boot")){
@@ -65,12 +148,6 @@ id.st <- function(x, c_lower = 0.25, c_upper = 0.75, c_step = 5,
     out <- list(lags = y_lag)
   }
 
-
-  Sigma_hat <- crossprod(u_t)/(Tob-1-k*p)
-
-  init_B <- t(chol(Sigma_hat))
-  init_Lambda <- diag(k)
-
   # Transition function
   transition <- function(gamma, cc, st){
     G <- (1 + exp(-exp(gamma)*(st - cc)))^(-1)
@@ -83,7 +160,7 @@ id.st <- function(x, c_lower = 0.25, c_upper = 0.75, c_step = 5,
     B <- matrix(parameter[1:(k*k)], k, k)
     Lambda <- diag(parameter[(k*k+1):(k*k+k)])
 
-    Omega <- lapply(G, function(x, B, Lambda)(1 - x)*tcrossprod(B, B) + x*B%*%tcrossprod(Lambda, B),
+    Omega <- lapply(G, function(xx, B, Lambda)(1 - xx)*tcrossprod(B) + xx*B%*%tcrossprod(Lambda, B),
                     B = B, Lambda = Lambda)
     Omega_inv <- lapply(Omega, function(x)solve(x))
 
@@ -111,144 +188,180 @@ id.st <- function(x, c_lower = 0.25, c_upper = 0.75, c_step = 5,
   G_grid <- mapply(transition, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
 
   # iterative approach
-  iterative_smooth_transition <- function(transition, u_t, y, Tob, crit, max.iter){
-
-    # Step 1: Optimizing likelihood with initial parameter
-    mle <- optim(fn = likelihood.st, par = parameter, u_t = u_t, G = transition, method = "BFGS")
-
-    B_hat <- matrix(mle$par[1:(k*k)], nrow = k)
-    Lambda_hat <- diag(mle$par[(k*k+1):(k*k+k)])
-    ll <- mle$value
-
-    # Step 2: Reestimation of VAR parameter with GLS
-    yl <- t(y_lag_cr(t(y), p)$lags)
-    yret <- y
-    y <- y[,-c(1:p)]
-
-    if(x$type == 'const'){
-      Z_t <- rbind(rep(1, ncol(yl)), yl)
-    }else if(x$type == 'trend'){
-      Z_t <- rbind(seq(1, ncol(yl)), yl)
-    }else if(x$type == 'both'){
-      Z_t <- rbind(rep(1, ncol(yl)), seq(1, ncol(yl)), yl)
-    }else{
-      Z_t <- yl
-    }
-
-    Omega_i <- lapply(transition, function(x, B, Lambda){solve((1 - x)*tcrossprod(B, B) + x*B%*%tcrossprod(Lambda, B))},
-                    B = B_hat, Lambda = Lambda_hat)
-
-    W <- blockMatrixDiagonal(Omega_i)
-
-    b_gls <- solve(kronecker(Z_t, diag(k))%*%W%*%kronecker(t(Z_t), diag(k)))%*%kronecker(Z_t, diag(k))%*%W%*%c(y)
-
-
-
-    W <- solve(diag(K*(Tob))) # identity matrix as starting weighting matrix
+  iterative_smooth_transition <- function(transition, u_t, y, Tob, k, p, crit, max.iter){
 
     count <- 0 # count variable
-    Exit <-  1  #Exit criterion
+    Exit <-  -100  #Exit criterion
 
-    while( (abs(stop_cond) > crit) && (round <= max.iter) ){
+    # Creating initial values for structural parameter
+    Sigma_hat <- crossprod(u_t)/(Tob-1-k*p)
+
+    init_B <- t(chol(Sigma_hat))
+    init_Lambda <- diag(k)
+
+    B_hat <- list(init_B)
+    Lambda_hat <- list(init_Lambda)
+    ll <- list(likelihood.st(parameter = c(init_B, diag(init_Lambda)),u_t = u_t, G = transition))
+
+
+    while( (Exit < crit) & (count < max.iter) ){
       count <- count + 1
-      # Z <- t(Z)
-      y_reg <- t(y)
-      y_reg <- c(y_reg)
-      y <- matrix(y, (T-spec$lag),K)
 
-      # in first round VAR starting values are estimates for the VAR model, since W = I
-      b <-  solve( (kronecker(t(Z),diag(K) )%*%W %*%kronecker(Z,diag(K) ))  )  %*% (kronecker(t(Z),diag(K) ))%*%W%*%y_reg
-      # b <-  solve( (kronecker(diag(K),t(Z) )%*%W %*%kronecker(diag(K),Z ))  )  %*% (kronecker(diag(K), t(Z) ))%*%W%*%c(y)
-
-      Theta <-  vector(mode="numeric", length=(K^2)*spec$lag+K)
-      for (i in 1:((K^2)*spec$lag+K) ){
-        Theta[i] <- b[i]
-      }
-      Theta <- matrix(Theta , K, K*spec$lag+1)
-      u_est <- residuals3(y, Theta, Z)
-      Sigma <- 1/(T-spec$lag)*t(u_est)%*%u_est
-
-
-      # get initial values for first repetition only from linear var
-      if (round== 1){
-        # ini <- vech(sqrtm((T-spec$lag)^-1*t(u_est)%*%u_est)$B)
-        ini <-  c(t(chol(Sigma)))
-        ini <- c(ini, rep(0.5,K))
+      if(count == 1){
+        u_t_gls <- u_t
       }
 
+      parameter <- c(B_hat[[count]], diag(Lambda_hat[[count]]))
 
-      ###############
-      #   STEP 1    #
-      ###############
-
-      # minimize the negative log-likelihood
-
-      object_fun <- function(unknown) LogLike_smtr_apply(unknown, y, Z,tr_func, T,K, spec,u_est)
-      # Minimize the negative Log-Likelihoodfunction
-
-      output <- nlm(object_fun, p= ini)
-
-      # names(output$estimate) <- c("int_ml","alpha_ml", "B", "lambda")
-      # assign(paste(names(output$estimate), collapse=""), output$estimate)
-      # estimates have to be squared to get structural parameters <- but for starting values use the estimates that are not squared
-      ini <- c(output$estimate) # save the estimated structural parameters
-      # calculate the estimated variances
-      B <-  vector(mode="numeric", length = K^2)
-      for (i in 1:K^2){
-        B[i] <- output$estimate[i]
+      # Step 1: Optimizing likelihood
+      mle <- tryCatch(
+                    optim(fn = likelihood.st, par = parameter, u_t = u_t_gls, G = transition, method = "BFGS",
+                    hessian = T), error = function(e) NULL)
+      if(is.null(mle)){
+        count2 <- 0
+        while(is.null(mle) & count2 < 25){
+          MW <- -1
+          #MW2 <- -1
+          while(MW < 0.5){
+            B_help <- suppressMessages(expm::sqrtm((1/Tob)* crossprod(u_t_gls))) + matrix(runif(k*k), nrow = k, byrow = T)
+            MW <- det(tcrossprod(B_help))
+          }
+          parameter <- c(B_help, rep(1,k))
+          mle <- tryCatch(
+            optim(fn = likelihood.st, par = parameter, u_t = u_t_gls, G = transition, method = "BFGS",
+                  hessian = T), error = function(e) NULL)
+          count2 <- count2 + 1
+        }
+        if(is.null(mle)){
+          return(NA)
+        }
       }
-      B <- matrix(B, K,K)
-      Sigma1 <-  B%*%t(B)
 
-      Lambda <- vector(mode="numeric", length = K)
-      count <- 0
-      for (i in (K^2+1:(K^2+K))){
-        count <- count+1
-        Lambda[count] <- output$estimate[i]
+      B_hat <- c(B_hat, list(matrix(mle$par[1:(k*k)], nrow = k)))
+      Lambda_hat <- c(Lambda_hat, list(diag(mle$par[(k*k+1):(k*k+k)])))
+      ll <- c(ll, list(mle$value))
+      if(count == 1){
+        hessian <- list(solve(mle$hessian))
+      }else{
+        hessian <- c(hessian, list(solve(mle$hessian)))
       }
-      Lambda<- diag(Lambda, K,K)
-      Sigma2 <- B%*%Lambda%*%t(B)
-      l_l <- output$minimum
-      old_ll[round] <- abs(l_l)
-      if (round == 1){stop_cond <- stop_cond}
-      else {stop_cond <- (l_l -old_ll[round-1])/old_ll[round-1]}
-      ###############
-      #   STEP 2    #
-      ###############
-      #--> re-estimate the model (see estimation of b in the next round of while loop and the last estimation is outside the loop)    # construct the weighting matrix
-      Omega_vec <- matrix(NA, K^2, (T-spec$lag))
-      for (i in 1:(T- spec$lag)){
-        Omega_vec[,i] <- c((1-tr_func[i])*Sigma1 + tr_func[i]*Sigma2)
-      }
-      W <-  matrix(0, (T-spec$lag)*K,(T-spec$lag)*K)
-      count <- 0
-      for (i in 1:(T-spec$lag)){
-        count <- count +1
-        W[((i*K)-(K-1)):(i*K),((i*K)-(K-1)):(i*K)] <-  solve(matrix(Omega_vec[,count],K,K))
-      }
-    } # end of the while loop for iterative process to estimate parameters B and lambda
-    # estimate b one more time, since loop breaks before the very last estimation
-    b <-  solve( (kronecker(t(Z),diag(K) )%*%W %*%kronecker(Z,diag(K) ))  )  %*% (kronecker(t(Z),diag(K) ))%*%W%*%y_reg
 
-    Theta <-  vector(mode="numeric", length=(K^2)*spec$lag+K)
-    for (i in 1:((K^2)*spec$lag+K) ){
-      Theta[i] <- b[i]
-    }
-    Theta <- matrix(Theta , K, K*spec$lag+1 )
 
-    if (round <= 500){
-      convergence <- 1
-    } else if (round > 500){
-      convergence <- 0
+      # Step 2: Reestimation of VAR parameter with GLS
+      yl <- t(y_lag_cr(t(y), p)$lags)
+      yret <- y
+      y_loop <- y[,-c(1:p)]
+
+      if(x$type == 'const'){
+        Z_t <- rbind(rep(1, ncol(yl)), yl)
+      }else if(x$type == 'trend'){
+        Z_t <- rbind(seq(1, ncol(yl)), yl)
+      }else if(x$type == 'both'){
+        Z_t <- rbind(rep(1, ncol(yl)), seq(1, ncol(yl)), yl)
+      }else{
+        Z_t <- yl
+      }
+
+      Omega_i <- lapply(transition, function(x, B, Lambda){solve((1 - x)*tcrossprod(B, B) + x*B%*%tcrossprod(Lambda, B))},
+                        B = B_hat[[(count + 1)]], Lambda = Lambda_hat[[(count + 1)]])
+
+      W <- block.diagonal(Omega_i)
+
+      b_gls <- solve(kronecker(Z_t, diag(k))%*%W%*%kronecker(t(Z_t), diag(k)))%*%kronecker(Z_t, diag(k))%*%W%*%c(y_loop)
+
+      if(count == 1){
+        GLSE <- list(b_gls)
+      }else{
+        GLSE <- c(GLSE, list(b_gls))
+      }
+
+      u_t_gls <- c(y_loop) - kronecker(t(Z_t), diag(k))%*%b_gls
+      u_t_gls <- matrix(u_t_gls, Tob, k)
+
+      if(count > 1){
+        Exit <- ll[[count+1]] - ll[[count]]
+      }
     }
 
-    out <- list(B = B, Lambda =Lambda, ll = -l_l, sigma1 = Sigma1, sigma2 = Sigma2, Theta =Theta,  convergence=  convergence)
-    return(out)
+    # extracting the best estimates
+    ll <- unlist(ll)
+    ll_best <- ll[which.min(ll)]
+    cc <- which.min(ll)
+    B_hat <- B_hat[[cc]]
+    Lambda_hat <- Lambda_hat[[cc]]
+    GLSE <- GLSE[[cc-1]]
+    GLSE <- matrix(GLSE, nrow = k)
 
+    # Optaining standard errors
+    HESS <- hessian[[cc-1]]
+    for(i in 1:nrow(HESS)){
+      if(HESS[i,i] < 0){
+        HESS[,i] <- -HESS[,i]
+      }
+    }
+    FishObs <- sqrt(diag(HESS))
+    B.SE <- matrix(FishObs[1:(k*k)], k,k)
+    Lambda.SE <- diag(FishObs[(k*k+1):(k*k+k)])
+
+    # Testing the estimated SVAR for identification by menas of wald statistic
+    # wald <- wald.test(Lambda_hat, HESS, restrictions)
+
+    return(list(
+      Lambda = Lambda_hat,    # estimated Lambda matrix (unconditional heteroscedasticity)
+      Lambda_SE = Lambda.SE,  # standard errors of Lambda matrix
+      B = B_hat,              # estimated B matrix (unique decomposition of the covariance matrix)
+      B_SE = B.SE,            # standard errors of B matrix
+      Fish = HESS,            # observerd fisher information matrix
+      Lik = -ll_best,             # function value of likelihood
+      iteration = count,     # number of gls estimations
+      A_hat = GLSE             # VAR parameter estimated with gls
+    ))
   }
 
+  G_grid <- apply(G_grid, 2, list)
 
+  grid_optimization <- mclapply(G_grid, function(x){iterative_smooth_transition(unlist(x),
+                                                                                u_t = u_t, y = y,
+                                                                                Tob = Tob, k = k,
+                                                                                p = p, crit = crit,
+                                                                                max.iter = max.iter)},
+                                mc.cores = nc)
+  # Checking for NA's
+  if(any(is.na(grid_optimization))){
+    G_grid[[which(is.na(grid_optimization))]] <- NULL
+    grid_optimization <- lapply(grid_optimization, function (x)x[any(!is.na(x))])
+    delnull  <-  function(x){
+      x[unlist(lapply(x, length) != 0)]
+    }
+    grid_optimization <- delnull(grid_optimization)
+  }
 
+  max_likelihood <- which.max(sapply(grid_optimization, '[[', 'Lik'))
+  best_estimation <- grid_optimization[[max_likelihood]]
+  transition_function <- unlist(G_grid[[max_likelihood]])
 
+  # Testing the estimated SVAR for identification by means of wald statistic
+  wald <- wald.test(best_estimation$Lambda, best_estimation$Fish, 0)
 
+  result <- list(
+    Lambda = best_estimation$Lambda,        # estimated Lambda matrix (unconditional heteroscedasticity)
+    Lambda_SE = best_estimation$Lambda_SE,  # standard errors of Lambda matrix
+    B = best_estimation$B,                  # estimated B matrix (unique decomposition of the covariance matrix)
+    B_SE = best_estimation$B_SE,            # standard errors of B matrix
+    n = Tob,                                # number of observations
+    Fish = best_estimation$Fish,            # observerd fisher information matrix
+    Lik = best_estimation$Lik,              # function value of likelihood
+    wald_statistic = wald,                  # results of wald test
+    iteration = best_estimation$iteration,  # number of gls estimations
+    method = "Smooth transition",
+    SB = grid_comb[max_likelihood,2],       # Structural Break point
+    transition_coefficient = grid_comb[max_likelihood,1], # Parameter which determines the shape of thetransition function
+    comb = nrow(grid_comb),                 # number of all evaluated combinations of gamma and c
+    transition_function = transition_function,
+    A_hat = best_estimation$A_hat,          # VAR parameter estimated with gls
+    type = x$type,          # type of the VAR model e.g 'const'
+    y = t(y),                # Data
+    p = p,                # number of lags
+    K = k                 # number of time series
+  )
 }
