@@ -43,6 +43,26 @@ summary.svars <- function(object, ...){
      cat(svarsObject$lRatioTestPValue)
 
    }
+  }else if(svarsObject$method == "Smooth transition"){
+    cat("\nStructural Break: At Observation Number ")
+    cat(svarsObject$SB)
+    cat("\nNumber of GLS estimations : ")
+    cat(svarsObject$iteration)
+    cat("\nEstimated transition coefficient : ")
+    cat(svarsObject$transition_coefficient)
+    cat("\nNumber of all grid combinations : ")
+    cat(svarsObject$comb)
+    cat("\n")
+    cat("\nEstimated Heteroscedasticity Matrix (Lambda):\n")
+    print(svarsObject$Lambda)
+    cat("\nStandard Errors of Lambda:\n")
+    print(svarsObject$Lambda_SE)
+    cat("\nEstimated B Matrix (unique decomposition of the covariance matrix): \n")
+    print(svarsObject$B)
+    cat("\nStandard Errors of B:\n")
+    print(svarsObject$B_SE)
+    cat("\nPairwise Wald Test:\n")
+    print(svarsObject$wald_statistic)
  }else if(svarsObject$method == "Non-Gaussian maximum likelihood"){
    cat("\nStage3: ")
    cat(svarsObject$stage3)

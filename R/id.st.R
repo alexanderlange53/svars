@@ -48,7 +48,7 @@
 #' # i = interest rates
 #' set.seed(23211)
 #' v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
-#' x1 <- id.st(v1,)
+#' x1 <- id.st(v1)
 #' summary(x1)
 #'
 #' # switching columns according to sign patter
@@ -58,25 +58,6 @@
 #' # Impulse response analysis
 #' i1 <- imrf(x1, horizon = 30)
 #' plot(i1, scales = 'free_y')
-#'
-#' # Restrictions
-#' # Assuming that the interest rate doesn't influence the output gap on impact
-#' restMat <- matrix(rep(NA, 9), ncol = 3)
-#' restMat[1,3] <- 0
-#' x2 <- id.cv(v1, SB = 60, restriction_matrix = restMat)
-#'
-#' #Structural brake via Dates
-#' # given that time series vector with dates is available
-#' dateVector = seq(as.Date("1965/1/1"), as.Date("2008/7/1"), "quarter")
-#' x3 <- id.cv(v1, SB = "1985-01-01", format = "%Y-%m-%d", dateVector = dateVector)
-#'
-#' # or pass sequence arguments directly
-#' x4 <- id.cv(v1, SB = "1985-01-01", format = "%Y-%m-%d", start = "1965-01-01", end = "2008-06-01",
-#' frequency = "quarter")
-#'
-#' # or provide ts date format (For quarterly, monthly, weekly and daily frequencies only)
-#' x5 <- id.cv(v1, SB = c(1985, 1))
-#'
 #' }
 #' @importFrom steadyICA steadyICA
 #' @export
@@ -159,24 +140,25 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5,
 
     B <- matrix(parameter[1:(k*k)], k, k)
     Lambda <- diag(parameter[(k*k+1):(k*k+k)])
+    Sigma_1 <- tcrossprod(B)
+    Sigma_2 <- B%*%tcrossprod(Lambda, B)
 
-    Omega <- lapply(G, function(xx, B, Lambda)(1 - xx)*tcrossprod(B) + xx*B%*%tcrossprod(Lambda, B),
+    Omega <- lapply(G, function(xx, B, Lambda)(1 - xx)*Sigma_1 + xx*Sigma_2,
                     B = B, Lambda = Lambda)
     Omega_inv <- lapply(Omega, function(x)solve(x))
 
     Likelihood_part1 <- suppressWarnings(lapply(Omega, function(x) log(det(x))))
     Likelihood_part1 <- Reduce('+', Likelihood_part1)
 
-    u_list <- apply(u_t, 1, list)
-
-    Likelihood_part2 <- sum(mapply(function(xx,yy){t(unlist(xx))%*%yy%*%unlist(xx)}, u_list, Omega_inv))
+    Omega_huge <- block.diagonal(Omega_inv)
+    Likelihood_part2 <- u_t%*%Omega_huge%*%u_t
 
     L <- -0.5*Likelihood_part1 - 0.5*Likelihood_part2
 
     if(!is.na(L)){
-      return(-L) ;
+      return(-L)
     }else{
-      return(1e25) ;
+      return(1e25)
     }
 
   }
@@ -201,7 +183,8 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5,
 
     B_hat <- list(init_B)
     Lambda_hat <- list(init_Lambda)
-    ll <- list(likelihood.st(parameter = c(init_B, diag(init_Lambda)),u_t = u_t, G = transition))
+    u_t2 = c(t(u_t))
+    ll <- list(likelihood.st(parameter = c(init_B, diag(init_Lambda)), u_t = u_t2, G = transition))
 
 
     while( (Exit < crit) & (count < max.iter) ){
@@ -214,8 +197,9 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5,
       parameter <- c(B_hat[[count]], diag(Lambda_hat[[count]]))
 
       # Step 1: Optimizing likelihood
+      u_t2 = c(t(u_t_gls))
       mle <- tryCatch(
-                    optim(fn = likelihood.st, par = parameter, u_t = u_t_gls, G = transition, method = "BFGS",
+                    nlm(f = likelihood.st, p = parameter, u_t = u_t2, G = transition,
                     hessian = T), error = function(e) NULL)
       if(is.null(mle)){
         count2 <- 0
@@ -228,7 +212,7 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5,
           }
           parameter <- c(B_help, rep(1,k))
           mle <- tryCatch(
-            optim(fn = likelihood.st, par = parameter, u_t = u_t_gls, G = transition, method = "BFGS",
+            nlm(f = likelihood.st, p = parameter, u_t = u_t_gls, G = transition,
                   hessian = T), error = function(e) NULL)
           count2 <- count2 + 1
         }
@@ -237,9 +221,9 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5,
         }
       }
 
-      B_hat <- c(B_hat, list(matrix(mle$par[1:(k*k)], nrow = k)))
-      Lambda_hat <- c(Lambda_hat, list(diag(mle$par[(k*k+1):(k*k+k)])))
-      ll <- c(ll, list(mle$value))
+      B_hat <- c(B_hat, list(matrix(mle$estimate[1:(k*k)], nrow = k)))
+      Lambda_hat <- c(Lambda_hat, list(diag(mle$estimate[(k*k+1):(k*k+k)])))
+      ll <- c(ll, list(mle$minimum))
       if(count == 1){
         hessian <- list(solve(mle$hessian))
       }else{
@@ -320,7 +304,7 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5,
 
   G_grid <- apply(G_grid, 2, list)
 
-  grid_optimization <- mclapply(G_grid, function(x){iterative_smooth_transition(unlist(x),
+  grid_optimization <- parallel::mclapply(G_grid, function(x){iterative_smooth_transition(unlist(x),
                                                                                 u_t = u_t, y = y,
                                                                                 Tob = Tob, k = k,
                                                                                 p = p, crit = crit,
@@ -364,4 +348,7 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5,
     p = p,                # number of lags
     K = k                 # number of time series
   )
+
+  class(result) <- 'svars'
+  return(result)
 }
