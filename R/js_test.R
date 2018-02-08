@@ -42,25 +42,15 @@ js.test <- function(x, R, r = NULL){
   if(class(x)!= 'sboot'){
     stop("Please provide an object of class 'sboot'")
   }
-
-    if(!is.null(nrow(R))){
+  if(!is.matrix(R)){
+    stop("Please provide R in matrix format")
+  }
       if(is.null(r)){
         r <- rep(0, nrow(R))
       }
         df <- nrow(R)
-    }else{
-      if(is.null(r)){
-        r <- 0
-      }
-      df <- 1
-    }
 
-
-  if(df > 1){
     v <- t(R%*%c(x$point_estimate) - r)%*%R%*%solve(x$cov_bs)%*%t(R)%*%(R%*%c(x$point_estimate) - r)
-  }else{
-    v <- t(R%*%c(x$point_estimate) - r)%*%R%*%solve(x$cov_bs)%*%R%*%(R%*%c(x$point_estimate) - r)
-  }
 
   p.value <- 1 - pchisq(v, df)
   ctest <- list(
