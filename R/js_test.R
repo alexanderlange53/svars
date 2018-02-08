@@ -30,7 +30,7 @@
 #' # relation between structural and reduced form errors
 #' R <- rbind(c(0,0,0,1,0,0,0,0,0), c(0,0,0,0,0,0,1,0,0),
 #'            c(0,0,0,0,0,0,0,1,0))
-#' c.test <- joint.significance(bb, R)
+#' c.test <- js.test(bb, R)
 #' summary(c.test)
 #' }
 #'
@@ -42,16 +42,19 @@ js.test <- function(x, R, r = NULL){
   if(class(x)!= 'sboot'){
     stop("Please provide an object of class 'sboot'")
   }
-  if(is.null(r)){
+
     if(!is.null(nrow(R))){
-      r <- rep(0, nrow(R))
-      df <- nrow(R)
+      if(is.null(r)){
+        r <- rep(0, nrow(R))
+      }
+        df <- nrow(R)
     }else{
-      r <- 0
+      if(is.null(r)){
+        r <- 0
+      }
       df <- 1
     }
 
-  }
 
   if(df > 1){
     v <- t(R%*%c(x$point_estimate) - r)%*%R%*%solve(x$cov_bs)%*%t(R)%*%(R%*%c(x$point_estimate) - r)

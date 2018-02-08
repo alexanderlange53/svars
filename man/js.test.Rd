@@ -39,7 +39,7 @@ bb <- wild.boot(x1, nboot = 1000, horizon = 30)
 # relation between structural and reduced form errors
 R <- rbind(c(0,0,0,1,0,0,0,0,0), c(0,0,0,0,0,0,1,0,0),
            c(0,0,0,0,0,0,0,1,0))
-c.test <- joint.significance(bb, R)
+c.test <- js.test(bb, R)
 summary(c.test)
 }
 
