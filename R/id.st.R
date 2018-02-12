@@ -15,9 +15,12 @@
 #' @param c_upper End point where the algorithm stops to search for the volatility shift.
 #'                Defalt is 0.7*(Total number of observations)
 #' @param c_step Step width of c, default is 5.
+#' @param c_fix If the break point is known, it can be passed as argument,
+#'              where break point = Numberof observations - c_fix
 #' @param gamma_lower Lower bound for gamma. Small values indicate a flat transition function. Default is -3
 #' @param gamma_upper Upper bound for gamma. Large values indicate a steep transition function. Default is 2
 #' @param gamma_step Step width of gamma, default is 0.5
+#' @param gamma_fix A fixed parameter for gamma, instead of letting the function search for gamma.
 #' @param max.iter Integer. Number of maximum GLS iterations
 #' @param crit Integer. Critical value for the precision of the GLS estimation
 #' @return A list of class "svars" with elements
@@ -62,8 +65,8 @@
 #' @importFrom steadyICA steadyICA
 #' @export
 
-id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5,
-                  gamma_lower = -3, gamma_upper = 2, gamma_step = 0.5,
+id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL,
+                  gamma_lower = -3, gamma_upper = 2, gamma_step = 0.5, gamma_fix = NULL,
                   max.iter = 50, crit = 0.01){
 
   # Gathering informations from reduced form model
@@ -138,6 +141,10 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5,
   # Likelihod function
   likelihood.st <- function(parameter, u_t, G){
 
+    if(any(parameter[(k*k+1):(k*k+k)] < 0)){
+      return(return(1e25))
+    }
+
     B <- matrix(parameter[1:(k*k)], k, k)
     Lambda <- diag(parameter[(k*k+1):(k*k+k)])
     Sigma_1 <- tcrossprod(B)
@@ -163,11 +170,26 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5,
 
   }
 
-  # Creating grid for iterative procedure
-  gamma_grid <-  seq(gamma_lower, gamma_upper, by = gamma_step)
-  cc_grid <- seq(ceiling(c_lower*Tob), floor(c_upper*Tob), by = c_step)
-  grid_comb <- unique(expand.grid(gamma_grid, cc_grid))
-  G_grid <- mapply(transition, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
+  if(is.null(gamma_fix) &  is.null(c_fix)){
+    # Creating grid for iterative procedure with gamma and break point unknown
+    gamma_grid <-  seq(gamma_lower, gamma_upper, by = gamma_step)
+    cc_grid <- seq(ceiling(c_lower*Tob), floor(c_upper*Tob), by = c_step)
+    grid_comb <- unique(expand.grid(gamma_grid, cc_grid))
+    G_grid <- mapply(transition, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
+  }else if(is.null(gamma_fix)){
+    # Creating grid for iterative procedure with fix break point
+    gamma_grid <-  seq(gamma_lower, gamma_upper, by = gamma_step)
+    grid_comb <- unique(expand.grid(gamma_grid, c_fix))
+    G_grid <- mapply(transition, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
+  }else if(is.null(c_fix)){
+    # Creating grid for iterative procedure with fix shape of transition function
+    cc_grid <- seq(ceiling(c_lower*Tob), floor(c_upper*Tob), by = c_step)
+    grid_comb <- unique(expand.grid(gamma_fix, cc_grid))
+    G_grid <- mapply(transition, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
+  }else{
+    G_grid <- mapply(transition, gamma_fix, c_fix, MoreArgs = list(st = seq(1:Tob)))
+  }
+
 
   # iterative approach
   iterative_smooth_transition <- function(transition, u_t, y, Tob, k, p, crit, max.iter){
@@ -187,7 +209,7 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5,
     ll <- list(likelihood.st(parameter = c(init_B, diag(init_Lambda)), u_t = u_t2, G = transition))
 
 
-    while( (Exit < crit) & (count < max.iter) ){
+    while( (abs(Exit) > crit) & (count < max.iter) ){
       count <- count + 1
 
       if(count == 1){
@@ -302,27 +324,35 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5,
     ))
   }
 
-  G_grid <- apply(G_grid, 2, list)
+  if(!is.null(gamma_fix) &  !is.null(c_fix)){
+    best_estimation <- iterative_smooth_transition(G_grid, u_t = u_t, y = y, Tob = Tob, k = k,
+                                           p = p, crit = crit, max.iter = max.iter)
 
-  grid_optimization <- parallel::mclapply(G_grid, function(x){iterative_smooth_transition(unlist(x),
-                                                                                u_t = u_t, y = y,
-                                                                                Tob = Tob, k = k,
-                                                                                p = p, crit = crit,
-                                                                                max.iter = max.iter)},
-                                mc.cores = nc)
-  # Checking for NA's
-  if(any(is.na(grid_optimization))){
-    G_grid[[which(is.na(grid_optimization))]] <- NULL
-    grid_optimization <- lapply(grid_optimization, function (x)x[any(!is.na(x))])
-    delnull  <-  function(x){
-      x[unlist(lapply(x, length) != 0)]
+  }else{
+    G_grid <- apply(G_grid, 2, list)
+
+    grid_optimization <- pblapply(G_grid, function(x){iterative_smooth_transition(unlist(x),
+                                                                                  u_t = u_t, y = y,
+                                                                                  Tob = Tob, k = k,
+                                                                                  p = p, crit = crit,
+                                                                                  max.iter = max.iter)},
+                                  cl = nc)
+    # Checking for NA's
+    if(any(is.na(grid_optimization))){
+      G_grid[[which(is.na(grid_optimization))]] <- NULL
+      grid_optimization <- lapply(grid_optimization, function (x)x[any(!is.na(x))])
+      delnull  <-  function(x){
+        x[unlist(lapply(x, length) != 0)]
+      }
+      grid_optimization <- delnull(grid_optimization)
     }
-    grid_optimization <- delnull(grid_optimization)
+
+    max_likelihood <- which.max(sapply(grid_optimization, '[[', 'Lik'))
+    best_estimation <- grid_optimization[[max_likelihood]]
+    transition_function <- unlist(G_grid[[max_likelihood]])
   }
 
-  max_likelihood <- which.max(sapply(grid_optimization, '[[', 'Lik'))
-  best_estimation <- grid_optimization[[max_likelihood]]
-  transition_function <- unlist(G_grid[[max_likelihood]])
+
 
   # Testing the estimated SVAR for identification by means of wald statistic
   wald <- wald.test(best_estimation$Lambda, best_estimation$Fish, 0)
