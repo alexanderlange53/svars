@@ -40,13 +40,13 @@
 #' @examples
 #' \donttest{
 #' # data contains quartlery observations from 1965Q1 to 2008Q2
-#' # assumed structural break in 1979Q4
+#' # assumed structural break in 1979Q3
 #' # x = output gap
 #' # pi = inflation
 #' # i = interest rates
 #' set.seed(23211)
 #' v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
-#' x1 <- id.cv(v1, SB = 60)
+#' x1 <- id.cv(v1, SB = 59)
 #' summary(x1)
 #'
 #' # switching columns according to sign patter
@@ -61,19 +61,23 @@
 #' # Assuming that the interest rate doesn't influence the output gap on impact
 #' restMat <- matrix(rep(NA, 9), ncol = 3)
 #' restMat[1,3] <- 0
-#' x2 <- id.cv(v1, SB = 60, restriction_matrix = restMat)
+#' x2 <- id.cv(v1, SB = 59, restriction_matrix = restMat)
+#' summary(x2)
 #'
 #' #Structural brake via Dates
 #' # given that time series vector with dates is available
 #' dateVector = seq(as.Date("1965/1/1"), as.Date("2008/7/1"), "quarter")
-#' x3 <- id.cv(v1, SB = "1985-01-01", format = "%Y-%m-%d", dateVector = dateVector)
+#' x3 <- id.cv(v1, SB = "1979-07-01", format = "%Y-%m-%d", dateVector = dateVector)
+#' summary(x3)
 #'
 #' # or pass sequence arguments directly
-#' x4 <- id.cv(v1, SB = "1985-01-01", format = "%Y-%m-%d", start = "1965-01-01", end = "2008-06-01",
+#' x4 <- id.cv(v1, SB = "1979-07-01", format = "%Y-%m-%d", start = "1965-01-01", end = "2008-07-01",
 #' frequency = "quarter")
+#' summary(x4)
 #'
 #' # or provide ts date format (For quarterly, monthly, weekly and daily frequencies only)
-#' x5 <- id.cv(v1, SB = c(1985, 1))
+#' x5 <- id.cv(v1, SB = c(1979, 3))
+#' summary(x5)
 #'
 #' }
 #' @importFrom steadyICA steadyICA

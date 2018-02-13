@@ -97,7 +97,9 @@ id.ngml <- function(x, stage3 = FALSE){
 
       return(-logl)
 
-    } else {return(return(1e25))}
+    } else {
+      return(1e25)
+      }
   }
 
   resid.ls <- function(Z_t, k, A){
