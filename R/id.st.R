@@ -332,6 +332,7 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
 
     transition_coefficient <- gamma_fix
     SB <- c_fix
+    comb <- 1
 
   }else{
     G_grid <- apply(G_grid, 2, list)
@@ -358,6 +359,7 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
 
     transition_coefficient <- grid_comb[max_likelihood,1]
     SB <- grid_comb[max_likelihood,2]
+    comb <- nrow(grid_comb)
   }
 
 
@@ -376,9 +378,9 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
     wald_statistic = wald,                  # results of wald test
     iteration = best_estimation$iteration,  # number of gls estimations
     method = "Smooth transition",
-    SB = grid_comb[max_likelihood,2],       # Structural Break point
+    SB = SB,       # Structural Break point
     transition_coefficient = transition_coefficient, # Parameter which determines the shape of thetransition function
-    comb = nrow(grid_comb),                 # number of all evaluated combinations of gamma and c
+    comb = comb,                 # number of all evaluated combinations of gamma and c
     transition_function = transition_function,
     A_hat = best_estimation$A_hat,          # VAR parameter estimated with gls
     type = x$type,          # type of the VAR model e.g 'const'
