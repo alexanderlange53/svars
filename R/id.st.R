@@ -187,6 +187,7 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
     grid_comb <- unique(expand.grid(gamma_fix, cc_grid))
     G_grid <- mapply(transition, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
   }else{
+    grid_comb <- unique(expand.grid(gamma_fix, c_fix))
     G_grid <- mapply(transition, gamma_fix, c_fix, MoreArgs = list(st = seq(1:Tob)))
   }
 
