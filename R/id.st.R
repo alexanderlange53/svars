@@ -328,6 +328,10 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
   if(!is.null(gamma_fix) &  !is.null(c_fix)){
     best_estimation <- iterative_smooth_transition(G_grid, u_t = u_t, y = y, Tob = Tob, k = k,
                                            p = p, crit = crit, max.iter = max.iter)
+    transition_function <- G_grid
+
+    transition_coefficient <- gamma_fix
+    SB <- c_fix
 
   }else{
     G_grid <- apply(G_grid, 2, list)
@@ -351,6 +355,9 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
     max_likelihood <- which.max(sapply(grid_optimization, '[[', 'Lik'))
     best_estimation <- grid_optimization[[max_likelihood]]
     transition_function <- unlist(G_grid[[max_likelihood]])
+
+    transition_coefficient <- grid_comb[max_likelihood,1]
+    SB <- grid_comb[max_likelihood,2]
   }
 
 
@@ -370,7 +377,7 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
     iteration = best_estimation$iteration,  # number of gls estimations
     method = "Smooth transition",
     SB = grid_comb[max_likelihood,2],       # Structural Break point
-    transition_coefficient = grid_comb[max_likelihood,1], # Parameter which determines the shape of thetransition function
+    transition_coefficient = transition_coefficient, # Parameter which determines the shape of thetransition function
     comb = nrow(grid_comb),                 # number of all evaluated combinations of gamma and c
     transition_function = transition_function,
     A_hat = best_estimation$A_hat,          # VAR parameter estimated with gls
