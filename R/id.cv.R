@@ -110,6 +110,7 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
   if(inherits(x, "var.boot")){
     p <- x$p
     y <- t(x$y)
+    yOut <- x$y
     type = x$type
     coef_x = x$coef_x
   }else if(inherits(x, "varest")){
@@ -121,6 +122,7 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
     }
     p <- x$lag
     y <- t(x$model[, 1:k])
+    yOut <- x$y
   }else if(inherits(x, "list")){
     p <- x$order
     y <- t(x$data)

@@ -141,9 +141,11 @@ hd <- function(x, series = 1){
   for(i in 3:ncol(yhat)){
     colnames(yhat)[i] <- paste('Cumulative effect of flow ', colnames(y)[i-2], 'shock on ', colnames(y)[series])
   }
-
+  if(inherits(x$y, "ts")){
+  histdecomp <- list(hidec = ts(yhat[, -grep("V1", colnames(yhat))], start = start(lag(x$y, k = -x$p)), end = end(x$y), frequency = frequency(x$y)))
+}else{
   histdecomp <- list(hidec = as.data.frame(yhat))
+}
   class(histdecomp) <- 'hd'
   return(histdecomp)
-
 }
