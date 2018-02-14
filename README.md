@@ -1,10 +1,28 @@
-# SVAR Identification [![Build Status](https://travis-ci.org/alexanderlange53/svars.svg?branch=master)](https://travis-ci.org/alexanderlange53/svars) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/svars)](http://cran.r-project.org/package=svars) [![rstudio mirror downloads](http://cranlogs.r-pkg.org/badges/svars)](https://github.com/metacran/cranlogs.app)
+svars
+=====
 
-This repository is concerned with data driven methods to identify the B matrix of structural vector autoregressive (SVAR)
+[![Build Status](https://travis-ci.org/alexanderlange53/svars.svg?branch=master)](https://travis-ci.org/alexanderlange53/svars) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/svars)](http://cran.r-project.org/package=svars) [![rstudio mirror downloads](http://cranlogs.r-pkg.org/badges/grand-total/svars)](https://github.com/metacran/cranlogs.app)
+
+This repository is concerned with data driven methods to estimate structural vector autoregressive (SVAR)
 models.  
 
-Installing the development version:
+## Installation
 
-```library(devtools)```
 
-```install_github("alexanderlange53/svars")```
+```r
+install.packages("svars")
+```
+
+Alternatively, install development version
+
+
+```r
+install.packages("devtools")
+devtools::install_github("alexanderlange53/svars"")
+```
+
+
+```r
+library("svars")
+```
+
