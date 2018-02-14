@@ -48,7 +48,7 @@ A nonparametric dependence measure, the Cramer-von Mises distance (Genest and Re
 # i = interest rates
 set.seed(23211)
 v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
-cob <- copula::indepTestSim(v1$obs, v1$K, verbose=F)
+cob <- copula::indepTestSim(v1$obs, v1$K, verbose=FALSE)
 x1 <- id.cvm(v1, dd = cob)
 summary(x1)
 
