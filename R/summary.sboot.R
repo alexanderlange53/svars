@@ -1,4 +1,4 @@
-#' @export
+#' @S3method summary sboot
 
 summary.sboot <- function(object, ...){
 

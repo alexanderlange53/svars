@@ -54,7 +54,6 @@
 ## Identification via non-Gaussian maximum likelihood ##
 #------------------------------------------------------#
 
-
 id.ngml <- function(x, stage3 = FALSE){
 
 
@@ -98,7 +97,7 @@ id.ngml <- function(x, stage3 = FALSE){
 
       return(-logl)
 
-    } else {return(NA)}
+    } else {return(return(1e25))}
   }
 
   resid.ls <- function(Z_t, k, A){
@@ -250,15 +249,15 @@ id.ngml <- function(x, stage3 = FALSE){
   }
 
   # optimizing the likelihood function 2. stage
-  maxL <- optim(theta0, loglik, method = 'BFGS', hessian = TRUE)
-  beta_est <- maxL$par[1:(k*k-k)]
+  maxL <- nlm(p = theta0, f = loglik, hessian = TRUE)
+  beta_est <- maxL$estimate[1:(k*k-k)]
 
-  sigma_est <- maxL$par[(k*k-k+1):(k*k)]
+  sigma_est <- maxL$estimate[(k*k-k+1):(k*k)]
   B_stand_est <- diag(k)
   B_stand_est[row(B_stand_est)!=col(B_stand_est)] <- beta_est
   B_mle <- B_stand_est%*%diag(sigma_est)
-  d_freedom <- maxL$par[(k*k+1):(k*k+k)]
-  ll <- maxL$value
+  d_freedom <- maxL$estimate[(k*k+1):(k*k+k)]
+  ll <- maxL$minimum
 
   # obating standard errors from observed fisher information
   HESS <- solve(maxL$hessian)
@@ -343,9 +342,9 @@ id.ngml <- function(x, stage3 = FALSE){
     }
 
     A <- c(A)
-    maxL2 <- optim(A, loglik2, method = 'BFGS', hessian = TRUE)
+    maxL2 <- nlm(p = A, f = loglik2, hessian = TRUE)
 
-    A_hat <- matrix(maxL2$par, nrow = k)
+    A_hat <- matrix(maxL2$estimate, nrow = k)
   }else{
     if(inherits(x, "var.boot")){
       A_hat <- coef_x

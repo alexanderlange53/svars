@@ -21,9 +21,8 @@ wild.boot(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL,
 \item{dd}{Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.
 roxIf not supplied, it will be calculated by the function}
 
-\item{signrest}{A list containing vectors with the sign pattern of a specific shock,
-which should be tested on the apperance in the bootstrap. If no list is supplied,
-then the function counts the frequency of bootstrapped covariance decompositions that have the same sign pattern as the point estimate.}
+\item{signrest}{A list with vectors containing 1 and -1, e.g. c(1,-1,1), indicating a sign pattern of specific shocks to be tested
+with the help of the bootstrap samples.}
 
 \item{itermax}{Maximum number of iterations for DEoptim}
 
@@ -35,8 +34,10 @@ then the function counts the frequency of bootstrapped covariance decompositions
 A list of class "sboot" with elements
 \item{boot_mean}{Mean of bootstrapped covariance decompositions}
 \item{sign_complete}{Frequency of appearance of the complete sign pattern in all bootstrapped covaraince decompositions}
-\item{sign_part}{Frequency of appearance of single shocks according to a specific sign pattern
- in all bootstrapped covaraince decompositions}
+\item{sign_part}{Frequency of bootstrapped covariance decompositions which conform the complete predetermined sign pattern. If signrest=NULL,
+ the frequency of bootstrapped covariance decompositions that hold the same sign pattern as the point estimate is provided.}
+\item{sign_part}{Frequency of single shocks in all bootstrapped covariance decompositions which accord to a specific predetermined sign pattern
+ }
 }
 \description{
 Calculating confidence bands for impulse response functions via wild bootstrap techniques (Goncalves and Kilian, 2004).
@@ -63,7 +64,9 @@ plot(bb, lowerq = 0.16, upperq = 0.84)
 
 }
 \references{
-Goncalves, S., Kilian, L., 2004. Bootstrapping autoregressions with conditional heteroskedasticity of unknown form. Journal of Econometrics 123, 89-120.
+Goncalves, S., Kilian, L., 2004. Bootstrapping autoregressions with conditional heteroskedasticity of unknown form. Journal of Econometrics 123, 89-120.\cr
+  Herwartz, H., 2017. Hodges Lehmann detection of structural shocks -
+       An analysis of macroeconomic dynamics in the Euro Area, Oxford Bulletin of Economics and Statistics
 }
 \seealso{
 \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}

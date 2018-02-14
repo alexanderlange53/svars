@@ -1,8 +1,8 @@
-#' Chi square test for joint hypothesis testing
+#' Chi-square test for joint hypotheses
 #'
-#' the test statistic is calculated as
-#' \deqn{(Rvec(\widehat{B}) - r)'R(\widehat{\mbox{Cov}}[vec(B^*)])^{-1}R'(Rvec(\widehat{b} - r)) \sim \chi^2_J},
-#' where matrix B* is the bootstrap estimation of the structural parameters.
+#' Based on an existing bootstrap object, the test statistic allows to test joint hypotheses for selected entries of the structural matrix B. The test statistic reads as
+#' \deqn{(Rvec(\widehat{B}) - r)'R(\widehat{\mbox{Cov}}[vec(B^*)])^{-1}R'(Rvec(\widehat{b} - r)) \sim \chi^2_J,}
+#' where \eqn{\widehat{\mbox{Cov}}[vec(B^*)]} is the estimated covariance of vectorized bootstrap estimates of structural parameters. The composite null hypothesis is \eqn{H_0: Rvec(B)= r}.
 #'
 #' @param x Object of class 'sboot'
 #' @param R A J*K^2 selection matrix, where J is the number of hypotheses and K the number of time series.
@@ -17,9 +17,9 @@
 #'@examples
 #' \donttest{
 #' # data contains quarterly observations from 1965Q1 to 2008Q3
-#' x = output gap
-#' pi = inflation
-#' i = interest rates
+#' # x = output gap
+#' # pi = inflation
+#' # i = interest rates
 #' v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
 #' x1 <- id.dc(v1)
 #'
@@ -30,34 +30,27 @@
 #' # relation between structural and reduced form errors
 #' R <- rbind(c(0,0,0,1,0,0,0,0,0), c(0,0,0,0,0,0,1,0,0),
 #'            c(0,0,0,0,0,0,0,1,0))
-#' c.test <- joint.significance(bb, R)
+#' c.test <- js.test(bb, R)
 #' summary(c.test)
 #' }
 #'
 #' @export
 #'
 
-joint.significance <- function(x, R, r = NULL){
+js.test <- function(x, R, r = NULL){
 
   if(class(x)!= 'sboot'){
     stop("Please provide an object of class 'sboot'")
   }
-  if(is.null(r)){
-    if(!is.null(nrow(R))){
-      r <- rep(0, nrow(R))
-      df <- nrow(R)
-    }else{
-      r <- 0
-      df <- 1
-    }
-
+  if(!is.matrix(R)){
+    stop("Please provide R in matrix format")
   }
+      if(is.null(r)){
+        r <- rep(0, nrow(R))
+      }
+        df <- nrow(R)
 
-  if(df > 1){
     v <- t(R%*%c(x$point_estimate) - r)%*%R%*%solve(x$cov_bs)%*%t(R)%*%(R%*%c(x$point_estimate) - r)
-  }else{
-    v <- t(R%*%c(x$point_estimate) - r)%*%R%*%solve(x$cov_bs)%*%R%*%(R%*%c(x$point_estimate) - r)
-  }
 
   p.value <- 1 - pchisq(v, df)
   ctest <- list(

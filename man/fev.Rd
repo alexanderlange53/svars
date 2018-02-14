@@ -23,6 +23,9 @@ plot(x2)
 }
 
 }
+\references{
+Kilian, L., Luetkepohl, H., 2017. Structural Vector Autoregressive Analysis, Cambridge University Press.
+}
 \seealso{
 \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}
 }

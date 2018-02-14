@@ -1,4 +1,4 @@
-#' @export
+#' @S3method summary chow
 
 summary.chow <- function(object, ...){
 

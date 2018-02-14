@@ -9,19 +9,22 @@
 #'@param nc Number of processor cores (Not available on windows machines)
 #'@param dd Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.
 #'roxIf not supplied, it will be calculated by the function
-#'@param signrest A list containing vectors with the sign pattern of a specific shock,
-#'which should be tested on the apperance in the bootstrap. If no list is supplied,
-#'then the function counts the frequency of bootstrapped covariance decompositions that have the same sign pattern as the point estimate.
+#'@param signrest A list with vectors containing 1 and -1, e.g. c(1,-1,1), indicating a sign pattern of specific shocks to be tested
+#' with the help of the bootstrap samples.
 #'@param itermax Maximum number of iterations for DEoptim
 #'@param steptol Tolerance for steps without improvement for DEoptim
 #'@param iter2 Number of iterations for the second optimization
 #' @return A list of class "sboot" with elements
 #' \item{boot_mean}{Mean of bootstrapped covariance decompositions}
 #' \item{sign_complete}{Frequency of appearance of the complete sign pattern in all bootstrapped covaraince decompositions}
-#' \item{sign_part}{Frequency of appearance of single shocks according to a specific sign pattern
-#'  in all bootstrapped covaraince decompositions}
+#' \item{sign_part}{Frequency of bootstrapped covariance decompositions which conform the complete predetermined sign pattern. If signrest=NULL,
+#'  the frequency of bootstrapped covariance decompositions that hold the same sign pattern as the point estimate is provided.}
+#' \item{sign_part}{Frequency of single shocks in all bootstrapped covariance decompositions which accord to a specific predetermined sign pattern
+#'  }
 #'
-#'@references Goncalves, S., Kilian, L., 2004. Bootstrapping autoregressions with conditional heteroskedasticity of unknown form. Journal of Econometrics 123, 89-120.
+#'@references Goncalves, S., Kilian, L., 2004. Bootstrapping autoregressions with conditional heteroskedasticity of unknown form. Journal of Econometrics 123, 89-120.\cr
+#'   Herwartz, H., 2017. Hodges Lehmann detection of structural shocks -
+#'        An analysis of macroeconomic dynamics in the Euro Area, Oxford Bulletin of Economics and Statistics
 #'
 #'@seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}
 #'
@@ -141,7 +144,7 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
     if(x$method == "Non-Gaussian maximum likelihood"){
       temp <- id.ngml(varb, stage3 = x$stage3)
     }else if(x$method == "Changes in Volatility"){
-      temp <- tryCatch(id.cv(varb, SB = x$SB,max.iter = 5000), error = function(e) NULL)
+      temp <- tryCatch(id.cv(varb, SB = x$SB), error = function(e) NULL)
     }else if(x$method == "Cramer-von Mises distance"){
       temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
     }else{
@@ -230,9 +233,10 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
     for(j in 1:length(bootstraps)){
       check.full <- 0
       for(i in 1:nrest){
-        check <- rep(FALSE, k)
+        check <- rep(FALSE, length(signrest[[i]][!is.na(signrest[[i]])]))
         for(l in 1:k){
-          check[l] <- any(all(Bs[,l,j]/abs(Bs[,l,j]) == signrest[[i]]) | all(Bs[,l,j]/abs(Bs[,l,j]) == signrest[[i]]*(-1)))
+          check[l] <- any(all(Bs[!is.na(signrest[[i]]),l,j]/abs(Bs[!is.na(signrest[[i]]),l,j]) == signrest[[i]][!is.na(signrest[[i]])]) |
+                            all(Bs[!is.na(signrest[[i]]),l,j]/abs(Bs[!is.na(signrest[[i]]),l,j]) == signrest[[i]][!is.na(signrest[[i]])]*(-1)))
         }
         if(sum(check) == 1){
           sign.part[[i]] <- sign.part[[i]] + 1

@@ -1,4 +1,4 @@
-#' @export
+#' @S3method summary svars
 
 summary.svars <- function(object, ...){
 
