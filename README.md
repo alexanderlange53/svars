@@ -2,7 +2,7 @@ svars
 =====
 
 [![Build Status](https://travis-ci.org/alexanderlange53/svars.svg?branch=master)](https://travis-ci.org/alexanderlange53/svars) 
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/svars)](http://cran.r-project.org/package=svars) 
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/svars)](https://cran.r-project.org/package=svars) 
 [![rstudio mirror downloads](http://cranlogs.r-pkg.org/badges/grand-total/svars)](https://cran.r-project.org/package=svars)
 
 This repository is concerned with data driven methods to estimate structural vector autoregressive (SVAR)
