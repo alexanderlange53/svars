@@ -42,7 +42,7 @@
 #' # impulse response analysis with confidence bands
 #' # Checking how often theory based impact relations appear
 #' signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
-#' bb <- wild.boot(x1, rademacher = T, nboot = 500, horizon = 30, nc = 1, signrest = signrest)
+#' bb <- wild.boot(x1, rademacher = TRUE, nboot = 500, horizon = 30, nc = 1, signrest = signrest)
 #' summary(bb)
 #' plot(bb, lowerq = 0.16, upperq = 0.84)
 #' }
