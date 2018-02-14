@@ -160,7 +160,7 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
     Omega_huge <- block.diagonal(Omega_inv)
     Likelihood_part2 <- u_t%*%Omega_huge%*%u_t
 
-    L <- -0.5*Likelihood_part1 - 0.5*Likelihood_part2
+    L <-  - (- k/2 *log(2*pi) - 0.5*Likelihood_part1 - 0.5*Likelihood_part2)
 
     if(!is.na(L)){
       return(-L)
