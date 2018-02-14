@@ -1,8 +1,8 @@
 Package: svars
 Type: Package
 Title: Data-Driven Identification of SVAR Models
-Version: 1.1.0
-Date: 2018-01-15
+Version: 1.1.1
+Date: 2018-02-14
 Author: Alexander Lange [aut, cre],
         Bernhard Dalheimer [aut],
         Helmut Herwartz [aut],
