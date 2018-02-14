@@ -71,6 +71,7 @@ set.seed(23211)
 v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
 x1 <- id.st(v1)
 summary(x1)
+plot(x1)
 
 # switching columns according to sign patter
 x1$B <- x1$B[,c(3,2,1)]
