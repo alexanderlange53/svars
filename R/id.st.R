@@ -150,24 +150,21 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
     Sigma_1 <- tcrossprod(B)
     Sigma_2 <- B%*%tcrossprod(Lambda, B)
 
-    Omega <- lapply(G, function(xx, B, Lambda)(1 - xx)*Sigma_1 + xx*Sigma_2,
-                    B = B, Lambda = Lambda)
-    Omega_inv <- lapply(Omega, function(x)solve(x))
+    lik <- function(xx, B, Lambda){
+      Omega <- (1 - G[xx])*Sigma_1 + G[xx]*Sigma_2
+      log(det(Omega)) + u_t[xx,]%*%solve(Omega)%*%u_t[xx,]
+    }
 
-    Likelihood_part1 <- suppressWarnings(lapply(Omega, function(x) log(det(x))))
-    Likelihood_part1 <- Reduce('+', Likelihood_part1)
+    ll <- sapply(1:length(G), lik)
+    ll <- sum(ll)*0.5
 
-    Omega_huge <- block.diagonal(Omega_inv)
-    Likelihood_part2 <- u_t%*%Omega_huge%*%u_t
-
-    L <-  - (- k/2 *log(2*pi) - 0.5*Likelihood_part1 - 0.5*Likelihood_part2)
+    L <- - (- Tob * k/2 * log(2*pi) - ll)
 
     if(!is.na(L)){
-      return(-L)
+      return(L)
     }else{
       return(1e25)
     }
-
   }
 
   if(is.null(gamma_fix) &  is.null(c_fix)){
@@ -206,8 +203,8 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
 
     B_hat <- list(init_B)
     Lambda_hat <- list(init_Lambda)
-    u_t2 = c(t(u_t))
-    ll <- list(likelihood.st(parameter = c(init_B, diag(init_Lambda)), u_t = u_t2, G = transition))
+    #u_t2 = c(t(u_t))
+    ll <- list(likelihood.st(parameter = c(init_B, diag(init_Lambda)), u_t = u_t, G = transition))
 
 
     while( (abs(Exit) > crit) & (count < max.iter) ){
@@ -220,9 +217,9 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
       parameter <- c(B_hat[[count]], diag(Lambda_hat[[count]]))
 
       # Step 1: Optimizing likelihood
-      u_t2 = c(t(u_t_gls))
+      #u_t2 = c(t(u_t_gls))
       mle <- tryCatch(
-                    nlm(f = likelihood.st, p = parameter, u_t = u_t2, G = transition,
+                    nlm(f = likelihood.st, p = parameter, u_t = u_t_gls, G = transition,
                     hessian = T), error = function(e) NULL)
       if(is.null(mle)){
         count2 <- 0

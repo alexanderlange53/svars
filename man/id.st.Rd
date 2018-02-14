@@ -5,8 +5,8 @@
 \title{Identification of SVAR models by means of a smooth transition of volatility}
 \usage{
 id.st(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5,
-  gamma_lower = -3, gamma_upper = 2, gamma_step = 0.5, max.iter = 50,
-  crit = 0.01)
+  c_fix = NULL, gamma_lower = -3, gamma_upper = 2, gamma_step = 0.5,
+  gamma_fix = NULL, max.iter = 50, crit = 0.01)
 }
 \arguments{
 \item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object}
@@ -22,11 +22,16 @@ Defalt is 0.7*(Total number of observations)}
 
 \item{c_step}{Step width of c, default is 5.}
 
+\item{c_fix}{If the break point is known, it can be passed as argument,
+where break point = Numberof observations - c_fix}
+
 \item{gamma_lower}{Lower bound for gamma. Small values indicate a flat transition function. Default is -3}
 
 \item{gamma_upper}{Upper bound for gamma. Large values indicate a steep transition function. Default is 2}
 
 \item{gamma_step}{Step width of gamma, default is 0.5}
+
+\item{gamma_fix}{A fixed parameter for gamma, instead of letting the function search for gamma.}
 
 \item{max.iter}{Integer. Number of maximum GLS iterations}
 
