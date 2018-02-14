@@ -18,7 +18,7 @@ Alternatively, install development version
 
 ```r
 install.packages("devtools")
-devtools::install_github("alexanderlange53/svars"")
+devtools::install_github("alexanderlange53/svars)
 ```
 
 
