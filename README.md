@@ -48,4 +48,4 @@ To get started, use the example data set which comes with the package. The data 
 ggplot2::autoplot(USA, facet = TRUE) + ggplot2::theme_bw()
 ```
 
-![Fig 1](https://github.com/alexanderlange53/svars/master/figs/data_viz.png)
+![](figs/data_viz.png)
