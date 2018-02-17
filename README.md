@@ -18,9 +18,7 @@ The cornerstone functions identify the structural errors
 -   `id.dc()` via least dependent innovations based on distance covariance matrix.
 -   `id.ngml()` by means of non-Gaussian maximum likelihood.
 
-These all return an estimated svars object with identified structural shocks, for which the package contains varoius functions for further analysis. 
-
-It is common practice in the SVAR literatur to calculate confidence bands via bootstrap procedures, where svars provides functions for the wild bootstrap approach (`wild.boot()`) and the moving block bootstrap method (`mb.boot()`). Further helpful tools for SVAR analysis might be e.g. impulse response functions (`imrf()`), forecast error variance decompostions (`fev()`) and historical decompositions (`hd()`). 
+These all return an estimated svars object with identified structural shocks and decomposed covariance matrix, for which the package contains varoius tools for further analysis.  
 
 
 ## Installation
@@ -42,3 +40,12 @@ devtools::install_github("alexanderlange53/svars")
 library("svars")
 ```
 
+## Usage
+
+To get started, use the example data set which comes with the package. The data set consists of three U.S. macroeconomic time series, output gap (x), inflation (pi) and interest rates (r). For more details on the data set, please look into the description file `?USA`.
+
+```r
+ggplot2::autoplot(USA, facet = TRUE) + ggplot2::theme_bw()
+```
+
+![Fig 1](https://github.com/alexanderlange53/svars/master/figs/data_viz.png)
