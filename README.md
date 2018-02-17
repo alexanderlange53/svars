@@ -50,7 +50,7 @@ ggplot2::autoplot(USA, facet = TRUE) + ggplot2::theme_bw()
 
 ![](figs/data_viz.png)
 
-The first step is to estimate a reduced form VAR, for instance with the vars package and store the resulting object. Afterwards, the user can choose a model from the svar package to estimate the structural VAR form. The choice of the model depends usually on the data structure, for more details look at the help file `help(svars)`. For illustration, we use the identification by means of non-Gaussian maximum likelihood. 
+The first step is to estimate a reduced form VAR, for instance with the vars package and store the resulting object. Afterwards, the user can choose a model from the svars package to estimate the structural VAR form. The choice of the model depends usually on the data structure, for more details look in the help file `help(svars)`. For illustration, we use the identification by means of non-Gaussian maximum likelihood. 
 
 ```r
 reduced.form <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
@@ -88,3 +88,13 @@ summary(structural.form)
 # Estimated scale of the standardized B: 0.5069822 0.9260285 0.7849987
 # Standard errors of the scale:          0.06375649 0.0969339 0.1801454
 ```
+The summary provides some general informations regarding the estimation (see `?id.ngml`) and the decomposition of the covariance matrix, which is seen as the relation between reduced form errors and structural form errors. Furthermore, the resulting matrix represents the impact effects of structural shocks on the variables. Since the impact relation matrix is only identified up to sign and permutation, the user has to rearrange the columns according economic theory. For example, we order the columns according a specific sign pattern. Afterwards, we can calculate impulse response functions.
+
+```r
+structural.form$B <- structural.form$B[,c(3,2,1)]
+structural.form$B[,3] <- structural.form$B[,3]*(-1)
+
+impulse.response <- imrf(structural.form, horizon = 30)
+plot(impulse.response, scales = 'free_y')
+```
+![](figs/irf_viz.png)
