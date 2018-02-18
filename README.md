@@ -99,7 +99,7 @@ plot(impulse.response, scales = 'free_y')
 ```
 ![](figs/irf_viz.png)
 
-It is common practice in the SVAR literature to calculate confidence bands via bootstrap procedures. The svars package contains the fixed design wild bootstrap (`wild.boot()`) and the moving block bootstrap method (`mb.boot()`). The functions provide the possibility of parallel computation on non Windows systems. Nevertheless, bootsrapping SVARs is computationally demanding and - depending on the chosen SVAR model - takes some time to finish. 
+It is common practice in the SVAR literature to calculate confidence bands via bootstrap procedures. The svars package contains the fixed design wild bootstrap (`wild.boot()`) and the moving block bootstrap method (`mb.boot()`). The functions provide the possibility of parallel computation on non Windows systems. Nevertheless, bootsrapping SVARs is computationally demanding and - depending on the chosen SVAR model - takes some time to finish. The bootstrap functions have several input arguments to adjust the methods to the considered data set (see e.g. `?wild.boot()`) and test various hypotheses. We illustrate the simplest case and use the bootstrap solely to calculate confidence bands.
 
 ```r
 if(.Platform$OS.type == "windows") {
@@ -112,3 +112,23 @@ if(.Platform$OS.type == "windows") {
 plot(boot.svar)
 ```
 ![](figs/irfb_viz.png)
+
+Asides from impulse response analysis, svars delivers several popular tools for SVAR analysis. For instance, the forecast error variance decomposition is useful to see the contribution of each shock to the response of each variable.
+
+```r
+fevd <- fev(structural.form, horizon = 30)
+plot(fevd)
+```
+
+![](figs/fev_viz.png)
+
+The historical decomposition allows to trace back the effects of specific structural shocks on observed recessions or booms in the series.
+
+```r
+hist.decomp <- hd(structural.form, series = 1)
+plot(hist.decomp)
+```
+
+![](figs/hd_viz.png)
+
+
