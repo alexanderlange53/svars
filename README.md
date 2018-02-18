@@ -98,3 +98,17 @@ impulse.response <- imrf(structural.form, horizon = 30)
 plot(impulse.response, scales = 'free_y')
 ```
 ![](figs/irf_viz.png)
+
+It is common practice in the SVAR literature to calculate confidence bands via bootstrap procedures. The svars package contains the fixed design wild bootstrap (`wild.boot()`) and the moving block bootstrap method (`mb.boot()`). The functions provide the possibility of parallel computation on non Windows systems. Nevertheless, bootsrapping SVARs is computationally demanding and - depending on the chosen SVAR model - takes some time to finish. 
+
+```r
+if(.Platform$OS.type == "windows") {
+    boot.svar <- wild.boot(structural.form, horizon = 30, nboot = 500, nc = 1)
+}else{
+    cores <- parallel::detectCores() - 1
+    boot.svar <- wild.boot(structural.form, horizon = 30, nboot = 500, nc = cores)
+}
+
+plot(boot.svar)
+```
+![](figs/irfb_viz.png)
