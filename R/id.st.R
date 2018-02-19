@@ -281,7 +281,7 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
       }
 
       u_t_gls <- c(y_loop) - kronecker(t(Z_t), diag(k))%*%b_gls
-      u_t_gls <- matrix(u_t_gls, Tob, k)
+      u_t_gls <- matrix(u_t_gls, Tob, k, byrow = T)
 
       if(count > 1){
         Exit <- ll[[count+1]] - ll[[count]]
