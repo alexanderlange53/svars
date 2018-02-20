@@ -17,6 +17,8 @@
 #' @param c_step Step width of c, default is 5.
 #' @param c_fix If the break point is known, it can be passed as argument,
 #'              where break point = Numberof observations - c_fix
+#' @param transition_vriable A numeric vector that represents teh transition variable. By default NULL, the time is used
+#'                           as transition variable.
 #' @param gamma_lower Lower bound for gamma. Small values indicate a flat transition function. Default is -3
 #' @param gamma_upper Upper bound for gamma. Large values indicate a steep transition function. Default is 2
 #' @param gamma_step Step width of gamma, default is 0.5
@@ -37,15 +39,14 @@
 #' \item{SB}{Structural break (number of observations)}
 #' \item{SBcharacter}{Structural break (date; if provided in function arguments)}
 #'
-#' @references Rigobon, R., 2003. Identification through Heteroskedasticity. The Review of Economics and Statistics, 85, 777-792.\cr
-#'  Herwartz, H. & Ploedt, M., 2016. Simulation Evidence on Theory-based and Statistical Identification under Volatility Breaks Oxford Bulletin of Economics and Statistics, 78, 94-112.
+#' @references Luetkepohl H., Netsunajev A., 2017. “Structural vector autoregressions with smooth transition\cr
+#'  in variances.” Journal of Economic Dynamics and Control, 84, 43 – 57. ISSN 0165-1889.
 #'
 #' @seealso For alternative identification approaches see \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
 #'
 #' @examples
 #' \donttest{
 #' # data contains quartlery observations from 1965Q1 to 2008Q2
-#' # assumed structural break in 1979Q4
 #' # x = output gap
 #' # pi = inflation
 #' # i = interest rates
@@ -66,9 +67,9 @@
 #' @importFrom steadyICA steadyICA
 #' @export
 
-id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL,
+id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, transition_variable = NULL,
                   gamma_lower = -3, gamma_upper = 2, gamma_step = 0.5, gamma_fix = NULL,
-                  max.iter = 50, crit = 0.01){
+                  max.iter = 5, crit = 0.01){
 
   # Gathering informations from reduced form model
   if(inherits(x, "var.boot")){
@@ -173,7 +174,14 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
     gamma_grid <-  seq(gamma_lower, gamma_upper, by = gamma_step)
     cc_grid <- seq(ceiling(c_lower*Tob), floor(c_upper*Tob), by = c_step)
     grid_comb <- unique(expand.grid(gamma_grid, cc_grid))
-    G_grid <- mapply(transition, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
+    if(is.null(transition_variable)){
+      G_grid <- mapply(transition, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
+    }else{
+      if(length(transition_variable) != Tob){
+        stop('length of transition variable is unequal to data length')
+      }
+      G_grid <- mapply(transition, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = transition_variable))
+    }
   }else if(is.null(gamma_fix)){
     # Creating grid for iterative procedure with fix break point
     gamma_grid <-  seq(gamma_lower, gamma_upper, by = gamma_step)
@@ -183,15 +191,43 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
     # Creating grid for iterative procedure with fix shape of transition function
     cc_grid <- seq(ceiling(c_lower*Tob), floor(c_upper*Tob), by = c_step)
     grid_comb <- unique(expand.grid(gamma_fix, cc_grid))
-    G_grid <- mapply(transition, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
+    if(is.null(transition_variable)){
+      G_grid <- mapply(transition, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
+    }else{
+      if(length(transition_variable) != Tob){
+        stop('length of transition variable is unequal to data length')
+      }
+      G_grid <- mapply(transition, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = transition_variable))
+    }
   }else{
     grid_comb <- unique(expand.grid(gamma_fix, c_fix))
-    G_grid <- mapply(transition, gamma_fix, c_fix, MoreArgs = list(st = seq(1:Tob)))
+    if(is.null(transition_variable)){
+      G_grid <- mapply(transition, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
+    }else{
+      if(length(transition_variable) != Tob){
+        stop('length of transition variable is unequal to data length')
+      }
+      G_grid <- mapply(transition, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = transition_variable))
+    }
+  }
+
+  yl <- t(y_lag_cr(t(y), p)$lags)
+  #yret <- y
+  y_loop <- y[,-c(1:p)]
+
+  if(x$type == 'const'){
+    Z_t <- rbind(rep(1, ncol(yl)), yl)
+  }else if(x$type == 'trend'){
+    Z_t <- rbind(seq(1, ncol(yl)), yl)
+  }else if(x$type == 'both'){
+    Z_t <- rbind(rep(1, ncol(yl)), seq(1, ncol(yl)), yl)
+  }else{
+    Z_t <- yl
   }
 
 
   # iterative approach
-  iterative_smooth_transition <- function(transition, u_t, y, Tob, k, p, crit, max.iter){
+  iterative_smooth_transition <- function(transition, u_t, y, Tob, k, p, crit, max.iter, Z_t, y_loop){
 
     count <- 0 # count variable
     Exit <-  -100  #Exit criterion
@@ -204,7 +240,6 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
 
     B_hat <- list(init_B)
     Lambda_hat <- list(init_Lambda)
-    #u_t2 = c(t(u_t))
     ll <- list(likelihood.st(parameter = c(init_B, diag(init_Lambda)), u_t = u_t, G = transition))
 
 
@@ -218,29 +253,8 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
       parameter <- c(B_hat[[count]], diag(Lambda_hat[[count]]))
 
       # Step 1: Optimizing likelihood
-      #u_t2 = c(t(u_t_gls))
-      mle <- tryCatch(
-                    nlm(f = likelihood.st, p = parameter, u_t = u_t_gls, G = transition,
-                    hessian = T), error = function(e) NULL)
-      if(is.null(mle)){
-        count2 <- 0
-        while(is.null(mle) & count2 < 25){
-          MW <- -1
-          #MW2 <- -1
-          while(MW < 0.5){
-            B_help <- suppressMessages(expm::sqrtm((1/Tob)* crossprod(u_t_gls))) + matrix(runif(k*k), nrow = k, byrow = T)
-            MW <- det(tcrossprod(B_help))
-          }
-          parameter <- c(B_help, rep(1,k))
-          mle <- tryCatch(
-            nlm(f = likelihood.st, p = parameter, u_t = u_t_gls, G = transition,
-                  hessian = T), error = function(e) NULL)
-          count2 <- count2 + 1
-        }
-        if(is.null(mle)){
-          return(NA)
-        }
-      }
+      mle <- nlm(f = likelihood.st, p = parameter, u_t = u_t_gls, G = transition,
+                    hessian = T)
 
       B_hat <- c(B_hat, list(matrix(mle$estimate[1:(k*k)], nrow = k)))
       Lambda_hat <- c(Lambda_hat, list(diag(mle$estimate[(k*k+1):(k*k+k)])))
@@ -253,20 +267,6 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
 
 
       # Step 2: Reestimation of VAR parameter with GLS
-      yl <- t(y_lag_cr(t(y), p)$lags)
-      yret <- y
-      y_loop <- y[,-c(1:p)]
-
-      if(x$type == 'const'){
-        Z_t <- rbind(rep(1, ncol(yl)), yl)
-      }else if(x$type == 'trend'){
-        Z_t <- rbind(seq(1, ncol(yl)), yl)
-      }else if(x$type == 'both'){
-        Z_t <- rbind(rep(1, ncol(yl)), seq(1, ncol(yl)), yl)
-      }else{
-        Z_t <- yl
-      }
-
       Omega_i <- lapply(transition, function(x, B, Lambda){solve((1 - x)*tcrossprod(B, B) + x*B%*%tcrossprod(Lambda, B))},
                         B = B_hat[[(count + 1)]], Lambda = Lambda_hat[[(count + 1)]])
 
@@ -308,9 +308,6 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
     B.SE <- matrix(FishObs[1:(k*k)], k,k)
     Lambda.SE <- diag(FishObs[(k*k+1):(k*k+k)])
 
-    # Testing the estimated SVAR for identification by menas of wald statistic
-    # wald <- wald.test(Lambda_hat, HESS, restrictions)
-
     return(list(
       Lambda = Lambda_hat,    # estimated Lambda matrix (unconditional heteroscedasticity)
       Lambda_SE = Lambda.SE,  # standard errors of Lambda matrix
@@ -325,7 +322,7 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
 
   if(!is.null(gamma_fix) &  !is.null(c_fix)){
     best_estimation <- iterative_smooth_transition(G_grid, u_t = u_t, y = y, Tob = Tob, k = k,
-                                           p = p, crit = crit, max.iter = max.iter)
+                                           p = p, crit = crit, max.iter = max.iter, Z_t = Z_t, y_loop = y_loop)
     transition_function <- G_grid
 
     transition_coefficient <- gamma_fix
@@ -339,17 +336,9 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
                                                                                   u_t = u_t, y = y,
                                                                                   Tob = Tob, k = k,
                                                                                   p = p, crit = crit,
-                                                                                  max.iter = max.iter)},
+                                                                                  max.iter = max.iter, Z_t = Z_t,
+                                                                                  y_loop = y_loop)},
                                   cl = nc)
-    # Checking for NA's
-    if(any(is.na(grid_optimization))){
-      G_grid[[which(is.na(grid_optimization))]] <- NULL
-      grid_optimization <- lapply(grid_optimization, function (x)x[any(!is.na(x))])
-      delnull  <-  function(x){
-        x[unlist(lapply(x, length) != 0)]
-      }
-      grid_optimization <- delnull(grid_optimization)
-    }
 
     max_likelihood <- which.max(sapply(grid_optimization, '[[', 'Lik'))
     best_estimation <- grid_optimization[[max_likelihood]]
@@ -359,8 +348,6 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
     SB <- grid_comb[max_likelihood,2]
     comb <- nrow(grid_comb)
   }
-
-
 
   # Testing the estimated SVAR for identification by means of wald statistic
   wald <- wald.test(best_estimation$Lambda, best_estimation$Fish, 0)
@@ -376,7 +363,7 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
     wald_statistic = wald,                  # results of wald test
     iteration = best_estimation$iteration,  # number of gls estimations
     method = "Smooth transition",
-    SB = SB,       # Structural Break point
+    est_c = SB,       # Structural Break point
     transition_coefficient = transition_coefficient, # Parameter which determines the shape of thetransition function
     comb = comb,                 # number of all evaluated combinations of gamma and c
     transition_function = transition_function,

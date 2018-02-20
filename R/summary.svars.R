@@ -21,9 +21,9 @@ summary.svars <- function(object, ...){
     cat(" during ")
     cat(svarsObject$SBcharacter)
   }
- cat("\nNumber of GLS estimations : ")
+ cat("\nNumber of GLS estimations: ")
  cat(svarsObject$iteration)
- cat("\nNumber of Restrictions : ")
+ cat("\nNumber of Restrictions: ")
  cat(svarsObject$restrictions)
  cat("\n")
  cat("\nEstimated unconditional Heteroscedasticity Matrix (Lambda):\n")
@@ -44,13 +44,13 @@ summary.svars <- function(object, ...){
 
    }
   }else if(svarsObject$method == "Smooth transition"){
-    cat("\nStructural Break: At Observation Number ")
-    cat(svarsObject$SB)
-    cat("\nNumber of GLS estimations : ")
+    cat("\nEstimated location of transition: ")
+    cat(svarsObject$est_c)
+    cat("\nNumber of GLS estimations: ")
     cat(svarsObject$iteration)
-    cat("\nEstimated transition coefficient : ")
+    cat("\nEstimated transition coefficient: ")
     cat(svarsObject$transition_coefficient)
-    cat("\nNumber of all grid combinations : ")
+    cat("\nNumber of all grid combinations: ")
     cat(svarsObject$comb)
     cat("\n")
     cat("\nEstimated Heteroscedasticity Matrix (Lambda):\n")

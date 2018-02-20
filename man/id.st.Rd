@@ -6,7 +6,7 @@
 \usage{
 id.st(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5,
   c_fix = NULL, gamma_lower = -3, gamma_upper = 2, gamma_step = 0.5,
-  gamma_fix = NULL, max.iter = 50, crit = 0.01)
+  gamma_fix = NULL, max.iter = 5, crit = 0.01)
 }
 \arguments{
 \item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object}
@@ -83,8 +83,8 @@ plot(i1, scales = 'free_y')
 }
 }
 \references{
-Rigobon, R., 2003. Identification through Heteroskedasticity. The Review of Economics and Statistics, 85, 777-792.\cr
- Herwartz, H. & Ploedt, M., 2016. Simulation Evidence on Theory-based and Statistical Identification under Volatility Breaks Oxford Bulletin of Economics and Statistics, 78, 94-112.
+Luetkepohl H., Netsunajev A., 2017. “Structural vector autoregressions with smooth transition\cr
+ in variances.” Journal of Economic Dynamics and Control, 84, 43 – 57. ISSN 0165-1889.
 }
 \seealso{
 For alternative identification approaches see \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
