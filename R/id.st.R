@@ -5,20 +5,21 @@
 #' \deqn{y_t=c_t+A_1 y_{t-1}+...+A_p y_{t-p}+u_t
 #' =c_t+A_1 y_{t-1}+...+A_p y_{t-p}+B \epsilon_t.}
 #' Matrix B corresponds to the decomposition of the pre-break covariance matrix \eqn{\Sigma_1=B B'}.
-#' The post-break covariance corresponds to \eqn{\Sigma_2=B\Lambda B'} where \eqn{\Lambda} is the estimated unconditional heteroskedasticity matrix.
+#' The post-break covariance corresponds to \eqn{\Sigma_2=B\Lambda B'} where \eqn{\Lambda} is the estimated heteroskedasticity matrix.
 #'
 #' @param x An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object
 #' @param nc Number of processor cores (Not available on windows machines).
 #'           Note the smooth transition model is computationally extremely demanding.
-#' @param c_lower Start point where the algorithm starts to search for the volatility shift.
+#' @param c_lower Starting point where the algorithm starts to search for the volatility shift.
 #'                Defalt is 0.3*(Total number of observations)
-#' @param c_upper End point where the algorithm stops to search for the volatility shift.
+#' @param c_upper Ending point where the algorithm stops to search for the volatility shift.
 #'                Defalt is 0.7*(Total number of observations)
 #' @param c_step Step width of c, default is 5.
-#' @param c_fix If the break point is known, it can be passed as argument,
-#'              where break point = Numberof observations - c_fix
-#' @param transition_vriable A numeric vector that represents teh transition variable. By default NULL, the time is used
-#'                           as transition variable.
+#' @param c_fix If the transition point is known, it can be passed as argument,
+#'              where transition point = Numberof observations - c_fix
+#' @param transition_variable A numeric vector that represents the transition variable. By default NULL, the time is used
+#'                           as transition variable. Note that c_lower,c_upper, c_step and/or c_fix have to be adjusted
+#'                           to the specified transition variable.
 #' @param gamma_lower Lower bound for gamma. Small values indicate a flat transition function. Default is -3
 #' @param gamma_upper Upper bound for gamma. Large values indicate a steep transition function. Default is 2
 #' @param gamma_step Step width of gamma, default is 0.5
@@ -36,13 +37,14 @@
 #' \item{wald_statistic}{Results of pairwise Wald tests}
 #' \item{iteration}{Number of GLS estimations}
 #' \item{method}{Method applied for identification}
-#' \item{SB}{Structural break (number of observations)}
+#' \item{est_c}{Structural break (number of observations)}
 #' \item{SBcharacter}{Structural break (date; if provided in function arguments)}
 #'
 #' @references Luetkepohl H., Netsunajev A., 2017. “Structural vector autoregressions with smooth transition\cr
 #'  in variances.” Journal of Economic Dynamics and Control, 84, 43 – 57. ISSN 0165-1889.
 #'
-#' @seealso For alternative identification approaches see \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
+#' @seealso For alternative identification approaches see \code{\link{id.cv}}, \code{\link{id.cvm}}, \code{\link{id.dc}},
+#'          or \code{\link{id.ngml}}
 #'
 #' @examples
 #' \donttest{
@@ -235,7 +237,8 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
     # Creating initial values for structural parameter
     Sigma_hat <- crossprod(u_t)/(Tob-1-k*p)
 
-    init_B <- t(chol(Sigma_hat))
+    #init_B <- t(chol(Sigma_hat))
+    init_B <- suppressMessages(expm::sqrtm(Sigma_hat))
     init_Lambda <- diag(k)
 
     B_hat <- list(init_B)

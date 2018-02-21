@@ -5,8 +5,9 @@
 \title{Identification of SVAR models by means of a smooth transition of volatility}
 \usage{
 id.st(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5,
-  c_fix = NULL, gamma_lower = -3, gamma_upper = 2, gamma_step = 0.5,
-  gamma_fix = NULL, max.iter = 5, crit = 0.01)
+  c_fix = NULL, transition_variable = NULL, gamma_lower = -3,
+  gamma_upper = 2, gamma_step = 0.5, gamma_fix = NULL, max.iter = 5,
+  crit = 0.01)
 }
 \arguments{
 \item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object}
@@ -14,16 +15,20 @@ id.st(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5,
 \item{nc}{Number of processor cores (Not available on windows machines).
 Note the smooth transition model is computationally extremely demanding.}
 
-\item{c_lower}{Start point where the algorithm starts to search for the volatility shift.
+\item{c_lower}{Starting point where the algorithm starts to search for the volatility shift.
 Defalt is 0.3*(Total number of observations)}
 
-\item{c_upper}{End point where the algorithm stops to search for the volatility shift.
+\item{c_upper}{Ending point where the algorithm stops to search for the volatility shift.
 Defalt is 0.7*(Total number of observations)}
 
 \item{c_step}{Step width of c, default is 5.}
 
-\item{c_fix}{If the break point is known, it can be passed as argument,
-where break point = Numberof observations - c_fix}
+\item{c_fix}{If the transition point is known, it can be passed as argument,
+where transition point = Numberof observations - c_fix}
+
+\item{transition_variable}{A numeric vector that represents the transition variable. By default NULL, the time is used
+as transition variable. Note that c_lower,c_upper, c_step and/or c_fix have to be adjusted
+to the specified transition variable.}
 
 \item{gamma_lower}{Lower bound for gamma. Small values indicate a flat transition function. Default is -3}
 
@@ -58,12 +63,11 @@ by means of smooth transition
 \deqn{y_t=c_t+A_1 y_{t-1}+...+A_p y_{t-p}+u_t
 =c_t+A_1 y_{t-1}+...+A_p y_{t-p}+B \epsilon_t.}
 Matrix B corresponds to the decomposition of the pre-break covariance matrix \eqn{\Sigma_1=B B'}.
-The post-break covariance corresponds to \eqn{\Sigma_2=B\Lambda B'} where \eqn{\Lambda} is the estimated unconditional heteroskedasticity matrix.
+The post-break covariance corresponds to \eqn{\Sigma_2=B\Lambda B'} where \eqn{\Lambda} is the estimated heteroskedasticity matrix.
 }
 \examples{
 \donttest{
 # data contains quartlery observations from 1965Q1 to 2008Q2
-# assumed structural break in 1979Q4
 # x = output gap
 # pi = inflation
 # i = interest rates
@@ -87,5 +91,6 @@ Luetkepohl H., Netsunajev A., 2017. “Structural vector autoregressions with sm
  in variances.” Journal of Economic Dynamics and Control, 84, 43 – 57. ISSN 0165-1889.
 }
 \seealso{
-For alternative identification approaches see \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
+For alternative identification approaches see \code{\link{id.cv}}, \code{\link{id.cvm}}, \code{\link{id.dc}},
+         or \code{\link{id.ngml}}
 }
