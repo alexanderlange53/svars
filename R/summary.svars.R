@@ -49,7 +49,7 @@ summary.svars <- function(object, ...){
     cat("\nNumber of GLS estimations: ")
     cat(svarsObject$iteration)
     cat("\nEstimated transition coefficient: ")
-    cat(svarsObject$transition_coefficient)
+    cat(svarsObject$est_g)
     cat("\nNumber of all grid combinations: ")
     cat(svarsObject$comb)
     cat("\n")

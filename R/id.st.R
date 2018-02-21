@@ -257,7 +257,7 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
 
       # Step 1: Optimizing likelihood
       mle <- nlm(f = likelihood.st, p = parameter, u_t = u_t_gls, G = transition,
-                    hessian = T)
+                    hessian = T, iterlim = 150)
 
       B_hat <- c(B_hat, list(matrix(mle$estimate[1:(k*k)], nrow = k)))
       Lambda_hat <- c(Lambda_hat, list(diag(mle$estimate[(k*k+1):(k*k+k)])))
@@ -367,7 +367,8 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
     iteration = best_estimation$iteration,  # number of gls estimations
     method = "Smooth transition",
     est_c = SB,       # Structural Break point
-    transition_coefficient = transition_coefficient, # Parameter which determines the shape of thetransition function
+    est_g = transition_coefficient, # Parameter which determines the shape of thetransition function
+    transition_variable = transition_variable,
     comb = comb,                 # number of all evaluated combinations of gamma and c
     transition_function = transition_function,
     A_hat = best_estimation$A_hat,          # VAR parameter estimated with gls

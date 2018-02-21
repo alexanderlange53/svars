@@ -162,8 +162,11 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, signres
       temp <- tryCatch(id.cv(varb, SB = x$SB), error = function(e) NULL)
     }else if(x$method == "Cramer-von Mises distance"){
       temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
-    }else{
+    }else if(x$method == "Distance covariances"){
       temp <- id.dc(varb, PIT=x$PIT)
+    }else{
+      temp <- id.st(varb, c_fix = x$est_c, transition_variable = x$transition_variable,
+                    gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01)
     }
 
     if(!is.null(temp)){
