@@ -54,7 +54,7 @@ A list of class "svars" with elements
 \item{wald_statistic}{Results of pairwise Wald tests}
 \item{iteration}{Number of GLS estimations}
 \item{method}{Method applied for identification}
-\item{SB}{Structural break (number of observations)}
+\item{est_c}{Structural break (number of observations)}
 \item{SBcharacter}{Structural break (date; if provided in function arguments)}
 }
 \description{
