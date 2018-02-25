@@ -93,7 +93,7 @@
 
 
 id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
-                        format = NULL, dateVector = NULL, max.iter = 50, crit = 0.05, restriction_matrix = NULL){
+                        format = NULL, dateVector = NULL, max.iter = 50, crit = 0.001, restriction_matrix = NULL){
 
   # if(is.null(residuals(x))){
   #   stop("No residuals retrieved from model")
