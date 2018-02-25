@@ -8,8 +8,7 @@ svars
 ## Overview
 
 svars contains data-driven identification methods for structural vector autoregressive (SVAR) models.
-Based on an existing VAR model object (provided by e.g. VAR() from the 'vars' package), the structural impact relation matrix 
-is obtained via data-driven identification techniques.
+Based on an existing VAR model object (provided by e.g. VAR() from the 'vars' package), the structural matrix is obtained via data-driven identification techniques.
 
 The cornerstone functions identify the structural errors
 
@@ -18,7 +17,7 @@ The cornerstone functions identify the structural errors
 -   `id.dc()` via least dependent innovations based on distance covariance matrix.
 -   `id.ngml()` by means of non-Gaussian maximum likelihood.
 
-These all return an estimated svars object with identified structural shocks and decomposed covariance matrix, for which the package contains varoius tools for further analysis.  
+These functions return an estimated svars object with identified structural shocks and decomposition of the covariance matrix of the reduced form errors. Additionally, the package contains various tools for SVAR analysis.  
 
 
 ## Installation
@@ -27,7 +26,7 @@ These all return an estimated svars object with identified structural shocks and
 install.packages("svars")
 ```
 
-Alternatively, install development version
+Alternatively, install the development version
 
 
 ```r
@@ -42,7 +41,7 @@ library("svars")
 
 ## Usage
 
-To get started, use the example data set which comes with the package. The data set consists of three U.S. macroeconomic time series, output gap (x), inflation (pi) and interest rates (r). For more details on the data set, please look into the description file `?USA`.
+To get started, use the example data set which is included in the package. The data set consists of three U.S. macroeconomic time series, i.e. output gap (x), inflation (pi) and interest rates (r). More details on the data set are provided in the description file `?USA`.
 
 ```r
 ggplot2::autoplot(USA, facet = TRUE) + ggplot2::theme_bw()
@@ -50,7 +49,7 @@ ggplot2::autoplot(USA, facet = TRUE) + ggplot2::theme_bw()
 
 ![](figs/data_viz.png)
 
-The first step is to estimate a reduced form VAR, for instance with the vars package and store the resulting object. Afterwards, the user can choose a model from the svars package to estimate the structural VAR form. The choice of the model depends usually on the data structure, for more details look in the help file `help(svars)`. For illustration, we use the identification by means of non-Gaussian maximum likelihood. 
+First, the reduced form VAR needs to be estimated, for instance using the vars package, and the user needs to store the resulting object. Subsequently, the user chooses a method from the svars package to determine the structural matrix. The choice of the method usually depends on the data structure, for more details see the help file `help(svars)`. For illustration, we use the identification by means of non-Gaussian maximum likelihood. 
 
 ```r
 reduced.form <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
@@ -88,7 +87,7 @@ summary(structural.form)
 # Estimated scale of the standardized B: 0.5069822 0.9260285 0.7849987
 # Standard errors of the scale:          0.06375649 0.0969339 0.1801454
 ```
-The summary provides some general informations regarding the estimation (see `?id.ngml`) and the decomposition of the covariance matrix, which is seen as the relation between reduced form errors and structural form errors. Furthermore, the resulting matrix represents the impact effects of structural shocks on the variables. Since the impact relation matrix is only identified up to sign and permutation, the user has to rearrange the columns according economic theory. For example, we order the columns according a specific sign pattern. Afterwards, we can calculate impulse response functions.
+The summary includes general information on the estimation (see `?id.ngml`) and the decomposition of the covariance matrix which relates the reduced form errors and the structural errors. The resulting matrix represents the on impact effects of structural shocks on the variables. Since the structural matrix is only identified up to sign and permutation, the user (probably) needs to rearrange the columns to obtain a reasonable economic interpretation. As an example, we order the columns according to an economically derived sign pattern. Afterwards, we can calculate impulse response functions.
 
 ```r
 structural.form$B <- structural.form$B[,c(3,2,1)]
@@ -99,7 +98,7 @@ plot(impulse.response, scales = 'free_y')
 ```
 ![](figs/irf_viz.png)
 
-It is common practice in the SVAR literature to calculate confidence bands via bootstrap procedures. The svars package contains the fixed design wild bootstrap (`wild.boot()`) and the moving block bootstrap method (`mb.boot()`). The functions provide the possibility of parallel computation on non Windows systems. Nevertheless, bootsrapping SVARs is computationally demanding and - depending on the chosen SVAR model - takes some time to finish. The bootstrap functions have several input arguments to adjust the methods to the considered data set (see e.g. `?wild.boot()`) and test various hypotheses. We illustrate the simplest case and use the bootstrap solely to calculate confidence bands.
+It is common practice in the SVAR literature to calculate confidence bands via bootstrap procedures. The svars package contains the fixed design wild bootstrap (`wild.boot()`) and the moving block bootstrap method (`mb.boot()`). The functions allow for parallel computation on non-Windows systems. Nevertheless, bootstrapping the SVAR model is computationally demanding and - depending on the identification technique - time-consuming. Several input arguments enable to adjust the bootstrap methods to the data set (see e.g. `?wild.boot()`) and to test various hypotheses. To illustrate a simple case we use the bootstrap to calculate confidence bands only.
 
 ```r
 if(.Platform$OS.type == "windows") {
@@ -113,7 +112,7 @@ plot(boot.svar)
 ```
 ![](figs/irfb_viz.png)
 
-Asides from impulse response analysis, svars delivers several popular tools for SVAR analysis. For instance, the forecast error variance decomposition is useful to see the contribution of each shock to the response of each variable.
+Besides impulse response analysis, svars contains several tools for SVAR analysis. For instance, the forecast error variance decomposition is useful to see the contribution of each shock to the response of each variable.
 
 ```r
 fevd <- fev(structural.form, horizon = 30)
