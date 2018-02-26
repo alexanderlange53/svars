@@ -95,10 +95,6 @@
 id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
                         format = NULL, dateVector = NULL, max.iter = 50, crit = 0.001, restriction_matrix = NULL){
 
-  # if(is.null(residuals(x))){
-  #   stop("No residuals retrieved from model")
-  # }
-
   if(inherits(x, "var.boot")){
     u_t <- x$residuals
     Tob <- nrow(u_t)
@@ -136,7 +132,7 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
     SBcharacter <- NULL
   }
 
-  if(!is.numeric(SB)){
+if(!is.numeric(SB)){
     SBcharacter <- SB
     SB <- getStructuralBreak(SB = SB, start = start, end = end,
                              frequency = frequency, format = format, dateVector = dateVector, Tob = Tob, p = p)

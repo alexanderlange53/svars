@@ -1,6 +1,6 @@
 identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = restriction_matrix,
                                Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
-                               max.iter, crit = crit){
+                               max.iter, crit = crit, Z = NULL){
 
   MW <- -1
   while(MW < 0.5){
@@ -43,29 +43,36 @@ identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restric
   # estimating again with GLS to obatin a more precise estimation
   #y <- t(x$y)
 
-  y_lag_cr <- function(y, lag_length){
-    # create matrix that stores the lags
-    y_lag <- matrix(NA, dim(y)[1],dim(y)[2]*lag_length)
-    for (i in 1:lag_length) {
-      y_lag[(1+i):dim(y)[1],((i*NCOL(y)-NCOL(y))+1):(i*NCOL(y))] <- y[1:(dim(y)[1]-i),(1:NCOL(y))]
+  if(is.null(Z)){
+
+
+    y_lag_cr <- function(y, lag_length){
+      # create matrix that stores the lags
+      y_lag <- matrix(NA, dim(y)[1],dim(y)[2]*lag_length)
+      for (i in 1:lag_length) {
+        y_lag[(1+i):dim(y)[1],((i*NCOL(y)-NCOL(y))+1):(i*NCOL(y))] <- y[1:(dim(y)[1]-i),(1:NCOL(y))]
+      }
+      # drop first observation
+      y_lag <- as.matrix(y_lag[-(1:lag_length),])
+      out <- list(lags = y_lag)
     }
-    # drop first observation
-    y_lag <- as.matrix(y_lag[-(1:lag_length),])
-    out <- list(lags = y_lag)
-  }
 
-  yl <- t(y_lag_cr(t(y), p)$lags)
-  yret <- y
-  y <- y[,-c(1:p)]
+    yl <- t(y_lag_cr(t(y), p)$lags)
+    yret <- y
+    y <- y[,-c(1:p)]
 
-  if(x$type == 'const'){
-    Z_t <- rbind(rep(1, ncol(yl)), yl)
-  }else if(x$type == 'trend'){
-    Z_t <- rbind(seq(1, ncol(yl)), yl)
-  }else if(x$type == 'both'){
-    Z_t <- rbind(rep(1, ncol(yl)), seq(1, ncol(yl)), yl)
+    if(x$type == 'const'){
+      Z_t <- rbind(rep(1, ncol(yl)), yl)
+    }else if(x$type == 'trend'){
+      Z_t <- rbind(seq(1, ncol(yl)), yl)
+    }else if(x$type == 'both'){
+      Z_t <- rbind(rep(1, ncol(yl)), seq(1, ncol(yl)), yl)
+    }else{
+      Z_t <- yl
+    }
   }else{
-    Z_t <- yl
+    Z_t <- Z
+    yret <- y
   }
 
   gls1 <- function(Z, Sig){
