@@ -165,16 +165,19 @@ id.ngml <- function(x, stage3 = FALSE){
   if(inherits(x, "var.boot")){
     p <- x$p
     y <- t(x$y)
+    yOut <- x$y
     type = x$type
     coef_x = x$coef_x
   }else if(inherits(x, "varest")){
     p <- x$p
     y <- t(x$y)
+    yOut <- x$y
     type = x$type
     coef_x = coef(x)
   }else if(inherits(x, "nlVar")){
     p <- x$lag
     y <- t(x$model[, 1:k])
+    yOut <- x$model[, 1:k]
     coef_x <- t(coef(x))
 
     if(inherits(x, "VECM")){
@@ -196,6 +199,7 @@ id.ngml <- function(x, stage3 = FALSE){
   }else if(inherits(x, "list")){
     p <- x$order
     y <- t(x$data)
+    y <- x$data
     coef_x <- x$coef
     if(x$cnst == TRUE){
       coef_x <- coef_x[c(2:nrow(coef_x),1),]
@@ -209,7 +213,7 @@ id.ngml <- function(x, stage3 = FALSE){
     names(coef_x) <- colnames(x$y)
     p <- x$p
     y <- t(x$y)
-
+    yOut <- x$y
     for (i in seq_len(k)) {
       for (j in seq_len(p)) coef_x[[i]] <- c(coef_x[[i]], x$A[[j]][i,])
       coef_x[[i]] <- c(coef_x[[i]], x$deterministic[i,])
@@ -437,8 +441,8 @@ id.ngml <- function(x, stage3 = FALSE){
                  Lik = -ll,              # value of maximum likelihood
                  method = "Non-Gaussian maximum likelihood",
                  n = Tob,              # number of observations
-                 type = type,            # type of the VAR model e.g 'const'
-                 y = t(y),                # Data
+                 type = type,          # type of the VAR model e.g 'const'
+                 y = yOut,             # Data
                  p = p,                # number of lags
                  K = k,                # number of time series
                  stage3 = stage3

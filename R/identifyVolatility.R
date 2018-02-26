@@ -1,6 +1,6 @@
 identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = restriction_matrix,
                                     Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
-                                     max.iter, crit = crit){
+                                     max.iter, crit = crit, yOut = yOut, type = type){
 
   MLE<- NULL
   counter2 <- 0
@@ -74,11 +74,11 @@ yl <- t(y_lag_cr(t(y), p)$lags)
 yret <- y
 y <- y[,-c(1:p)]
 
-if(x$type == 'const'){
+if(type == 'const'){
   Z_t <- rbind(rep(1, ncol(yl)), yl)
-}else if(x$type == 'trend'){
+}else if(type == 'trend'){
   Z_t <- rbind(seq(1, ncol(yl)), yl)
-}else if(x$type == 'both'){
+}else if(type == 'both'){
   Z_t <- rbind(rep(1, ncol(yl)), seq(1, ncol(yl)), yl)
 }else{
   Z_t <- yl
@@ -110,15 +110,15 @@ while(abs(Exit) > crit & counter < max.iter){
   GLS1.1 <- rowSums(apply(Z_t[, 1:(TB-1)], 2, gls1, Sig = Sig1))
   GLS1.2 <- rowSums(apply(Z_t[, (TB):ncol(Z_t)], 2, gls1, Sig = Sig2))
 
-  if(x$type == 'none'){
+  if(type == 'none'){
     GLS1 <- solve(matrix(GLS1.1 + GLS1.2, nrow = k*k*p, byrow = F))
     GLS2.1 <- matrix(0, nrow = k*k*p, ncol = (TB-1))
     GLS2.2 <- matrix(0, nrow = k*k*p, ncol = ncol(y))
-  }else if(x$type == 'const' | x$type == 'trend'){
+  }else if(type == 'const' | type == 'trend'){
     GLS1 <- solve(matrix(GLS1.1 + GLS1.2, nrow = k*k*p+k, byrow = F))
     GLS2.1 <- matrix(0, nrow = k*k*p+k, ncol = (TB-1))
     GLS2.2 <- matrix(0, nrow = k*k*p+k, ncol = ncol(y))
-  }else if(x$type == 'both'){
+  }else if(type == 'both'){
     GLS1 <- solve(matrix(GLS1.1 + GLS1.2, nrow = k*k*p+k+k, byrow = F))
     GLS2.1 <- matrix(0, nrow = k*k*p+k+k, ncol = (TB-1))
     GLS2.2 <- matrix(0, nrow = k*k*p+k+k, ncol = ncol(y))
@@ -261,10 +261,10 @@ result <- list(
   method = "Changes in Volatility",
   SB = SB,                # Structural Break in number format
   A_hat = GLSE,            # VAR parameter estimated with gls
-  type = x$type,          # type of the VAR model e.g 'const'
+  type = type,          # type of the VAR model e.g 'const'
   SBcharacter = SBcharacter,             # Structural Break in input character format
   restrictions = restrictions, # number of restrictions
-  y = t(yret),                # Data
+  y = yOut,                # Data
   p = p,                # number of lags
   K = k                 # number of time series
 )

@@ -87,16 +87,19 @@ id.cvm <- function(x, dd = NULL, itermax = 500, steptol = 100, iter2 = 75){
   if(inherits(x, "var.boot")){
     p <- x$p
     y <- t(x$y)
+    yOut <- x$y
     type = x$type
     coef_x = x$coef_x
   }else if(inherits(x, "varest")){
     p <- x$p
     y <- t(x$y)
+    yOut <- x$y
     type = x$type
     coef_x = coef(x)
   }else if(inherits(x, "nlVar")){
     p <- x$lag
     y <- t(x$model[, 1:k])
+    yOut <- x$model[, 1:k]
     coef_x <- t(coef(x))
 
     if(inherits(x, "VECM")){
@@ -121,6 +124,7 @@ id.cvm <- function(x, dd = NULL, itermax = 500, steptol = 100, iter2 = 75){
   }else if(inherits(x, "list")){
     p <- x$order
     y <- t(x$data)
+    yOut <- x$data
     coef_x <- x$coef
 
     if(x$cnst == TRUE){
@@ -135,6 +139,7 @@ id.cvm <- function(x, dd = NULL, itermax = 500, steptol = 100, iter2 = 75){
     names(coef_x) <- colnames(x$y)
     p <- x$p
     y <- t(x$y)
+    yOut <- x$y
 
     for (i in seq_len(k)) {
       for (j in seq_len(p)) coef_x[[i]] <- c(coef_x[[i]], x$A[[j]][i,])
@@ -255,7 +260,7 @@ id.cvm <- function(x, dd = NULL, itermax = 500, steptol = 100, iter2 = 75){
                  method = "Cramer-von Mises distance",
                  n = Tob,          # number of observations
                  type = type,      # type of the VAR model e.g 'const'
-                 y = t(y),            # Data
+                 y = yOut,         # Data
                  p = p,            # number of lags
                  K = k,            # number of time series
                  rotation_angles = par_o, # optimal rotation angles
