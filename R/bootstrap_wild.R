@@ -139,7 +139,7 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
     class(varb) <- 'var.boot'
 
     if(x$method == "Non-Gaussian maximum likelihood"){
-      temp <- id.ngml.boot(varb, stage3 = x$stage3, Z = Z)
+      temp <- id.ngml_boot(varb, stage3 = x$stage3, Z = Z)
     }else if(x$method == "Changes in Volatility"){
       Tob <- nrow(Ustar) - p
       k <- ncol(Ustar)

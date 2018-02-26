@@ -1,4 +1,4 @@
-id.ngml.boot <- function(x, stage3 = FALSE, Z = NULL){
+id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL){
 
 
   # likelihood function to optimize
