@@ -1,60 +1,4 @@
-#' Non-Gaussian maximum likelihood identification of SVAR models
-#'
-#' Given an estimated VAR model, this function applies identification by means of a non-Gaussian likelihood for the structural impact matrix B of the corresponding SVAR model
-#' \deqn{y_t=c_t+A_1 y_{t-1}+...+A_p y_{t-p}+u_t   =c_t+A_1 y_{t-1}+...+A_p y_{t-p}+B \epsilon_t.}
-#' Matrix B corresponds to the unique decomposition of the least squares covariance matrix \eqn{\Sigma_u=B B'} if the vector of structural shocks \eqn{\epsilon_t} contains at most one Gaussian shock (Comon, 94).
-#' A likelihood function of independent t-distributed structural shocks \eqn{\epsilon_t=B^{-1}u_t} is maximized with respect to the entries of B and the degrees of freedom of the t-distribution (Lanne et al., 2017).
-#'
-#' @param x An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object
-#' @param stage3 Logical. If stage3="TRUE", the VAR parameters are estimated via non-gaussian maximum likelihood (computationally demanding)
-#' @return A list of class "svars" with elements
-#' \item{B}{Estimated structural impact matrix B, i.e. unique decomposition of the covariance matrix of reduced form errors}
-#' \item{sigma}{Estimated scale of the standardized matrix B_stand, i.e. \eqn{B=B_stand*diag(\sigma_1,...,\sigma_K)}}
-#' \item{sigma_SE}{Standard errors of the scale}
-#' \item{df}{Estimated degrees of freedom}
-#' \item{df_SE}{Standard errors of the degrees of freedom}
-#' \item{Fish}{Observed Fisher information matrix}
-#' \item{A_hat}{Estimated VAR parameter}
-#' \item{B_stand}{Estimated standardized structural impact matrix}
-#' \item{B_stand_SE}{Standard errors of standardized matrix B_stand}
-#' \item{Lik}{Function value of likelihood}
-#' \item{method}{Method applied for identifaction}
-#' \item{n}{Number of observations}
-#' \item{type}{Type of the VAR model, e.g. 'const'}
-#'
-#'@references Lanne, M., Meitz, M., Saikkonen, P., 2017. Identification and estimation of non-Gaussian structural vector autoregressions. J. Econometrics 196 (2), 288-304.\cr
-#'Comon, P., 1994. Independent component analysis, A new concept?, Signal Processing, 36, 287-314
-#'
-#' @seealso For alternative identification approaches see \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.cv}}
-#'
-#' @examples
-#' \donttest{
-#' # data contains quarterly observations from 1965Q1 to 2008Q3
-#' # x = output gap
-#' # pi = inflation
-#' # i = interest rates
-#' set.seed(23211)
-#' v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
-#' x1 <- id.ngml(v1)
-#' summary(x1)
-#'
-#' # switching columns according to sign pattern
-#' x1$B <- x1$B[,c(3,2,1)]
-#' x1$B[,3] <- x1$B[,3]*(-1)
-#'
-#' # impulse response analysis
-#' i1 <- imrf(x1, horizon = 30)
-#' plot(i1, scales = 'free_y')
-#' }
-#' @importFrom tsDyn VARrep
-#' @export
-
-
-#------------------------------------------------------#
-## Identification via non-Gaussian maximum likelihood ##
-#------------------------------------------------------#
-
-id.ngml <- function(x, stage3 = FALSE){
+id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL){
 
 
   # likelihood function to optimize
@@ -73,7 +17,7 @@ id.ngml <- function(x, stage3 = FALSE){
       return(B_hat)
     }
 
-    if(all(sigma >0) & det(B_hat(beta))>0 & all(lambda > 2)){
+    if(all(sigma > 0) & det(B_hat(beta)) > 0.1 & all(lambda > 2)){
 
       logl <- rep(0, Tob)
 
@@ -99,7 +43,7 @@ id.ngml <- function(x, stage3 = FALSE){
 
     } else {
       return(1e25)
-      }
+    }
   }
 
   resid.ls <- function(Z_t, k, A){
@@ -251,7 +195,7 @@ id.ngml <- function(x, stage3 = FALSE){
   }
 
   # optimizing the likelihood function 2. stage
-  maxL <- nlm(p = theta0, f = loglik, hessian = TRUE)
+  maxL <- nlm(p = theta0, f = loglik, hessian = FALSE)
   beta_est <- maxL$estimate[1:(k*k-k)]
 
   sigma_est <- maxL$estimate[(k*k-k+1):(k*k)]
@@ -261,94 +205,61 @@ id.ngml <- function(x, stage3 = FALSE){
   d_freedom <- maxL$estimate[(k*k+1):(k*k+k)]
   ll <- maxL$minimum
 
-  # obating standard errors from observed fisher information
-  HESS <- solve(maxL$hessian)
-  for(i in 1:nrow(HESS)){
-    if(HESS[i,i] < 0){
-      HESS[,i] <- -HESS[,i]
-    }
-  }
-  FishObs <- sqrt(diag(HESS))
-  B.SE <- matrix(0, k, k)
-  B.SE[row(B.SE)!=col(B.SE)] <- FishObs[1:(k*k-k)]
-  sigma_SE <- FishObs[(k*k-k+1):(k*k)]
-  d_SE <- FishObs[(k*k+1):(k*k+k)]
-
-  # getting variances and covariances for S.E. of non stand B
-  covariance <- HESS[1:(k*k-k),((k*k-k+1):(k*k))]
-  B.SE.2 <- diag(sigma_SE)
-
-
-  jj <- 0
-  for(i in 1:k){
-    for(j in 1:k){
-      if(i != j){
-        jj <- jj + 1
-        B.SE.2[j,i] <- sqrt(2*covariance[jj,i]^2 + (B.SE[j,i]^2 + B_stand_est[j,i]^2)*(sigma_SE[i]^2 + sigma_est[i]^2) -
-                              (covariance[jj, i] + B_stand_est[j,i] * sigma_est[i])^2)
-      }
-    }
-  }
-
   # Estimating VAR parameter 3. stage
   if(stage3 == TRUE){
-    #y <- t(x$y)
-    yl <- t(y_lag_cr(t(y), p)$lags)
-    y_return <- y
 
-    y <- y[,-c(1:p)]
-
-    A <- matrix(0, nrow = k, ncol = k*p)
-
-    for(i in 1:k){
-      A[i,] <- coef_x[[i]][1:(k*p),1]
-    }
-
-    if(type == "const"){
-      v <- rep(1, k)
-
-      for(i in 1:k){
-        v[i] <- coef_x[[i]][(k*p+1), 1]
-      }
-
-      A <- cbind(v, A)
-      Z_t <- rbind(rep(1, ncol(yl)), yl)
-    }else if (type == "trend"){
-      trend <- rep(1, k)
-
-      for(i in 1:k){
-        trend[i] <- coef_x[[i]][(k*p+1), 1]
-      }
-
-      A <- cbind(trend, A)
-      Z_t <- rbind(seq(1, ncol(yl)), yl)
-    }else if(type == "both"){
-      v <- rep(1, k)
-
-      for(i in 1:k){
-        v[i] <- coef_x[[i]][(k*p+1), 1]
-      }
-
-      trend <- rep(1, k)
-      Z_t <- rbind(rep(1, ncol(yl)), seq(1, ncol(yl)), yl)
-      for(i in 1:k){
-        trend[i] <- coef_x[[i]][(k*p+2), 1]
-      }
-
-      A <- cbind(v, trend, A)
-    }else{
-      Z_t <- yl
-    }
-
-    if(inherits(x, "var.boot")){
+    if(!is.null(Z)){
       A <- coef_x
+      Z_t <- Z
+    }else{
+      A <- matrix(0, nrow = k, ncol = k*p)
+
+      for(i in 1:k){
+        A[i,] <- coef_x[[i]][1:(k*p),1]
+      }
+      yl <- t(y_lag_cr(t(y), p)$lags)
+      y <- y[,-c(1:p)]
+
+      if(type == "const"){
+        v <- rep(1, k)
+
+        for(i in 1:k){
+          v[i] <- coef_x[[i]][(k*p+1), 1]
+        }
+        A <- cbind(v, A)
+        Z_t <- rbind(rep(1, ncol(yl)), yl)
+      }else if (type == "trend"){
+        trend <- rep(1, k)
+
+        for(i in 1:k){
+          trend[i] <- coef_x[[i]][(k*p+1), 1]
+        }
+        A <- cbind(trend, A)
+        Z_t <- rbind(seq(1, ncol(yl)), yl)
+      }else if(type == "both"){
+        v <- rep(1, k)
+
+        for(i in 1:k){
+          v[i] <- coef_x[[i]][(k*p+1), 1]
+        }
+
+        trend <- rep(1, k)
+        Z_t <- rbind(rep(1, ncol(yl)), seq(1, ncol(yl)), yl)
+        for(i in 1:k){
+          trend[i] <- coef_x[[i]][(k*p+2), 1]
+        }
+
+        A <- cbind(v, trend, A)
+      }else{
+        Z_t <- yl
+      }
     }
+
 
     A <- c(A)
-    maxL2 <- nlm(p = A, f = loglik2, hessian = TRUE)
+    maxL2 <- nlm(p = A, f = loglik2, hessian = FALSE)
 
     A_hat <- matrix(maxL2$estimate, nrow = k)
-    y <- y_return
   }else{
     if(inherits(x, "var.boot")){
       A_hat <- coef_x
@@ -395,16 +306,12 @@ id.ngml <- function(x, stage3 = FALSE){
   }
 
 
+
   result <- list(B = B_mle,       # estimated B matrix (unique decomposition of the covariance matrix)
-                 B_SE = B.SE.2,          # standard errors
                  sigma = sigma_est,      # estimated scale of the standardized B
-                 sigma_SE = sigma_SE,    # standard errors of the scale
                  df = d_freedom,         # estimated degrees of freedom of the distribution
-                 df_SE = d_SE,           # standard errors of the degrees of freedom
-                 Fish = HESS,            # observed fisher information matrix
                  A_hat = A_hat,          # estimated VAR parameter
                  B_stand = B_stand_est,  # estimated standardized B matrix
-                 B_stand_SE = B.SE ,     # standard errors
                  Lik = -ll,              # value of maximum likelihood
                  method = "Non-Gaussian maximum likelihood",
                  n = Tob,              # number of observations
