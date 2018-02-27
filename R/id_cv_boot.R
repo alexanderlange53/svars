@@ -1,4 +1,3 @@
-
 id.cv_boot <- function(x, SB, max.iter = 50, crit = 0.001, restriction_matrix = NULL, Z = NULL){
 
   if(inherits(x, "var.boot")){
@@ -47,13 +46,13 @@ id.cv_boot <- function(x, SB, max.iter = 50, crit = 0.001, restriction_matrix = 
 
   if(!is.null(restriction_matrix)){
     result <- identifyVolatility_boot(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = restriction_matrix,
-                                 Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
-                                 max.iter = max.iter, crit = crit, Z)
+                                      Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
+                                      max.iter = max.iter, crit = crit, Z)
   }else{
     restriction_matrix <- NULL
     result <- identifyVolatility_boot(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = restriction_matrix,
-                                 Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
-                                 max.iter = max.iter, crit = crit, Z)
+                                      Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
+                                      max.iter = max.iter, crit = crit, Z)
   }
 
   class(result) <- "svars"

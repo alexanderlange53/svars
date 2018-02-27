@@ -183,6 +183,87 @@ if(!is.numeric(SB)){
                                  max.iter = max.iter, crit = crit)
   }
 
+  if(is.null(result$A_hat)){
+    if(inherits(x, "varest")){
+      p <- x$p
+      y <- t(x$y)
+      type = x$type
+      coef_x = coef(x)
+    }else if(inherits(x, "nlVar")){
+      p <- x$lag
+      y <- t(x$model[, 1:k])
+      coef_x <- t(coef(x))
+
+      if(inherits(x, "VECM")){
+        coef_x <- t(VARrep(x))
+      }
+
+      if(rownames(coef_x)[1] %in% c("Intercept", "constant")){
+        coef_x <- coef_x[c(2:nrow(coef_x),1),]
+
+      }else if(rownames(coef_x)[1] == "Trend"){
+        coef_x <- coef_x[c(2:nrow(coef_x),1),]
+      }
+      if(rownames(coef_x)[1] %in% c("Intercept", "constant", "Trend")){
+        coef_x <- coef_x[c(2:nrow(coef_x),1),]
+      }
+      type <- x$include
+      coef_x <- split(coef_x, rep(1:ncol(coef_x), each = nrow(coef_x)))
+      coef_x <- lapply(coef_x, as.matrix)
+    }else if(inherits(x, "list")){
+      p <- x$order
+      y <- t(x$data)
+      coef_x <- x$coef
+      if(x$cnst == TRUE){
+        coef_x <- coef_x[c(2:nrow(coef_x),1),]
+        type = "const"
+      }
+      coef_x <- split(coef_x, rep(1:ncol(coef_x), each = nrow(coef_x)))
+      coef_x <- lapply(coef_x, as.matrix)
+
+    }else if(inherits(x, "vec2var")){
+      coef_x <- vector("list", length = k)
+      names(coef_x) <- colnames(x$y)
+      p <- x$p
+      y <- t(x$y)
+
+      for (i in seq_len(k)) {
+        for (j in seq_len(p)) coef_x[[i]] <- c(coef_x[[i]], x$A[[j]][i,])
+        coef_x[[i]] <- c(coef_x[[i]], x$deterministic[i,])
+      }
+      coef_x <- lapply(coef_x, matrix)
+      type <- "const"
+    }
+    A <- matrix(0, nrow = k, ncol = k*p)
+    for(i in 1:k){
+      A[i,] <- coef_x[[i]][1:(k*p),1]
+    }
+    A_hat <- A
+    if(type == "const"){
+      v <- rep(1, k)
+      for(i in 1:k){
+        v[i] <- coef_x[[i]][(k*p+1), 1]
+      }
+      A_hat <- cbind(v, A)
+    }else if (type == "trend"){
+      trend <- rep(1, k)
+      for(i in 1:k){
+        trend[i] <- coef_x[[i]][(k*p+1), 1]
+      }
+      A_hat <- cbind(trend, A)
+    }else if(type == "both"){
+      v <- rep(1, k)
+      for(i in 1:k){
+        v[i] <- coef_x[[i]][(k*p+1), 1]
+      }
+      trend <- rep(1, k)
+      for(i in 1:k){
+        trend[i] <- coef_x[[i]][(k*p+2), 1]
+      }
+      A_hat <- cbind(v, trend, A)
+    }
+  }
+
   class(result) <- "svars"
  return(result)
 }

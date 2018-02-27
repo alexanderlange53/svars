@@ -22,14 +22,6 @@ identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restric
 
   if(!is.null(restriction_matrix)){
     naElements <- is.na(restriction_matrix)
-    Lam <- diag(MLE$estimate[(sum(naElements) + 1):length(MLE$estimate)])
-  }else{
-    Lam <- diag(MLE$estimate[(k*k+1):(k*k+k)])
-  }
-
-
-  if(!is.null(restriction_matrix)){
-    naElements <- is.na(restriction_matrix)
     B_hat = restriction_matrix
     B_hat[naElements] <- MLE$estimate[1:sum(naElements)]
     Lambda_hat <- diag(MLE$estimate[(sum(naElements) + 1):length(MLE$estimate)])
@@ -79,6 +71,8 @@ identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restric
   Lambda_hat <- list(Lambda_hat)
   B_hat <- list(B_hat)
   ll <- list(ll)
+  MLEgls_loop <- list(MLE)
+  GLSE <- list(NULL)
 
   counter <- 1
   Exit <- 1
@@ -147,13 +141,6 @@ identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restric
 
     if(!is.null(restriction_matrix)){
       naElements <- is.na(restriction_matrix)
-      Lam <- diag(MLE$estimate[(sum(naElements) + 1):length(MLE$estimate)])
-    }else{
-      Lam <- diag(MLE$estimate[(k*k+1):(k*k+k)])
-    }
-
-    if(!is.null(restriction_matrix)){
-      naElements <- is.na(restriction_matrix)
       B_hatg <- restriction_matrix
       B_hatg[naElements] <- MLEgls$estimate[1:sum(naElements)]
       Lambda_hatg <- diag(MLEgls$estimate[(sum(naElements) + 1):length(MLEgls$estimate)])
@@ -167,15 +154,10 @@ identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restric
     B_hat <- c(B_hat, list(B_hatg))
     Lambda_hat <- c(Lambda_hat, list(Lambda_hatg))
     ll <- c(ll, list(ll_g))
-
-    if(counter == 1){
-      GLSE <- list(GLS_hat)
-    }else{
-      GLSE <- c(GLSE, list(GLS_hat))
-    }
-
+    GLSE <- c(GLSE, list(GLS_hat))
+    MLEgls_loop <- c(MLEgls_loop, list(MLEgls))
     counter <- counter + 1
-    #Exit <- sum(diag(Lambda_hat[[counter]])) - sum(diag(Lambda_hat[[counter - 1]]))
+
     Exit <- ll[[counter]] - ll[[counter-1]]
   }
 
@@ -185,8 +167,11 @@ identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restric
   cc <- which.min(ll)
   B_hat <- B_hat[[cc]]
   Lambda_hat <- Lambda_hat[[cc]]
-  GLSE <- GLSE[[cc-1]]
-  GLSE <- matrix(GLSE, nrow = k)
+  GLSE <- GLSE[[cc]]
+  if(!is.null(GLSE)){
+    GLSE <- matrix(GLSE, nrow = k)
+  }
+  MLEgls <- MLEgls_loop[[cc]]
 
   # obtaining standard errors from inverse fisher information matrix
   HESS <- solve(MLEgls$hessian)

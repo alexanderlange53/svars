@@ -141,7 +141,7 @@ wild.boot <- function(x, rademacher = TRUE, horizon, nboot, nc = 1, dd = NULL, s
     if(x$method == "Non-Gaussian maximum likelihood"){
       temp <- id.ngml_boot(varb, stage3 = x$stage3, Z = Z)
     }else if(x$method == "Changes in Volatility"){
-      temp <- id.cv_boot(varb, x$SB, Z = Z)
+      temp <- tryCatch(id.cv_boot(varb, SB = x$SB, Z = Z), error = function(e) NULL)
     }else if(x$method == "Cramer-von Mises distance"){
       temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
     }else{

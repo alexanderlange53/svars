@@ -1,6 +1,6 @@
 identifyVolatility_boot = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = restriction_matrix,
-                              Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
-                              max.iter, crit = crit, Z = NULL){
+                                   Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
+                                   max.iter, crit = crit, Z = NULL){
 
   MW <- -1
   while(MW < 0.5){
