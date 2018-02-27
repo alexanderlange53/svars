@@ -141,37 +141,45 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, signres
   # Bootstrapfunction
   bootf <- function(Ustar1){
 
-    Ystar <- t(A %*% Z + Ustar1)
-    Bstar <- t(Ystar) %*% t(Z) %*% solve(Z %*% t(Z))
-    Ustar <- Ystar - t(Bstar %*% Z)
-    Sigma_u_star <- crossprod(Ustar)/(ncol(Ustar1) - 1 - k * p)
+    Ystar <- matrix(0, nrow(y), k)
+    # adding pre sample values
+    Ystar[1:p,] <- y[1:p,]
 
-    varb <- list(y = Ystar,
-                 coef_x = Bstar,
-                 residuals = Ustar,
-                 p = p,
-                 type = x$type)
-    class(varb) <- 'var.boot'
+    if(x$type == 'const' | x$type == 'trend'){
+      for(i in (p+1):nrow(y)){
+        for(j in 1:k){
+          Ystar[i,j] <- A[j,1] + A[j,-1]%*%c(t(Ystar[(i-1):(i-p),])) + Ustar1[j, (i-p)]
+        }
+      }
+    }else if(x$type == 'both'){
+      for(i in (p+1):nrow(y)){
+        for(j in 1:k){
+          Ystar[i,j] <- A[j,c(1,2)] + A[j,-c(1,2)]%*%c(t(Ystar[(i-p):(i-1),])) + Ustar1[j, (i-p)]
+        }
+      }
+    }else if(x$type == 'none'){
+      for(i in (p+1):nrow(y)){
+        for(j in 1:k){
+          Ystar[i,j] <- A[j,]%*%c(t(Ystar[(i-p):(i-1),])) + Ustar1[j, (i-p)]
+        }
+      }
+    }
+
+    varb <- suppressWarnings(VAR(Ystar, p = x$p, type = x$type))
+    Ustar <- residuals(varb)
+    Sigma_u_star <- crossprod(Ustar)/(obs - 1 - k * p)
+
+    # varb <- list(y = Ystar,
+    #              coef_x = Bstar,
+    #              residuals = Ustar,
+    #              p = p,
+    #              type = x$type)
+    # class(varb) <- 'var.boot'
 
     if(x$method == "Non-Gaussian maximum likelihood"){
-      temp <- id.ngml(varb, stage3 = x$stage3)
+      temp <- id.ngml_boot(varb, stage3 = x$stage3)
     }else if(x$method == "Changes in Volatility"){
-      Tob <- nrow(Ustar) - p
-      k <- ncol(Ustar)
-      residY <- Ustar
-      p <- varb$p
-      y <- t(varb$y)
-      type = varb$type
-      coef_x = varb$coef_x
-      TB <- x$SB - p
-      resid1 <- Ustar[1:TB-1,]
-      resid2 <- Ustar[TB:Tob,]
-      Sigma_hat1 <- (crossprod(resid1)) / (TB-1)
-      Sigma_hat2 <- (crossprod(resid2)) / (Tob-TB+1)
-      temp <- identifyVolatility(varb, SB = x$SB, Tob = Tob, u_t = Ustar, k = k, y = y, restriction_matrix = NULL,
-                                 Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter = NULL,
-                                 max.iter = x$iteration, crit = 0.001, Z = Z)
-      class(temp) <- 'svars'
+      temp <- id.cv_boot(varb, x$SB)
     }else if(x$method == "Cramer-von Mises distance"){
       temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
     }else{

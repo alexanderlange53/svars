@@ -294,6 +294,7 @@ id.ngml <- function(x, stage3 = FALSE){
   if(stage3 == TRUE){
     #y <- t(x$y)
     yl <- t(y_lag_cr(t(y), p)$lags)
+    y_return <- y
 
     y <- y[,-c(1:p)]
 
@@ -347,6 +348,7 @@ id.ngml <- function(x, stage3 = FALSE){
     maxL2 <- nlm(p = A, f = loglik2, hessian = TRUE)
 
     A_hat <- matrix(maxL2$estimate, nrow = k)
+    y <- y_return
   }else{
     if(inherits(x, "var.boot")){
       A_hat <- coef_x

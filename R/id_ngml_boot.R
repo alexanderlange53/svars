@@ -207,26 +207,48 @@ id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL){
 
   # Estimating VAR parameter 3. stage
   if(stage3 == TRUE){
-    A <- coef_x
 
     if(!is.null(Z)){
+      A <- coef_x
       Z_t <- Z
     }else{
+      A <- matrix(0, nrow = k, ncol = k*p)
+
+      for(i in 1:k){
+        A[i,] <- coef_x[[i]][1:(k*p),1]
+      }
       yl <- t(y_lag_cr(t(y), p)$lags)
       y <- y[,-c(1:p)]
 
       if(type == "const"){
-        v <- coef_x[, 1]
+        v <- rep(1, k)
+
+        for(i in 1:k){
+          v[i] <- coef_x[[i]][(k*p+1), 1]
+        }
         A <- cbind(v, A)
         Z_t <- rbind(rep(1, ncol(yl)), yl)
       }else if (type == "trend"){
-        trend <- coef_x[, 1]
+        trend <- rep(1, k)
+
+        for(i in 1:k){
+          trend[i] <- coef_x[[i]][(k*p+1), 1]
+        }
         A <- cbind(trend, A)
         Z_t <- rbind(seq(1, ncol(yl)), yl)
       }else if(type == "both"){
-        v <- coef_x[, 1]
+        v <- rep(1, k)
 
-        trend <- coef_x[, 2]
+        for(i in 1:k){
+          v[i] <- coef_x[[i]][(k*p+1), 1]
+        }
+
+        trend <- rep(1, k)
+        Z_t <- rbind(rep(1, ncol(yl)), seq(1, ncol(yl)), yl)
+        for(i in 1:k){
+          trend[i] <- coef_x[[i]][(k*p+2), 1]
+        }
+
         A <- cbind(v, trend, A)
       }else{
         Z_t <- yl

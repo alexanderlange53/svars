@@ -52,7 +52,7 @@
 
 
 
-wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, signrest = NULL, itermax = 300, steptol = 200, iter2 = 50){
+wild.boot <- function(x, rademacher = TRUE, horizon, nboot, nc = 1, dd = NULL, signrest = NULL, itermax = 300, steptol = 200, iter2 = 50){
 
   # x: vars object
   # B: estimated covariance matrix from true data set
