@@ -2,15 +2,15 @@ identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restric
                                Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
                                max.iter, crit = crit){
 
-  MW <- -1
-  while(MW < 0.5){
-    B <- suppressMessages(expm::sqrtm((1/Tob)* crossprod(u_t))) + matrix(runif(k*k), nrow = k, byrow = T)
-    MW <- det(tcrossprod(B))
-  }
-  B <- c(B)
+
   if(!is.null(restriction_matrix)){
+    B <- t(chol((1/Tob)* crossprod(u_t)))
+    naElements <- is.na(restriction_matrix)
+    B <- B[naElements]
     restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
-    B <- B[1:(length(B)-restrictions)]
+  }else{
+    B <- t(chol((1/Tob)* crossprod(u_t)))
+    B <- c(B)
   }
   Lambda <- rep(1, k)
   S <- c(B, Lambda)
@@ -18,11 +18,11 @@ identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restric
   # optimize the likelihood function
   MLE <- nlm(f = LH, p = S, k = k, TB = TB, Sigma_hat1 = Sigma_hat1,
              Sigma_hat2 = Sigma_hat2, Tob = Tob, hessian = T, restriction_matrix = restriction_matrix,
-             restrictions = restrictions)
+             restrictions = restrictions, iterlim = 150)
 
   if(!is.null(restriction_matrix)){
     naElements <- is.na(restriction_matrix)
-    B_hat = restriction_matrix
+    B_hat <- restriction_matrix
     B_hat[naElements] <- MLE$estimate[1:sum(naElements)]
     Lambda_hat <- diag(MLE$estimate[(sum(naElements) + 1):length(MLE$estimate)])
   }else{
@@ -122,22 +122,22 @@ identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restric
     Sigma_hat2gls <- (crossprod(resid2gls)) / (Tob-TB+1)
 
     # Determine starting values for B and Lambda
-    MW <- -1
-    while(MW < 0.5){
-      B <- suppressMessages(expm::sqrtm((1/Tob)* crossprod(u_tgls))) + matrix(runif(k*k), nrow = k, byrow = T)
-      MW <- det(tcrossprod(B))
-    }
-    B <- c(B)
     if(!is.null(restriction_matrix)){
+      B <- t(chol((1/Tob)* crossprod(u_t)))
+      naElements <- is.na(restriction_matrix)
+      B <- B[naElements]
       restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
-      B <- B[1:(length(B)-restrictions)]
+    }else{
+      B <- t(chol((1/Tob)* crossprod(u_t)))
+      B <- c(B)
     }
     Lambda <- rep(1, k)
     S <- c(B, Lambda)
 
     #optimize the likelihood function
     MLEgls <- nlm(f = LH, p = S, k = k, TB = TB, Sigma_hat1 = Sigma_hat1gls,
-                  Sigma_hat2 = Sigma_hat2gls, Tob = Tob, hessian = T, restriction_matrix = restriction_matrix, restrictions = restrictions)
+                  Sigma_hat2 = Sigma_hat2gls, Tob = Tob, hessian = T, restriction_matrix = restriction_matrix,
+                  restrictions = restrictions, iterlim = 150)
 
     if(!is.null(restriction_matrix)){
       naElements <- is.na(restriction_matrix)
