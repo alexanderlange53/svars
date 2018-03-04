@@ -214,7 +214,7 @@ identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restric
     SBcharacter = SBcharacter,             # Structural Break in input character format
     restrictions = restrictions, # number of restrictions
     y = t(yret),                # Data
-    p = p,                # number of lags
+    p = unname(p),                # number of lags
     K = k                 # number of time series
   )
   return(result)
