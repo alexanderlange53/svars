@@ -1,5 +1,7 @@
+install: travis_wait 30 mvn install
+sudo: required
+
 language: R
-sudo: false
 cache: packages
 
 addons:
@@ -7,5 +9,3 @@ addons:
     packages:
       - libgsl0-dev
 
-script:
-- "travis_wait 30 sleep 1800 &"
