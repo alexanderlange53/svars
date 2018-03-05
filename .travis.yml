@@ -6,3 +6,7 @@ addons:
   apt:
     packages:
       - libgsl0-dev
+script:
+  - |
+    R CMD build .
+    travis_wait 20 R CMD check svars.tar.gz
