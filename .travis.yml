@@ -1,4 +1,3 @@
-install: travis_wait 30 mvn install
 sudo: required
 
 language: R
@@ -13,3 +12,6 @@ addons:
     packages:
       - libgsl0-dev
 
+script:
+
+- travis_wait 30 mvn package -Dtestng=test.xml
