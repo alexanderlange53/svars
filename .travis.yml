@@ -1,10 +1,8 @@
-sudo: required
-
 language: R
+sudo: false
 cache: packages
 
 addons:
   apt:
     packages:
       - libgsl0-dev
-
