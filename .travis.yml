@@ -4,6 +4,10 @@ sudo: required
 language: R
 cache: packages
 
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq default-jdk maven
+
 addons:
   apt:
     packages:
