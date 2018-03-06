@@ -47,7 +47,7 @@ To get started, use the example data set which is included in the package. The d
 ggplot2::autoplot(USA, facet = TRUE) + ggplot2::theme_bw()
 ```
 
-![](figs/data_viz.png)
+![](man/figures/data_viz.png)
 
 First, the reduced form VAR needs to be estimated, for instance using the vars package, and the user needs to store the resulting object. Subsequently, the user chooses a method from the svars package to determine the structural matrix. The choice of the method usually depends on the data structure, for more details see the help file `help(svars)`. For illustration, we use the identification by means of non-Gaussian maximum likelihood. 
 
@@ -96,7 +96,7 @@ structural.form$B[,3] <- structural.form$B[,3]*(-1)
 impulse.response <- imrf(structural.form, horizon = 30)
 plot(impulse.response, scales = 'free_y')
 ```
-![](figs/irf_viz.png)
+![](man/figures/irf_viz.png)
 
 It is common practice in the SVAR literature to calculate confidence bands via bootstrap procedures. The svars package contains the fixed design wild bootstrap (`wild.boot()`) and the moving block bootstrap method (`mb.boot()`). The functions allow for parallel computation on non-Windows systems. Nevertheless, bootstrapping the SVAR model is computationally demanding and - depending on the identification technique - time-consuming. Several input arguments enable to adjust the bootstrap methods to the data set (see e.g. `?wild.boot()`) and to test various hypotheses. To illustrate a simple case we use the bootstrap to calculate confidence bands only.
 

@@ -1,6 +1,7 @@
 context("test-id_dc.R")
 
 test_that("id.dc 3-dims PIT = FALSE works", {
+  skip_on_cran()
   set.seed(23211)
   v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
   x1 <- id.dc(v1)
@@ -16,6 +17,7 @@ test_that("id.dc 3-dims PIT = FALSE works", {
 })
 
 test_that("id.dc 3-dims PIT = TRUE works", {
+  skip_on_cran()
   set.seed(23211)
   v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
   x1 <- id.dc(v1, PIT = TRUE)
@@ -31,6 +33,7 @@ test_that("id.dc 3-dims PIT = TRUE works", {
 })
 
 test_that("id.dc 3-dims PIT = TRUE works", {
+  skip_on_cran()
   set.seed(23211)
   v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
   x1 <- id.dc(v1, PIT = TRUE)
@@ -46,6 +49,7 @@ test_that("id.dc 3-dims PIT = TRUE works", {
 })
 
 test_that("id.dc 2-dims PIT = FALSE works", {
+  skip_on_cran()
   set.seed(23211)
   v1 <- vars::VAR(USA[,-3], p = 3, ic = "AIC" )
   x1 <- id.dc(v1)
@@ -61,6 +65,7 @@ test_that("id.dc 2-dims PIT = FALSE works", {
 })
 
 test_that("id.dc 2-dims PIT = TRUE works", {
+  skip_on_cran()
   set.seed(23211)
   v1 <- vars::VAR(USA[,-3], p = 3, ic = "AIC" )
   x1 <- id.dc(v1, PIT = TRUE)

@@ -1,6 +1,7 @@
 context("test-id_cvm.R")
 
 test_that("id.cvm 3-dims works", {
+  skip_on_cran()
   set.seed(23211)
   v1 <- vars::VAR(USA, p = 6, ic = "AIC" )
   cob <- copula::indepTestSim(v1$obs, v1$K, verbose=FALSE)
@@ -18,6 +19,7 @@ test_that("id.cvm 3-dims works", {
 })
 
 test_that("id.cvm 3-dims works with internal test stat calculation", {
+  skip_on_cran()
   set.seed(23211)
   v1 <- vars::VAR(USA, p = 6, ic = "AIC" )
   x1 <- id.cvm(v1, dd = NULL)
@@ -34,6 +36,7 @@ test_that("id.cvm 3-dims works with internal test stat calculation", {
 })
 
 test_that("id.cvm 2-dims works", {
+  skip_on_cran()
   set.seed(23211)
   v1 <- vars::VAR(USA[,-3], p = 3, ic = "AIC" )
   cob <- copula::indepTestSim(v1$obs, v1$K, verbose=FALSE)
@@ -51,6 +54,7 @@ test_that("id.cvm 2-dims works", {
 })
 
 test_that("id.cvm 2-dims works with internal test stat calculation", {
+  skip_on_cran()
   set.seed(23211)
   v1 <- vars::VAR(USA[,-3], p = 3, ic = "AIC" )
   x1 <- id.cvm(v1, dd = NULL)

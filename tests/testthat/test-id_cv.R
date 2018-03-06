@@ -1,6 +1,7 @@
 context("test-id_cv.R")
 
 test_that("unrestricted id.cv estimation with 3-dim works", {
+  skip_on_cran()
   set.seed(23211)
   v1 <- vars::VAR(USA, p = 6, ic = "AIC" )
   x1 <- id.cv(v1, SB = 59)
@@ -22,6 +23,7 @@ test_that("unrestricted id.cv estimation with 3-dim works", {
 })
 
 test_that("unrestricted id.cv estimation with 2-dim works", {
+  skip_on_cran()
   set.seed(23211)
   v1 <- vars::VAR(USA[,-3], p = 3, ic = "AIC" )
   x1 <- id.cv(v1, SB = 59)
@@ -43,6 +45,7 @@ test_that("unrestricted id.cv estimation with 2-dim works", {
 })
 
 test_that("restricted id.cv estimation with 3-dim works", {
+  skip_on_cran()
   set.seed(23211)
   v1 <- vars::VAR(USA, p = 6, ic = "AIC" )
   restmat <- matrix(NA,3,3)
@@ -67,6 +70,7 @@ test_that("restricted id.cv estimation with 3-dim works", {
 })
 
 test_that("restricted id.cv estimation with 2-dim works", {
+  skip_on_cran()
   set.seed(23211)
   v1 <- vars::VAR(USA[,-3], p = 3, ic = "AIC" )
   restmat <- matrix(NA,2,2)

@@ -1,6 +1,7 @@
 context("test-id_ngml.R")
 
 test_that("id.ngml 3-dim stage3 = FALSE works", {
+  skip_on_cran()
   set.seed(23211)
   v1 <- vars::VAR(USA, p = 6, ic = "AIC" )
   x1 <- id.ngml(v1)
@@ -20,6 +21,7 @@ test_that("id.ngml 3-dim stage3 = FALSE works", {
 })
 
 test_that("id.ngml 3-dim stage3 = TRUE works", {
+  skip_on_cran()
   set.seed(23211)
   v1 <- vars::VAR(USA, p = 6, ic = "AIC" )
   x1 <- id.ngml(v1, stage3 =  TRUE)
@@ -39,6 +41,7 @@ test_that("id.ngml 3-dim stage3 = TRUE works", {
 })
 
 test_that("id.ngml 2-dim stage3 = FALSE works", {
+  skip_on_cran()
   set.seed(23211)
   v1 <- vars::VAR(USA[,-3], p = 3, ic = "AIC" )
   x1 <- id.ngml(v1)
@@ -58,6 +61,7 @@ test_that("id.ngml 2-dim stage3 = FALSE works", {
 })
 
 test_that("id.ngml 2-dim stage3 = TRUE works", {
+  skip_on_cran()
   set.seed(23211)
   v1 <- vars::VAR(USA[,-3], p = 3, ic = "AIC" )
   x1 <- id.ngml(v1, stage3 = TRUE)
