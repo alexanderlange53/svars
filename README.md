@@ -110,7 +110,7 @@ if(.Platform$OS.type == "windows") {
 
 plot(boot.svar)
 ```
-![](figs/irfb_viz.png)
+![](man/figures/irfb_viz.png)
 
 Besides impulse response analysis, svars contains several tools for SVAR analysis. For instance, the forecast error variance decomposition is useful to see the contribution of each shock to the response of each variable.
 
@@ -119,7 +119,7 @@ fevd <- fev(structural.form, horizon = 30)
 plot(fevd)
 ```
 
-![](figs/fev_viz.png)
+![](man/figures/fev_viz.png)
 
 The historical decomposition allows to trace back the effects of specific structural shocks on observed recessions or booms in the series.
 
@@ -128,6 +128,6 @@ hist.decomp <- hd(structural.form, series = 1)
 plot(hist.decomp)
 ```
 
-![](figs/hd_viz.png)
+![](man/figures/hd_viz.png)
 
 
