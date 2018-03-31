@@ -42,7 +42,7 @@
 #' # impulse response analysis with confidence bands
 #' # Checking how often theory based impact relations appear
 #' signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
-#' bb <- wild.boot(x1, rademacher = T, nboot = 500, horizon = 30, nc = 1, signrest = signrest)
+#' bb <- wild.boot(x1, rademacher = TRUE, nboot = 500, horizon = 30, nc = 1, signrest = signrest)
 #' summary(bb)
 #' plot(bb, lowerq = 0.16, upperq = 0.84)
 #' }
@@ -52,7 +52,7 @@
 
 
 
-wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, signrest = NULL, itermax = 300, steptol = 200, iter2 = 50){
+wild.boot <- function(x, rademacher = TRUE, horizon, nboot, nc = 1, dd = NULL, signrest = NULL, itermax = 300, steptol = 200, iter2 = 50){
 
   # x: vars object
   # B: estimated covariance matrix from true data set
@@ -127,24 +127,21 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
   bootf <- function(Ustar1){
 
     Ystar <- t(A %*% Z + Ustar1)
-
     Bstar <- t(Ystar) %*% t(Z) %*% solve(Z %*% t(Z))
+    Ustar <- Ystar - t(Bstar %*% Z)
+    Sigma_u_star <- crossprod(Ustar)/(ncol(Ustar1) - 1 - k * p)
 
-    Ustar <- t(y[-c(1:p),]) - Bstar %*% Z
-
-    Sigma_u_star <- tcrossprod(Ustar)/(ncol(Ustar1) - 1 - k * p)
-
-    varb <- list(y = y,
+    varb <- list(y = Ystar,
                  coef_x = Bstar,
-                 residuals = t(Ustar),
+                 residuals = Ustar,
                  p = p,
                  type = x$type)
     class(varb) <- 'var.boot'
 
     if(x$method == "Non-Gaussian maximum likelihood"){
-      temp <- id.ngml(varb, stage3 = x$stage3)
+      temp <- id.ngml_boot(varb, stage3 = x$stage3, Z = Z)
     }else if(x$method == "Changes in Volatility"){
-      temp <- tryCatch(id.cv(varb, SB = x$SB), error = function(e) NULL)
+      temp <- tryCatch(id.cv_boot(varb, SB = x$SB, Z = Z), error = function(e) NULL)
     }else if(x$method == "Cramer-von Mises distance"){
       temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
     }else if(x$method == "Distance covariances"){
@@ -162,7 +159,6 @@ wild.boot <- function(x, rademacher = FALSE, horizon, nboot, nc = 1, dd = NULL, 
 
      frobP <- frobICA_mod(t(solve(diag_sigma_root)%*%Pstar1), t(solve(diag_sigma_root)%*%B), standardize=TRUE)
      Pstar <- Pstar1%*%frobP$perm
-
      temp$B <- Pstar
 
     ip <- imrf(temp, horizon = horizon)

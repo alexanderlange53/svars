@@ -141,25 +141,45 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, signres
   # Bootstrapfunction
   bootf <- function(Ustar1){
 
-    Ystar <- t(A %*% Z + Ustar1)
+    Ystar <- matrix(0, nrow(y), k)
+    # adding pre sample values
+    Ystar[1:p,] <- y[1:p,]
 
-    Bstar <- t(Ystar) %*% t(Z) %*% solve(Z %*% t(Z))
+    if(x$type == 'const' | x$type == 'trend'){
+      for(i in (p+1):nrow(y)){
+        for(j in 1:k){
+          Ystar[i,j] <- A[j,1] + A[j,-1]%*%c(t(Ystar[(i-1):(i-p),])) + Ustar1[j, (i-p)]
+        }
+      }
+    }else if(x$type == 'both'){
+      for(i in (p+1):nrow(y)){
+        for(j in 1:k){
+          Ystar[i,j] <- A[j,c(1,2)] + A[j,-c(1,2)]%*%c(t(Ystar[(i-p):(i-1),])) + Ustar1[j, (i-p)]
+        }
+      }
+    }else if(x$type == 'none'){
+      for(i in (p+1):nrow(y)){
+        for(j in 1:k){
+          Ystar[i,j] <- A[j,]%*%c(t(Ystar[(i-p):(i-1),])) + Ustar1[j, (i-p)]
+        }
+      }
+    }
 
-    Ustar <- t(y[-c(1:p),]) - Bstar %*% Z
+    varb <- suppressWarnings(VAR(Ystar, p = x$p, type = x$type))
+    Ustar <- residuals(varb)
+    Sigma_u_star <- crossprod(Ustar)/(obs - 1 - k * p)
 
-    Sigma_u_star <- tcrossprod(Ustar)/(ncol(Ustar1) - 1 - k * p)
-
-    varb <- list(y = y,
-                 coef_x = Bstar,
-                 residuals = t(Ustar),
-                 p = p,
-                 type = x$type)
-    class(varb) <- 'var.boot'
+    # varb <- list(y = Ystar,
+    #              coef_x = Bstar,
+    #              residuals = Ustar,
+    #              p = p,
+    #              type = x$type)
+    # class(varb) <- 'var.boot'
 
     if(x$method == "Non-Gaussian maximum likelihood"){
-      temp <- id.ngml(varb, stage3 = x$stage3)
+      temp <- id.ngml_boot(varb, stage3 = x$stage3)
     }else if(x$method == "Changes in Volatility"){
-      temp <- tryCatch(id.cv(varb, SB = x$SB), error = function(e) NULL)
+      temp <- tryCatch(id.cv_boot(varb, x$SB), error = function(e) NULL)
     }else if(x$method == "Cramer-von Mises distance"){
       temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
     }else if(x$method == "Distance covariances"){
@@ -168,6 +188,7 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, signres
       temp <- id.st(varb, c_fix = x$est_c, transition_variable = x$transition_variable,
                     gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01)
     }
+
 
     if(!is.null(temp)){
       Pstar <- temp$B

@@ -16,7 +16,7 @@ Calculation of impulse response functions for an identified SVAR object 'svars' 
 }
 \examples{
 \donttest{
-v1 <- VAR(USA, lag.max = 10, ic = "AIC" )
+v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
 x1 <- id.ngml(v1)
 x2 <- imrf(x1, horizon = 20)
 plot(x2)

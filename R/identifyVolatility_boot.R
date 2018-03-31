@@ -1,7 +1,6 @@
-identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = restriction_matrix,
-                                    Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
-                                     max.iter, crit = crit, yOut = yOut, type = type){
-
+identifyVolatility_boot = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = restriction_matrix,
+                                   Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
+                                   max.iter, crit = crit, Z = NULL){
 
   if(!is.null(restriction_matrix)){
     B <- t(chol((1/Tob)* crossprod(u_t)))
@@ -17,12 +16,12 @@ identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restric
 
   # optimize the likelihood function
   MLE <- nlm(f = LH, p = S, k = k, TB = TB, Sigma_hat1 = Sigma_hat1,
-             Sigma_hat2 = Sigma_hat2, Tob = Tob, hessian = T, restriction_matrix = restriction_matrix,
-             restrictions = restrictions, iterlim = 150)
+             Sigma_hat2 = Sigma_hat2, Tob = Tob, hessian = F, restriction_matrix = restriction_matrix,
+             restrictions = restrictions)
 
   if(!is.null(restriction_matrix)){
     naElements <- is.na(restriction_matrix)
-    B_hat <- restriction_matrix
+    B_hat = restriction_matrix
     B_hat[naElements] <- MLE$estimate[1:sum(naElements)]
     Lambda_hat <- diag(MLE$estimate[(sum(naElements) + 1):length(MLE$estimate)])
   }else{
@@ -33,6 +32,8 @@ identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restric
   ll <- MLE$minimum
 
   # estimating again with GLS to obatin a more precise estimation
+  if(is.null(Z)){
+
     y_lag_cr <- function(y, lag_length){
       # create matrix that stores the lags
       y_lag <- matrix(NA, dim(y)[1],dim(y)[2]*lag_length)
@@ -57,6 +58,10 @@ identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restric
     }else{
       Z_t <- yl
     }
+  }else{
+    Z_t <- Z
+    yret <- y
+  }
 
   gls1 <- function(Z, Sig){
     G <- kronecker(tcrossprod(Z), Sig)
@@ -71,8 +76,6 @@ identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restric
   Lambda_hat <- list(Lambda_hat)
   B_hat <- list(B_hat)
   ll <- list(ll)
-  MLEgls_loop <- list(MLE)
-  GLSE <- list(NULL)
 
   counter <- 1
   Exit <- 1
@@ -136,8 +139,7 @@ identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restric
 
     #optimize the likelihood function
     MLEgls <- nlm(f = LH, p = S, k = k, TB = TB, Sigma_hat1 = Sigma_hat1gls,
-                  Sigma_hat2 = Sigma_hat2gls, Tob = Tob, hessian = T, restriction_matrix = restriction_matrix,
-                  restrictions = restrictions, iterlim = 150)
+                  Sigma_hat2 = Sigma_hat2gls, Tob = Tob, hessian = F, restriction_matrix = restriction_matrix, restrictions = restrictions)
 
     if(!is.null(restriction_matrix)){
       naElements <- is.na(restriction_matrix)
@@ -154,10 +156,15 @@ identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restric
     B_hat <- c(B_hat, list(B_hatg))
     Lambda_hat <- c(Lambda_hat, list(Lambda_hatg))
     ll <- c(ll, list(ll_g))
-    GLSE <- c(GLSE, list(GLS_hat))
-    MLEgls_loop <- c(MLEgls_loop, list(MLEgls))
-    counter <- counter + 1
 
+    if(counter == 1){
+      GLSE <- list(GLS_hat)
+    }else{
+      GLSE <- c(GLSE, list(GLS_hat))
+    }
+
+    counter <- counter + 1
+    #Exit <- sum(diag(Lambda_hat[[counter]])) - sum(diag(Lambda_hat[[counter - 1]]))
     Exit <- ll[[counter]] - ll[[counter-1]]
   }
 
@@ -167,56 +174,25 @@ identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restric
   cc <- which.min(ll)
   B_hat <- B_hat[[cc]]
   Lambda_hat <- Lambda_hat[[cc]]
-  GLSE <- GLSE[[cc]]
-  if(!is.null(GLSE)){
-    GLSE <- matrix(GLSE, nrow = k)
-  }
-  MLEgls <- MLEgls_loop[[cc]]
+  GLSE <- GLSE[[cc-1]]
+  GLSE <- matrix(GLSE, nrow = k)
 
-  # obtaining standard errors from inverse fisher information matrix
-  HESS <- solve(MLEgls$hessian)
-
-  for(i in 1:nrow(HESS)){
-    if(HESS[i,i] < 0){
-      HESS[,i] <- -HESS[,i]
-    }
-  }
-  if(!is.null(restriction_matrix)){
-    unRestrictions = k*k - restrictions
-    FishObs <- sqrt(diag(HESS))
-    B.SE <- restriction_matrix
-    B.SE[naElements] <- FishObs[1:unRestrictions]
-    Lambda.SE <- FishObs[((k*k+1) - restrictions):((k*k+k)-restrictions)]*diag(k)
-  }else{
-    FishObs <- sqrt(diag(HESS))
-    B.SE <- matrix(FishObs[1:(k*k)], k,k)
-    Lambda.SE <- diag(FishObs[(k*k+1):(k*k+k)])
-  }
-
-
-  # Testing the estimated SVAR for identification by menas of wald statistic
-  wald <- wald.test(Lambda_hat, HESS, restrictions)
-
-result <- list(
-  Lambda = Lambda_hat,    # estimated Lambda matrix (unconditional heteroscedasticity)
-  Lambda_SE = Lambda.SE,  # standard errors of Lambda matrix
-  B = B_hat,              # estimated B matrix (unique decomposition of the covariance matrix)
-  B_SE = B.SE,            # standard errors of B matrix
-  n = Tob,                # number of observations
-  Fish = HESS,            # observerd fisher information matrix
-  Lik = -llf,             # function value of likelihood
-  wald_statistic = wald,  # results of wald test
-  iteration = counter,     # number of gls estimations
-  method = "Changes in Volatility",
-  SB = SB,                # Structural Break in number format
-  A_hat = GLSE,            # VAR parameter estimated with gls
-  type = type,          # type of the VAR model e.g 'const'
-  SBcharacter = SBcharacter,             # Structural Break in input character format
-  restrictions = restrictions, # number of restrictions
-  y = yOut,                # Data
-    p = unname(p),                # number of lags
-  K = k                 # number of time series
-)
-return(result)
+  result <- list(
+    Lambda = Lambda_hat,    # estimated Lambda matrix (unconditional heteroscedasticity)
+    B = B_hat,              # estimated B matrix (unique decomposition of the covariance matrix)
+    n = Tob,                # number of observations
+    Lik = -llf,             # function value of likelihood
+    iteration = counter,     # number of gls estimations
+    method = "Changes in Volatility",
+    SB = SB,                # Structural Break in number format
+    A_hat = GLSE,            # VAR parameter estimated with gls
+    type = x$type,          # type of the VAR model e.g 'const'
+    SBcharacter = SBcharacter,             # Structural Break in input character format
+    restrictions = restrictions, # number of restrictions
+    y = t(yret),                # Data
+    p = p,                # number of lags
+    K = k                 # number of time series
+  )
+  return(result)
 
 }
