@@ -1,6 +1,6 @@
 identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = restriction_matrix,
-                               Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
-                               max.iter, crit = crit){
+                                    Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
+                                     max.iter, crit = crit, yOut = yOut, type = type){
 
 
   if(!is.null(restriction_matrix)){
@@ -197,26 +197,26 @@ identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restric
   # Testing the estimated SVAR for identification by menas of wald statistic
   wald <- wald.test(Lambda_hat, HESS, restrictions)
 
-  result <- list(
-    Lambda = Lambda_hat,    # estimated Lambda matrix (unconditional heteroscedasticity)
-    Lambda_SE = Lambda.SE,  # standard errors of Lambda matrix
-    B = B_hat,              # estimated B matrix (unique decomposition of the covariance matrix)
-    B_SE = B.SE,            # standard errors of B matrix
-    n = Tob,                # number of observations
-    Fish = HESS,            # observerd fisher information matrix
-    Lik = -llf,             # function value of likelihood
-    wald_statistic = wald,  # results of wald test
-    iteration = counter,     # number of gls estimations
-    method = "Changes in Volatility",
-    SB = SB,                # Structural Break in number format
-    A_hat = GLSE,            # VAR parameter estimated with gls
-    type = x$type,          # type of the VAR model e.g 'const'
-    SBcharacter = SBcharacter,             # Structural Break in input character format
-    restrictions = restrictions, # number of restrictions
-    y = t(yret),                # Data
+result <- list(
+  Lambda = Lambda_hat,    # estimated Lambda matrix (unconditional heteroscedasticity)
+  Lambda_SE = Lambda.SE,  # standard errors of Lambda matrix
+  B = B_hat,              # estimated B matrix (unique decomposition of the covariance matrix)
+  B_SE = B.SE,            # standard errors of B matrix
+  n = Tob,                # number of observations
+  Fish = HESS,            # observerd fisher information matrix
+  Lik = -llf,             # function value of likelihood
+  wald_statistic = wald,  # results of wald test
+  iteration = counter,     # number of gls estimations
+  method = "Changes in Volatility",
+  SB = SB,                # Structural Break in number format
+  A_hat = GLSE,            # VAR parameter estimated with gls
+  type = type,          # type of the VAR model e.g 'const'
+  SBcharacter = SBcharacter,             # Structural Break in input character format
+  restrictions = restrictions, # number of restrictions
+  y = yOut,                # Data
     p = unname(p),                # number of lags
-    K = k                 # number of time series
-  )
-  return(result)
+  K = k                 # number of time series
+)
+return(result)
 
 }

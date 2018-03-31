@@ -66,16 +66,19 @@ id.dc <- function(x, PIT=FALSE){
   if(inherits(x, "var.boot")){
     p <- x$p
     y <- x$y
+    yOut = x$y
     type = x$type
     coef_x = x$coef_x
   }else  if(inherits(x, "varest")){
     p <- x$p
     y <- t(x$y)
+    yOut = x$y
     type = x$type
     coef_x = coef(x)
   }else if(inherits(x, "nlVar")){
     p <- x$lag
     y <- t(x$model[, 1:k])
+    yOut <- x$model[, 1:k]
     coef_x <- t(coef(x))
 
     if(inherits(x, "VECM")){
@@ -96,6 +99,8 @@ id.dc <- function(x, PIT=FALSE){
   }else if(inherits(x, "list")){
     p <- x$order
     y <- t(x$data)
+    yOut <- x$data
+    coef_x <- t(coef(x))
     coef_x <- x$coef
     if(x$cnst == TRUE){
       coef_x <- coef_x[c(2:nrow(coef_x),1),]
@@ -109,6 +114,7 @@ id.dc <- function(x, PIT=FALSE){
     names(coef_x) <- colnames(x$y)
     p <- x$p
     y <- t(x$y)
+    yOut <- x$y
 
     for (i in seq_len(k)) {
       for (j in seq_len(p)) coef_x[[i]] <- c(coef_x[[i]], x$A[[j]][i,])
@@ -184,7 +190,7 @@ id.dc <- function(x, PIT=FALSE){
               method =        "Distance covariances",
               n = Tob,        # number of observations
               type = type,    # type of the VAR model e.g 'const'
-              y = t(y),        # Data
+              y = yOut,        # Data
               p = unname(p),        # number of lags
               K = k,         # number of time series
               PIT=PIT

@@ -110,20 +110,26 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
   if(inherits(x, "var.boot")){
     p <- x$p
     y <- t(x$y)
-    type = x$type
-    coef_x = x$coef_x
+    yOut <- x$y
+    type <- x$type
+    coef_x <- x$coef_x
   }else if(inherits(x, "varest")){
   p <- x$p
   y <- t(x$y)
+  yOut <- x$y
+  type <- x$type
   }else if(inherits(x, "nlVar")){
     if(inherits(x, "VECM")){
       stop("id.cv is not available for VECMs")
     }
     p <- x$lag
     y <- t(x$model[, 1:k])
+    type <- x$include
+    yOut <- x$model[, 1:k]
   }else if(inherits(x, "list")){
     p <- x$order
     y <- t(x$data)
+    yOut <- x$data
   }else{
     stop("Object class is not supported")
   }
@@ -166,10 +172,10 @@ if(!is.numeric(SB)){
   if(!is.null(restriction_matrix)){
    resultUnrestricted <- identifyVolatility(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = NULL,
                                  Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
-                                 max.iter = max.iter, crit = crit)
+                                 max.iter = max.iter, crit = crit, yOut = yOut, type = type)
     result <- identifyVolatility(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = restriction_matrix,
                                            Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
-                                 max.iter = max.iter, crit = crit)
+                                 max.iter = max.iter, crit = crit, yOut = yOut, type = type)
 
     lRatioTestStatistic = 2 * (resultUnrestricted$Lik - result$Lik)
     pValue = round(1 - pchisq(lRatioTestStatistic, result$restrictions), 4)
@@ -180,7 +186,7 @@ if(!is.numeric(SB)){
     restriction_matrix <- NULL
     result <- identifyVolatility(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = restriction_matrix,
                                  Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
-                                 max.iter = max.iter, crit = crit)
+                                 max.iter = max.iter, crit = crit, yOut = yOut, type = type)
   }
 
   if(is.null(result$A_hat)){
