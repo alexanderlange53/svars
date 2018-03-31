@@ -191,7 +191,7 @@ id.dc <- function(x, PIT=FALSE){
               n = Tob,        # number of observations
               type = type,    # type of the VAR model e.g 'const'
               y = yOut,        # Data
-              p = p,        # number of lags
+              p = unname(p),        # number of lags
               K = k,         # number of time series
               PIT=PIT
               )

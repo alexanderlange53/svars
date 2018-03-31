@@ -37,7 +37,7 @@ summary.svars <- function(object, ...){
  cat("\nPairwise Wald Test:\n")
  print(svarsObject$wald_statistic)
    if(svarsObject$restrictions > 0){
-     cat("\nLikelihood Ratio Test Statistic:")
+     cat("\nLikelihood Ratio Test Statistic: ")
      cat(svarsObject$lRatioTestStatistic)
      cat(", p-value:")
      cat(svarsObject$lRatioTestPValue)

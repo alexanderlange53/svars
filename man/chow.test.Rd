@@ -45,22 +45,24 @@ The Chow test for structural change is implemented as sample-split and break-poi
 \examples{
 \donttest{
 # Testing for structural break in USA data
-z1 = chow.test(USA, SB = 65, p = 6)
+z1 = chow.test(USA, SB = 59, p = 6)
 summary(z1)
 
 #Structural brake via Dates
 #given that time series vector with dates is available
-dateVector = seq(as.Date("1965/1/1"), as.Date("2008/6/1"), "quarter")
-z2 <- chow.test(USA, SB = "1985-01-01", p = 6, format = "\%Y-\%m-\%d", dateVector = dateVector)
+dateVector = seq(as.Date("1965/1/1"), as.Date("2008/7/1"), "quarter")
+z2 <- chow.test(USA, SB = "1979-07-01", p = 6, format = "\%Y-\%m-\%d", dateVector = dateVector)
 summary(z2)
 
 # alternatively pass sequence arguments directly
-z3 <- chow.test(USA, SB = "1985-01-01", p = 6, format = "\%Y-\%m-\%d",
-                start = "1965-01-01", end = "2008-06-01",
+z3 <- chow.test(USA, SB = "1979-07-01", p = 6, format = "\%Y-\%m-\%d",
+                start = "1965-01-01", end = "2008-07-01",
                 frequency = "quarter")
+summary(z3)
 
 # or provide ts date format (For quarterly, monthly, weekly and daily frequencies only)
-z4 <- chow.test(USA, SB = c(1985,1), p = 6)
+z4 <- chow.test(USA, SB = c(1979,3), p = 6)
+summary(z4)
 }
 }
 \references{
