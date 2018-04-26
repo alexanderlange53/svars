@@ -65,7 +65,7 @@ id.dc <- function(x, PIT=FALSE){
 
   if(inherits(x, "var.boot")){
     p <- x$p
-    y <- x$y
+    y <- t(x$y)
     yOut = x$y
     type = x$type
     coef_x = x$coef_x
