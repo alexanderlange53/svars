@@ -2,14 +2,28 @@
 ## Likelihood for smooth transition model ##
 #==========================================#
 
-likelihood_st <- function(parameter, u_t, G, k, Tob){
+likelihood_st <- function(parameter, u_t, G, k, Tob, restriction_matrix, restrictions){
 
-  if(any(parameter[(k * k + 1): (k * k + k)] < 0)){
+  if(!is.null(restriction_matrix)){
+    if(!is.matrix(restriction_matrix)){
+      stop("Please provide a valid input matrix")
+    }
+    naElements <- is.na(restriction_matrix)
+    toFillMatrix <- restriction_matrix
+    toFillMatrix[naElements] <- parameter[1:sum(naElements)]
+    B <- toFillMatrix
+  }else{
+    B <- matrix(parameter[1: (k * k)], k, k)
+    restrictions <- 0
+  }
+
+  Lambda <-  diag(parameter[((k*k+1) - restrictions):((k*k+k)-restrictions)])
+
+  if(any(diag(Lambda) < 0)){
     return(return(1e25))
   }
 
-  B <- matrix(parameter[1: (k * k)], k, k)
-  Lambda <- diag(parameter[(k * k + 1): (k * k + k)])
+
   Sigma_1 <- tcrossprod(B)
   Sigma_2 <- B %*% tcrossprod(Lambda, B)
 

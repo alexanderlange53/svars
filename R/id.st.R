@@ -26,6 +26,7 @@
 #' @param gamma_fix A fixed parameter for gamma, instead of letting the function search for gamma.
 #' @param max.iter Integer. Number of maximum GLS iterations
 #' @param crit Integer. Critical value for the precision of the GLS estimation
+#' @param restriction_matrix Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)
 #' @return A list of class "svars" with elements
 #' \item{Lambda}{Estimated heteroscedasticity matrix \eqn{\Lambda}}
 #' \item{Lambda_SE}{Matrix of standard errors of Lambda}
@@ -78,7 +79,7 @@
 
 id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, transition_variable = NULL,
                   gamma_lower = -3, gamma_upper = 2, gamma_step = 0.5, gamma_fix = NULL, nc = 1,
-                  max.iter = 5, crit = 0.01){
+                  max.iter = 5, crit = 0.01, restriction_matrix = NULL){
 
   # Gathering information from reduced form model
   if(inherits(x, "var.boot")){
@@ -116,22 +117,6 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     yOut <- x$data
   }else{
     stop("Object class is not supported")
-  }
-
-  # Function to create a block diagonal matrix
-  block.diagonal<-function(...){
-    matrixList <- list(...)
-    if(is.list(matrixList[[1]])) matrixList<-matrixList[[1]]
-
-    dimensions <- sapply(matrixList,FUN=function(x) dim(x)[1])
-    finalDimension <- sum(dimensions)
-    finalMatrix <- matrix(0,nrow=finalDimension,ncol=finalDimension)
-    index <- 1
-    for(k in 1:length(dimensions)){
-      finalMatrix[index:(index+dimensions[k]-1),index:(index+dimensions[k]-1)]<-matrixList[[k]]
-      index <- index+dimensions[k]
-    }
-    finalMatrix
   }
 
 
@@ -210,105 +195,10 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     Z_t <- yl
   }
 
-
-  # iterative approach
-  iterative_smooth_transition <- function(transition, u_t, y, Tob, k, p, crit, max.iter, Z_t, y_loop){
-
-    count <- 0 # count variable
-    Exit <-  -100  #Exit criterion
-
-    # Creating initial values for structural parameter
-    Sigma_hat <- crossprod(u_t)/(Tob-1-k*p)
-
-    #init_B <- t(chol(Sigma_hat))
-    init_B <- suppressMessages(expm::sqrtm(Sigma_hat))
-    init_Lambda <- diag(k)
-
-    B_hat <- list(init_B)
-    Lambda_hat <- list(init_Lambda)
-    ll <- list(likelihood_st(parameter = c(init_B, diag(init_Lambda)), u_t = u_t, G = transition, k = k, Tob = Tob))
-
-
-    while( (abs(Exit) > crit) & (count < max.iter) ){
-      count <- count + 1
-
-      if(count == 1){
-        u_t_gls <- u_t
-      }
-
-      parameter <- c(B_hat[[count]], diag(Lambda_hat[[count]]))
-
-      # Step 1: Optimizing likelihood
-      mle <- nlm(f = likelihood_st, p = parameter, u_t = u_t_gls, G = transition, k = k, Tob = Tob,
-                    hessian = T, iterlim = 150)
-
-      B_hat <- c(B_hat, list(matrix(mle$estimate[1:(k*k)], nrow = k)))
-      Lambda_hat <- c(Lambda_hat, list(diag(mle$estimate[(k*k+1):(k*k+k)])))
-      ll <- c(ll, list(mle$minimum))
-      if(count == 1){
-        hessian <- list(solve(mle$hessian))
-      }else{
-        hessian <- c(hessian, list(solve(mle$hessian)))
-      }
-
-
-      # Step 2: Reestimation of VAR parameter with GLS
-      Omega_i <- lapply(transition, function(x, B, Lambda){solve((1 - x)*tcrossprod(B, B) + x*B%*%tcrossprod(Lambda, B))},
-                        B = B_hat[[(count + 1)]], Lambda = Lambda_hat[[(count + 1)]])
-
-      W <- block.diagonal(Omega_i)
-
-      b_gls <- solve(kronecker(Z_t, diag(k))%*%W%*%kronecker(t(Z_t), diag(k)))%*%kronecker(Z_t, diag(k))%*%W%*%c(y_loop)
-
-      if(count == 1){
-        GLSE <- list(b_gls)
-      }else{
-        GLSE <- c(GLSE, list(b_gls))
-      }
-
-      u_t_gls <- c(y_loop) - kronecker(t(Z_t), diag(k))%*%b_gls
-      u_t_gls <- matrix(u_t_gls, Tob, k, byrow = T)
-
-      if(count > 1){
-        Exit <- ll[[count+1]] - ll[[count]]
-      }
-    }
-
-    # extracting the best estimates
-    ll <- unlist(ll)
-    ll_best <- ll[which.min(ll)]
-    cc <- which.min(ll)
-    B_hat <- B_hat[[cc]]
-    Lambda_hat <- Lambda_hat[[cc]]
-    GLSE <- GLSE[[cc-1]]
-    GLSE <- matrix(GLSE, nrow = k)
-
-    # Optaining standard errors
-    HESS <- hessian[[cc-1]]
-    for(i in 1:nrow(HESS)){
-      if(HESS[i,i] < 0){
-        HESS[,i] <- -HESS[,i]
-      }
-    }
-    FishObs <- sqrt(diag(HESS))
-    B.SE <- matrix(FishObs[1:(k*k)], k,k)
-    Lambda.SE <- diag(FishObs[(k*k+1):(k*k+k)])
-
-    return(list(
-      Lambda = Lambda_hat,    # estimated Lambda matrix (unconditional heteroscedasticity)
-      Lambda_SE = Lambda.SE,  # standard errors of Lambda matrix
-      B = B_hat,              # estimated B matrix (unique decomposition of the covariance matrix)
-      B_SE = B.SE,            # standard errors of B matrix
-      Fish = HESS,            # observerd fisher information matrix
-      Lik = -ll_best,             # function value of likelihood
-      iteration = count,     # number of gls estimations
-      A_hat = GLSE             # VAR parameter estimated with gls
-    ))
-  }
-
   if(!is.null(gamma_fix) &  !is.null(c_fix)){
     best_estimation <- iterative_smooth_transition(G_grid, u_t = u_t, y = y, Tob = Tob, k = k,
-                                           p = p, crit = crit, max.iter = max.iter, Z_t = Z_t, y_loop = y_loop)
+                                           p = p, crit = crit, max.iter = max.iter, Z_t = Z_t, y_loop = y_loop,
+                                           restriction_matrix = restriction_matrix)
     transition_function <- G_grid
 
     transition_coefficient <- gamma_fix
@@ -335,8 +225,14 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     comb <- nrow(grid_comb)
   }
 
+  if(!is.null(restriction_matrix)){
+    restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
+  }else{
+    restrictions <- 0
+  }
+
   # Testing the estimated SVAR for identification by means of wald statistic
-  wald <- wald.test(best_estimation$Lambda, best_estimation$Fish, 0)
+  wald <- wald.test(best_estimation$Lambda, best_estimation$Fish, restrictions)
 
   result <- list(
     Lambda = best_estimation$Lambda,        # estimated Lambda matrix (unconditional heteroscedasticity)
