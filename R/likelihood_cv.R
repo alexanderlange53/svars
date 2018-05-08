@@ -1,5 +1,5 @@
 # likelihood function to optimize for identification via changes in volatility
-LH <- function(S, Tob, TB, Sigma_hat1, k,  Sigma_hat2, restriction_matrix, restrictions) {
+likelihood_cv <- function(S, Tob, TB, Sigma_hat1, k,  Sigma_hat2, restriction_matrix, restrictions) {
 
   if(!is.null(restriction_matrix)){
     if(!is.matrix(restriction_matrix)){
