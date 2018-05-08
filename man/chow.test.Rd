@@ -4,7 +4,7 @@
 \alias{chow.test}
 \title{Chow Test for Structural Break}
 \usage{
-chow.test(Y, SB, p, nboot = 500, rademacher = "FALSE", start = NULL,
+chow.test(Y, SB, p, nboot = 500, rademacher = FALSE, start = NULL,
   end = NULL, frequency = NULL, format = NULL, dateVector = NULL)
 }
 \arguments{

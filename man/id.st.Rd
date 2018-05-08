@@ -4,16 +4,13 @@
 \alias{id.st}
 \title{Identification of SVAR models by means of a smooth transition of volatility}
 \usage{
-id.st(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5,
-  c_fix = NULL, transition_variable = NULL, gamma_lower = -3,
-  gamma_upper = 2, gamma_step = 0.5, gamma_fix = NULL, max.iter = 5,
+id.st(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL,
+  transition_variable = NULL, gamma_lower = -3, gamma_upper = 2,
+  gamma_step = 0.5, gamma_fix = NULL, nc = 1, max.iter = 5,
   crit = 0.01)
 }
 \arguments{
 \item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object}
-
-\item{nc}{Number of processor cores (Not available on windows machines).
-Note the smooth transition model is computationally extremely demanding.}
 
 \item{c_lower}{Starting point where the algorithm starts to search for the volatility shift.
 Defalt is 0.3*(Total number of observations)}
@@ -37,6 +34,9 @@ to the specified transition variable.}
 \item{gamma_step}{Step width of gamma, default is 0.5}
 
 \item{gamma_fix}{A fixed parameter for gamma, instead of letting the function search for gamma.}
+
+\item{nc}{Number of processor cores (Not available on windows machines).
+Note the smooth transition model is computationally extremely demanding.}
 
 \item{max.iter}{Integer. Number of maximum GLS iterations}
 
@@ -84,11 +84,18 @@ x1$B[,3] <- x1$B[,3]*(-1)
 # Impulse response analysis
 i1 <- imrf(x1, horizon = 30)
 plot(i1, scales = 'free_y')
+
+# Example with same data set as in Luetkepohl and Nestunajev 2017
+v1 <- vars::VAR(LN, p = 3, type = 'const')
+x1 <- id.st(v1, c_fix = 167, gamma_fix = -2.77)
+summary(x1)
+plot(x1)
+
 }
 }
 \references{
-Luetkepohl H., Netsunajev A., 2017. “Structural vector autoregressions with smooth transition\cr
- in variances.” Journal of Economic Dynamics and Control, 84, 43 – 57. ISSN 0165-1889.
+Luetkepohl H., Netsunajev A., 2017. "Structural vector autoregressions with smooth transition \cr
+  in variances." Journal of Economic Dynamics and Control, 84, 43 - 57. ISSN 0165-1889.
 }
 \seealso{
 For alternative identification approaches see \code{\link{id.cv}}, \code{\link{id.cvm}}, \code{\link{id.dc}},

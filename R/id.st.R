@@ -40,8 +40,8 @@
 #' \item{est_c}{Structural break (number of observations)}
 #' \item{SBcharacter}{Structural break (date; if provided in function arguments)}
 #'
-#' @references Luetkepohl H., Netsunajev A., 2017. “Structural vector autoregressions with smooth transition\cr
-#'  in variances.” Journal of Economic Dynamics and Control, 84, 43 – 57. ISSN 0165-1889.
+#' @references Luetkepohl H., Netsunajev A., 2017. "Structural vector autoregressions with smooth transition \cr
+#'   in variances." Journal of Economic Dynamics and Control, 84, 43 - 57. ISSN 0165-1889.
 #'
 #' @seealso For alternative identification approaches see \code{\link{id.cv}}, \code{\link{id.cvm}}, \code{\link{id.dc}},
 #'          or \code{\link{id.ngml}}
@@ -65,15 +65,22 @@
 #' # Impulse response analysis
 #' i1 <- imrf(x1, horizon = 30)
 #' plot(i1, scales = 'free_y')
+#'
+#' # Example with same data set as in Luetkepohl and Nestunajev 2017
+#' v1 <- vars::VAR(LN, p = 3, type = 'const')
+#' x1 <- id.st(v1, c_fix = 167, gamma_fix = -2.77)
+#' summary(x1)
+#' plot(x1)
+#'
 #' }
 #' @importFrom steadyICA steadyICA
 #' @export
 
-id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, transition_variable = NULL,
-                  gamma_lower = -3, gamma_upper = 2, gamma_step = 0.5, gamma_fix = NULL,
+id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, transition_variable = NULL,
+                  gamma_lower = -3, gamma_upper = 2, gamma_step = 0.5, gamma_fix = NULL, nc = 1,
                   max.iter = 5, crit = 0.01){
 
-  # Gathering informations from reduced form model
+  # Gathering information from reduced form model
   if(inherits(x, "var.boot")){
     u_t <- x$residuals
     Tob <- nrow(u_t)
@@ -91,18 +98,22 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
     y <- t(x$y)
     type = x$type
     coef_x = x$coef_x
+    yOut <- x$y
   }else if(inherits(x, "varest")){
     p <- x$p
     y <- t(x$y)
+    yOut <- x$y
   }else if(inherits(x, "nlVar")){
     if(inherits(x, "VECM")){
-      stop("id.cv is not available for VECMs")
+      stop("id.st is not available for VECMs")
     }
     p <- x$lag
     y <- t(x$model[, 1:k])
+    yOut <- x$model[, 1:k]
   }else if(inherits(x, "list")){
     p <- x$order
     y <- t(x$data)
+    yOut <- x$data
   }else{
     stop("Object class is not supported")
   }
@@ -137,39 +148,11 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
   }
 
   # Transition function
-  transition <- function(gamma, cc, st){
+  transition_f <- function(gamma, cc, st){
     G <- (1 + exp(-exp(gamma)*(st - cc)))^(-1)
     return(G)
   }
 
-  # Likelihod function
-  likelihood.st <- function(parameter, u_t, G){
-
-    if(any(parameter[(k*k+1):(k*k+k)] < 0)){
-      return(return(1e25))
-    }
-
-    B <- matrix(parameter[1:(k*k)], k, k)
-    Lambda <- diag(parameter[(k*k+1):(k*k+k)])
-    Sigma_1 <- tcrossprod(B)
-    Sigma_2 <- B%*%tcrossprod(Lambda, B)
-
-    lik <- function(xx, B, Lambda){
-      Omega <- (1 - G[xx])*Sigma_1 + G[xx]*Sigma_2
-      log(det(Omega)) + u_t[xx,]%*%solve(Omega)%*%u_t[xx,]
-    }
-
-    ll <- sapply(1:length(G), lik)
-    ll <- sum(ll)*0.5
-
-    L <- - (- Tob * k/2 * log(2*pi) - ll)
-
-    if(!is.na(L)){
-      return(L)
-    }else{
-      return(1e25)
-    }
-  }
 
   if(is.null(gamma_fix) &  is.null(c_fix)){
     # Creating grid for iterative procedure with gamma and break point unknown
@@ -177,39 +160,39 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
     cc_grid <- seq(ceiling(c_lower*Tob), floor(c_upper*Tob), by = c_step)
     grid_comb <- unique(expand.grid(gamma_grid, cc_grid))
     if(is.null(transition_variable)){
-      G_grid <- mapply(transition, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
+      G_grid <- mapply(transition_f, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
     }else{
       if(length(transition_variable) != Tob){
         stop('length of transition variable is unequal to data length')
       }
-      G_grid <- mapply(transition, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = transition_variable))
+      G_grid <- mapply(transition_f, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = transition_variable))
     }
   }else if(is.null(gamma_fix)){
     # Creating grid for iterative procedure with fix break point
     gamma_grid <-  seq(gamma_lower, gamma_upper, by = gamma_step)
     grid_comb <- unique(expand.grid(gamma_grid, c_fix))
-    G_grid <- mapply(transition, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
+    G_grid <- mapply(transition_f, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
   }else if(is.null(c_fix)){
     # Creating grid for iterative procedure with fix shape of transition function
     cc_grid <- seq(ceiling(c_lower*Tob), floor(c_upper*Tob), by = c_step)
     grid_comb <- unique(expand.grid(gamma_fix, cc_grid))
     if(is.null(transition_variable)){
-      G_grid <- mapply(transition, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
+      G_grid <- mapply(transition_f, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
     }else{
       if(length(transition_variable) != Tob){
         stop('length of transition variable is unequal to data length')
       }
-      G_grid <- mapply(transition, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = transition_variable))
+      G_grid <- mapply(transition_f, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = transition_variable))
     }
   }else{
     grid_comb <- unique(expand.grid(gamma_fix, c_fix))
     if(is.null(transition_variable)){
-      G_grid <- mapply(transition, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
+      G_grid <- mapply(transition_f, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
     }else{
       if(length(transition_variable) != Tob){
         stop('length of transition variable is unequal to data length')
       }
-      G_grid <- mapply(transition, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = transition_variable))
+      G_grid <- mapply(transition_f, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = transition_variable))
     }
   }
 
@@ -243,7 +226,7 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
 
     B_hat <- list(init_B)
     Lambda_hat <- list(init_Lambda)
-    ll <- list(likelihood.st(parameter = c(init_B, diag(init_Lambda)), u_t = u_t, G = transition))
+    ll <- list(likelihood_st(parameter = c(init_B, diag(init_Lambda)), u_t = u_t, G = transition, k = k, Tob = Tob))
 
 
     while( (abs(Exit) > crit) & (count < max.iter) ){
@@ -256,7 +239,7 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
       parameter <- c(B_hat[[count]], diag(Lambda_hat[[count]]))
 
       # Step 1: Optimizing likelihood
-      mle <- nlm(f = likelihood.st, p = parameter, u_t = u_t_gls, G = transition,
+      mle <- nlm(f = likelihood_st, p = parameter, u_t = u_t_gls, G = transition, k = k, Tob = Tob,
                     hessian = T, iterlim = 150)
 
       B_hat <- c(B_hat, list(matrix(mle$estimate[1:(k*k)], nrow = k)))
@@ -373,7 +356,7 @@ id.st <- function(x, nc = 1, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = N
     transition_function = transition_function,
     A_hat = best_estimation$A_hat,          # VAR parameter estimated with gls
     type = x$type,          # type of the VAR model e.g 'const'
-    y = t(y),                # Data
+    y = yOut,                # Data
     p = p,                # number of lags
     K = k                 # number of time series
   )
