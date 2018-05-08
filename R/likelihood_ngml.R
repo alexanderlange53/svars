@@ -49,7 +49,7 @@ resid.ls <- function(Z_t, k, A){
 }
 
 likelihood_ngml_stage3 <-function(A, Z_t, y, il, B_stand_est, rows, sigma_est,
-                                  d_freedom) {
+                                  d_freedom, k, Tob) {
 
   logl <- rep(0, Tob)
 

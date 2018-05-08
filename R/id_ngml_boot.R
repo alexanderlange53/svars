@@ -112,7 +112,8 @@ id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL){
   }
 
   # optimizing the likelihood function 2. stage
-  maxL <- nlm(p = theta0, f = likelihood_ngml_stage2(), hessian = FALSE)
+  maxL <- nlm(p = theta0, f = likelihood_ngml_stage2, u = u, il = il, rows = rows,
+              hessian = FALSE)
   beta_est <- maxL$estimate[1:(k*k-k)]
 
   sigma_est <- maxL$estimate[(k*k-k+1):(k*k)]
@@ -174,7 +175,9 @@ id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL){
 
 
     A <- c(A)
-    maxL2 <- nlm(p = A, f = likelihood_ngml_stage3, hessian = FALSE)
+    maxL2 <- nlm(p = A, f = likelihood_ngml_stage3, Z_t = Z_t, y = y, il = il,
+                 B_stand_est = B_stand_est, rows = rows, sigma_est = sigma_est,
+                 d_freedom = d_freedom, k=k, hessian = FALSE)
 
     A_hat <- matrix(maxL2$estimate, nrow = k)
   }else{

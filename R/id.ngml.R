@@ -266,7 +266,7 @@ id.ngml <- function(x, stage3 = FALSE){
     A <- c(A)
     maxL2 <- nlm(p = A, f = likelihood_ngml_stage3, Z_t = Z_t, y = y, il = il,
                  B_stand_est = B_stand_est, rows = rows, sigma_est = sigma_est,
-                 d_freedom = d_freedom, hessian = TRUE)
+                 d_freedom = d_freedom, Tob = Tob, k=k, hessian = TRUE)
 
     A_hat <- matrix(maxL2$estimate, nrow = k)
     y <- y_return
