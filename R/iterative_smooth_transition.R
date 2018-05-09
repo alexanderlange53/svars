@@ -129,8 +129,16 @@ iterative_smooth_transition <- function(transition, u_t, y, Tob, k, p, crit, max
     }
   }
   FishObs <- sqrt(diag(HESS))
-  B.SE <- matrix(FishObs[1:(k*k)], k,k)
-  Lambda.SE <- diag(FishObs[(k*k+1):(k*k+k)])
+
+  if(!is.null(restriction_matrix)){
+    unRestrictions = k*k - restrictions
+    B.SE <- restriction_matrix
+    B.SE[naElements] <- FishObs[1:unRestrictions]
+    Lambda.SE <- FishObs[((k*k+1) - restrictions):((k*k+k)-restrictions)]*diag(k)
+  }else{
+    B.SE <- matrix(FishObs[1:(k*k)], k,k)
+    Lambda.SE <- diag(FishObs[(k*k+1):(k*k+k)])
+  }
 
   return(list(
     Lambda = Lambda_hat,    # estimated Lambda matrix (unconditional heteroscedasticity)

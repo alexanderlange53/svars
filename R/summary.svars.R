@@ -48,6 +48,8 @@ summary.svars <- function(object, ...){
     cat(svarsObject$est_c)
     cat("\nNumber of GLS estimations: ")
     cat(svarsObject$iteration)
+    cat("\nNumber of Restrictions: ")
+    cat(svarsObject$restrictions)
     cat("\nEstimated transition coefficient: ")
     cat(svarsObject$est_g)
     cat("\nNumber of all grid combinations: ")
@@ -63,6 +65,13 @@ summary.svars <- function(object, ...){
     print(svarsObject$B_SE)
     cat("\nPairwise Wald Test:\n")
     print(svarsObject$wald_statistic)
+    if(svarsObject$restrictions > 0){
+      cat("\nLikelihood Ratio Test Statistic: ")
+      cat(svarsObject$lRatioTestStatistic)
+      cat(", p-value:")
+      cat(svarsObject$lRatioTestPValue)
+
+    }
  }else if(svarsObject$method == "Non-Gaussian maximum likelihood"){
    cat("\nStage3: ")
    cat(svarsObject$stage3)

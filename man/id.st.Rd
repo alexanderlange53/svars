@@ -7,7 +7,7 @@
 id.st(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL,
   transition_variable = NULL, gamma_lower = -3, gamma_upper = 2,
   gamma_step = 0.5, gamma_fix = NULL, nc = 1, max.iter = 5,
-  crit = 0.01)
+  crit = 0.01, restriction_matrix = NULL, lr_test = FALSE)
 }
 \arguments{
 \item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object}
@@ -41,6 +41,10 @@ Note the smooth transition model is computationally extremely demanding.}
 \item{max.iter}{Integer. Number of maximum GLS iterations}
 
 \item{crit}{Integer. Critical value for the precision of the GLS estimation}
+
+\item{restriction_matrix}{Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)}
+
+\item{lr_test}{Logical. Indictaes wthether the restricted model should be tested against the unrestricted model via a likelihood ratio test.}
 }
 \value{
 A list of class "svars" with elements

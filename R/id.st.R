@@ -27,6 +27,7 @@
 #' @param max.iter Integer. Number of maximum GLS iterations
 #' @param crit Integer. Critical value for the precision of the GLS estimation
 #' @param restriction_matrix Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)
+#' @param lr_test Logical. Indictaes wthether the restricted model should be tested against the unrestricted model via a likelihood ratio test.
 #' @return A list of class "svars" with elements
 #' \item{Lambda}{Estimated heteroscedasticity matrix \eqn{\Lambda}}
 #' \item{Lambda_SE}{Matrix of standard errors of Lambda}
@@ -79,7 +80,7 @@
 
 id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, transition_variable = NULL,
                   gamma_lower = -3, gamma_upper = 2, gamma_step = 0.5, gamma_fix = NULL, nc = 1,
-                  max.iter = 5, crit = 0.01, restriction_matrix = NULL){
+                  max.iter = 5, crit = 0.01, restriction_matrix = NULL, lr_test = FALSE){
 
   # Gathering information from reduced form model
   if(inherits(x, "var.boot")){
@@ -196,7 +197,7 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
   }
 
   if(!is.null(gamma_fix) &  !is.null(c_fix)){
-    best_estimation <- iterative_smooth_transition(G_grid, u_t = u_t, y = y, Tob = Tob, k = k,
+    best_estimation <- iterative_smooth_transition(transition = G_grid, u_t = u_t, y = y, Tob = Tob, k = k,
                                            p = p, crit = crit, max.iter = max.iter, Z_t = Z_t, y_loop = y_loop,
                                            restriction_matrix = restriction_matrix)
     transition_function <- G_grid
@@ -204,6 +205,18 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     transition_coefficient <- gamma_fix
     SB <- c_fix
     comb <- 1
+
+    if(lr_test == TRUE & !is.null(restriction_matrix)){
+      unrestricted_estimation <- iterative_smooth_transition(G_grid, u_t = u_t, y = y, Tob = Tob, k = k,
+                                                             p = p, crit = crit, max.iter = max.iter, Z_t = Z_t, y_loop = y_loop,
+                                                             restriction_matrix = NULL)
+      lRatioTestStatistic = 2 * (unrestricted_estimation$Lik - best_estimation$Lik)
+      restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
+      pValue = round(1 - pchisq(lRatioTestStatistic, restrictions), 4)
+    }else{
+      lRatioTestStatistic <- NULL
+      pValue <- NULL
+    }
 
   }else{
     G_grid <- apply(G_grid, 2, list)
@@ -213,16 +226,39 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
                                                                                   Tob = Tob, k = k,
                                                                                   p = p, crit = crit,
                                                                                   max.iter = max.iter, Z_t = Z_t,
-                                                                                  y_loop = y_loop)},
+                                                                                  y_loop = y_loop,
+                                                                                  restriction_matrix = restriction_matrix)},
                                   cl = nc)
 
     max_likelihood <- which.max(sapply(grid_optimization, '[[', 'Lik'))
     best_estimation <- grid_optimization[[max_likelihood]]
     transition_function <- unlist(G_grid[[max_likelihood]])
 
-    transition_coefficient <- grid_comb[max_likelihood,1]
-    SB <- grid_comb[max_likelihood,2]
+    transition_coefficient <- grid_comb[max_likelihood, 1]
+    SB <- grid_comb[max_likelihood, 2]
     comb <- nrow(grid_comb)
+
+    if(lr_test == TRUE & !is.null(restriction_matrix)){
+      grid_comb <- unique(expand.grid(transition_coefficient, SB))
+      if(is.null(transition_variable)){
+        G_grid <- mapply(transition_f, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
+      }else{
+        if(length(transition_variable) != Tob){
+          stop('length of transition variable is unequal to data length')
+        }
+        G_grid <- mapply(transition_f, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = transition_variable))
+      }
+
+      unrestricted_estimation <- iterative_smooth_transition(G_grid, u_t = u_t, y = y, Tob = Tob, k = k,
+                                                             p = p, crit = crit, max.iter = max.iter, Z_t = Z_t, y_loop = y_loop,
+                                                             restriction_matrix = NULL)
+      lRatioTestStatistic = 2 * (unrestricted_estimation$Lik - max_likelihood)
+      restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
+      pValue = round(1 - pchisq(lRatioTestStatistic, restrictions), 4)
+    }else{
+      lRatioTestStatistic <- NULL
+      pValue <- NULL
+    }
   }
 
   if(!is.null(restriction_matrix)){
@@ -254,7 +290,10 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     type = x$type,          # type of the VAR model e.g 'const'
     y = yOut,                # Data
     p = p,                # number of lags
-    K = k                 # number of time series
+    K = k,                 # number of time series
+    restrictions = restrictions,
+    lRatioTestStatistic = lRatioTestStatistic,
+    lRatioTestPValue = pValue
   )
 
   class(result) <- 'svars'
