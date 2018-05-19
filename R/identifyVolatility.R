@@ -213,8 +213,9 @@ result <- list(
   type = type,          # type of the VAR model e.g 'const'
   SBcharacter = SBcharacter,             # Structural Break in input character format
   restrictions = restrictions, # number of restrictions
+  restriction_matrix = restriction_matrix,
   y = yOut,                # Data
-    p = unname(p),                # number of lags
+  p = unname(p),                # number of lags
   K = k                 # number of time series
 )
 return(result)
