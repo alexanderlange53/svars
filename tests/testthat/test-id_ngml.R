@@ -66,7 +66,7 @@ test_that("id.ngml 2-dim stage3 = TRUE works", {
   set.seed(23211)
   v1 <- vars::VAR(USA[,-3], p = 3, ic = "AIC" )
   x1 <- id.ngml(v1, stage3 = TRUE)
-  x2 <- id.ngml(v1, stage3 = TRUE)
+  x2 <- id.ngml_boot(v1, stage3 = TRUE)
 
   expect_equal(round(x1$Lik, 4),round(x2$Lik, 4), -425.5546)
   expect_equal(sum(round(x1$B, 4)), sum(round(x2$B, 4)), 1.8334)
