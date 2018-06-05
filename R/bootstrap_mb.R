@@ -194,7 +194,7 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, signres
     if(!is.null(temp)){
       Pstar <- temp$B
 
-      if(x$method == "Changes in Volatility" & !is.null(x$restriction_matrix)){
+      if(!is.null(x$restriction_matrix)){
         Pstar1 <- Pstar
         frobP <- frobICA_mod(Pstar1, B, standardize=TRUE)
       }else{
@@ -246,7 +246,7 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, signres
   rownames(boot.mean) <- rownames(x$B)
 
   # Checking for signs
-  if(x$method == "Changes in Volatility" & !is.null(x$restriction_matrix)){
+  if(!is.null(x$restriction_matrix)){
     if(!is.null(signrest)){
       cat('Testing signs only possible for unrestricted model \n')
     }

@@ -292,6 +292,7 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     p = p,                # number of lags
     K = k,                 # number of time series
     restrictions = restrictions,
+    restriction_matrix = restriction_matrix,
     lRatioTestStatistic = lRatioTestStatistic,
     lRatioTestPValue = pValue
   )
