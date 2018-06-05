@@ -186,7 +186,7 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, signres
     }else if(x$method == "Distance covariances"){
       temp <- id.dc(varb, PIT=x$PIT)
     }else{
-      temp <- id.st(varb, c_fix = x$est_c, transition_variable = x$transition_variable,
+      temp <- id.st(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,
                     gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01)
     }
 
