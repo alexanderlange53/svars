@@ -252,7 +252,7 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
       unrestricted_estimation <- iterative_smooth_transition(G_grid, u_t = u_t, y = y, Tob = Tob, k = k,
                                                              p = p, crit = crit, max.iter = max.iter, Z_t = Z_t, y_loop = y_loop,
                                                              restriction_matrix = NULL)
-      lRatioTestStatistic = 2 * (unrestricted_estimation$Lik - max_likelihood)
+      lRatioTestStatistic = 2 * (unrestricted_estimation$Lik - best_estimation$Lik)
       restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
       pValue = round(1 - pchisq(lRatioTestStatistic, restrictions), 4)
     }else{
