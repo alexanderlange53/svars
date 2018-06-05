@@ -82,7 +82,6 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
     Z_t <- Z
   }
 
-
     best_estimation <- iterative_smooth_transition(transition = G_grid, u_t = u_t, y = y, Tob = Tob, k = k,
                                                    p = p, crit = crit, max.iter = max.iter, Z_t = Z_t, y_loop = y_loop,
                                                    restriction_matrix = restriction_matrix)
@@ -97,9 +96,6 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
   }else{
     restrictions <- 0
   }
-
-  # Testing the estimated SVAR for identification by means of wald statistic
-  wald <- wald.test(best_estimation$Lambda, best_estimation$Fish, restrictions)
 
   result <- list(
     Lambda = best_estimation$Lambda,        # estimated Lambda matrix (unconditional heteroscedasticity)
