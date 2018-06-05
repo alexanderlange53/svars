@@ -148,8 +148,8 @@ wild.boot <- function(x, rademacher = TRUE, horizon, nboot, nc = 1, dd = NULL, s
     }else if(x$method == "Distance covariances"){
       temp <- id.dc(varb, PIT=x$PIT)
     }else{
-      temp <- id.st(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,
-                    gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01)
+      temp <- id.st_boot(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,
+                    gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01, Z = Z)
     }
 
     if(!is.null(temp)){
