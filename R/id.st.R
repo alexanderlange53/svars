@@ -120,19 +120,6 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     stop("Object class is not supported")
   }
 
-
-  # Function for Z matrix
-  y_lag_cr <- function(y, lag_length){
-    # create matrix that stores the lags
-    y_lag <- matrix(NA, dim(y)[1], dim(y)[2]*lag_length)
-    for (i in 1:lag_length) {
-      y_lag[(1 + i):dim(y)[1], ((i*ncol(y) - ncol(y)) + 1):(i * ncol(y))] <- y[1:(dim(y)[1] - i), (1:ncol(y))]
-    }
-    # drop first observation
-    y_lag <- as.matrix(y_lag[-(1:lag_length),])
-    out <- list(lags = y_lag)
-  }
-
   # Transition function
   transition_f <- function(gamma, cc, st){
     G <- (1 + exp(-exp(gamma)*(st - cc)))^(-1)
