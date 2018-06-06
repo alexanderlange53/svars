@@ -4,7 +4,7 @@
 \alias{chow.test}
 \title{Chow Test for Structural Break}
 \usage{
-chow.test(Y, SB, p, nboot = 500, rademacher = "FALSE", start = NULL,
+chow.test(Y, SB, p, nboot = 500, rademacher = FALSE, start = NULL,
   end = NULL, frequency = NULL, format = NULL, dateVector = NULL)
 }
 \arguments{
@@ -66,6 +66,6 @@ summary(z4)
 }
 }
 \references{
-Luetkepohl, H., 2005. New introduction to multiple time series analysis, Springer-Verlag, Berlin.
+Luetkepohl, H., 2005. New introduction to multiple time series analysis, Springer-Verlag, Berlin.\cr
      Luetkepohl, H., Kraetzig, M., 2004. Applied time series econometrics, Cambridge University Press, Cambridge.
 }

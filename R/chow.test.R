@@ -23,7 +23,7 @@
 #' \item{testcrit_sp}{Critical value of the test statistic lambda_sp}
 #' \item{p.value_sp}{p-value of the test statistic lambda_sp}
 #'
-#' @references Luetkepohl, H., 2005. New introduction to multiple time series analysis, Springer-Verlag, Berlin.
+#' @references Luetkepohl, H., 2005. New introduction to multiple time series analysis, Springer-Verlag, Berlin.\cr
 #'      Luetkepohl, H., Kraetzig, M., 2004. Applied time series econometrics, Cambridge University Press, Cambridge.
 #'@examples
 #' \donttest{
@@ -63,7 +63,7 @@
 # nboot : number of bootstrap iterations
 # lags  : maximum lag order
 
-chow.test <- function(Y, SB, p, nboot = 500, rademacher="FALSE",start = NULL, end = NULL,
+chow.test <- function(Y, SB, p, nboot = 500, rademacher= FALSE ,start = NULL, end = NULL,
                       frequency = NULL, format = NULL, dateVector = NULL){
   # Null hypothesis of no sample split is rejected for large values of lambda
   Tob <- nrow(Y) - p
