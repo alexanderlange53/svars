@@ -65,27 +65,18 @@ id.dc <- function(x, PIT=FALSE){
 
   if(inherits(x, "var.boot")){
     p <- x$p
-    if(inherits(x$y, "ts" )){
-      yts = x$y
-    }
     y <- x$y
     yOut = x$y
     type = x$type
     coef_x = x$coef_x
   }else  if(inherits(x, "varest")){
     p <- x$p
-    if(inherits(x$y, "ts" )){
-      yts = x$y
-    }
     y <- t(x$y)
     yOut = x$y
     type = x$type
     coef_x = coef(x)
   }else if(inherits(x, "nlVar")){
     p <- x$lag
-    if(inherits(x$model[, 1:k], "ts" )){
-      yts = x$y
-    }
     y <- t(x$model[, 1:k])
     yOut <- x$model[, 1:k]
     coef_x <- t(coef(x))
@@ -193,19 +184,14 @@ id.dc <- function(x, PIT=FALSE){
     }
   }
 
-
   result <- list(B = P,       # estimated B matrix (unique decomposition of the covariance matrix)
               A_hat = A_hat,  # estimated VAR parameter
               method =        "Distance covariances",
               n = Tob,        # number of observations
               type = type,    # type of the VAR model e.g 'const'
-              if(!is.null(yts)){
-                y = yts
-                }else{
-                  y = t(y)
-                  },        # Data
-              p = unname(p),        # number of lags
-              K = k,         # number of time series
+              y = yOut,       # Data
+              p = unname(p),  # number of lags
+              K = k,          # number of time series
               PIT=PIT
               )
   class(result) <- "svars"
