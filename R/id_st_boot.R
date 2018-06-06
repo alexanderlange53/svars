@@ -80,6 +80,7 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
     }
   }else{
     Z_t <- Z
+    y_loop <- y
   }
 
     best_estimation <- iterative_smooth_transition(transition = G_grid, u_t = u_t, y = y, Tob = Tob, k = k,
