@@ -12,10 +12,11 @@ Based on an existing VAR model object (provided by e.g. VAR() from the 'vars' pa
 
 The cornerstone functions identify the structural errors
 
--   `id.cv()` by means of changes in volatility wit exogenous break.
+-   `id.cv()` by means of changes in volatility with exogenous break.
 -   `id.cvm()` via least dependent innovations based on Cramer-von Mises statistic.
 -   `id.dc()` via least dependent innovations based on distance covariance matrix.
 -   `id.ngml()` by means of non-Gaussian maximum likelihood.
+-   `id.st()` by means of smooth transition in covariance.
 
 These functions return an estimated svars object with identified structural shocks and decomposition of the covariance matrix of the reduced form errors. Additionally, the package contains various tools for SVAR analysis.  
 
