@@ -7,11 +7,13 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
     Tob <- nrow(u_t)
     k <- ncol(u_t)
     residY <- u_t
+    yOut <- x$y
   }else{
     u_t <- residuals(x)
     Tob <- nrow(u_t)
     k <- ncol(u_t)
     residY <- u_t
+    yOut <- x$y
   }
 
   if(inherits(x, "var.boot")){
@@ -19,9 +21,11 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
     y <- t(x$y)
     type = x$type
     coef_x = x$coef_x
+    yOut <- x$y
   }else if(inherits(x, "varest")){
     p <- x$p
     y <- t(x$y)
+    yOut <- x$y
   }else if(inherits(x, "nlVar")){
     if(inherits(x, "VECM")){
       stop("id.cv is not available for VECMs")
