@@ -16,7 +16,7 @@ identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restric
   S <- c(B, Lambda)
 
   # optimize the likelihood function
-  MLE <- nlm(f = LH, p = S, k = k, TB = TB, Sigma_hat1 = Sigma_hat1,
+  MLE <- nlm(f = likelihood_cv, p = S, k = k, TB = TB, Sigma_hat1 = Sigma_hat1,
              Sigma_hat2 = Sigma_hat2, Tob = Tob, hessian = T, restriction_matrix = restriction_matrix,
              restrictions = restrictions, iterlim = 150)
 
@@ -135,7 +135,7 @@ identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restric
     S <- c(B, Lambda)
 
     #optimize the likelihood function
-    MLEgls <- nlm(f = LH, p = S, k = k, TB = TB, Sigma_hat1 = Sigma_hat1gls,
+    MLEgls <- nlm(f = likelihood_cv, p = S, k = k, TB = TB, Sigma_hat1 = Sigma_hat1gls,
                   Sigma_hat2 = Sigma_hat2gls, Tob = Tob, hessian = T, restriction_matrix = restriction_matrix,
                   restrictions = restrictions, iterlim = 150)
 
