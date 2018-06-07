@@ -12,30 +12,30 @@ id.st(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL,
 \arguments{
 \item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object}
 
-\item{c_lower}{Starting point for the algorithm to start searching for the volatility shift.
+\item{c_lower}{Integer. Starting point for the algorithm to start searching for the volatility shift.
 Default is 0.3*(Total number of observations)}
 
-\item{c_upper}{Ending point for the algorithm to stop searching for the volatility shift.
+\item{c_upper}{Integer. Ending point for the algorithm to stop searching for the volatility shift.
 Default is 0.7*(Total number of observations)}
 
-\item{c_step}{Step width of c. Default is 5}
+\item{c_step}{Integer. Step width of c. Default is 5}
 
-\item{c_fix}{If the transition point is known, it can be passed as an argument
+\item{c_fix}{Integer. If the transition point is known, it can be passed as an argument
 where transition point = Number of observations - c_fix}
 
 \item{transition_variable}{A numeric vector that represents the transition variable. By default (NULL), the time is used
 as transition variable. Note that c_lower,c_upper, c_step and/or c_fix have to be adjusted
 to the specified transition variable}
 
-\item{gamma_lower}{Lower bound for gamma. Small values indicate a flat transition function. Default is -3}
+\item{gamma_lower}{Integer. Lower bound for gamma. Small values indicate a flat transition function. Default is -3}
 
-\item{gamma_upper}{Upper bound for gamma. Large values indicate a steep transition function. Default is 2}
+\item{gamma_upper}{Integer. Upper bound for gamma. Large values indicate a steep transition function. Default is 2}
 
-\item{gamma_step}{Step width of gamma. Default is 0.5}
+\item{gamma_step}{Integer. Step width of gamma. Default is 0.5}
 
-\item{gamma_fix}{A fixed value for gamma, alternative to gamma found by the function}
+\item{gamma_fix}{Integer. A fixed value for gamma, alternative to gamma found by the function}
 
-\item{nc}{Number of processor cores (not available on windows machines)
+\item{nc}{Integer. Number of processor cores
 Note that the smooth transition model is computationally extremely demanding.}
 
 \item{max.iter}{Integer. Number of maximum GLS iterations}
