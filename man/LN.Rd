@@ -6,7 +6,7 @@
 
 \title{Interaction between monetary policy and the stock market}
 
-\description{All time series, whith exception of the commodity price index (c), are taken from the FRED database and transformed as in Luetkepohl & Netsunajev (2017). The commodity price index comes from the World Bank. The five dimensional series model is commonly used to analyze the interaction between monetary policy and the stock amrket.
+\description{A five dimensional time series model which is commonly used to analyze the interaction between monetary policy and the stock market.
   \cr
   Monthly observations from 1970M1 to 2007M6:
   \tabular{ll}{
@@ -17,7 +17,7 @@
     to measure the real stock prices; the series is first differenced to represent monthly returns \cr
     r \tab Interest rate on Federal funds \cr
   }
-A more detailed description of the data and a corresponding VAR model implementation can be found in Luetkepohl & Netsunajev (2017).
+All series, whith exception of the commodity price index (c), are taken from the FRED database and transformed as in Luetkepohl & Netsunajev (2017). The commodity price index comes from the World Bank. A more detailed description of the data and a corresponding VAR model implementation can be found in Luetkepohl & Netsunajev (2017).
 }
 
 \usage{LN}

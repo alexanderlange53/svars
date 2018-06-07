@@ -12,7 +12,7 @@
 #' \item{test_statistic}{Test statistic}
 #' \item{p_value}{P-value}
 #'
-#' @references Herwartz, H., 2017. Hodges Lehmann detection of structural shocks -
+#' @references Herwartz, H., 2018. Hodges Lehmann detection of structural shocks -
 #'        An analysis of macroeconomic dynamics in the Euro Area, Oxford Bulletin of Economics and Statistics
 #'@examples
 #' \donttest{

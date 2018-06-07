@@ -12,7 +12,7 @@ fev(x, horizon = 10)
 \item{horizon}{Time horizon for forecast error variance decomposition}
 }
 \description{
-Calculation of forecast error variance decomposition for an identified SVAR object 'svars' derived by function id.cvm( ),id.cv( ),id.dc( ) or id.ngml( ).
+Calculation of forecast error variance decomposition for an identified SVAR object 'svars' derived by function id.st( ), id.cvm( ),id.cv( ),id.dc( ) or id.ngml( ).
 }
 \examples{
 \donttest{
@@ -25,7 +25,4 @@ plot(x2)
 }
 \references{
 Kilian, L., Luetkepohl, H., 2017. Structural Vector Autoregressive Analysis, Cambridge University Press.
-}
-\seealso{
-\code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}
 }

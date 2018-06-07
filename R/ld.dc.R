@@ -14,7 +14,7 @@
 #' \item{n}{Number of observations}
 #' \item{type}{Type of the VAR model, e.g. 'const'}
 #'
-#' @seealso For alternative identification approaches see \code{\link{id.cvm}}, \code{\link{id.cv}} or \code{\link{id.ngml}}
+#' @seealso For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.cvm}}, \code{\link{id.cv}} or \code{\link{id.ngml}}
 #'
 #'@references Matteson, D. S. & Tsay, R. S., 2013. Independent Component Analysis via Distance Covariance, pre-print\cr
 #'      Szekely, G. J.; Rizzo, M. L. & Bakirov, N. K., 2007. Measuring and testing dependence by correlation of distances Ann. Statist., 35, 2769-2794\cr

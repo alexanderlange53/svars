@@ -63,11 +63,11 @@ plot(i1, scales = 'free_y')
 
 }
 \references{
-Herwartz, H., 2015. Structural VAR modelling with independent innovations - An analysis of macroeconomic dynamics in the euro area based on a novel identification scheme\cr
+Herwartz, H., 2018. Hodges Lehmann detection of structural shocks - An Analysis of macroeconomic dynamics in the Euro Area, Oxford Bulletin of Economics and Statistics\cr
  Herwartz, H. & Ploedt, M., 2016. The macroeconomic effects of oil price shocks: Evidence from a statistical identification approach, Journal of International Money and Finance, 61, 30-44\cr
  Comon, P., 1994. Independent component analysis, A new concept?, Signal Processing, 36, 287-314\cr
  Genest, C. & Remillard, B., 2004. Tests of independence and randomness based on the empirical copula process, Test, 13, 335-370\cr
 }
 \seealso{
-For alternative identification approaches see \code{\link{id.cv}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
+For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.cv}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
 }

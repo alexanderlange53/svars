@@ -12,31 +12,31 @@ id.st(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL,
 \arguments{
 \item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object}
 
-\item{c_lower}{Starting point where the algorithm starts to search for the volatility shift.
-Defalt is 0.3*(Total number of observations)}
+\item{c_lower}{Starting point for the algorithm to start searching for the volatility shift.
+Default is 0.3*(Total number of observations)}
 
-\item{c_upper}{Ending point where the algorithm stops to search for the volatility shift.
-Defalt is 0.7*(Total number of observations)}
+\item{c_upper}{Ending point for the algorithm to stop searching for the volatility shift.
+Default is 0.7*(Total number of observations)}
 
-\item{c_step}{Step width of c, default is 5.}
+\item{c_step}{Step width of c. Default is 5}
 
-\item{c_fix}{If the transition point is known, it can be passed as argument,
-where transition point = Numberof observations - c_fix}
+\item{c_fix}{If the transition point is known, it can be passed as an argument
+where transition point = Number of observations - c_fix}
 
-\item{transition_variable}{A numeric vector that represents the transition variable. By default NULL, the time is used
+\item{transition_variable}{A numeric vector that represents the transition variable. By default (NULL), the time is used
 as transition variable. Note that c_lower,c_upper, c_step and/or c_fix have to be adjusted
-to the specified transition variable.}
+to the specified transition variable}
 
 \item{gamma_lower}{Lower bound for gamma. Small values indicate a flat transition function. Default is -3}
 
 \item{gamma_upper}{Upper bound for gamma. Large values indicate a steep transition function. Default is 2}
 
-\item{gamma_step}{Step width of gamma, default is 0.5}
+\item{gamma_step}{Step width of gamma. Default is 0.5}
 
-\item{gamma_fix}{A fixed parameter for gamma, instead of letting the function search for gamma.}
+\item{gamma_fix}{A fixed value for gamma, alternative to gamma found by the function}
 
-\item{nc}{Number of processor cores (Not available on windows machines).
-Note the smooth transition model is computationally extremely demanding.}
+\item{nc}{Number of processor cores (not available on windows machines)
+Note that the smooth transition model is computationally extremely demanding.}
 
 \item{max.iter}{Integer. Number of maximum GLS iterations}
 
@@ -44,7 +44,7 @@ Note the smooth transition model is computationally extremely demanding.}
 
 \item{restriction_matrix}{Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)}
 
-\item{lr_test}{Logical. Indictaes wthether the restricted model should be tested against the unrestricted model via a likelihood ratio test.}
+\item{lr_test}{Logical. Indictaes wthether the restricted model should be tested against the unrestricted model via a likelihood ratio test}
 }
 \value{
 A list of class "svars" with elements
@@ -62,8 +62,7 @@ A list of class "svars" with elements
 \item{SBcharacter}{Structural break (date; if provided in function arguments)}
 }
 \description{
-Given an estimated VAR model, this function identifies the structural impact matrix B of the corresponding SVAR model
-by means of smooth transition
+Given an estimated VAR model, this function uses a smooth transition in the covariance to identify the structural impact matrix B of the corresponding SVAR model
 \deqn{y_t=c_t+A_1 y_{t-1}+...+A_p y_{t-p}+u_t
 =c_t+A_1 y_{t-1}+...+A_p y_{t-p}+B \epsilon_t.}
 Matrix B corresponds to the decomposition of the pre-break covariance matrix \eqn{\Sigma_1=B B'}.

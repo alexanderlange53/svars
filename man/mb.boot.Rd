@@ -66,6 +66,3 @@ Brueggemann, R., Jentsch, C., and Trenkler, C. (2016). Inference in VARs with co
   Herwartz, H., 2017. Hodges Lehmann detection of structural shocks -
        An analysis of macroeconomic dynamics in the Euro Area, Oxford Bulletin of Economics and Statistics
 }
-\seealso{
-\code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}
-}

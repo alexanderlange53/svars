@@ -52,5 +52,5 @@ Matteson, D. S. & Tsay, R. S., 2013. Independent Component Analysis via Distance
      Comon, P., 1994. Independent component analysis, A new concept?, Signal Processing, 36, 287-314
 }
 \seealso{
-For alternative identification approaches see \code{\link{id.cvm}}, \code{\link{id.cv}} or \code{\link{id.ngml}}
+For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.cvm}}, \code{\link{id.cv}} or \code{\link{id.ngml}}
 }

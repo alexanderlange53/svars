@@ -5,7 +5,7 @@
 #' @param x SVAR object of class "svars"
 #' @param horizon Time horizon for the impulse responses
 #'
-#' @seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}
+#' @seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}}, \code{\link{id.cv} or \code{\link{id.st}}
 #'
 #' @examples
 #' \donttest{

@@ -19,9 +19,12 @@
   \tabular{ll}{
     \code{id.cvm} \tab Independence-based identification of SVAR models based on Cramer-von Mises distance.
   }
+  \tabular{ll}{
+    \code{id.st} \tab Identification by means of smooth transition in covariance.
+  }
 
   All of these functions require an estimated var object. Currently the classes 'vars' and 'vec2var' from the \code{vars} package,     'nlVar', which includes both VAR and VECM, from the \code{tsDyn} package as well as the list from \code{MTS} package are supported.
-  Besides these core functions, some additional tools to calculate confidence bands for impulse response functions using
+  Besides these core functions, additional tools to calculate confidence bands for impulse response functions using
   bootstrap techniques as well as the Chow-Test for structural change are implemented. The \code{USA} dataset is used to showcase the
   functionalties in examples throughout the package.
 }
@@ -30,7 +33,7 @@
       \item Alexander Lange \email{alexander.lange@uni-goettingen.de}
       \item Bernhard Dalheimer \email{bernhard.dalheimer@uni-goettingen.de}
       \item Helmut Herwartz \email{hherwartz@uni-goettingen.de}
-      \item Simone Maxand   \email{smaxand@uni-goettingen.de}
+      \item Simone Maxand   \email{simone.maxand@helsinki.fi}
 
     }
     }

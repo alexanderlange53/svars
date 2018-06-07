@@ -1,33 +1,32 @@
 #' Identification of SVAR models by means of a smooth transition of volatility
 #'
-#' Given an estimated VAR model, this function identifies the structural impact matrix B of the corresponding SVAR model
-#' by means of smooth transition
+#' Given an estimated VAR model, this function uses a smooth transition in the covariance to identify the structural impact matrix B of the corresponding SVAR model
 #' \deqn{y_t=c_t+A_1 y_{t-1}+...+A_p y_{t-p}+u_t
 #' =c_t+A_1 y_{t-1}+...+A_p y_{t-p}+B \epsilon_t.}
 #' Matrix B corresponds to the decomposition of the pre-break covariance matrix \eqn{\Sigma_1=B B'}.
 #' The post-break covariance corresponds to \eqn{\Sigma_2=B\Lambda B'} where \eqn{\Lambda} is the estimated heteroskedasticity matrix.
 #'
 #' @param x An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object
-#' @param nc Number of processor cores (Not available on windows machines).
-#'           Note the smooth transition model is computationally extremely demanding.
-#' @param c_lower Starting point where the algorithm starts to search for the volatility shift.
-#'                Defalt is 0.3*(Total number of observations)
-#' @param c_upper Ending point where the algorithm stops to search for the volatility shift.
-#'                Defalt is 0.7*(Total number of observations)
-#' @param c_step Step width of c, default is 5.
-#' @param c_fix If the transition point is known, it can be passed as argument,
-#'              where transition point = Numberof observations - c_fix
-#' @param transition_variable A numeric vector that represents the transition variable. By default NULL, the time is used
+#' @param nc Number of processor cores (not available on windows machines)
+#'           Note that the smooth transition model is computationally extremely demanding.
+#' @param c_lower Starting point for the algorithm to start searching for the volatility shift.
+#'                Default is 0.3*(Total number of observations)
+#' @param c_upper Ending point for the algorithm to stop searching for the volatility shift.
+#'                Default is 0.7*(Total number of observations)
+#' @param c_step Step width of c. Default is 5
+#' @param c_fix If the transition point is known, it can be passed as an argument
+#'              where transition point = Number of observations - c_fix
+#' @param transition_variable A numeric vector that represents the transition variable. By default (NULL), the time is used
 #'                           as transition variable. Note that c_lower,c_upper, c_step and/or c_fix have to be adjusted
-#'                           to the specified transition variable.
+#'                           to the specified transition variable
 #' @param gamma_lower Lower bound for gamma. Small values indicate a flat transition function. Default is -3
 #' @param gamma_upper Upper bound for gamma. Large values indicate a steep transition function. Default is 2
-#' @param gamma_step Step width of gamma, default is 0.5
-#' @param gamma_fix A fixed parameter for gamma, instead of letting the function search for gamma.
+#' @param gamma_step Step width of gamma. Default is 0.5
+#' @param gamma_fix A fixed value for gamma, alternative to gamma found by the function
 #' @param max.iter Integer. Number of maximum GLS iterations
 #' @param crit Integer. Critical value for the precision of the GLS estimation
 #' @param restriction_matrix Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)
-#' @param lr_test Logical. Indictaes wthether the restricted model should be tested against the unrestricted model via a likelihood ratio test.
+#' @param lr_test Logical. Indictaes wthether the restricted model should be tested against the unrestricted model via a likelihood ratio test
 #' @return A list of class "svars" with elements
 #' \item{Lambda}{Estimated heteroscedasticity matrix \eqn{\Lambda}}
 #' \item{Lambda_SE}{Matrix of standard errors of Lambda}
