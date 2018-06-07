@@ -15,7 +15,7 @@ id.dc(x, PIT = FALSE)
 A list of class "svars" with elements
 \item{B}{Estimated structural impact matrix B, i.e. unique decomposition of the covariance matrix of reduced form errors}
 \item{A_hat}{Estimated VAR parameter}
-\item{method}{Method applied for identifaction}
+\item{method}{Method applied for identification}
 \item{n}{Number of observations}
 \item{type}{Type of the VAR model, e.g. 'const'}
 }

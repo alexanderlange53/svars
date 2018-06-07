@@ -44,7 +44,7 @@ Note that the smooth transition model is computationally extremely demanding.}
 
 \item{restriction_matrix}{Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)}
 
-\item{lr_test}{Logical. Indictaes wthether the restricted model should be tested against the unrestricted model via a likelihood ratio test}
+\item{lr_test}{Logical. Indicates whether the restricted model should be tested against the unrestricted model via a likelihood ratio test}
 }
 \value{
 A list of class "svars" with elements

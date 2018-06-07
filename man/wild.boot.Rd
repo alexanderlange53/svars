@@ -33,7 +33,7 @@ with the help of the bootstrap samples.}
 \value{
 A list of class "sboot" with elements
 \item{boot_mean}{Mean of bootstrapped covariance decompositions}
-\item{sign_complete}{Frequency of appearance of the complete sign pattern in all bootstrapped covaraince decompositions}
+\item{sign_complete}{Frequency of appearance of the complete sign pattern in all bootstrapped covariance decompositions}
 \item{sign_part}{Frequency of bootstrapped covariance decompositions which conform the complete predetermined sign pattern. If signrest=NULL,
  the frequency of bootstrapped covariance decompositions that hold the same sign pattern as the point estimate is provided.}
 \item{sign_part}{Frequency of single shocks in all bootstrapped covariance decompositions which accord to a specific predetermined sign pattern

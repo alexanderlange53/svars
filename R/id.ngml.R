@@ -18,7 +18,7 @@
 #' \item{B_stand}{Estimated standardized structural impact matrix}
 #' \item{B_stand_SE}{Standard errors of standardized matrix B_stand}
 #' \item{Lik}{Function value of likelihood}
-#' \item{method}{Method applied for identifaction}
+#' \item{method}{Method applied for identification}
 #' \item{n}{Number of observations}
 #' \item{type}{Type of the VAR model, e.g. 'const'}
 #'

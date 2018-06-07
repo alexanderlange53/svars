@@ -17,7 +17,7 @@
     to measure the real stock prices; the series is first differenced to represent monthly returns \cr
     r \tab Interest rate on Federal funds \cr
   }
-All series, whith exception of the commodity price index (c), are taken from the FRED database and transformed as in Luetkepohl & Netsunajev (2017). The commodity price index comes from the World Bank. A more detailed description of the data and a corresponding VAR model implementation can be found in Luetkepohl & Netsunajev (2017).
+All series, with exception of the commodity price index (c), are taken from the FRED database and transformed as in Luetkepohl & Netsunajev (2017). The commodity price index comes from the World Bank. A more detailed description of the data and a corresponding VAR model implementation can be found in Luetkepohl & Netsunajev (2017).
 }
 
 \usage{LN}

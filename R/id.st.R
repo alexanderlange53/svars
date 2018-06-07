@@ -26,7 +26,7 @@
 #' @param max.iter Integer. Number of maximum GLS iterations
 #' @param crit Integer. Critical value for the precision of the GLS estimation
 #' @param restriction_matrix Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)
-#' @param lr_test Logical. Indictaes wthether the restricted model should be tested against the unrestricted model via a likelihood ratio test
+#' @param lr_test Logical. Indicates whether the restricted model should be tested against the unrestricted model via a likelihood ratio test
 #' @return A list of class "svars" with elements
 #' \item{Lambda}{Estimated heteroscedasticity matrix \eqn{\Lambda}}
 #' \item{Lambda_SE}{Matrix of standard errors of Lambda}
