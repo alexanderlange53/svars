@@ -13,9 +13,9 @@ test_that("Likelihood function within ngml, stage2 works for 3x3", {
   il1[9,9] <- 1
   rows1 = c(1,5,9)
   likelihood_result = likelihood_ngml_stage2(theta = theta1,
-                                    u = u1,
-                                    il = il1,
-                                    rows = rows1)
+                                    u = u1, k = k1,
+                                    il = il1, restrictions = 0,
+                                    rows = rows1, restriction_matrix = NULL)
   expect_equal(round(likelihood_result, 3), 1612.772)
 })
 
@@ -31,9 +31,9 @@ test_that("Likelihood function within ngml, stage2 works for 2x2", {
   il2[4,4] <- 1
   rows2 = c(1,4)
   likelihood_result = likelihood_ngml_stage2(theta = theta2,
-                                             u = u2,
-                                             il = il2,
-                                             rows = rows2)
+                                             u = u2, k = k2,
+                                             il = il2, restrictions = 0,
+                                             rows = rows2, restriction_matrix = NULL)
   expect_equal(round(likelihood_result, 4), 508.5066)
 })
 
@@ -52,9 +52,9 @@ test_that("Likelihood function within ngml, stage2 works for 2x2", {
       il3[25,25] <- 1
       rows3 = c(1, 7, 13, 19, 25)
       likelihood_result = likelihood_ngml_stage2(theta = theta3,
-                                                 u = u3,
-                                                 il = il3,
-                                                 rows = rows3)
+                                                 u = u3, k = k3,
+                                                 il = il3, restrictions = 0,
+                                                 rows = rows3, restriction_matrix = NULL)
       expect_equal(round(likelihood_result, 1), 1596.8)
     })
 

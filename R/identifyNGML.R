@@ -1,4 +1,4 @@
-identifyNGML <- function(x, coef_x, Sigma_hat, u, k, p, Tob, yOut, type, il, rows,
+identifyNGML <- function(x, coef_x, Sigma_hat, u, k, p, Tob, yOut, type, il, rows, y,
                          restriction_matrix, restrictions, stage3 = F, naElements = NULL){
   # choleski decomposition of sigma_u
   B_l <- t(chol(Sigma_hat))

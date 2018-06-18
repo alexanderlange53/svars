@@ -137,9 +137,9 @@ id.ngml <- function(x, stage3 = FALSE, restriction_matrix = NULL){
 
   if(!is.null(restriction_matrix)){
     resultUnrestricted <- identifyNGML(x = x, coef_x = coef_x, Sigma_hat = Sigma_hat, u = u, k = k, p = p, Tob = Tob, yOut = yOut, type = type, il = il,
-                                       rows = rows, stage3 = stage3, restriction_matrix = NULL, restrictions = 0)
+                                       rows = rows, stage3 = stage3, restriction_matrix = NULL, restrictions = 0, y = y)
     result <- identifyNGML(x = x, coef_x = coef_x, Sigma_hat = Sigma_hat, u = u, k = k, p = p, Tob = Tob, yOut = yOut, type = type, il = il,
-                           rows = rows, stage3 = stage3, restriction_matrix = restriction_matrix, restrictions = restrictions)
+                           rows = rows, stage3 = stage3, restriction_matrix = restriction_matrix, restrictions = restrictions, y = y)
 
     lRatioTestStatistic = 2 * (resultUnrestricted$Lik - result$Lik)
     pValue = round(1 - pchisq(lRatioTestStatistic, result$restrictions), 4)
@@ -149,7 +149,7 @@ id.ngml <- function(x, stage3 = FALSE, restriction_matrix = NULL){
   }else{
     restriction_matrix <- NULL
     result <- identifyNGML(x = x, coef_x = coef_x, Sigma_hat = Sigma_hat, u = u, k = k, p = p, Tob = Tob, yOut = yOut, type = type, il = il,
-                           rows = rows, stage3 = stage3, restriction_matrix = restriction_matrix, restrictions = restrictions)
+                           rows = rows, stage3 = stage3, restriction_matrix = restriction_matrix, restrictions = restrictions, y = y)
   }
   class(result) <- "svars"
   return(result)
