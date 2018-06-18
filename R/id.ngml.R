@@ -7,6 +7,7 @@
 #'
 #' @param x An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object
 #' @param stage3 Logical. If stage3="TRUE", the VAR parameters are estimated via non-gaussian maximum likelihood (computationally demanding)
+#' @param restriction_matrix Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)
 #' @return A list of class "svars" with elements
 #' \item{B}{Estimated structural impact matrix B, i.e. unique decomposition of the covariance matrix of reduced form errors}
 #' \item{sigma}{Estimated scale of the standardized matrix B_stand, i.e. \eqn{B=B_stand*diag(\sigma_1,...,\sigma_K)}}
@@ -54,18 +55,8 @@
 ## Identification via non-Gaussian maximum likelihood ##
 #------------------------------------------------------#
 
-id.ngml <- function(x, stage3 = FALSE){
+id.ngml <- function(x, stage3 = FALSE, restriction_matrix = NULL){
 
-
-  # likelihood function to optimize
-
-
-  ########### starting the computations ------------------------------------------------------------------------
-
-
-  # if(is.null(residuals(x))){
-  #   stop("No residuals retrieved from model")
-  # }
   if(inherits(x, "var.boot")){
     u <- x$residuals
     Tob <- nrow(u)
@@ -144,197 +135,22 @@ id.ngml <- function(x, stage3 = FALSE){
   # calculating the covariance matrix
   Sigma_hat <- crossprod(residY)/(Tob-1-k*p)
 
-  # choleski decomposition of sigma_u
-  B_l <- t(chol(Sigma_hat))
-  # standardized choleski decomp
-  B_l_st <- B_l%*%solve(diag(diag(B_l)))
+  if(!is.null(restriction_matrix)){
+    resultUnrestricted <- identifyNGML(x = x, coef_x = coef_x, Sigma_hat = Sigma_hat, u = u, k = k, p = p, Tob = Tob, yOut = yOut, type = type, il = il,
+                                       rows = rows, stage3 = stage3, restriction_matrix = NULL, restrictions = 0)
+    result <- identifyNGML(x = x, coef_x = coef_x, Sigma_hat = Sigma_hat, u = u, k = k, p = p, Tob = Tob, yOut = yOut, type = type, il = il,
+                           rows = rows, stage3 = stage3, restriction_matrix = restriction_matrix, restrictions = restrictions)
 
-  # starting values
-  beta0 <- B_l_st[row(B_l)!=col(B_l)]
-  sigma0 <- rep(1,k)
-  lambda0 <- rep(5,k)
-  theta0 <- c(beta0,sigma0,lambda0)
+    lRatioTestStatistic = 2 * (resultUnrestricted$Lik - result$Lik)
+    pValue = round(1 - pchisq(lRatioTestStatistic, result$restrictions), 4)
 
-  # Creating selection matrix for likelihood
-  il <- matrix(0, k*k, k*k)
-  rows <- rep(0, k)
-  for(i in 1:k){
-    if(i == 1){
-      il[i,i] <- 1
-      rows[i] <- 1
-    }else{
-      il[(i+(k*(i-1))),(i+(k*(i-1)))] <- 1
-      rows[i] <- i+(k*(i-1))
-    }
-  }
-
-  # optimizing the likelihood function 2. stage
-  maxL <- nlm(p = theta0, f = likelihood_ngml_stage2, u = u, il = il, rows = rows,
-              hessian = TRUE)
-  beta_est <- maxL$estimate[1:(k*k-k)]
-
-  sigma_est <- maxL$estimate[(k*k-k+1):(k*k)]
-  B_stand_est <- diag(k)
-  B_stand_est[row(B_stand_est)!=col(B_stand_est)] <- beta_est
-  B_mle <- B_stand_est%*%diag(sigma_est)
-  d_freedom <- maxL$estimate[(k*k+1):(k*k+k)]
-  ll <- maxL$minimum
-
-  # obating standard errors from observed fisher information
-  HESS <- solve(maxL$hessian)
-  for(i in 1:nrow(HESS)){
-    if(HESS[i,i] < 0){
-      HESS[,i] <- -HESS[,i]
-    }
-  }
-  FishObs <- sqrt(diag(HESS))
-  B.SE <- matrix(0, k, k)
-  B.SE[row(B.SE)!=col(B.SE)] <- FishObs[1:(k*k-k)]
-  sigma_SE <- FishObs[(k*k-k+1):(k*k)]
-  d_SE <- FishObs[(k*k+1):(k*k+k)]
-
-  # getting variances and covariances for S.E. of non stand B
-  covariance <- HESS[1:(k*k-k),((k*k-k+1):(k*k))]
-  B.SE.2 <- diag(sigma_SE)
-
-
-  jj <- 0
-  for(i in 1:k){
-    for(j in 1:k){
-      if(i != j){
-        jj <- jj + 1
-        B.SE.2[j,i] <- sqrt(2*covariance[jj,i]^2 + (B.SE[j,i]^2 + B_stand_est[j,i]^2)*(sigma_SE[i]^2 + sigma_est[i]^2) -
-                              (covariance[jj, i] + B_stand_est[j,i] * sigma_est[i])^2)
-      }
-    }
-  }
-
-  # Estimating VAR parameter 3. stage
-  if(stage3 == TRUE){
-    #y <- t(x$y)
-    yl <- t(y_lag_cr(t(y), p)$lags)
-    y_return <- y
-
-    y <- y[,-c(1:p)]
-
-    A <- matrix(0, nrow = k, ncol = k*p)
-
-    for(i in 1:k){
-      A[i,] <- coef_x[[i]][1:(k*p),1]
-    }
-
-    if(type == "const"){
-      v <- rep(1, k)
-
-      for(i in 1:k){
-        v[i] <- coef_x[[i]][(k*p+1), 1]
-      }
-
-      A <- cbind(v, A)
-      Z_t <- rbind(rep(1, ncol(yl)), yl)
-    }else if (type == "trend"){
-      trend <- rep(1, k)
-
-      for(i in 1:k){
-        trend[i] <- coef_x[[i]][(k*p+1), 1]
-      }
-
-      A <- cbind(trend, A)
-      Z_t <- rbind(seq(1, ncol(yl)), yl)
-    }else if(type == "both"){
-      v <- rep(1, k)
-
-      for(i in 1:k){
-        v[i] <- coef_x[[i]][(k*p+1), 1]
-      }
-
-      trend <- rep(1, k)
-      Z_t <- rbind(rep(1, ncol(yl)), seq(1, ncol(yl)), yl)
-      for(i in 1:k){
-        trend[i] <- coef_x[[i]][(k*p+2), 1]
-      }
-
-      A <- cbind(v, trend, A)
-    }else{
-      Z_t <- yl
-    }
-
-    if(inherits(x, "var.boot")){
-      A <- coef_x
-    }
-
-    A <- c(A)
-    maxL2 <- nlm(p = A, f = likelihood_ngml_stage3, Z_t = Z_t, y = y, il = il,
-                 B_stand_est = B_stand_est, rows = rows, sigma_est = sigma_est,
-                 d_freedom = d_freedom, Tob = Tob, k=k, hessian = TRUE)
-
-    A_hat <- matrix(maxL2$estimate, nrow = k)
-    y <- y_return
+    result$lRatioTestStatistic = lRatioTestStatistic
+    result$lRatioTestPValue = pValue
   }else{
-    if(inherits(x, "var.boot")){
-      A_hat <- coef_x
-    }else{
-      A <- matrix(0, nrow = k, ncol = k*p)
-      for(i in 1:k){
-        A[i,] <- coef_x[[i]][1:(k*p),1]
-      }
-
-      A_hat <- A
-
-      if(type == "const"){
-        v <- rep(1, k)
-
-        for(i in 1:k){
-          v[i] <- coef_x[[i]][(k*p+1), 1]
-        }
-
-        A_hat <- cbind(v, A)
-      }else if (type == "trend"){
-        trend <- rep(1, k)
-
-        for(i in 1:k){
-          trend[i] <- coef_x[[i]][(k*p+1), 1]
-        }
-
-        A_hat <- cbind(trend, A)
-      }else if(type == "both"){
-        v <- rep(1, k)
-
-        for(i in 1:k){
-          v[i] <- coef_x[[i]][(k*p+1), 1]
-        }
-
-        trend <- rep(1, k)
-
-        for(i in 1:k){
-          trend[i] <- coef_x[[i]][(k*p+2), 1]
-        }
-
-        A_hat <- cbind(v, trend, A)
-      }
-    }
+    restriction_matrix <- NULL
+    result <- identifyNGML(x = x, coef_x = coef_x, Sigma_hat = Sigma_hat, u = u, k = k, p = p, Tob = Tob, yOut = yOut, type = type, il = il,
+                           rows = rows, stage3 = stage3, restriction_matrix = restriction_matrix, restrictions = restrictions)
   }
-
-
-  result <- list(B = B_mle,       # estimated B matrix (unique decomposition of the covariance matrix)
-                 B_SE = B.SE.2,          # standard errors
-                 sigma = sigma_est,      # estimated scale of the standardized B
-                 sigma_SE = sigma_SE,    # standard errors of the scale
-                 df = d_freedom,         # estimated degrees of freedom of the distribution
-                 df_SE = d_SE,           # standard errors of the degrees of freedom
-                 Fish = HESS,            # observed fisher information matrix
-                 A_hat = A_hat,          # estimated VAR parameter
-                 B_stand = B_stand_est,  # estimated standardized B matrix
-                 B_stand_SE = B.SE ,     # standard errors
-                 Lik = -ll,              # value of maximum likelihood
-                 method = "Non-Gaussian maximum likelihood",
-                 n = Tob,              # number of observations
-                 type = type,          # type of the VAR model e.g 'const'
-                 y = yOut,             # Data
-                 p = p,                # number of lags
-                 K = k,                # number of time series
-                 stage3 = stage3
-  )
   class(result) <- "svars"
   return(result)
 }
