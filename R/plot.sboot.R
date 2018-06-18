@@ -1,6 +1,6 @@
 #' @S3method plot sboot
 
-plot.sboot <- function(x, scales = "free_y", lowerq = 0.16, upperq = 0.84, ..., base){
+plot.sboot <- function(x, scales = "free_y", lowerq = 0.16, upperq = 0.84, percentile = 'standard', ..., base){
 
   impulse <- melt(x$true$irf, id = 'V1')
   confidence <- x$bootstrap
@@ -28,6 +28,10 @@ plot.sboot <- function(x, scales = "free_y", lowerq = 0.16, upperq = 0.84, ..., 
   }
   lower <- as.data.frame(lower)
   upper <- as.data.frame(upper)
+  if(percentile == 'hall'){
+    lower <- 2*x$true$irf - lower
+    upper <- 2*x$true$irf - upper
+  }
 
   lower <- melt(lower, id = 'V1')
   upper <- melt(upper, id = 'V1')
