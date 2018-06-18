@@ -1,18 +1,5 @@
-id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL){
+id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL, restriction_matrix = NULL){
 
-
-  # likelihood function to optimize
-  resid.ls <- function(Z_t, k, A){
-    term1 <- kronecker(t(Z_t), diag(k))%*%A
-    return(term1)
-  }
-
-  ########### starting the computations ------------------------------------------------------------------------
-
-
-  # if(is.null(residuals(x))){
-  #   stop("No residuals retrieved from model")
-  # }
   if(inherits(x, "var.boot")){
     u <- x$residuals
     Tob <- nrow(u)
@@ -93,7 +80,16 @@ id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL){
   B_l_st <- B_l%*%solve(diag(diag(B_l)))
 
   # starting values
-  beta0 <- B_l_st[row(B_l)!=col(B_l)]
+  if(!is.null(restriction_matrix)){
+    naElements <- is.na(restriction_matrix)
+    beta0 <- B_l_st[row(B_l)!=col(B_l)]
+    beta0 <- beta0[-(which(!is.na(restriction_matrix))-floor(which(!is.na(restriction_matrix))/k))]
+    restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
+    diag(naElements) <- FALSE
+  }else{
+    beta0 <- B_l_st[row(B_l)!=col(B_l)]
+    restrictions <- 0
+  }
   sigma0 <- rep(1,k)
   lambda0 <- rep(5,k)
   theta0 <- c(beta0,sigma0,lambda0)
@@ -111,16 +107,27 @@ id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL){
     }
   }
 
-  # optimizing the likelihood function 2. stage
-  maxL <- nlm(p = theta0, f = likelihood_ngml_stage2, u = u, il = il, rows = rows,
-              hessian = FALSE)
-  beta_est <- maxL$estimate[1:(k*k-k)]
+  # Creating matrix with off diagonal elemts
+  B_hat <- function(beta, k){
+    B_hat <- diag(k)
+    if(!is.null(restriction_matrix)){
+      B_hat[naElements] <- beta
+    }else{
+      B_hat[row(B_hat)!=col(B_hat)] <- beta
+    }
+    return(B_hat)
+  }
 
-  sigma_est <- maxL$estimate[(k*k-k+1):(k*k)]
-  B_stand_est <- diag(k)
-  B_stand_est[row(B_stand_est)!=col(B_stand_est)] <- beta_est
+  # optimizing the likelihood function 2. stage
+  maxL <- nlm(p = theta0, f = likelihood_ngml_stage2, u = u, k = k, il = il, rows = rows, restriction_matrix = restriction_matrix,
+              restrictions = restrictions,
+              hessian = FALSE)
+  beta_est <- maxL$estimate[1:(k*k-k-restrictions)]
+
+  sigma_est <- maxL$estimate[(k*k-k+1-restrictions):(k*k-restrictions)]
+  B_stand_est <- B_hat(beta_est, k)
   B_mle <- B_stand_est%*%diag(sigma_est)
-  d_freedom <- maxL$estimate[(k*k+1):(k*k+k)]
+  d_freedom <- maxL$estimate[(k*k+1-restrictions):(k*k+k-restrictions)]
   ll <- maxL$minimum
 
   # Estimating VAR parameter 3. stage
@@ -238,6 +245,7 @@ id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL){
                  type = type,            # type of the VAR model e.g 'const'
                  y = t(y),                # Data
                  p = p,                # number of lags
+                 restrictions = restrictions, # number of restrictions
                  K = k,                # number of time series
                  stage3 = stage3
   )

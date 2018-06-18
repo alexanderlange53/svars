@@ -139,7 +139,7 @@ wild.boot <- function(x, rademacher = TRUE, horizon, nboot, nc = 1, dd = NULL, s
     class(varb) <- 'var.boot'
 
     if(x$method == "Non-Gaussian maximum likelihood"){
-      temp <- id.ngml_boot(varb, stage3 = x$stage3, Z = Z)
+      temp <- id.ngml_boot(varb, stage3 = x$stage3, Z = Z, restriction_matrix = x$restriction_matrix)
     }else if(x$method == "Changes in Volatility"){
       temp <- tryCatch(id.cv_boot(varb, SB = x$SB, Z = Z, restriction_matrix = x$restriction_matrix),
                        error = function(e) NULL)

@@ -220,6 +220,7 @@ identifyNGML <- function(x, coef_x, Sigma_hat, u, k, p, Tob, yOut, type, il, row
                  p = p,                # number of lags
                  K = k,                # number of time series
                  restrictions = restrictions,
+                 restriction_matrix = restriction_matrix,
                  stage3 = stage3
   )
   return(result)
