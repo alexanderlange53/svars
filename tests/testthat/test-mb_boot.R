@@ -101,4 +101,24 @@ test_that("wild.boot returns valid object for id.ngml", {
   bbngml4 <- mb.boot(x1, b.length = 15, nboot = 5, horizon = 30, nc = 1, signrest = NULL)
   expect_length(bbngml4, 12)
   expect_equal(bbngml4$nboot, 5)
+
+  restmat <- matrix(NA, 3,3)
+  restmat[1,c(2,3)] <- 0
+  restmat[2,3] <- 0
+
+  x1 <- id.ngml(v1, stage3 = F, restriction_matrix = restmat)
+
+  bbngml5 <- mb.boot(x1, b.length = 15, nboot = 5, horizon = 30, nc = 1, signrest = NULL)
+  expect_length(bbngml5, 12)
+  expect_equal(bbngml5$nboot, 5)
+
+  restmat <- matrix(NA, 3,3)
+  restmat[1,c(2,3)] <- 0
+  restmat[2,3] <- 0
+
+  x1 <- id.ngml(v1, stage3 = T, restriction_matrix = restmat)
+
+  bbngml6 <- mb.boot(x1, b.length = 15, nboot = 5, horizon = 30, nc = 1, signrest = NULL)
+  expect_length(bbngml6, 12)
+  expect_equal(bbngml6$nboot, 5)
 })

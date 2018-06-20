@@ -58,18 +58,6 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, signres
     dd <- copula::indepTestSim(x$n, x$K, verbose=F)
   }
 
-  # function to create Z matrix
-  y_lag_cr <- function(y, lag_length){
-    # create matrix that stores the lags
-    y_lag <- matrix(NA, dim(y)[1],dim(y)[2]*lag_length)
-    for (i in 1:lag_length) {
-      y_lag[(1+i):dim(y)[1],((i*NCOL(y)-NCOL(y))+1):(i*NCOL(y))] <- y[1:(dim(y)[1]-i),(1:NCOL(y))]
-    }
-    # drop first observation
-    y_lag <- as.matrix(y_lag[-(1:lag_length),])
-    out <- list(lags = y_lag)
-  }
-
   sqrt.f <- function(Pstar, Sigma_u_star){
     yy <- suppressMessages(sqrtm(Sigma_u_hat_old))%*%solve(suppressMessages(sqrtm(Sigma_u_star)))%*%Pstar
     return(yy)
@@ -177,7 +165,7 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL, signres
     # class(varb) <- 'var.boot'
 
     if(x$method == "Non-Gaussian maximum likelihood"){
-      temp <- id.ngml_boot(varb, stage3 = x$stage3)
+      temp <- id.ngml_boot(varb, stage3 = x$stage3, restriction_matrix = x$restriction_matrix)
     }else if(x$method == "Changes in Volatility"){
       temp <- tryCatch(id.cv_boot(varb, SB = x$SB, restriction_matrix = x$restriction_matrix),
                        error = function(e) NULL)

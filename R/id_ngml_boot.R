@@ -182,9 +182,9 @@ id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL, restriction_matrix = NULL)
 
 
     A <- c(A)
-    maxL2 <- nlm(p = A, f = likelihood_ngml_stage3, Z_t = Z_t, y = y, il = il,
+    maxL2 <- suppressMessages(nlm(p = A, f = likelihood_ngml_stage3, Z_t = Z_t, y = y, il = il,
                  B_stand_est = B_stand_est, rows = rows, sigma_est = sigma_est,
-                 d_freedom = d_freedom, k=k, hessian = FALSE)
+                 d_freedom = d_freedom, k=k, hessian = FALSE))
 
     A_hat <- matrix(maxL2$estimate, nrow = k)
   }else{

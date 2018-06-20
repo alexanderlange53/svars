@@ -4,12 +4,14 @@
 \alias{id.ngml}
 \title{Non-Gaussian maximum likelihood identification of SVAR models}
 \usage{
-id.ngml(x, stage3 = FALSE)
+id.ngml(x, stage3 = FALSE, restriction_matrix = NULL)
 }
 \arguments{
 \item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object}
 
 \item{stage3}{Logical. If stage3="TRUE", the VAR parameters are estimated via non-gaussian maximum likelihood (computationally demanding)}
+
+\item{restriction_matrix}{Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)}
 }
 \value{
 A list of class "svars" with elements
