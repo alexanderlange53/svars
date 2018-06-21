@@ -135,7 +135,7 @@ id.dc <- function(x, PIT=FALSE){
 
   # minimize dCov with 'steadyICA'
   u_chol <- t(solve(P_chol)%*%t(u))
-  ICA <- steadyICA(u_chol, symmetric=TRUE, PIT=PIT)
+  ICA <- suppressMessages(steadyICA(u_chol, symmetric=TRUE, PIT=PIT))
 
   # structural matrix Sigma_u = BB'
   P <- P_chol%*%ICA$W

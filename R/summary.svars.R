@@ -90,6 +90,13 @@ summary.svars <- function(object, ...){
    cat(svarsObject$sigma)
    cat("\nStandard errors of the scale:          ")
    cat(svarsObject$sigma_SE)
+   if(svarsObject$restrictions > 0){
+     cat("\nLikelihood Ratio Test Statistic: ")
+     cat(svarsObject$lRatioTestStatistic)
+     cat(", p-value:")
+     cat(svarsObject$lRatioTestPValue)
+
+   }
 
  }else if(svarsObject$method == "Distance covariances"){
    cat("\n")

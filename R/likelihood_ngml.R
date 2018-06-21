@@ -1,36 +1,49 @@
 # likelihood functions for ngml procedure
 
-likelihood_ngml_stage2 <-function(theta, u, il, rows) {
+likelihood_ngml_stage2 <-function(theta, u, il, k, rows, restriction_matrix, restrictions) {
 
   Tob <- nrow(u)
-  K <- ncol(u)
-  beta <- theta[1:(K*(K-1))]
-  sigma <- theta[(K*(K-1)+1):K^2]
-  lambda <- theta[(K^2+1):length(theta)]
 
-  B_hat <- function(beta){
-    B_hat <- diag(K)
-    B_hat[row(B_hat)!=col(B_hat)] <- beta
+  if(!is.null(restriction_matrix)){
+    if(!is.matrix(restriction_matrix)){
+      stop("Please provide a valid input matrix")
+    }
+    naElements <- is.na(restriction_matrix)
+    diag(naElements) <- FALSE
+  }
+
+  # Creating matrix with off diagonal elemts
+  B_hat <- function(beta, k){
+    B_hat <- diag(k)
+    if(!is.null(restriction_matrix)){
+      B_hat[naElements] <- beta
+    }else{
+      B_hat[row(B_hat)!=col(B_hat)] <- beta
+    }
     return(B_hat)
   }
 
-  if(all(sigma >0) & det(B_hat(beta))>0 & all(lambda > 2)){
+  beta <- theta[1:(k*(k-1)-restrictions)]
+  sigma <- theta[(k*(k-1)+1-restrictions):(k^2-restrictions)]
+  lambda <- theta[(k^2+1-restrictions):length(theta)]
+
+  if(all(sigma > 0) & det(B_hat(beta, k)) > 0 & all(lambda > 2)){
 
     logl <- rep(0, Tob)
 
-    mid <- il %*% kronecker(diag(K), solve(B_hat(beta)))
+    mid <- il %*% kronecker(diag(k), solve(B_hat(beta, k)))
     midd <- mid[rows, ]
-    mid1 <- matrix(0, nrow = K, ncol = K)
-    for(i in 1:K){
+    mid1 <- matrix(0, nrow = k, ncol = k)
+    for(i in 1:k){
       if(i == 1){
-        mid1[1, 1:K] <- midd[1, 1:K]
+        mid1[1, 1:k] <- midd[1, 1:k]
       }else{
-        mid1[i, 1:K] <- midd[i, ((K+1+K*(i-2)):(i*K))]
+        mid1[i, 1:k] <- midd[i, ((k+1+k*(i-2)):(i*k))]
       }
     }
 
     l_t <- function(uu, sigma, lambda, mid1, beta){
-      l <-  sum(log(dt( ((sigma)^(-1))*sqrt(lambda/(lambda - 2)) * (mid1 %*% uu), lambda ))) - log(det(B_hat(beta))) - sum(log(sigma*sqrt((lambda - 2)/lambda)))
+      l <-  sum(log(dt( ((sigma)^(-1))*sqrt(lambda/(lambda - 2)) * (mid1 %*% uu), lambda ))) - log(det(B_hat(beta, k))) - sum(log(sigma*sqrt((lambda - 2)/lambda)))
       return(l)
     }
 
