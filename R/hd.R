@@ -70,11 +70,11 @@ hd <- function(x, series = 1){
 
   ## Step 1: Calculate MA coefficients
 
-  if(x$type == 'const'){
+  if(x$type == "const"){
     A_hat <- x$A_hat[,-1]
-  }else if(x$type == 'trend'){
+  }else if(x$type == "trend"){
     A_hat <- x$A_hat[,-1]
-  }else if(x$type == 'both'){
+  }else if(x$type == "both"){
     A_hat <- x$A_hat[,-c(1,2)]
   }else{
     A_hat <- x$A_hat
@@ -111,11 +111,11 @@ hd <- function(x, series = 1){
   A <- x$A_hat
   Z <- t(y_lag_cr(y, p)$lags)
 
-  if(x$type == 'const'){
+  if(x$type == "const"){
     Z <- rbind(rep(1, ncol(Z)), Z)
-  }else if(x$type == 'trend'){
+  }else if(x$type == "trend"){
     Z <- rbind(seq(1, ncol(Z)), Z)
-  }else if(x$type == 'both'){
+  }else if(x$type == "both"){
     Z <- rbind(rep(1, ncol(Z)), seq(1, ncol(Z)), Z)
   }else{
     Z <- Z
@@ -141,13 +141,13 @@ hd <- function(x, series = 1){
   colnames(yhat)[2] <- colnames(y)[series]
 
   for(i in 3:ncol(yhat)){
-    colnames(yhat)[i] <- paste('Cumulative effect of flow ', colnames(y)[i-2], 'shock on ', colnames(y)[series])
+    colnames(yhat)[i] <- paste("Cumulative effect of flow ", colnames(y)[i-2], "shock on ", colnames(y)[series])
   }
   if(inherits(x$y, "ts")){
   histdecomp <- list(hidec = ts(yhat[, -grep("V1", colnames(yhat))], start = start(lag(x$y, k = -x$p)), end = end(x$y), frequency = frequency(x$y)))
 }else{
   histdecomp <- list(hidec = as.data.frame(yhat))
 }
-  class(histdecomp) <- 'hd'
+  class(histdecomp) <- "hd"
   return(histdecomp)
 }
