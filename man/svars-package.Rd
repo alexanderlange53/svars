@@ -11,7 +11,7 @@
       \code{id.cv} \tab Identification via changes in volatility,
     }
   \tabular{ll}{
-    \code{id.nglm} \tab Identification via Non-Gaussian maximum likelihood,
+    \code{id.ngml} \tab Identification via Non-Gaussian maximum likelihood,
   }
   \tabular{ll}{
     \code{id.dc} \tab Independence-based identification of SVAR models based on distance covariances,
