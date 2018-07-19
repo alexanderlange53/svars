@@ -1,24 +1,11 @@
 #' Impulse Response Functions for SVAR Models
-#'
-#' Calculation of impulse response functions for an identified SVAR object 'svars' derived by function id.cvm( ),id.cv( ),id.dc( ) or id.ngml( ).
-#'
-#' @param x SVAR object of class "svars"
-#' @param horizon Time horizon for the impulse responses
-#'
-#' @seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}}, \code{\link{id.cv} or \code{\link{id.st}}
-#'
-#' @examples
-#' \donttest{
-#' v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
-#' x1 <- id.ngml(v1)
-#' x2 <- imrf(x1, horizon = 20)
-#' plot(x2)
-#' }
-#'
-#' @export
+#' @import vars
+#' @S3method irf svars
 
-imrf <- function(x, horizon = 20){
-
+irf.svars <- function(x, n.ahead = 20){
+  if(!(class(x)=="svars")){
+    stop("\nPlease provide an object of class 'svars'.\n")
+  }
   # Function to calculate matrix potence
   "%^%" <- function(A, n){
     if(n == 1){
@@ -29,24 +16,24 @@ imrf <- function(x, horizon = 20){
   }
 
   # function to calculate impulse response
-  IrF <- function(A_hat, B_hat, horizon){
+  IrF <- function(A_hat, B_hat, n.ahead){
     k <- nrow(A_hat)
     p <- ncol(A_hat)/k
     if(p == 1){
-      irfa <- array(0, c(k, k, horizon))
+      irfa <- array(0, c(k, k, n.ahead))
       irfa[,,1] <- B_hat
-      for(i in 1:horizon){
+      for(i in 1:n.ahead){
         irfa[,,i] <- (A_hat%^%i)%*%B_hat
       }
       return(irfa)
     }else{
-      irfa <- array(0, c(k, k, horizon))
+      irfa <- array(0, c(k, k, n.ahead))
       irfa[,,1] <- B_hat
       Mm <- matrix(0, nrow = k*p, ncol = k*p)
       Mm[1:k, 1:(k*p)] <- A_hat
       Mm[(k+1):(k*p), 1 : ((p-1)*k)] <- diag(k*(p-1))
       Mm1 <- diag(k*p)
-      for(i in 1:(horizon-1)){
+      for(i in 1:(n.ahead-1)){
         Mm1 <- Mm1%*%Mm
         irfa[,,(i+1)] <- Mm1[1:k, 1:k]%*%B_hat
       }
@@ -66,7 +53,7 @@ imrf <- function(x, horizon = 20){
 
   B_hat <- x$B
 
-  IR <- IrF(A_hat, B_hat, horizon)
+  IR <- IrF(A_hat, B_hat, n.ahead)
 
   impulse <- matrix(0, ncol = dim(IR)[2]^2 + 1, nrow = dim(IR)[3])
   colnames(impulse) <- rep("V1", ncol(impulse))
@@ -80,6 +67,6 @@ imrf <- function(x, horizon = 20){
     }
   }
   impulse <- list(irf = as.data.frame(impulse))
-  class(impulse) <- "irf"
+  class(impulse) <- "svarirf"
   return(impulse)
 }
