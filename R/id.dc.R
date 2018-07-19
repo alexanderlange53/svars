@@ -35,7 +35,7 @@
 #' x1$B[,3] <- x1$B[,3]*(-1)
 #'
 #' # impulse response analysis
-#' i1 <- imrf(x1, horizon = 30)
+#' i1 <- irf(x1, n.ahead = 30)
 #' plot(i1, scales = 'free_y')
 #'
 #'
@@ -192,7 +192,7 @@ id.dc <- function(x, PIT=FALSE){
               y = yOut,       # Data
               p = unname(p),  # number of lags
               K = k,          # number of time series
-              PIT=PIT
+              PIT=PIT         #
               )
   class(result) <- "svars"
   return(result)
