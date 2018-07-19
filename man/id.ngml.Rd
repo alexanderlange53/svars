@@ -51,7 +51,7 @@ x1$B <- x1$B[,c(3,2,1)]
 x1$B[,3] <- x1$B[,3]*(-1)
 
 # impulse response analysis
-i1 <- imrf(x1, horizon = 30)
+i1 <- irf(x1, n.ahead = 30)
 plot(i1, scales = 'free_y')
 }
 }

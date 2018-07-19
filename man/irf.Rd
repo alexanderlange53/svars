@@ -8,7 +8,7 @@
 \method{irf}{svars}(x, n.ahead = 20, ...)
 }
 \arguments{
-\item{x}{SVAR object of class "svars"}
+\item{x}{SVAR object of class "svars".}
 
 \item{n.ahead}{Integer specifying the steps.}
 

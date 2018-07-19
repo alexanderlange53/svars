@@ -4,7 +4,7 @@
 \alias{mb.boot}
 \title{Moving block bootstrap for IRFs of identified SVARs}
 \usage{
-mb.boot(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL,
+mb.boot(x, b.length = 15, n.ahead, nboot, nc = 1, dd = NULL,
   signrest = NULL, itermax = 300, steptol = 200, iter2 = 50)
 }
 \arguments{
@@ -12,7 +12,7 @@ mb.boot(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL,
 
 \item{b.length}{Length of each block}
 
-\item{horizon}{Time horizon of impulse response functions}
+\item{n.ahead}{Integer specifying the steps}
 
 \item{nboot}{Number of bootstrap iterations}
 
@@ -55,7 +55,7 @@ summary(x1)
 # impulse response analysis with confidence bands
 # Checking how often theory based impact relations appear
 signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
-bb <- mb.boot(x1, b.length = 15, nboot = 500, horizon = 30, nc = 1, signrest = signrest)
+bb <- mb.boot(x1, b.length = 15, nboot = 500, n.ahead = 30, nc = 1, signrest = signrest)
 summary(bb)
 plot(bb, lowerq = 0.16, upperq = 0.84)
 }

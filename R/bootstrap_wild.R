@@ -4,7 +4,7 @@
 #'
 #'@param x SVAR object of class "svars"
 #'@param rademacher If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples
-#'@param horizon Time horizon for impulse response functions
+#'@param n.ahead Integer specifying the steps
 #'@param nboot Number of bootstrap iterations
 #'@param nc Number of processor cores (Not available on windows machines)
 #'@param dd Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.
@@ -42,7 +42,7 @@
 #' # impulse response analysis with confidence bands
 #' # Checking how often theory based impact relations appear
 #' signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
-#' bb <- wild.boot(x1, rademacher = TRUE, nboot = 500, horizon = 30, nc = 1, signrest = signrest)
+#' bb <- wild.boot(x1, rademacher = TRUE, nboot = 500, n.ahead = 30, nc = 1, signrest = signrest)
 #' summary(bb)
 #' plot(bb, lowerq = 0.16, upperq = 0.84)
 #' }
@@ -52,12 +52,12 @@
 
 
 
-wild.boot <- function(x, rademacher = TRUE, horizon, nboot, nc = 1, dd = NULL, signrest = NULL, itermax = 300, steptol = 200, iter2 = 50){
+wild.boot <- function(x, rademacher = TRUE, n.ahead, nboot, nc = 1, dd = NULL, signrest = NULL, itermax = 300, steptol = 200, iter2 = 50){
 
   # x: vars object
   # B: estimated covariance matrix from true data set
   # rademacher: wether the bootstraop work with rademacher distance
-  # horizon: Time horizon for Irf
+  # n.ahead: Time n.ahead for Irf
   # nboot: number of bootstrap replications
   if(x$method == "Cramer-von Mises distance" & is.null(dd)){
     dd <- copula::indepTestSim(x$n, x$K, verbose=F)
@@ -156,7 +156,7 @@ wild.boot <- function(x, rademacher = TRUE, horizon, nboot, nc = 1, dd = NULL, s
      Pstar <- Pstar1%*%frobP$perm
      temp$B <- Pstar
 
-    ip <- imrf(temp, horizon = horizon)
+    ip <- irf(temp, n.ahead = n.ahead)
     return(list(ip, Pstar))
     }else{
       return(NA)
@@ -253,7 +253,7 @@ wild.boot <- function(x, rademacher = TRUE, horizon, nboot, nc = 1, dd = NULL, s
   }
 
   ## Impulse response of actual model
-  ip <- imrf(x, horizon = horizon)
+  ip <- irf(x, n.ahead = n.ahead)
 
   result <- list(true = ip,
                  bootstrap = ipb,
