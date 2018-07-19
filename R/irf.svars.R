@@ -1,8 +1,28 @@
 #' Impulse Response Functions for SVAR Models
-#' @import vars
+#'
+#' Calculation of impulse response functions for an identified SVAR object 'svars' derived by function id.cvm( ),id.cv( ),id.dc( ), id.ngml( ) or id.st( ).
+#'
+#' @param x SVAR object of class "svars".
+#' @param n.ahead Integer specifying the steps.
+#' @param ... Currently not used.
+#'
+#' @seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}}, \code{\link{id.cv} or \code{\link{id.st}}
+#'
+#' @examples
+#' \donttest{
+#' v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
+#' x1 <- id.ngml(v1)
+#' x2 <- irf(x1, n.ahead = 20)
+#' plot(x2)
+#' }
+#'
+#' @rdname irf
+#' @name irf
+#' @aliases irf.svars
+#' @importFrom vars irf
 #' @S3method irf svars
 
-irf.svars <- function(x, n.ahead = 20){
+irf.svars <- function(x, n.ahead = 20, ...){
   if(!(class(x)=="svars")){
     stop("\nPlease provide an object of class 'svars'.\n")
   }

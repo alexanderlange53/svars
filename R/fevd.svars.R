@@ -2,8 +2,9 @@
 #'
 #' Calculation of forecast error variance decomposition for an identified SVAR object 'svars' derived by function id.st( ), id.cvm( ),id.cv( ),id.dc( ) or id.ngml( ).
 #'
-#' @param x SVAR object of class "svars"
-#' @param n.ahead Time n.ahead for forecast error variance decomposition
+#' @param x SVAR object of class "svars".
+#' @param n.ahead Integer specifying the steps.
+#' @param ... Currently not used.
 #'
 #' @seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}}, \code{\link{id.cv} or \code{\link{id.st}}
 #'
@@ -13,13 +14,17 @@
 #' \donttest{
 #' v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
 #' x1 <- id.dc(v1)
-#' x2 <- fev(x1, n.ahead = 30)
+#' x2 <- fevd(x1, n.ahead = 30)
 #' plot(x2)
 #' }
-#' @import vars
+#'
+#' @rdname fevd
+#' @name fevd
+#' @aliases fevd.svars
+#' @importFrom  vars fevd
 #' @S3method fevd svars
 
-fevd.svars <- function(x, n.ahead = 10){
+fevd.svars <- function(x, n.ahead = 10, ...){
   if(!(class(x)=="svars")){
     stop("\nPlease provide an object of class 'svars'.\n")
   }
