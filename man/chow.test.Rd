@@ -4,17 +4,15 @@
 \alias{chow.test}
 \title{Chow Test for Structural Break}
 \usage{
-chow.test(Y, SB, p, nboot = 500, rademacher = FALSE, start = NULL,
+chow.test(x, SB, nboot = 500, rademacher = TRUE, start = NULL,
   end = NULL, frequency = NULL, format = NULL, dateVector = NULL)
 }
 \arguments{
-\item{Y}{Data of multivariate time series in matrix form}
+\item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object}
 
 \item{SB}{Integer, vector or date character. The structural break is specified either by an integer (number of observations in the pre-break period),
 a vector of ts() frequencies if a ts object is used in the VAR or a date character. If a date character is provided, either a date vector containing the whole time line
 in the corresponding format or common time parameters need to be provided}
-
-\item{p}{Integer. Number of lags included in the presumed VAR model}
 
 \item{nboot}{Integer. Number of bootstrap iterations to calculate quantiles and p-values}
 
@@ -40,28 +38,35 @@ A list with elements
 \item{p.value_sp}{p-value of the test statistic lambda_sp}
 }
 \description{
-The Chow test for structural change is implemented as sample-split and break-point test (see Luetkepohl and Kraetzig, 2004, p. 135). A multivariate time series and the presupposed structural break need to be provided.
+The Chow test for structural change is implemented as sample-split and break-point test (see Luetkepohl and Kraetzig, 2004, p. 135). An estimated VAR model and the presupposed structural break need to be provided.
 }
 \examples{
 \donttest{
 # Testing for structural break in USA data
-z1 = chow.test(USA, SB = 59, p = 6)
+#' # data contains quartlery observations from 1965Q1 to 2008Q2
+# assumed structural break in 1979Q3
+# x = output gap
+# pi = inflation
+# i = interest rates
+set.seed(23211)
+v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
+z1 = chow.test(v1, SB = 59)
 summary(z1)
 
 #Structural brake via Dates
 #given that time series vector with dates is available
 dateVector = seq(as.Date("1965/1/1"), as.Date("2008/7/1"), "quarter")
-z2 <- chow.test(USA, SB = "1979-07-01", p = 6, format = "\%Y-\%m-\%d", dateVector = dateVector)
+z2 <- chow.test(v1, SB = "1979-07-01", format = "\%Y-\%m-\%d", dateVector = dateVector)
 summary(z2)
 
 # alternatively pass sequence arguments directly
-z3 <- chow.test(USA, SB = "1979-07-01", p = 6, format = "\%Y-\%m-\%d",
+z3 <- chow.test(v1, SB = "1979-07-01", format = "\%Y-\%m-\%d",
                 start = "1965-01-01", end = "2008-07-01",
                 frequency = "quarter")
 summary(z3)
 
 # or provide ts date format (For quarterly, monthly, weekly and daily frequencies only)
-z4 <- chow.test(USA, SB = c(1979,3), p = 6)
+z4 <- chow.test(v1, SB = c(1979,3))
 summary(z4)
 }
 }
