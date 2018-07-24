@@ -184,6 +184,10 @@ identifyVolatility = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restric
 
   # Testing the estimated SVAR for identification by menas of wald statistic
   wald <- wald.test(Lambda_hat, HESS, restrictions)
+ rownames(B_hat) <- colnames(u_t)
+ rownames(Lambda_hat) <- colnames(u_t)
+ rownames(Lambda.SE) <- colnames(u_t)
+ rownames(B.SE) <- colnames(u_t)
 
 result <- list(
   Lambda = Lambda_hat,    # estimated Lambda matrix (unconditional heteroscedasticity)

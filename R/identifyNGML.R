@@ -200,7 +200,9 @@ identifyNGML <- function(x, coef_x, Sigma_hat, u, k, p, Tob, yOut, type, il, row
       }
     }
   }
-
+  rownames(B_mle) <- colnames(u)
+  rownames(B_stand_est) <- colnames(u)
+  rownames(B.SE) <- colnames(u)
 
   result <- list(B = B_mle,       # estimated B matrix (unique decomposition of the covariance matrix)
                  #B_SE = B.SE.2,          # standard errors

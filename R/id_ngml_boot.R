@@ -232,7 +232,7 @@ id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL, restriction_matrix = NULL)
     }
   }
 
-
+  rownames(B_mle) <- colnames(u)
 
   result <- list(B = B_mle,       # estimated B matrix (unique decomposition of the covariance matrix)
                  sigma = sigma_est,      # estimated scale of the standardized B

@@ -144,13 +144,15 @@ id.ngml <- function(x, stage3 = FALSE, restriction_matrix = NULL){
     lRatioTestStatistic = 2 * (resultUnrestricted$Lik - result$Lik)
     pValue = round(1 - pchisq(lRatioTestStatistic, result$restrictions), 4)
 
-    result$lRatioTestStatistic = lRatioTestStatistic
-    result$lRatioTestPValue = pValue
+    lRatioTest <- data.frame(testStatistic = lRatioTestStatistic, p.value = pValue)
+    rownames(lRatioTest) <- ""
+    colnames(lRatioTest) <- c("Test statistic", "p-value")
+    result$lRatioTest <- lRatioTest
   }else{
     restriction_matrix <- NULL
     result <- identifyNGML(x = x, coef_x = coef_x, Sigma_hat = Sigma_hat, u = u, k = k, p = p, Tob = Tob, yOut = yOut, type = type, il = il,
                            rows = rows, stage3 = stage3, restriction_matrix = restriction_matrix, restrictions = restrictions, y = y)
-  }
+     }
   class(result) <- "svars"
   return(result)
 }

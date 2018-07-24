@@ -37,11 +37,11 @@ summary.svars <- function(object, ...){
  cat("\nPairwise Wald Test:\n")
  printCoefmat(svarsObject$wald_statistic, has.Pvalue = T)
    if(svarsObject$restrictions > 0){
-     cat("\nLikelihood Ratio Test Statistic: ")
-     cat(svarsObject$lRatioTestStatistic)
-     cat(", p-value:")
-     cat(svarsObject$lRatioTestPValue)
-
+     cat("\nLikelihood Ratio Test: \n")
+     #cat(svarsObject$lRatioTestStatistic)
+     #cat(", p-value:")
+     #cat(svarsObject$lRatioTestPValue)
+     printCoefmat(svarsObject$lRatioTest, has.Pvalue = T)
    }
   }else if(svarsObject$method == "Smooth transition"){
     cat("\nEstimated location of transition: ")
@@ -65,11 +65,9 @@ summary.svars <- function(object, ...){
     print(svarsObject$B_SE)
     cat("\nPairwise Wald Test:\n")
     printCoefmat(svarsObject$wald_statistic, has.Pvalue = T)
-    if(svarsObject$restrictions > 0){
-      cat("\nLikelihood Ratio Test Statistic: ")
-      cat(svarsObject$lRatioTestStatistic)
-      cat(", p-value:")
-      cat(svarsObject$lRatioTestPValue)
+    if(svarsObject$restrictions > 0 & svarsObject$lr_test == T){
+      cat("\nLikelihood Ratio Test: \n")
+      printCoefmat(svarsObject$lRatioTest, has.Pvalue = T)
 
     }
  }else if(svarsObject$method == "Non-Gaussian maximum likelihood"){
@@ -89,12 +87,10 @@ summary.svars <- function(object, ...){
    cat("\nEstimated scale of the standardized B: ")
    cat(svarsObject$sigma)
    cat("\nStandard errors of the scale:          ")
-   cat(svarsObject$sigma_SE)
+   cat(svarsObject$sigma_SE, "\n")
    if(svarsObject$restrictions > 0){
-     cat("\nLikelihood Ratio Test Statistic: ")
-     cat(svarsObject$lRatioTestStatistic)
-     cat(", p-value:")
-     cat(svarsObject$lRatioTestPValue)
+     cat("\nLikelihood Ratio Test: \n")
+     printCoefmat(svarsObject$lRatioTest, has.Pvalue = T)
 
    }
 

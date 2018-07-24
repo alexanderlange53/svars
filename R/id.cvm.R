@@ -254,6 +254,7 @@ id.cvm <- function(x, dd = NULL, itermax = 500, steptol = 100, iter2 = 75){
       A_hat <- cbind(v, trend, A)
     }
   }
+  rownames(B_hat) = colnames(u)
 
   result <- list(B = B_hat,        # estimated B matrix (unique decomposition of the covariance matrix)
                  A_hat = A_hat,    # estimated VAR parameter

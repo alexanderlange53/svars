@@ -37,6 +37,7 @@ wald.test <- function(Lambda, Sigma, restrictions){
 
   #waldTest = cbind(H.null, test.stat, p.value)
   waldTest <- data.frame(test.stat = unlist(test.stat), p.value = unlist(p.value))
+  colnames(waldTest) = c("Test statistic", "p-value")
   rownames(waldTest) <- H.null
   return(waldTest)
 }

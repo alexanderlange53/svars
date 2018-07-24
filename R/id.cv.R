@@ -180,8 +180,12 @@ if(!is.numeric(SB)){
     lRatioTestStatistic = 2 * (resultUnrestricted$Lik - result$Lik)
     pValue = round(1 - pchisq(lRatioTestStatistic, result$restrictions), 4)
 
-    result$lRatioTestStatistic = lRatioTestStatistic
-    result$lRatioTestPValue = pValue
+    #result$lRatioTestStatistic = lRatioTestStatistic
+    #result$lRatioTestPValue = pValue
+    lRatioTest <- data.frame(testStatistic = lRatioTestStatistic, p.value = pValue)
+    rownames(lRatioTest) <- ""
+    colnames(lRatioTest) <- c("Test statistic", "p-value")
+    result$lRatioTest <- lRatioTest
   }else{
     restriction_matrix <- NULL
     result <- identifyVolatility(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = restriction_matrix,

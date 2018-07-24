@@ -24,7 +24,7 @@
 #' x1 <- id.dc(v1)
 #'
 #' # Bootstrapping of SVAR
-#' bb <- wild.boot(x1, nboot = 1000, horizon = 30)
+#' bb <- wild.boot(x1, nboot = 1000, n.ahead = 30)
 #'
 #' # Testing the hypothesis of a lower triangular matrix as
 #' # relation between structural and reduced form errors
