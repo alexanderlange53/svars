@@ -19,7 +19,7 @@
 #' @rdname irf
 #' @name irf
 #' @aliases irf.svars
-#' @importFrom vars irf
+#' @import vars
 #' @S3method irf svars
 
 irf.svars <- function(x, n.ahead = 20, ...){

@@ -21,7 +21,7 @@
 #' @rdname fevd
 #' @name fevd
 #' @aliases fevd.svars
-#' @importFrom  vars fevd
+#' @import  vars
 #' @S3method fevd svars
 
 fevd.svars <- function(x, n.ahead = 10, ...){
