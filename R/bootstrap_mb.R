@@ -49,7 +49,7 @@
 #' @export
 
 
-mb.boot <- function(x, b.length = 15, n.ahead, nboot, nc = 1, dd = NULL, signrest = NULL,  itermax = 300, steptol = 200, iter2 = 50){
+mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NULL, signrest = NULL,  itermax = 300, steptol = 200, iter2 = 50){
   # x: vars object
   # B: estimated covariance matrix from true data set
   # n.ahead: Time steps for Irf

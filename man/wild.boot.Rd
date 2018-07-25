@@ -4,8 +4,9 @@
 \alias{wild.boot}
 \title{Wild bootstrap for IRFs of identified SVARs}
 \usage{
-wild.boot(x, rademacher = TRUE, n.ahead, nboot, nc = 1, dd = NULL,
-  signrest = NULL, itermax = 300, steptol = 200, iter2 = 50)
+wild.boot(x, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1,
+  dd = NULL, signrest = NULL, itermax = 300, steptol = 200,
+  iter2 = 50)
 }
 \arguments{
 \item{x}{SVAR object of class "svars"}
