@@ -91,6 +91,6 @@ fevd.svars <- function(x, n.ahead = 10, ...){
     }
   }
 
-  class(fe2) <- "fevd"
+  class(fe2) <- "svarfevd"
   return(fe2)
 }

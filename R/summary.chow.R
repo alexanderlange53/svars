@@ -37,7 +37,7 @@ summary.chow <- function(object, ...){
                           object$p.value_sp),
                         ncol = 3, nrow = 2, byrow = T)
    rownames(TestMatrix) <- c("Break-point Test:", "Sample-split test:")
-   colnames(TestMatrix) <- c("Test statistic", "95% critical value", "p.value")
+   colnames(TestMatrix) <- c("Test statistic", "95% critical value", "p-value")
   cat("\n")
   printCoefmat(TestMatrix, has.Pvalue = T, signif.legend = T, signif.stars = T)
 
