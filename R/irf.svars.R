@@ -22,7 +22,7 @@
 #' @import vars
 #' @S3method irf svars
 
-irf.svars <- function(x, n.ahead = 20, ...){
+irf.svars <- function(x, ..., n.ahead = 20){
   if(!(class(x)=="svars")){
     stop("\nPlease provide an object of class 'svars'.\n")
   }

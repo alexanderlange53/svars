@@ -5,14 +5,14 @@
 \alias{irf.svars}
 \title{Impulse Response Functions for SVAR Models}
 \usage{
-\method{irf}{svars}(x, n.ahead = 20, ...)
+\method{irf}{svars}(x, ..., n.ahead = 20)
 }
 \arguments{
 \item{x}{SVAR object of class "svars".}
 
-\item{n.ahead}{Integer specifying the steps.}
-
 \item{...}{Currently not used.}
+
+\item{n.ahead}{Integer specifying the steps.}
 }
 \description{
 Calculation of impulse response functions for an identified SVAR object 'svars' derived by function id.cvm( ),id.cv( ),id.dc( ), id.ngml( ) or id.st( ).

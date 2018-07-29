@@ -72,44 +72,8 @@
 chow.test <- function(x, SB, nboot = 500, rademacher = TRUE ,start = NULL, end = NULL,
                       frequency = NULL, format = NULL, dateVector = NULL){
 
-  if(inherits(x, "var.boot")){
-    u_t <- x$residuals
-    Tob <- nrow(u_t)
-    k <- ncol(u_t)
-    residY <- u_t
-  }else{
-    u_t <- residuals(x)
-    Tob <- nrow(u_t)
-    k <- ncol(u_t)
-    residY <- u_t
-  }
-
-  if(inherits(x, "var.boot")){
-    p <- x$p
-    y <- t(x$y)
-    yOut <- x$y
-    type <- x$type
-    coef_x <- x$coef_x
-  }else if(inherits(x, "varest")){
-    p <- x$p
-    y <- x$y
-    yOut <- x$y
-    type <- x$type
-  }else if(inherits(x, "nlVar")){
-    if(inherits(x, "VECM")){
-      stop("id.cv is not available for VECMs")
-    }
-    p <- x$lag
-    y <- t(x$model[, 1:k])
-    type <- x$include
-    yOut <- x$model[, 1:k]
-  }else if(inherits(x, "list")){
-    p <- x$order
-    y <- t(x$data)
-    yOut <- x$data
-  }else{
-    stop("Object class is not supported")
-  }
+  u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
+  get_var_objects(x)
 
   # Null hypothesis of no sample split is rejected for large values of lambda
   Tob <- x$obs
@@ -140,10 +104,10 @@ chow.test <- function(x, SB, nboot = 500, rademacher = TRUE ,start = NULL, end =
 
   }
 
-  sqrt.f <- function(Pstar, Sigma_u_star){
-    yy <- suppressMessages(sqrtm(Sigma_u_hat_old))%*%solve(suppressMessages(sqrtm(Sigma_u_star)))%*%Pstar
-    return(yy)
-  }
+  # sqrt.f <- function(Pstar, Sigma_u_star){
+  #   yy <- suppressMessages(sqrtm(Sigma_u_hat_old))%*%solve(suppressMessages(sqrtm(Sigma_u_star)))%*%Pstar
+  #   return(yy)
+  # }
 
   Full <- y
 

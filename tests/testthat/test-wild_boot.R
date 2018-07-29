@@ -29,17 +29,17 @@ test_that("wild.boot returns valid object for id.dc", {
   expect_equal(bbdc4$nboot, 50)
 })
 
-test_that("wild.boot works with parallelization", {
-  skip_on_cran()
-  set.seed(23211)
-  v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
-  x1 <- id.dc(v1)
-
-  cores <- parallel::detectCores() - 1
-  bb <- wild.boot(x1, rademacher = TRUE, nboot = 50, n.ahead = 30, nc = cores, signrest = NULL)
-  expect_length(bb, 12)
-  expect_equal(bb$nboot, 50)
-})
+# test_that("wild.boot works with parallelization", {
+#   skip_on_cran()
+#   set.seed(23211)
+#   v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
+#   x1 <- id.dc(v1)
+#
+#   cores <- parallel::detectCores() - 1
+#   bb <- wild.boot(x1, rademacher = TRUE, nboot = 50, n.ahead = 30, nc = cores, signrest = NULL)
+#   expect_length(bb, 12)
+#   expect_equal(bb$nboot, 50)
+# })
 
 test_that("wild.boot returns valid object for id.cv", {
   skip_on_cran()

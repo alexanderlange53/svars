@@ -2,7 +2,7 @@
 ## iterative approach ##
 #======================#
 
-iterative_smooth_transition <- function(transition, u_t, y, Tob, k, p, crit, max.iter, Z_t, y_loop, restriction_matrix){
+iterative_smooth_transition <- function(transition, u, y, Tob, k, p, crit, max.iter, Z_t, y_loop, restriction_matrix){
 
   # Function to create a block diagonal matrix
   block.diagonal<-function(...){
@@ -24,7 +24,7 @@ iterative_smooth_transition <- function(transition, u_t, y, Tob, k, p, crit, max
   Exit <-  -100  #Exit criterion
 
   # Creating initial values for structural parameter
-  Sigma_hat <- crossprod(u_t)/(Tob-1-k*p)
+  Sigma_hat <- crossprod(u)/(Tob-1-k*p)
 
   #init_B <- t(chol(Sigma_hat))
   if(!is.null(restriction_matrix)){
@@ -42,7 +42,7 @@ iterative_smooth_transition <- function(transition, u_t, y, Tob, k, p, crit, max
 
   #B_hat <- list(init_B)
   Lambda_hat <- list(init_Lambda)
-  ll <- list(likelihood_st(parameter = c(init_B, diag(init_Lambda)), u_t = u_t, G = transition, k = k, Tob = Tob,
+  ll <- list(likelihood_st(parameter = c(init_B, diag(init_Lambda)), u = u, G = transition, k = k, Tob = Tob,
                            restriction_matrix = restriction_matrix, restrictions = restrictions))
 
 
@@ -50,7 +50,7 @@ iterative_smooth_transition <- function(transition, u_t, y, Tob, k, p, crit, max
     count <- count + 1
 
     if(count == 1){
-      u_t_gls <- u_t
+      u_gls <- u
     }
 
     if(!is.null(restriction_matrix)){
@@ -64,7 +64,7 @@ iterative_smooth_transition <- function(transition, u_t, y, Tob, k, p, crit, max
     parameter <- c(init_B, diag(Lambda_hat[[count]]))
 
     # Step 1: Optimizing likelihood
-    mle <- nlm(f = likelihood_st, p = parameter, u_t = u_t_gls, G = transition, k = k, Tob = Tob,
+    mle <- nlm(f = likelihood_st, p = parameter, u = u_gls, G = transition, k = k, Tob = Tob,
                restriction_matrix = restriction_matrix, restrictions = restrictions,
                hessian = T, iterlim = 150)
 
@@ -104,8 +104,8 @@ iterative_smooth_transition <- function(transition, u_t, y, Tob, k, p, crit, max
       GLSE <- c(GLSE, list(b_gls))
     }
 
-    u_t_gls <- c(y_loop) - kronecker(t(Z_t), diag(k))%*%b_gls
-    u_t_gls <- matrix(u_t_gls, Tob, k, byrow = T)
+    u_gls <- c(y_loop) - kronecker(t(Z_t), diag(k))%*%b_gls
+    u_gls <- matrix(u_gls, Tob, k, byrow = T)
 
     if(count > 1){
       Exit <- ll[[count+1]] - ll[[count]]

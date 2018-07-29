@@ -82,42 +82,8 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
                   max.iter = 5, crit = 0.01, restriction_matrix = NULL, lr_test = FALSE){
 
   # Gathering information from reduced form model
-  if(inherits(x, "var.boot")){
-    u_t <- x$residuals
-    Tob <- nrow(u_t)
-    k <- ncol(u_t)
-    residY <- u_t
-  }else{
-    u_t <- residuals(x)
-    Tob <- nrow(u_t)
-    k <- ncol(u_t)
-    residY <- u_t
-  }
-
-  if(inherits(x, "var.boot")){
-    p <- x$p
-    y <- t(x$y)
-    type = x$type
-    coef_x = x$coef_x
-    yOut <- x$y
-  }else if(inherits(x, "varest")){
-    p <- x$p
-    y <- t(x$y)
-    yOut <- x$y
-  }else if(inherits(x, "nlVar")){
-    if(inherits(x, "VECM")){
-      stop("id.st is not available for VECMs")
-    }
-    p <- x$lag
-    y <- t(x$model[, 1:k])
-    yOut <- x$model[, 1:k]
-  }else if(inherits(x, "list")){
-    p <- x$order
-    y <- t(x$data)
-    yOut <- x$data
-  }else{
-    stop("Object class is not supported")
-  }
+  u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
+  get_var_objects(x)
 
   # Transition function
   transition_f <- function(gamma, cc, st){
@@ -183,7 +149,7 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
   }
 
   if(!is.null(gamma_fix) &  !is.null(c_fix)){
-    best_estimation <- iterative_smooth_transition(transition = G_grid, u_t = u_t, y = y, Tob = Tob, k = k,
+    best_estimation <- iterative_smooth_transition(transition = G_grid, u = u, y = y, Tob = Tob, k = k,
                                            p = p, crit = crit, max.iter = max.iter, Z_t = Z_t, y_loop = y_loop,
                                            restriction_matrix = restriction_matrix)
     transition_function <- G_grid
@@ -193,7 +159,7 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     comb <- 1
 
     if(lr_test == TRUE & !is.null(restriction_matrix)){
-      unrestricted_estimation <- iterative_smooth_transition(G_grid, u_t = u_t, y = y, Tob = Tob, k = k,
+      unrestricted_estimation <- iterative_smooth_transition(G_grid, u = u, y = y, Tob = Tob, k = k,
                                                              p = p, crit = crit, max.iter = max.iter, Z_t = Z_t, y_loop = y_loop,
                                                              restriction_matrix = NULL)
       lRatioTestStatistic = 2 * (unrestricted_estimation$Lik - best_estimation$Lik)
@@ -210,7 +176,7 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     G_grid <- apply(G_grid, 2, list)
 
     grid_optimization <- pblapply(G_grid, function(x){iterative_smooth_transition(unlist(x),
-                                                                                  u_t = u_t, y = y,
+                                                                                  u = u, y = y,
                                                                                   Tob = Tob, k = k,
                                                                                   p = p, crit = crit,
                                                                                   max.iter = max.iter, Z_t = Z_t,
@@ -237,7 +203,7 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
         G_grid <- mapply(transition_f, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = transition_variable))
       }
 
-      unrestricted_estimation <- iterative_smooth_transition(G_grid, u_t = u_t, y = y, Tob = Tob, k = k,
+      unrestricted_estimation <- iterative_smooth_transition(G_grid, u = u, y = y, Tob = Tob, k = k,
                                                              p = p, crit = crit, max.iter = max.iter, Z_t = Z_t, y_loop = y_loop,
                                                              restriction_matrix = NULL)
       lRatioTestStatistic = 2 * (unrestricted_estimation$Lik - best_estimation$Lik)
@@ -259,10 +225,10 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
 
   # Testing the estimated SVAR for identification by means of wald statistic
   wald <- wald.test(best_estimation$Lambda, best_estimation$Fish, restrictions)
-  rownames(best_estimation$B) <- colnames(u_t)
-  rownames(best_estimation$Lambda) <- colnames(u_t)
-  rownames(best_estimation$Lambda_SE) <- colnames(u_t)
-  rownames(best_estimation$B_SE) <- colnames(u_t)
+  rownames(best_estimation$B) <- colnames(u)
+  rownames(best_estimation$Lambda) <- colnames(u)
+  rownames(best_estimation$Lambda_SE) <- colnames(u)
+  rownames(best_estimation$B_SE) <- colnames(u)
 
   result <- list(
     Lambda = best_estimation$Lambda,        # estimated Lambda matrix (unconditional heteroscedasticity)
