@@ -55,7 +55,7 @@
 #' # i = interest rates
 #' set.seed(23211)
 #' v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
-#' x1 <- id.st(v1)
+#' x1 <- id.st(v1, c_fix = 80, gamma_fix = 0)
 #' summary(x1)
 #' plot(x1)
 #'

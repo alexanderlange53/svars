@@ -81,24 +81,24 @@ test_that("wild.boot returns valid object for id.ngml", {
   x1 <- id.ngml(v1)
 
   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
-  bbngml <- wild.boot(x1, rademacher = TRUE, nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
+  bbngml <- wild.boot(x1, rademacher = TRUE, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
 
   expect_length(bbngml, 12)
   expect_equal(bbngml$nboot, 10)
 
-  bbngml1 <- wild.boot(x1, rademacher = TRUE, nboot = 10, n.ahead = 30, nc = 1, signrest = NULL)
+  bbngml1 <- wild.boot(x1, rademacher = TRUE, nboot = 10, n.ahead = 30, nc = 2, signrest = NULL)
   expect_length(bbngml1, 12)
   expect_equal(bbngml1$nboot, 10)
 
   x1 <- id.ngml(v1, stage3 = TRUE)
 
   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
-  bbngml3 <- wild.boot(x1, rademacher = TRUE, nboot = 5, n.ahead = 30, nc = 1, signrest = signrest)
+  bbngml3 <- wild.boot(x1, rademacher = TRUE, nboot = 5, n.ahead = 30, nc = 4, signrest = signrest)
 
   expect_length(bbngml3, 12)
   expect_equal(bbngml3$nboot, 5)
 
-  bbngml4 <- wild.boot(x1, rademacher = TRUE, nboot = 5, n.ahead = 30, nc = 1, signrest = NULL)
+  bbngml4 <- wild.boot(x1, rademacher = TRUE, nboot = 5, n.ahead = 30, nc = 4, signrest = NULL)
   expect_length(bbngml4, 12)
   expect_equal(bbngml4$nboot, 5)
 
@@ -108,13 +108,13 @@ test_that("wild.boot returns valid object for id.ngml", {
 
   x1 <- id.ngml(v1, stage3 = F, restriction_matrix = restmat)
 
-  bbngml5 <- wild.boot(x1, rademacher = TRUE, nboot = 5, n.ahead = 30, nc = 1, signrest = NULL)
+  bbngml5 <- wild.boot(x1, rademacher = TRUE, nboot = 5, n.ahead = 30, nc = 4, signrest = NULL)
   expect_length(bbngml5, 12)
   expect_equal(bbngml5$nboot, 5)
 
   x1 <- id.ngml(v1, stage3 = T, restriction_matrix = restmat)
 
-  bbngml6 <- wild.boot(x1, rademacher = TRUE, nboot = 5, n.ahead = 30, nc = 1, signrest = NULL)
+  bbngml6 <- wild.boot(x1, rademacher = TRUE, nboot = 5, n.ahead = 30, nc = 4, signrest = NULL)
   expect_length(bbngml6, 12)
   expect_equal(bbngml6$nboot, 5)
 })

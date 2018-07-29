@@ -2,9 +2,9 @@
 
 S3method(fevd,svars)
 S3method(irf,svars)
-S3method(plot,fevd)
 S3method(plot,hd)
 S3method(plot,sboot)
+S3method(plot,svarfevd)
 S3method(plot,svarirf)
 S3method(plot,svars)
 S3method(print,chow)
