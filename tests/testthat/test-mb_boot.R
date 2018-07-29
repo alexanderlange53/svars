@@ -35,7 +35,7 @@ test_that("mb.boot works with parallelization", {
   v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
   x1 <- id.dc(v1)
 
-  cores <- parallel::detectCores() - 1
+  cores <- 2
   bb <- mb.boot(x1, b.length = 20, nboot = 50, n.ahead = 30, nc = cores, signrest = NULL)
 
   expect_length(bb, 12)

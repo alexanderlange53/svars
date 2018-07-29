@@ -18,5 +18,5 @@ Depends: R (>= 2.10), vars
 Imports: expm, reshape2, ggplot2, copula, clue, pbapply, steadyICA, tsDyn, DEoptim, zoo
 License: MIT + file LICENSE
 LazyData: TRUE
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Suggests: testthat

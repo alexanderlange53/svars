@@ -1,6 +1,6 @@
 context("id.st")
 
-test_that("unrestricted id.cv estimation with pre specified c and gamma works 3-dim works", {
+test_that("unrestricted id.st estimation with pre specified c and gamma works 3-dim works", {
   skip_on_cran()
   set.seed(23211)
   v1 <- vars::VAR(USA, p = 6, ic = "AIC" )
@@ -23,11 +23,11 @@ test_that("unrestricted id.cv estimation with pre specified c and gamma works 3-
 
 })
 
-test_that("unrestricted id.cv estimation with searching algo works 3-dim works", {
+test_that("unrestricted id.st estimation with searching algo 3-dim works", {
   skip_on_cran()
   set.seed(23211)
   v1 <- vars::VAR(USA, p = 6, ic = "AIC" )
-  cores <- parallel::detectCores() -1
+  cores <- 2
   x1 <- id.st(v1, nc = cores, c_lower = 0.4, c_upper = 0.6, c_step = 5, c_fix = NULL,
               transition_variable = NULL, gamma_lower = -3, gamma_upper = 2,
               gamma_step = 1, gamma_fix = NULL, max.iter = 5,
@@ -51,7 +51,7 @@ test_that("unrestricted id.cv estimation with searching algo works 3-dim works",
 
 })
 
-test_that("id.cv estimation with restrictions works 3-dim works", {
+test_that("id.st estimation with restrictions 3-dim works", {
   skip_on_cran()
   set.seed(23211)
   v1 <- vars::VAR(USA, p = 6, ic = "AIC" )
