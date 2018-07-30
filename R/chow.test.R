@@ -37,7 +37,7 @@
 #' # i = interest rates
 #' set.seed(23211)
 #' v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
-#' z1 = chow.test(v1, SB = 59)
+#' z1 <- chow.test(v1, SB = 59)
 #' summary(z1)
 #'
 #' #Using stability() to find potential break point and sample split
@@ -51,7 +51,7 @@
 #'
 #' #Structural brake via Dates
 #' #given that time series vector with dates is available
-#' dateVector = seq(as.Date("1965/1/1"), as.Date("2008/7/1"), "quarter")
+#' dateVector <- seq(as.Date("1965/1/1"), as.Date("2008/7/1"), "quarter")
 #' z2 <- chow.test(v1, SB = "1979-07-01", format = "%Y-%m-%d", dateVector = dateVector)
 #' summary(z2)
 #'
@@ -86,9 +86,9 @@ chow.test <- function(x, SB, nboot = 500, rademacher = TRUE ,start = NULL, end =
 
   if(class(x) == 'chow_pretest'){
     if(x$break_point == TRUE){
-      SB <- x$from + which.max(na.omit(x$teststat_bp))
+      SB <- x$from + which.max(na.omit(x$teststat_bp)) + x$p -1
     }else{
-      SB <- x$from + which.max(na.omit(x$teststat_sp))
+      SB <- x$from + which.max(na.omit(x$teststat_sp)) + x$p -1
     }
     x <- x$ovar
   }
