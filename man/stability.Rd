@@ -42,11 +42,10 @@ For details, please refer to documentation \code{\link[strucchange]{efp}} and \c
 }
 \examples{
 \donttest{
-data(Canada)
-var.2c <- VAR(Canada, p = 2, type = "const")
-var.2c.stabil <- stability(var.2c, type = "OLS-CUSUM")
-var.2c.stabil
-plot(var.2c.stabil)
+data(USA)
+v1 <- VAR(USA, p = 6)
+x1 <- stability(v1, type = "mv-chow-test")
+plot(x1)
 }
 }
 \references{

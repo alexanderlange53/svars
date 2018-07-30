@@ -8,7 +8,7 @@ chow.test(x, SB, nboot = 500, rademacher = TRUE, start = NULL,
   end = NULL, frequency = NULL, format = NULL, dateVector = NULL)
 }
 \arguments{
-\item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object}
+\item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object. Or an object of class 'chow_pretest' from stability()}
 
 \item{SB}{Integer, vector or date character. The structural break is specified either by an integer (number of observations in the pre-break period),
 a vector of ts() frequencies if a ts object is used in the VAR or a date character. If a date character is provided, either a date vector containing the whole time line
@@ -53,6 +53,15 @@ v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
 z1 = chow.test(v1, SB = 59)
 summary(z1)
 
+#Using stability() to find potential break point and sample split
+x1 <- stability(v1, type = "mv-chow-test")
+z1.1 <- chow.test(x1)
+summary(z1.1)
+#Or using sample split as reference
+z1.1$$break_point <- FALSE
+z1.1 <- chow.test(x1)
+summary(z1.1)
+
 #Structural brake via Dates
 #given that time series vector with dates is available
 dateVector = seq(as.Date("1965/1/1"), as.Date("2008/7/1"), "quarter")
@@ -73,4 +82,7 @@ summary(z4)
 \references{
 Luetkepohl, H., 2005. New introduction to multiple time series analysis, Springer-Verlag, Berlin.\cr
      Luetkepohl, H., Kraetzig, M., 2004. Applied time series econometrics, Cambridge University Press, Cambridge.
+}
+\seealso{
+\code{\link{stability}}
 }

@@ -2,7 +2,7 @@
 #'
 #' The Chow test for structural change is implemented as sample-split and break-point test (see Luetkepohl and Kraetzig, 2004, p. 135). An estimated VAR model and the presupposed structural break need to be provided.
 #'
-#' @param x An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object
+#' @param x An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object. Or an object of class 'chow_pretest' from stability()
 #' @param SB Integer, vector or date character. The structural break is specified either by an integer (number of observations in the pre-break period),
 #'                    a vector of ts() frequencies if a ts object is used in the VAR or a date character. If a date character is provided, either a date vector containing the whole time line
 #'                    in the corresponding format or common time parameters need to be provided
@@ -24,6 +24,9 @@
 #'
 #' @references Luetkepohl, H., 2005. New introduction to multiple time series analysis, Springer-Verlag, Berlin.\cr
 #'      Luetkepohl, H., Kraetzig, M., 2004. Applied time series econometrics, Cambridge University Press, Cambridge.
+#'
+#' @seealso \code{\link{stability}}
+#'
 #'@examples
 #' \donttest{
 #' # Testing for structural break in USA data
@@ -36,6 +39,15 @@
 #' v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
 #' z1 = chow.test(v1, SB = 59)
 #' summary(z1)
+#'
+#' #Using stability() to find potential break point and sample split
+#' x1 <- stability(v1, type = "mv-chow-test")
+#' z1.1 <- chow.test(x1)
+#' summary(z1.1)
+#' #Or using sample split as reference
+#' x1$break_point <- FALSE
+#' z1.1 <- chow.test(x1)
+#' summary(z1.1)
 #'
 #' #Structural brake via Dates
 #' #given that time series vector with dates is available
@@ -72,6 +84,15 @@
 chow.test <- function(x, SB, nboot = 500, rademacher = TRUE ,start = NULL, end = NULL,
                       frequency = NULL, format = NULL, dateVector = NULL){
 
+  if(class(x) == 'chow_pretest'){
+    if(x$break_point == TRUE){
+      SB <- x$from + which.max(na.omit(x$teststat_bp))
+    }else{
+      SB <- x$from + which.max(na.omit(x$teststat_sp))
+    }
+    x <- x$ovar
+  }
+
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
   get_var_objects(x)
 
@@ -103,11 +124,7 @@ chow.test <- function(x, SB, nboot = 500, rademacher = TRUE ,start = NULL, end =
     }
 
   }
-
-  # sqrt.f <- function(Pstar, Sigma_u_star){
-  #   yy <- suppressMessages(sqrtm(Sigma_u_hat_old))%*%solve(suppressMessages(sqrtm(Sigma_u_star)))%*%Pstar
-  #   return(yy)
-  # }
+  y <- t(y)
 
   Full <- y
 
@@ -140,7 +157,7 @@ chow.test <- function(x, SB, nboot = 500, rademacher = TRUE ,start = NULL, end =
   lambda_bp <- (l1 + l2)*log(det(Sigma)) - l1*log(det(Sigma.1)) - l2*log(det(Sigma.2))
   lambda_sp <- (l1 + l2)*(log(det(Sigma.1.2)) - log(det((1/(l1 + l2))*(l1*Sigma.1 + l2*Sigma.2))))
 
-
+if(!is.null(nboot)){
   lambda_bpB <- rep(NA, nboot)
   lambda_spB <- rep(NA, nboot)
   TB <- l1
@@ -248,11 +265,23 @@ chow.test <- function(x, SB, nboot = 500, rademacher = TRUE ,start = NULL, end =
   testcrit_sp <- quantile(lambda_spB, probs = 0.95)
   EmpDist_sp <- ecdf(lambda_spB)
   p.value_sp <- 1 - EmpDist_sp(lambda_sp)
+}else{
+  df_bp <- p*k^2 + k + (k*(k + 1))/2
+  df_sp <- p*k^2 + k
 
-  chowTest <- list(lambda_bp = lambda_bp,      # test statistic for break point test
+  # obtaining critical values and p-values for both tests
+  testcrit_bp <- qchisq(p = 0.95, df = df_bp)
+  p.value_bp <- 1 - unname(pchisq(lambda_bp, df = df_bp))
+
+  testcrit_sp <- qchisq(p = 0.95, df = df_sp)
+  p.value_sp <- 1 - unname(pchisq(lambda_sp, df = df_sp))
+}
+
+
+  chowTest <- list(lambda_bp = unname(lambda_bp),      # test statistic for break point test
                    testcrit_bp = testcrit_bp,  # critical value for 95% quantile
                    p.value_bp = p.value_bp,    # p-value
-                   lambda_sp = lambda_sp,      # test statistic for sample split
+                   lambda_sp = unname(lambda_sp),      # test statistic for sample split
                    testcrit_sp = testcrit_sp,  # critical value for 95% quantile
                    p.value_sp = p.value_sp,     # p-value
                    SB = SB,                     # Structural breakpoint
