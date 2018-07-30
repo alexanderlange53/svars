@@ -50,7 +50,7 @@ The Chow test for structural change is implemented as sample-split and break-poi
 # i = interest rates
 set.seed(23211)
 v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
-z1 = chow.test(v1, SB = 59)
+z1 <- chow.test(v1, SB = 59)
 summary(z1)
 
 #Using stability() to find potential break point and sample split
@@ -58,13 +58,13 @@ x1 <- stability(v1, type = "mv-chow-test")
 z1.1 <- chow.test(x1)
 summary(z1.1)
 #Or using sample split as reference
-z1.1$$break_point <- FALSE
+x1$break_point <- FALSE
 z1.1 <- chow.test(x1)
 summary(z1.1)
 
 #Structural brake via Dates
 #given that time series vector with dates is available
-dateVector = seq(as.Date("1965/1/1"), as.Date("2008/7/1"), "quarter")
+dateVector <- seq(as.Date("1965/1/1"), as.Date("2008/7/1"), "quarter")
 z2 <- chow.test(v1, SB = "1979-07-01", format = "\%Y-\%m-\%d", dateVector = dateVector)
 summary(z2)
 
