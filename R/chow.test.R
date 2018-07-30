@@ -108,16 +108,16 @@ chow.test <- function(x, SB, nboot = 500, rademacher = TRUE ,start = NULL, end =
                              frequency = frequency, format = format, dateVector = dateVector, Tob = Tob, p = p)
   }
 
-  if(length(SB) != 1 & inherits(y, "ts")){
+  if(length(SB) != 1 & inherits(yOut, "ts")){
     SBts = SB
-    SB = dim(window(y, end = SB))[1]
+    SB = dim(window(yOut, end = SB))[1]
     if(frequency(y == 4)){
       SBcharacter = paste(SBts[1], " Q", SBts[2], sep = "")
-    }else if(frequency(y == 12)){
+    }else if(frequency(yOut == 12)){
       SBcharacter = paste(SBts[1], " M", SBts[2], sep = "")
-    }else if(frequency(y == 52)){
+    }else if(frequency(yOut == 52)){
       SBcharacter = paste(SBts[1], " W", SBts[2], sep = "")
-    }else if(frequency(y == 365.25)){
+    }else if(frequency(yOut == 365.25)){
       SBcharacter = paste(SBts[1], "-", SBts[2], "-", SBts[3], sep = "")
     }else{
       SBcharacter = NULL

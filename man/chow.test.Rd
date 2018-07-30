@@ -58,7 +58,7 @@ x1 <- stability(v1, type = "mv-chow-test")
 z1.1 <- chow.test(x1)
 summary(z1.1)
 #Or using sample split as reference
-z1.1$$break_point <- FALSE
+x1$break_point <- FALSE
 z1.1 <- chow.test(x1)
 summary(z1.1)
 

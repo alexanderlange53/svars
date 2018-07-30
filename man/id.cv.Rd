@@ -4,8 +4,8 @@
 \alias{id.cv}
 \title{Changes in volatility identification of SVAR models}
 \usage{
-id.cv(x, SB, start = NULL, end = NULL, frequency = NULL,
-  format = NULL, dateVector = NULL, max.iter = 50, crit = 0.001,
+id.cv(x, SB, start = NULL, end = NULL, frequency = NULL, format = NULL,
+  dateVector = NULL, max.iter = 50, crit = 0.001,
   restriction_matrix = NULL)
 }
 \arguments{

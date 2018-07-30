@@ -42,10 +42,18 @@ For details, please refer to documentation \code{\link[strucchange]{efp}} and \c
 }
 \examples{
 \donttest{
+
+data(Canada)
+var.2c <- VAR(Canada, p = 2, type = "const")
+var.2c.stabil <- stability(var.2c, type = "OLS-CUSUM")
+var.2c.stabil
+plot(var.2c.stabil)
+
 data(USA)
 v1 <- VAR(USA, p = 6)
 x1 <- stability(v1, type = "mv-chow-test")
 plot(x1)
+
 }
 }
 \references{
@@ -61,14 +69,14 @@ and see the references provided in the reference section of \code{\link[struccha
 \author{
 Bernhard Pfaff, Alexander Lange, Bernhard Dalheimer, Simone Maxand, Helmut Herwartz
 }
-\keyword{Empirical}
+\keyword{"Empirical}
+\keyword{"Structural}
+\keyword{"Vector}
+\keyword{"efp"}
 \keyword{Fluctuation}
-\keyword{Process}
-\keyword{Stability,}
-\keyword{Structural}
-\keyword{VAR,}
-\keyword{Vector}
+\keyword{Process"}
+\keyword{Stability"}
+\keyword{VAR}
 \keyword{autoregressive}
-\keyword{efp,}
-\keyword{model,}
-\keyword{regression,}
+\keyword{model"}
+\keyword{regression}
