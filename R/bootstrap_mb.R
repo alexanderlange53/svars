@@ -104,11 +104,11 @@ mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NU
   }
 
   for(i in 1:nboot){
-    epsilon.star <- matrix(0, b.length*ceiling(N), ncol(u))
+    epsilon.star <- matrix(0, b.length*(ceiling(N)+1), ncol(u))
     epsilon.star <- list()
     # stacking randomly selected blocks at each other
-    for(kk in 1:ceiling(N)){
-      epsilon.star[[kk]] <- blocks[,,floor(runif(1, 1, obs-b.length+2))]
+    for(kk in 1:(ceiling(N)+1)){
+      epsilon.star[[kk]] <- blocks[,,floor(runif(1, 1, obs - b.length+2))]
     }
     epsilon.star <- do.call('rbind', epsilon.star)
 
