@@ -106,7 +106,7 @@ stability <- function(x, type = c("OLS-CUSUM", "Rec-CUSUM", "Rec-MOSUM",
                  to = unname(to),
                  ovar = x,
                  break_point = TRUE)
-  class(result) <- "chow_pretest"
+  class(result) <- "chowpretest"
 }
 
 return(result)

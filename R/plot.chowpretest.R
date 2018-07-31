@@ -1,7 +1,7 @@
 #' @import ggplot2
-#' @S3method plot chow_pretest
+#' @S3method plot chowpretest
 
-plot.chow_pretest <- function(x, ...){
+plot.chowpretest <- function(x, ...){
 
   if(inherits(x$y, "ts")){
     tsStructure = attr(x$y, which = "tsp")
