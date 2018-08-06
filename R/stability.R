@@ -18,8 +18,7 @@
 #'
 #' @details For details, please refer to documentation \code{\link[strucchange]{efp}} and \code{\link[svars]{chow.test}}.
 #'
-#' @return A list with either class attribute \sQuote{\code{varstabil}} or \sQuote{\code{chow}} holding the following elements:
-#' \item{stability}{A list with objects of class \sQuote{\code{efp}}; length is equal to the dimension of the VAR.}
+#' @return A list with either class attribute \sQuote{\code{varstabil}} or \sQuote{\code{chowpretest}} holding the following elements:
 #' \item{stability}{A list with objects of class \sQuote{\code{efp}}; length is equal to the dimension of the VAR.}
 #' \item{names}{Character vector containing the names of the endogenous variables.}
 #' \item{K}{An integer of the VAR dimension.}
@@ -30,7 +29,7 @@
 #' Models, \emph{Journal of Statistical Software}, \bold{7(2)}: 1-38,
 #' \url{http://www.jstatsoft.org/v07/i02/}\cr
 #'
-#' and see the references provided in the reference section of \code{\link[strucchange]{efp}}, too.
+#' and see the references provided in the reference section of \code{\link[strucchange]{efp}} and \code{\link[svars]{chow.test}}, too.
 #'
 #' @seealso \code{\link{VAR}}, \code{\link{plot}}, \code{\link[strucchange]{efp}}, \code{\link[svars]{chow.test}}
 #'
@@ -51,10 +50,13 @@
 #' }
 #' @keywords regression VAR "Vector autoregressive model" "Structural Stability" "Structural Stability" "efp" "Empirical Fluctuation Process"
 #'
+#' @rdname stability
+#' @name stability
+#' @aliases stability.varest
 #' @importFrom strucchange efp
-#' @export
+#' @S3method stability varest
 
-stability <- function(x, type = c("OLS-CUSUM", "Rec-CUSUM", "Rec-MOSUM",
+stability.varest <- function(x, type = c("OLS-CUSUM", "Rec-CUSUM", "Rec-MOSUM",
                                   "OLS-MOSUM", "RE", "ME", "Score-CUSUM",
                                   "Score-MOSUM", "fluctuation", "mv-chow-test"),
                       h = 0.15, dynamic = FALSE, rescale = TRUE, ...){
