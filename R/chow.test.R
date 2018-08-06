@@ -2,7 +2,7 @@
 #'
 #' The Chow test for structural change is implemented as sample-split and break-point test (see Luetkepohl and Kraetzig, 2004, p. 135). An estimated VAR model and the presupposed structural break need to be provided.
 #'
-#' @param x An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object. Or an object of class 'chow_pretest' from stability()
+#' @param x An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object. Or an object of class 'chowpretest' from stability()
 #' @param SB Integer, vector or date character. The structural break is specified either by an integer (number of observations in the pre-break period),
 #'                    a vector of ts() frequencies if a ts object is used in the VAR or a date character. If a date character is provided, either a date vector containing the whole time line
 #'                    in the corresponding format or common time parameters need to be provided
@@ -42,6 +42,7 @@
 #'
 #' #Using stability() to find potential break point and sample split
 #' x1 <- stability(v1, type = "mv-chow-test")
+#' plot(x1)
 #' z1.1 <- chow.test(x1)
 #' summary(z1.1)
 #' #Or using sample split as reference
