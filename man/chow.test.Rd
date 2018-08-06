@@ -8,7 +8,7 @@ chow.test(x, SB, nboot = 500, rademacher = TRUE, start = NULL,
   end = NULL, frequency = NULL, format = NULL, dateVector = NULL)
 }
 \arguments{
-\item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object. Or an object of class 'chow_pretest' from stability()}
+\item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object. Or an object of class 'chowpretest' from stability()}
 
 \item{SB}{Integer, vector or date character. The structural break is specified either by an integer (number of observations in the pre-break period),
 a vector of ts() frequencies if a ts object is used in the VAR or a date character. If a date character is provided, either a date vector containing the whole time line
@@ -55,6 +55,7 @@ summary(z1)
 
 #Using stability() to find potential break point and sample split
 x1 <- stability(v1, type = "mv-chow-test")
+plot(x1)
 z1.1 <- chow.test(x1)
 summary(z1.1)
 #Or using sample split as reference
