@@ -59,7 +59,19 @@ A list of class "svars" with elements
 \item{iteration}{Number of GLS estimations}
 \item{method}{Method applied for identification}
 \item{est_c}{Structural break (number of observations)}
-\item{SBcharacter}{Structural break (date; if provided in function arguments)}
+\item{est_g}{Transition coefficient}
+\item{transition_variable}{Vector of transition variable}
+\item{comb}{Number of all grid combinations of gamme and c}
+\item{transition_function}{Vector of transition function}
+\item{A_hat}{Estimated VAR paramter via GLS}
+\item{type}{Type of the VAR model e.g., 'const'}
+\item{y}{Data matrix}
+\item{p}{Number of lags}
+\item{K}{Dimension of the VAR}
+\item{restrictions}{Number of specified restrictions}
+\item{restriction_matrix}{Specified restriction matrix}
+\item{lr_test}{Logical, whether a likelihood ratio test is performed}
+\item{lRatioTest}{Results of likelihood ratio test}
 }
 \description{
 Given an estimated VAR model, this function uses a smooth transition in the covariance to identify the structural impact matrix B of the corresponding SVAR model

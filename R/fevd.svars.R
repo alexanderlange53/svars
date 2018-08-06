@@ -6,9 +6,11 @@
 #' @param n.ahead Integer specifying the steps.
 #' @param ... Currently not used.
 #'
-#' @seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}}, \code{\link{id.cv} or \code{\link{id.st}}
+#' @return A list with class attribute "svarfevd" holding the forecast error variance decompositions as data frames.
 #'
 #' @references Kilian, L., Luetkepohl, H., 2017. Structural Vector Autoregressive Analysis, Cambridge University Press.
+#'
+#' @seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}}, \code{\link{id.cv} or \code{\link{id.st}}
 #'
 #' @examples
 #' \donttest{

@@ -14,6 +14,9 @@
 
 \item{n.ahead}{Integer specifying the steps.}
 }
+\value{
+A list with class attribute "svarirf" holding the impulse response functions as data frame.
+}
 \description{
 Calculation of impulse response functions for an identified SVAR object 'svars' derived by function id.cvm( ),id.cv( ),id.dc( ), id.ngml( ) or id.st( ).
 }
@@ -25,4 +28,7 @@ x2 <- irf(x1, n.ahead = 20)
 plot(x2)
 }
 
+}
+\references{
+Luetkepohl, H., 2005. New introduction to multiple time series analysis, Springer-Verlag, Berlin.
 }

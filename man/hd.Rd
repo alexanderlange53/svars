@@ -9,7 +9,10 @@ hd(x, series = 1)
 \arguments{
 \item{x}{SVAR object of class "svars"}
 
-\item{series}{Integer, indicating the series that should be decomposed.}
+\item{series}{Integer indicating the series that should be decomposed.}
+}
+\value{
+A list with class attribute "hd" holding the historical decomposition as data frame.
 }
 \description{
 Calculation of historical decomposition for an identified SVAR object 'svars' derived by function id.st( ), id.cvm( ),id.cv( ),id.dc( ) or id.ngml( ).

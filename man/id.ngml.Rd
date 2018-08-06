@@ -21,13 +21,19 @@ A list of class "svars" with elements
 \item{df}{Estimated degrees of freedom}
 \item{df_SE}{Standard errors of the degrees of freedom}
 \item{Fish}{Observed Fisher information matrix}
-\item{A_hat}{Estimated VAR parameter}
+\item{A_hat}{Estimated VAR parameter via ML}
 \item{B_stand}{Estimated standardized structural impact matrix}
 \item{B_stand_SE}{Standard errors of standardized matrix B_stand}
 \item{Lik}{Function value of likelihood}
 \item{method}{Method applied for identification}
 \item{n}{Number of observations}
 \item{type}{Type of the VAR model, e.g. 'const'}
+\item{y}{Data matrix}
+\item{p}{Number of lags}
+\item{K}{Dimension of the VAR}
+\item{restrictions}{Number of specified restrictions}
+\item{restriction_matrix}{Specified restriction matrix}
+\item{stage3}{Logical, whether Stage 3 is performed}
 }
 \description{
 Given an estimated VAR model, this function applies identification by means of a non-Gaussian likelihood for the structural impact matrix B of the corresponding SVAR model

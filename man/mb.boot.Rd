@@ -33,11 +33,21 @@ with the help of the bootstrap samples.}
 }
 \value{
 A list of class "sboot" with elements
+\item{true}{Point estimate of impulse response functions}
+\item{bootstrap}{List of length "nboot" holding bootstrap impulse response functions}
+\item{SE}{Bootstraped standard errors of estimated covariance decomposition
+(only if "x" has method "Cramer von-Mises", or "Distance covariances")}
+\item{nboot}{Number of bootstrap iterations}
+\item{b_length}{Length of each block}
+\item{point_estimate}{Point estimate of covariance decomposition}
 \item{boot_mean}{Mean of bootstrapped covariance decompositions}
-\item{sign_complete}{Frequency of bootstrapped covariance decompositions which conform the complete predetermined sign pattern. If signrest=NULL,
+\item{signrest}{Evaluated sign pattern}
+\item{sign_complete}{Frequency of appearance of the complete sign pattern in all bootstrapped covariance decompositions}
+\item{sign_part}{Frequency of bootstrapped covariance decompositions which conform the complete predetermined sign pattern. If signrest=NULL,
  the frequency of bootstrapped covariance decompositions that hold the same sign pattern as the point estimate is provided.}
-\item{sign_part}{Frequency of single shocks in all bootstrapped covariance decompositions which accord to a specific predetermined sign pattern
- }
+\item{sign_part}{Frequency of single shocks in all bootstrapped covariance decompositions which accord to a specific predetermined sign pattern}
+\item{cov_bs}{Covariance matrix of bootstrapped parameter in impact relations matrix}
+\item{method}{Used bootstrap method}
 }
 \description{
 Calculating confidence bands for impulse response via moving block bootstrap

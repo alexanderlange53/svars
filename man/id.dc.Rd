@@ -18,6 +18,10 @@ A list of class "svars" with elements
 \item{method}{Method applied for identification}
 \item{n}{Number of observations}
 \item{type}{Type of the VAR model, e.g. 'const'}
+\item{y}{Data matrix}
+\item{p}{Number of lags}
+\item{K}{Dimension of the VAR}
+\item{PIT}{Logical, if PIT is used}
 }
 \description{
 Given an estimated VAR model, this function applies independence-based identification for the structural impact matrix B of the corresponding SVAR model

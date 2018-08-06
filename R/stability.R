@@ -10,18 +10,28 @@
 #' @param type Specifies which type of fluctuation process will be computed, the default is \sQuote{\code{OLS-CUSUM}}.
 #' For details see:\code{\link[strucchange]{efp}} and \code{\link[svars]{chow.test}}.
 #' @param h A numeric from interval (0,1) sepcifying the bandwidth. Determins the size of the data window
-#' relative to sample size (for \sQuote{\code{MOSUM}}, \sQuote{\code{ME}} and \sQuote{\code{mv-chow-test}} processes only).
-#' @param dynamic Logical. If \sQuote{\code{TRUE}} the lagged observations are included as a regressor.
+#' relative to sample size (for \sQuote{\code{MOSUM}}, \sQuote{\code{ME}} and \sQuote{\code{mv-chow-test}} only).
+#' @param dynamic Logical. If \sQuote{\code{TRUE}} the lagged observations are included as a regressor
+#' (not if  \sQuote{\code{type}} is \sQuote{\code{mv-chow-test}}).
 #' @param rescale Logical. If \sQuote{\code{TRUE}} the estimates will be standardized by the regressor matrix of the corresponding subsample;
 #' if \sQuote{\code{FALSE}} the whole regressor matrix will be used. (only if \sQuote{\code{type}} is either \sQuote{\code{RE}} or
 #' \sQuote{\code{E}}).
 #'
 #' @details For details, please refer to documentation \code{\link[strucchange]{efp}} and \code{\link[svars]{chow.test}}.
 #'
-#' @return A list with either class attribute \sQuote{\code{varstabil}} or \sQuote{\code{chowpretest}} holding the following elements:
+#' @return A list with either class attribute \sQuote{\code{varstabil}} or \sQuote{\code{chowpretest}} holding the following elements
+#' in case of class \sQuote{\code{varstabil}}:
 #' \item{stability}{A list with objects of class \sQuote{\code{efp}}; length is equal to the dimension of the VAR.}
 #' \item{names}{Character vector containing the names of the endogenous variables.}
 #' \item{K}{An integer of the VAR dimension.}
+#'
+#'In case of class \sQuote{\code{chowpretest}} the list consists of the following elements:
+#' \item{teststat_bp}{A vector containing the calculated break point test statistics for all considered break points.}
+#' \item{teststat_sp}{A vector containing the calculated sample split test statistics for all considered sample splits.}
+#' \item{from}{An integer sepcifying the first observation as possible break date.}
+#' \item{to}{An integer sepcifying the last observation as possible break date.}
+#' \item{var}{A list with objects of class \sQuote{\code{varest}}}
+#' \item{break_point}{Logical, if the break point test should be the benchmark for later analysis.}
 #'
 #' @author Bernhard Pfaff, Alexander Lange, Bernhard Dalheimer, Simone Maxand, Helmut Herwartz
 #'
@@ -102,11 +112,9 @@ stability.varest <- function(x, type = c("OLS-CUSUM", "Rec-CUSUM", "Rec-MOSUM",
   }
   result <- list(teststat_bp = teststat_bp,
                  teststat_sp = teststat_sp,
-                 y = x$y,
-                 p = x$p,
                  from = unname(from),
                  to = unname(to),
-                 ovar = x,
+                 var = x,
                  break_point = TRUE)
   class(result) <- "chowpretest"
 }

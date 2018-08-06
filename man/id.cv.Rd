@@ -44,7 +44,14 @@ A list of class "svars" with elements
 \item{iteration}{Number of GLS estimations}
 \item{method}{Method applied for identification}
 \item{SB}{Structural break (number of observations)}
+\item{A_hat}{Estimated VAR paramter via GLS}
+\item{type}{Type of the VAR model, e.g. 'const'}
 \item{SBcharacter}{Structural break (date; if provided in function arguments)}
+\item{restrictions}{Number of specified restrictions}
+\item{restriction_matrix}{Specified restriction matrix}
+\item{y}{Data matrix}
+\item{p}{Number of lags}
+\item{K}{Dimension of the VAR}
 }
 \description{
 Given an estimated VAR model, this function applies changes in volatility to identify the structural impact matrix B of the corresponding SVAR model

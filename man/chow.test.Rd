@@ -29,13 +29,16 @@ in the corresponding format or common time parameters need to be provided}
 \item{dateVector}{Vector. Vector of time periods containing SB in corresponding format}
 }
 \value{
-A list with elements
+A list of class "chow" with elements
 \item{lambda_bp}{Test statistic of the Chow test with break point}
 \item{testcrit_bp}{Critical value of the test statistic lambda_bp}
 \item{p.value_bp}{p-value of the test statistic lambda_bp}
 \item{lambda_sp}{Test statistic of the Chow test with sample split}
 \item{testcrit_sp}{Critical value of the test statistic lambda_sp}
 \item{p.value_sp}{p-value of the test statistic lambda_sp}
+\item{SB}{Structural break tested}
+\item{SBcharacter}{Structural break tested as character}
+\item{p}{Number of lags used}
 }
 \description{
 The Chow test for structural change is implemented as sample-split and break-point test (see Luetkepohl and Kraetzig, 2004, p. 135). An estimated VAR model and the presupposed structural break need to be provided.
@@ -58,7 +61,7 @@ x1 <- stability(v1, type = "mv-chow-test")
 plot(x1)
 z1.1 <- chow.test(x1)
 summary(z1.1)
-#Or using sample split as reference
+#Or using sample split as benchmark
 x1$break_point <- FALSE
 z1.1 <- chow.test(x1)
 summary(z1.1)

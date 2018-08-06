@@ -13,6 +13,10 @@
 #' \item{method}{Method applied for identification}
 #' \item{n}{Number of observations}
 #' \item{type}{Type of the VAR model, e.g. 'const'}
+#' \item{y}{Data matrix}
+#' \item{p}{Number of lags}
+#' \item{K}{Dimension of the VAR}
+#' \item{PIT}{Logical, if PIT is used}
 #'
 #' @seealso For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.cvm}}, \code{\link{id.cv}} or \code{\link{id.ngml}}
 #'
@@ -46,7 +50,7 @@
 ## Identification via least dependent innovations ##
 #--------------------------------------------------#
 
-id.dc <- function(x, PIT=FALSE){
+id.dc <- function(x, PIT = FALSE){
 
   # if(is.null(residuals(x))){
   #   stop("No residuals retrieved from model")

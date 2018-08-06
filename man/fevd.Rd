@@ -14,6 +14,9 @@
 
 \item{...}{Currently not used.}
 }
+\value{
+A list with class attribute "svarfevd" holding the forecast error variance decompositions as data frames.
+}
 \description{
 Calculation of forecast error variance decomposition for an identified SVAR object 'svars' derived by function id.st( ), id.cvm( ),id.cv( ),id.dc( ) or id.ngml( ).
 }

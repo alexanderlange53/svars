@@ -3,11 +3,13 @@
 #' Calculation of historical decomposition for an identified SVAR object 'svars' derived by function id.st( ), id.cvm( ),id.cv( ),id.dc( ) or id.ngml( ).
 #'
 #' @param x SVAR object of class "svars"
-#' @param series Integer, indicating the series that should be decomposed.
+#' @param series Integer indicating the series that should be decomposed.
 #'
-#' @seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}}, \code{\link{id.cv} or \code{\link{id.st}}
+#' @return A list with class attribute "hd" holding the historical decomposition as data frame.
 #'
 #' @references Kilian, L., Luetkepohl, H., 2017. Structural Vector Autoregressive Analysis, Cambridge University Press.
+#'
+#' @seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}}, \code{\link{id.cv} or \code{\link{id.st}}
 #'
 #' @examples
 #' \donttest{

@@ -8,19 +8,22 @@
 #'                    in the corresponding format or common time parameters need to be provided
 #' @param nboot Integer. Number of bootstrap iterations to calculate quantiles and p-values
 #' @param rademacher If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples
-#' @param dateVector Vector. Vector of time periods containing SB in corresponding format
 #' @param start Character. Start of the time series (only if dateVector is empty)
 #' @param end Character. End of the time series (only if dateVector is empty)
 #' @param frequency Character. Frequency of the time series (only if dateVector is empty)
 #' @param format Character. Date format (only if dateVector is empty)
+#' @param dateVector Vector. Vector of time periods containing SB in corresponding format
 #'
-#' @return A list with elements
+#' @return A list of class "chow" with elements
 #' \item{lambda_bp}{Test statistic of the Chow test with break point}
 #' \item{testcrit_bp}{Critical value of the test statistic lambda_bp}
 #' \item{p.value_bp}{p-value of the test statistic lambda_bp}
 #' \item{lambda_sp}{Test statistic of the Chow test with sample split}
 #' \item{testcrit_sp}{Critical value of the test statistic lambda_sp}
 #' \item{p.value_sp}{p-value of the test statistic lambda_sp}
+#' \item{SB}{Structural break tested}
+#' \item{SBcharacter}{Structural break tested as character}
+#' \item{p}{Number of lags used}
 #'
 #' @references Luetkepohl, H., 2005. New introduction to multiple time series analysis, Springer-Verlag, Berlin.\cr
 #'      Luetkepohl, H., Kraetzig, M., 2004. Applied time series econometrics, Cambridge University Press, Cambridge.
@@ -45,7 +48,7 @@
 #' plot(x1)
 #' z1.1 <- chow.test(x1)
 #' summary(z1.1)
-#' #Or using sample split as reference
+#' #Or using sample split as benchmark
 #' x1$break_point <- FALSE
 #' z1.1 <- chow.test(x1)
 #' summary(z1.1)
@@ -87,11 +90,11 @@ chow.test <- function(x, SB, nboot = 500, rademacher = TRUE ,start = NULL, end =
 
   if(class(x) == 'chowpretest'){
     if(x$break_point == TRUE){
-      SB <- x$from + which.max(na.omit(x$teststat_bp)) + x$p -1
+      SB <- x$from + which.max(na.omit(x$teststat_bp)) + x$var$p -1
     }else{
-      SB <- x$from + which.max(na.omit(x$teststat_sp)) + x$p -1
+      SB <- x$from + which.max(na.omit(x$teststat_sp)) + x$var$p -1
     }
-    x <- x$ovar
+    x <- x$var
   }
 
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL

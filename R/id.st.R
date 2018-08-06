@@ -7,8 +7,6 @@
 #' The post-break covariance corresponds to \eqn{\Sigma_2=B\Lambda B'} where \eqn{\Lambda} is the estimated heteroskedasticity matrix.
 #'
 #' @param x An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object
-#' @param nc Integer. Number of processor cores
-#'           Note that the smooth transition model is computationally extremely demanding.
 #' @param c_lower Integer. Starting point for the algorithm to start searching for the volatility shift.
 #'                Default is 0.3*(Total number of observations)
 #' @param c_upper Integer. Ending point for the algorithm to stop searching for the volatility shift.
@@ -23,6 +21,8 @@
 #' @param gamma_upper Integer. Upper bound for gamma. Large values indicate a steep transition function. Default is 2
 #' @param gamma_step Integer. Step width of gamma. Default is 0.5
 #' @param gamma_fix Integer. A fixed value for gamma, alternative to gamma found by the function
+#' @param nc Integer. Number of processor cores
+#'           Note that the smooth transition model is computationally extremely demanding.
 #' @param max.iter Integer. Number of maximum GLS iterations
 #' @param crit Integer. Critical value for the precision of the GLS estimation
 #' @param restriction_matrix Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)
@@ -39,7 +39,19 @@
 #' \item{iteration}{Number of GLS estimations}
 #' \item{method}{Method applied for identification}
 #' \item{est_c}{Structural break (number of observations)}
-#' \item{SBcharacter}{Structural break (date; if provided in function arguments)}
+#' \item{est_g}{Transition coefficient}
+#' \item{transition_variable}{Vector of transition variable}
+#' \item{comb}{Number of all grid combinations of gamme and c}
+#' \item{transition_function}{Vector of transition function}
+#' \item{A_hat}{Estimated VAR paramter via GLS}
+#' \item{type}{Type of the VAR model e.g., 'const'}
+#' \item{y}{Data matrix}
+#' \item{p}{Number of lags}
+#' \item{K}{Dimension of the VAR}
+#' \item{restrictions}{Number of specified restrictions}
+#' \item{restriction_matrix}{Specified restriction matrix}
+#' \item{lr_test}{Logical, whether a likelihood ratio test is performed}
+#' \item{lRatioTest}{Results of likelihood ratio test}
 #'
 #' @references Luetkepohl H., Netsunajev A., 2017. "Structural vector autoregressions with smooth transition \cr
 #'   in variances." Journal of Economic Dynamics and Control, 84, 43 - 57. ISSN 0165-1889.

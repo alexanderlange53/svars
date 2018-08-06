@@ -15,13 +15,19 @@
 #' \item{df}{Estimated degrees of freedom}
 #' \item{df_SE}{Standard errors of the degrees of freedom}
 #' \item{Fish}{Observed Fisher information matrix}
-#' \item{A_hat}{Estimated VAR parameter}
+#' \item{A_hat}{Estimated VAR parameter via ML}
 #' \item{B_stand}{Estimated standardized structural impact matrix}
 #' \item{B_stand_SE}{Standard errors of standardized matrix B_stand}
 #' \item{Lik}{Function value of likelihood}
 #' \item{method}{Method applied for identification}
 #' \item{n}{Number of observations}
 #' \item{type}{Type of the VAR model, e.g. 'const'}
+#' \item{y}{Data matrix}
+#' \item{p}{Number of lags}
+#' \item{K}{Dimension of the VAR}
+#' \item{restrictions}{Number of specified restrictions}
+#' \item{restriction_matrix}{Specified restriction matrix}
+#' \item{stage3}{Logical, whether Stage 3 is performed}
 #'
 #'@references Lanne, M., Meitz, M., Saikkonen, P., 2017. Identification and estimation of non-Gaussian structural vector autoregressions. J. Econometrics 196 (2), 288-304.\cr
 #'Comon, P., 1994. Independent component analysis, A new concept?, Signal Processing, 36, 287-314

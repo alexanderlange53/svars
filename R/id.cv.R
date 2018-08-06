@@ -30,7 +30,14 @@
 #' \item{iteration}{Number of GLS estimations}
 #' \item{method}{Method applied for identification}
 #' \item{SB}{Structural break (number of observations)}
+#' \item{A_hat}{Estimated VAR paramter via GLS}
+#' \item{type}{Type of the VAR model, e.g. 'const'}
 #' \item{SBcharacter}{Structural break (date; if provided in function arguments)}
+#' \item{restrictions}{Number of specified restrictions}
+#' \item{restriction_matrix}{Specified restriction matrix}
+#' \item{y}{Data matrix}
+#' \item{p}{Number of lags}
+#' \item{K}{Dimension of the VAR}
 #'
 #' @references Rigobon, R., 2003. Identification through Heteroskedasticity. The Review of Economics and Statistics, 85, 777-792.\cr
 #'  Herwartz, H. & Ploedt, M., 2016. Simulation Evidence on Theory-based and Statistical Identification under Volatility Breaks Oxford Bulletin of Economics and Statistics, 78, 94-112.
