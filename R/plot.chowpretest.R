@@ -17,7 +17,7 @@ plot.chowpretest <- function(x, ...){
   hline.dat <- data.frame(variable = c('Break point', 'Sample split'),
                           Z = c(trans$t[which.max(trans$'Break point')], trans$t[which.max(trans$'Sample split')]))
   trans <- melt(trans, id = 't')
-  ggplot(trans, aes(x = t, y = value)) + geom_line() + xlab("Time") + ylab("Test statistic") + ggtitle('Break point and sample split test') +
+  ggplot(trans, aes(x = t, y = value)) + geom_line(na.rm = TRUE) + xlab("Time") + ylab("Test statistic") + ggtitle('Break point and sample split test') +
     facet_wrap(~variable, ncol = 1, scales = 'free_y') + theme_bw() + geom_vline(data = hline.dat, aes(xintercept = Z),  color = 'red')
 }
 
