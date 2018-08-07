@@ -3,17 +3,17 @@
 #'Calculating confidence bands for impulse response functions via wild bootstrap techniques (Goncalves and Kilian, 2004).
 #'
 #'@param x SVAR object of class "svars"
-#'@param rademacher If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples
+#'@param rademacher locigal. If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples
 #'@param n.ahead Integer specifying the steps
-#'@param nboot Number of bootstrap iterations
-#'@param nc Number of processor cores (Not available on windows machines)
+#'@param nboot Integer. Number of bootstrap iterations
+#'@param nc Integer. Number of processor cores (Not available on windows machines)
 #'@param dd Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.
 #'roxIf not supplied, it will be calculated by the function
 #'@param signrest A list with vectors containing 1 and -1, e.g. c(1,-1,1), indicating a sign pattern of specific shocks to be tested
 #' with the help of the bootstrap samples.
-#'@param itermax Maximum number of iterations for DEoptim
-#'@param steptol Tolerance for steps without improvement for DEoptim
-#'@param iter2 Number of iterations for the second optimization
+#'@param itermax Integer. Maximum number of iterations for DEoptim
+#'@param steptol Integer. Tolerance for steps without improvement for DEoptim
+#'@param iter2 Integer. Number of iterations for the second optimization
 #' @return A list of class "sboot" with elements
 #' \item{true}{Point estimate of impulse response functions}
 #' \item{bootstrap}{List of length "nboot" holding bootstrap impulse response functions}

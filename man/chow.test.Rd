@@ -16,7 +16,7 @@ in the corresponding format or common time parameters need to be provided}
 
 \item{nboot}{Integer. Number of bootstrap iterations to calculate quantiles and p-values}
 
-\item{rademacher}{If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples}
+\item{rademacher}{Logical. If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples}
 
 \item{start}{Character. Start of the time series (only if dateVector is empty)}
 

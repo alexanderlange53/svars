@@ -11,13 +11,13 @@ wild.boot(x, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1,
 \arguments{
 \item{x}{SVAR object of class "svars"}
 
-\item{rademacher}{If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples}
+\item{rademacher}{locigal. If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples}
 
 \item{n.ahead}{Integer specifying the steps}
 
-\item{nboot}{Number of bootstrap iterations}
+\item{nboot}{Integer. Number of bootstrap iterations}
 
-\item{nc}{Number of processor cores (Not available on windows machines)}
+\item{nc}{Integer. Number of processor cores (Not available on windows machines)}
 
 \item{dd}{Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.
 roxIf not supplied, it will be calculated by the function}
@@ -25,11 +25,11 @@ roxIf not supplied, it will be calculated by the function}
 \item{signrest}{A list with vectors containing 1 and -1, e.g. c(1,-1,1), indicating a sign pattern of specific shocks to be tested
 with the help of the bootstrap samples.}
 
-\item{itermax}{Maximum number of iterations for DEoptim}
+\item{itermax}{Integer. Maximum number of iterations for DEoptim}
 
-\item{steptol}{Tolerance for steps without improvement for DEoptim}
+\item{steptol}{Integer. Tolerance for steps without improvement for DEoptim}
 
-\item{iter2}{Number of iterations for the second optimization}
+\item{iter2}{Integer. Number of iterations for the second optimization}
 }
 \value{
 A list of class "sboot" with elements

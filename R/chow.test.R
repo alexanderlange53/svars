@@ -7,7 +7,7 @@
 #'                    a vector of ts() frequencies if a ts object is used in the VAR or a date character. If a date character is provided, either a date vector containing the whole time line
 #'                    in the corresponding format or common time parameters need to be provided
 #' @param nboot Integer. Number of bootstrap iterations to calculate quantiles and p-values
-#' @param rademacher If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples
+#' @param rademacher Logical. If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples
 #' @param start Character. Start of the time series (only if dateVector is empty)
 #' @param end Character. End of the time series (only if dateVector is empty)
 #' @param frequency Character. Frequency of the time series (only if dateVector is empty)
