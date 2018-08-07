@@ -3,9 +3,9 @@
 
 plot.chowpretest <- function(x, ...){
 
-  if(inherits(x$y, "ts")){
-    tsStructure = attr(x$y, which = "tsp")
-    Index <- seq(from = tsStructure[1] + x$p/tsStructure[3], to = tsStructure[2], by = 1/tsStructure[3])
+  if(inherits(x$var$y, "ts")){
+    tsStructure = attr(x$var$y, which = "tsp")
+    Index <- seq(from = tsStructure[1], to = tsStructure[2] - x$var$p/tsStructure[3], by = 1/tsStructure[3])
 
     Index <- as.Date(yearmon(Index))
   } else {

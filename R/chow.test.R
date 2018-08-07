@@ -90,9 +90,9 @@ chow.test <- function(x, SB, nboot = 500, rademacher = TRUE ,start = NULL, end =
 
   if(class(x) == 'chowpretest'){
     if(x$break_point == TRUE){
-      SB <- x$from + which.max(na.omit(x$teststat_bp)) + x$var$p -1
+      SB <-  which.max(x$teststat_bp)
     }else{
-      SB <- x$from + which.max(na.omit(x$teststat_sp)) + x$var$p -1
+      SB <-  which.max(x$teststat_sp)
     }
     x <- x$var
   }
