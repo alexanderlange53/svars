@@ -45,7 +45,6 @@
 #'
 #' @examples
 #' \donttest{
-#'
 #' data(Canada)
 #' var.2c <- VAR(Canada, p = 2, type = "const")
 #' var.2c.stabil <- stability(var.2c, type = "OLS-CUSUM")
