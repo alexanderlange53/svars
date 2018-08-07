@@ -25,6 +25,8 @@ relative to sample size (for \sQuote{\code{MOSUM}}, \sQuote{\code{ME}} and \sQuo
 \item{rescale}{Logical. If \sQuote{\code{TRUE}} the estimates will be standardized by the regressor matrix of the corresponding subsample;
 if \sQuote{\code{FALSE}} the whole regressor matrix will be used. (only if \sQuote{\code{type}} is either \sQuote{\code{RE}} or
 \sQuote{\code{E}}).}
+
+\item{...}{Ellipsis, is passed to \code{strucchange::sctest()}, as default.}
 }
 \value{
 A list with either class attribute \sQuote{\code{varstabil}} or \sQuote{\code{chowpretest}} holding the following elements

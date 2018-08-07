@@ -16,6 +16,7 @@
 #' @param rescale Logical. If \sQuote{\code{TRUE}} the estimates will be standardized by the regressor matrix of the corresponding subsample;
 #' if \sQuote{\code{FALSE}} the whole regressor matrix will be used. (only if \sQuote{\code{type}} is either \sQuote{\code{RE}} or
 #' \sQuote{\code{E}}).
+#' @param ... Ellipsis, is passed to \code{strucchange::sctest()}, as default.
 #'
 #' @details For details, please refer to documentation \code{\link[strucchange]{efp}} and \code{\link[svars]{chow.test}}.
 #'

@@ -11,6 +11,7 @@ plot.chowpretest <- function(x, ...){
   } else {
     Index <- seq(1:length(x$teststat_bp))
   }
+  Z <- value <- NULL
 
   trans <- data.frame(t = Index[x$from:x$to], break_point = x$teststat_bp[x$from:x$to], sample_split = x$teststat_sp[x$from:x$to])
   colnames(trans) <- c('t', 'Break point', 'Sample split')
