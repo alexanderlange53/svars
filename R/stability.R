@@ -69,7 +69,7 @@
 stability.varest <- function(x, type = c("OLS-CUSUM", "Rec-CUSUM", "Rec-MOSUM",
                                   "OLS-MOSUM", "RE", "ME", "Score-CUSUM",
                                   "Score-MOSUM", "fluctuation", "mv-chow-test"),
-                      h = 0.15, dynamic = FALSE, rescale = TRUE){
+                      h = 0.15, dynamic = FALSE, rescale = TRUE, ...){
 
   if(type != "mv-chow-test"){
   if(!(class(x)=="varest")){
