@@ -25,7 +25,7 @@
 #' \item{names}{Character vector containing the names of the endogenous variables.}
 #' \item{K}{An integer of the VAR dimension.}
 #'
-#'In case of class \sQuote{\code{chowpretest}} the list consists of the following elements:
+#' In case of class \sQuote{\code{chowpretest}} the list consists of the following elements:
 #' \item{teststat_bp}{A vector containing the calculated break point test statistics for all considered break points.}
 #' \item{teststat_sp}{A vector containing the calculated sample split test statistics for all considered sample splits.}
 #' \item{from}{An integer sepcifying the first observation as possible break date.}
@@ -68,7 +68,7 @@
 stability.varest <- function(x, type = c("OLS-CUSUM", "Rec-CUSUM", "Rec-MOSUM",
                                   "OLS-MOSUM", "RE", "ME", "Score-CUSUM",
                                   "Score-MOSUM", "fluctuation", "mv-chow-test"),
-                      h = 0.15, dynamic = FALSE, rescale = TRUE, ...){
+                      h = 0.15, dynamic = FALSE, rescale = TRUE){
 
   if(type != "mv-chow-test"){
   if(!(class(x)=="varest")){

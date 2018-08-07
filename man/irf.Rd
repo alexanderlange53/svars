@@ -32,3 +32,6 @@ plot(x2)
 \references{
 Luetkepohl, H., 2005. New introduction to multiple time series analysis, Springer-Verlag, Berlin.
 }
+\seealso{
+\code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}}, \code{\link{id.cv}} or \code{\link{id.st}}
+}

@@ -31,11 +31,12 @@
 #' \item{cov_bs}{Covariance matrix of bootstrapped parameter in impact relations matrix}
 #' \item{method}{Used bootstrap method}
 #'
-#' @seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}}, \code{\link{id.cv} or \code{\link{id.st}}
-#'
 #' @references Brueggemann, R., Jentsch, C., and Trenkler, C. (2016). Inference in VARs with conditional heteroskedasticity of unknown form. Journal of Econometrics 191, 69-85.\cr
 #'   Herwartz, H., 2017. Hodges Lehmann detection of structural shocks -
-#'        An analysis of macroeconomic dynamics in the Euro Area, Oxford Bulletin of Economics and Statistics
+#'        An analysis of macroeconomic dynamics in the Euro Area, Oxford Bulletin of Economics and Statistics.
+#'
+#' @seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}}, \code{\link{id.cv}} or \code{\link{id.st}}
+#'
 #' @examples
 #' \donttest{
 #' # data contains quarterly observations from 1965Q1 to 2008Q3

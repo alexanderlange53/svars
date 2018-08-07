@@ -35,7 +35,7 @@
 #'   Herwartz, H., 2017. Hodges Lehmann detection of structural shocks -
 #'        An analysis of macroeconomic dynamics in the Euro Area, Oxford Bulletin of Economics and Statistics
 #'
-#'@seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}}, \code{\link{id.cv} or \code{\link{id.st}}
+#'@seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}}, \code{\link{id.cv}} or \code{\link{id.st}}
 #'
 #' @examples
 #' \donttest{
