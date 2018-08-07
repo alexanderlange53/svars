@@ -3,6 +3,9 @@
 
 plot.chowpretest <- function(x, ...){
 
+  Z <- NULL
+  t <- NULL
+  value <- NULL
   if(inherits(x$var$y, "ts")){
     tsStructure = attr(x$var$y, which = "tsp")
     Index <- seq(from = tsStructure[1], to = tsStructure[2] - x$var$p/tsStructure[3], by = 1/tsStructure[3])
