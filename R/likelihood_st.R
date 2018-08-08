@@ -2,7 +2,7 @@
 ## Likelihood for smooth transition model ##
 #==========================================#
 
-likelihood_st <- function(parameter, u_t, G, k, Tob, restriction_matrix, restrictions){
+likelihood_st <- function(parameter, u, G, k, Tob, restriction_matrix, restrictions){
 
   if(!is.null(restriction_matrix)){
     if(!is.matrix(restriction_matrix)){
@@ -29,7 +29,7 @@ likelihood_st <- function(parameter, u_t, G, k, Tob, restriction_matrix, restric
 
   lik <- function(xx, B, Lambda){
     Omega <- (1 - G[xx]) * Sigma_1 + G[xx] * Sigma_2
-    log(det(Omega)) + u_t[xx,] %*% solve(Omega) %*% u_t[xx,]
+    log(det(Omega)) + u[xx,] %*% solve(Omega) %*% u[xx,]
   }
 
   ll <- sapply(1:length(G), lik)

@@ -94,7 +94,7 @@ The summary includes general information on the estimation (see `?id.ngml`) and 
 structural.form$B <- structural.form$B[,c(3,2,1)]
 structural.form$B[,3] <- structural.form$B[,3]*(-1)
 
-impulse.response <- imrf(structural.form, horizon = 30)
+impulse.response <- irf(structural.form, n.ahead = 30)
 plot(impulse.response, scales = 'free_y')
 ```
 ![](man/figures/irf_viz.png)
@@ -103,10 +103,10 @@ It is common practice in the SVAR literature to calculate confidence bands via b
 
 ```r
 if(.Platform$OS.type == "windows") {
-    boot.svar <- wild.boot(structural.form, horizon = 30, nboot = 500, nc = 1)
+    boot.svar <- wild.boot(structural.form, n.ahead = 30, nboot = 500, nc = 1)
 }else{
     cores <- parallel::detectCores() - 1
-    boot.svar <- wild.boot(structural.form, horizon = 30, nboot = 500, nc = cores)
+    boot.svar <- wild.boot(structural.form, n.ahead = 30, nboot = 500, nc = cores)
 }
 
 plot(boot.svar)
@@ -116,7 +116,7 @@ plot(boot.svar)
 Besides impulse response analysis, svars contains several tools for SVAR analysis. For instance, the forecast error variance decomposition is useful to see the contribution of each shock to the response of each variable.
 
 ```r
-fevd <- fev(structural.form, horizon = 30)
+fevd <- fevd(structural.form, n.ahead = 30)
 plot(fevd)
 ```
 

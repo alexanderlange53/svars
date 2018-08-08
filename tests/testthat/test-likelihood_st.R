@@ -3,7 +3,7 @@ context("test-likelihood_st.R")
 test_that("Luetkepohl Netsunajev 5*5 example", {
 
   v1 <- vars::VAR(LN, p = 3, type = 'const')
-  u_t <- residuals(v1)
+  u <- residuals(v1)
   # Transition function
   transition_f <- function(gamma, cc, st){
     G <- (1 + exp(-exp(gamma)*(st - cc)))^(-1)
@@ -19,14 +19,14 @@ test_that("Luetkepohl Netsunajev 5*5 example", {
          0.885487887527691,	0.0288063531310017,	0.0196527566892526,	0.0206577929300702,	0.00150251343596967), nrow = 5, byrow = T)
   Lambda <- c(0.0199927489696526, 0.314911226555606, 0.548190884220239,	0.866994133953794, 0.926892018919112)*diag(5)
 
-  expect_equal(round(likelihood_st(parameter = c(B, diag(Lambda)), u_t = u_t, G = G_grid, k = 5, Tob = 447, restriction_matrix = NULL), 3),
+  expect_equal(round(likelihood_st(parameter = c(B, diag(Lambda)), u = u, G = G_grid, k = 5, Tob = 447, restriction_matrix = NULL), 3),
                      2976.656)
 })
 
 test_that("Random 2*2 example works", {
 
   set.seed(12123)
-  u_t <- matrix(rnorm(400, sd = 1.2), 200, 2)
+  u <- matrix(rnorm(400, sd = 1.2), 200, 2)
   # Transition function
   transition_f <- function(gamma, cc, st){
     G <- (1 + exp(-exp(gamma)*(st - cc)))^(-1)
@@ -38,14 +38,14 @@ test_that("Random 2*2 example works", {
   B <- matrix(c(rnorm(mean = 3, 4)), nrow = 2)
   Lambda <- c(rnorm(mean = 2, 2))*diag(2)
 
-  expect_equal(round(likelihood_st(parameter = c(B, diag(Lambda)), u_t = u_t, G = G_grid, k = 2, Tob = 200, restriction_matrix = NULL), 3),
+  expect_equal(round(likelihood_st(parameter = c(B, diag(Lambda)), u = u, G = G_grid, k = 2, Tob = 200, restriction_matrix = NULL), 3),
                906.717)
 })
 
 test_that("2*2 example with negative variance", {
 
   set.seed(12123)
-  u_t <- matrix(rnorm(400, sd = 1.2), 200, 2)
+  u <- matrix(rnorm(400, sd = 1.2), 200, 2)
   # Transition function
   transition_f <- function(gamma, cc, st){
     G <- (1 + exp(-exp(gamma)*(st - cc)))^(-1)
@@ -57,6 +57,6 @@ test_that("2*2 example with negative variance", {
   B <- matrix(c(rnorm(mean = 3, 4)), nrow = 2)
   Lambda <- c(-2, 2)*diag(2)
 
-  expect_equal(round(likelihood_st(parameter = c(B, diag(Lambda)), u_t = u_t, G = G_grid, k = 2, Tob = 200, restriction_matrix = NULL), 3),
+  expect_equal(round(likelihood_st(parameter = c(B, diag(Lambda)), u = u, G = G_grid, k = 2, Tob = 200, restriction_matrix = NULL), 3),
                1e25)
 })

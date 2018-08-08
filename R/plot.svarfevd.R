@@ -1,8 +1,8 @@
 #' @import ggplot2
 #' @importFrom reshape2 melt
-#' @S3method plot fevd
+#' @S3method plot svarfevd
 
-plot.fevd <- function(x, ...){
+plot.svarfevd <- function(x, ...){
 
   V1 <- NULL
   value <- NULL

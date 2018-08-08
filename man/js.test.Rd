@@ -14,9 +14,11 @@ js.test(x, R, r = NULL)
 \item{r}{A J*1 vector of restrictions}
 }
 \value{
-A list with elements
+A list of class "jstest" with elements
 \item{test_statistic}{Test statistic}
 \item{p_value}{P-value}
+\item{R}{Selection matrix}
+\item{r}{Vector of restrictions}
 }
 \description{
 Based on an existing bootstrap object, the test statistic allows to test joint hypotheses for selected entries of the structural matrix B. The test statistic reads as
@@ -33,7 +35,7 @@ v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
 x1 <- id.dc(v1)
 
 # Bootstrapping of SVAR
-bb <- wild.boot(x1, nboot = 1000, horizon = 30)
+bb <- wild.boot(x1, nboot = 1000, n.ahead = 30)
 
 # Testing the hypothesis of a lower triangular matrix as
 # relation between structural and reduced form errors
@@ -47,4 +49,7 @@ summary(c.test)
 \references{
 Herwartz, H., 2018. Hodges Lehmann detection of structural shocks -
        An analysis of macroeconomic dynamics in the Euro Area, Oxford Bulletin of Economics and Statistics
+}
+\seealso{
+\code{\link{mb.boot}}, \code{\link{wild.boot}}
 }

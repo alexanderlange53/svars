@@ -14,9 +14,9 @@ Description: Implements data-driven identification methods for structural vector
              Based on an existing VAR model object (provided by e.g. VAR() from the 'vars' package), the structural 
              impact matrix is obtained via data-driven identification techniques (i.e. changes in volatility (Rigobon, R. (2003) <doi:10.1162/003465303772815727>), 
              least dependent innovations (Herwartz, H., Ploedt, M., (2016) <doi:10.1016/j.jimonfin.2015.11.001>) or non-Gaussian maximum likelihood (Lanne, M., Meitz, M., Saikkonen, P. (2017) <doi:10.1016/j.jeconom.2016.06.002>).
-Depends: R (>= 2.10)
-Imports: vars, expm, reshape2, ggplot2, copula, clue, pbapply, steadyICA, tsDyn, DEoptim, zoo
+Depends: R (>= 2.10), vars (>= 1.5.3)
+Imports: expm, reshape2, ggplot2, copula, clue, pbapply, steadyICA, tsDyn, DEoptim, zoo, strucchange
 License: MIT + file LICENSE
 LazyData: TRUE
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Suggests: testthat

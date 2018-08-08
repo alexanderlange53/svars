@@ -1,8 +1,8 @@
 #' @import ggplot2
 #' @importFrom reshape2 melt
-#' @S3method plot irf
+#' @S3method plot svarirf
 
-plot.irf <- function(x, base, scales = "free_y", ...){
+plot.svarirf <- function(x, base, scales = "free_y", ...){
 
 
   impulse <- melt(x$irf, id = 'V1')

@@ -28,15 +28,17 @@ wald.test <- function(Lambda, Sigma, restrictions){
     round((betas[, x]%*%c(1, -1))^2 / (sum(sigmas[,x]) - 2 * covS[x]),2)
   })
 
-  combinations = matrix(combn(1:k,2), nrow = 2)
+  combinations <- matrix(combn(1:k,2), nrow = 2)
 
-  H.null = apply(combinations, 2, FUN = function(x){
+  H.null <- apply(combinations, 2, FUN = function(x){
     paste("lambda_", x[1], "=", "lambda_", x[2], sep = "")
     })
 
 
-  waldTest = cbind(H.null, test.stat, p.value)
-
+  #waldTest = cbind(H.null, test.stat, p.value)
+  waldTest <- data.frame(test.stat = unlist(test.stat), p.value = unlist(p.value))
+  colnames(waldTest) = c("Test statistic", "p-value")
+  rownames(waldTest) <- H.null
   return(waldTest)
 }
 

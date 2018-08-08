@@ -8,12 +8,17 @@
 #' @param R A J*K^2 selection matrix, where J is the number of hypotheses and K the number of time series.
 #' @param r A J*1 vector of restrictions
 #'
-#' @return A list with elements
+#' @return A list of class "jstest" with elements
 #' \item{test_statistic}{Test statistic}
 #' \item{p_value}{P-value}
+#' \item{R}{Selection matrix}
+#' \item{r}{Vector of restrictions}
 #'
 #' @references Herwartz, H., 2018. Hodges Lehmann detection of structural shocks -
 #'        An analysis of macroeconomic dynamics in the Euro Area, Oxford Bulletin of Economics and Statistics
+#'
+#' @seealso \code{\link{mb.boot}}, \code{\link{wild.boot}}
+#'
 #'@examples
 #' \donttest{
 #' # data contains quarterly observations from 1965Q1 to 2008Q3
@@ -24,7 +29,7 @@
 #' x1 <- id.dc(v1)
 #'
 #' # Bootstrapping of SVAR
-#' bb <- wild.boot(x1, nboot = 1000, horizon = 30)
+#' bb <- wild.boot(x1, nboot = 1000, n.ahead = 30)
 #'
 #' # Testing the hypothesis of a lower triangular matrix as
 #' # relation between structural and reduced form errors

@@ -1,14 +1,14 @@
-identifyVolatility_boot = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = restriction_matrix,
+identifyVolatility_boot = function(x, SB, Tob = Tob, u = u, k = k, y = y, restriction_matrix = restriction_matrix,
                                    Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
                                    max.iter, crit = crit, Z = NULL){
 
   if(!is.null(restriction_matrix)){
-    B <- t(chol((1/Tob)* crossprod(u_t)))
+    B <- t(chol((1/Tob)* crossprod(u)))
     naElements <- is.na(restriction_matrix)
     B <- B[naElements]
     restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
   }else{
-    B <- t(chol((1/Tob)* crossprod(u_t)))
+    B <- t(chol((1/Tob)* crossprod(u)))
     B <- c(B)
   }
   Lambda <- rep(1, k)
@@ -117,21 +117,21 @@ identifyVolatility_boot = function(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, re
     GLS_hat <- GLS1%*%GLS2
 
     term1 <- apply(Z_t, 2, resid.gls, k = k, GLS_hat = GLS_hat)
-    u_tgls <- t(y) - t(term1)
+    ugls <- t(y) - t(term1)
 
-    resid1gls <- u_tgls[1:TB-1,]
-    resid2gls <- u_tgls[TB:Tob,]
+    resid1gls <- ugls[1:TB-1,]
+    resid2gls <- ugls[TB:Tob,]
     Sigma_hat1gls <- (crossprod(resid1gls)) / (TB-1)
     Sigma_hat2gls <- (crossprod(resid2gls)) / (Tob-TB+1)
 
     # Determine starting values for B and Lambda
     if(!is.null(restriction_matrix)){
-      B <- t(chol((1/Tob)* crossprod(u_t)))
+      B <- t(chol((1/Tob)* crossprod(u)))
       naElements <- is.na(restriction_matrix)
       B <- B[naElements]
       restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
     }else{
-      B <- t(chol((1/Tob)* crossprod(u_t)))
+      B <- t(chol((1/Tob)* crossprod(u)))
       B <- c(B)
     }
     Lambda <- rep(1, k)

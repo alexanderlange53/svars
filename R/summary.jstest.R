@@ -5,11 +5,12 @@ summary.jstest <- function(object, ...){
   cat(paste("\n", "Joint Significance Test Results", "\n", sep = ""))
   underScore <- paste(rep("-", nchar("Joint Significance Test Results")), collapse = "")
   cat(underScore)
-  TestMatrix <-  matrix(c(round(object$test_statistic, 2),
-                          round(object$p_value, 2)),
-                        ncol = 1, nrow = 2)
-  rownames(TestMatrix) <- c("Test statistic", "p-value")
+  TestMatrix <-  matrix(c(object$test_statistic,
+                          object$p_value),
+                        ncol = 2, nrow = 1, byrow = T)
+  colnames(TestMatrix) <- c("Test statistic", "p-value")
+  rownames(TestMatrix) <- ""
   cat("\n")
-  printCoefmat(TestMatrix)
+  printCoefmat(TestMatrix, has.Pvalue = T)
 }
 

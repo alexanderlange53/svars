@@ -21,17 +21,25 @@ summary.chow <- function(object, ...){
                                       object$SBcharacter), sep = "")))), collapse = "")
   }
   cat(hLine, "\n")
-  TestMatrix <-  matrix(c(round(object$lambda_bp, 2),
-                          round(object$testcrit_bp, 2),
-                          round(object$p.value_bp, 2),
-                          round(object$lambda_sp, 2),
-                          round(object$testcrit_sp, 2),
-                          round(object$p.value_sp, 2)),
-                          ncol = 2, nrow = 3)
-  colnames(TestMatrix) <- c("Break-point Test:", "      Sample-split test:")
-  rownames(TestMatrix) <- c("Test statistic", "95% critical value", "p-value")
+  # TestMatrix <-  matrix(c(round(object$lambda_bp, 2),
+  #                         round(object$testcrit_bp, 2),
+  #                         round(object$p.value_bp, 2),
+  #                         round(object$lambda_sp, 2),
+  #                         round(object$testcrit_sp, 2),
+  #                         round(object$p.value_sp, 2)),
+  #                         ncol = 3, nrow = 2, byrow = T)
+
+  TestMatrix <-  matrix(c(object$lambda_bp,
+                          object$testcrit_bp,
+                          object$p.value_bp,
+                          object$lambda_sp,
+                          object$testcrit_sp,
+                          object$p.value_sp),
+                        ncol = 3, nrow = 2, byrow = T)
+   rownames(TestMatrix) <- c("Break-point Test:", "Sample-split test:")
+   colnames(TestMatrix) <- c("Test statistic", "95% critical value", "p-value")
   cat("\n")
-  printCoefmat(TestMatrix)
+  printCoefmat(TestMatrix, has.Pvalue = T, signif.legend = T, signif.stars = T)
 
 }
 

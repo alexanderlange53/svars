@@ -30,7 +30,14 @@
 #' \item{iteration}{Number of GLS estimations}
 #' \item{method}{Method applied for identification}
 #' \item{SB}{Structural break (number of observations)}
+#' \item{A_hat}{Estimated VAR paramter via GLS}
+#' \item{type}{Type of the VAR model, e.g. 'const'}
 #' \item{SBcharacter}{Structural break (date; if provided in function arguments)}
+#' \item{restrictions}{Number of specified restrictions}
+#' \item{restriction_matrix}{Specified restriction matrix}
+#' \item{y}{Data matrix}
+#' \item{p}{Number of lags}
+#' \item{K}{Dimension of the VAR}
 #'
 #' @references Rigobon, R., 2003. Identification through Heteroskedasticity. The Review of Economics and Statistics, 85, 777-792.\cr
 #'  Herwartz, H. & Ploedt, M., 2016. Simulation Evidence on Theory-based and Statistical Identification under Volatility Breaks Oxford Bulletin of Economics and Statistics, 78, 94-112.
@@ -54,7 +61,7 @@
 #' x1$B[,3] <- x1$B[,3]*(-1)
 #'
 #' # Impulse response analysis
-#' i1 <- imrf(x1, horizon = 30)
+#' i1 <- irf(x1, n.ahead = 30)
 #' plot(i1, scales = 'free_y')
 #'
 #' # Restrictions
@@ -94,45 +101,8 @@
 
 id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
                         format = NULL, dateVector = NULL, max.iter = 50, crit = 0.001, restriction_matrix = NULL){
-
-  if(inherits(x, "var.boot")){
-    u_t <- x$residuals
-    Tob <- nrow(u_t)
-    k <- ncol(u_t)
-    residY <- u_t
-  }else{
-    u_t <- residuals(x)
-    Tob <- nrow(u_t)
-    k <- ncol(u_t)
-    residY <- u_t
-  }
-
-  if(inherits(x, "var.boot")){
-    p <- x$p
-    y <- t(x$y)
-    yOut <- x$y
-    type <- x$type
-    coef_x <- x$coef_x
-  }else if(inherits(x, "varest")){
-  p <- x$p
-  y <- t(x$y)
-  yOut <- x$y
-  type <- x$type
-  }else if(inherits(x, "nlVar")){
-    if(inherits(x, "VECM")){
-      stop("id.cv is not available for VECMs")
-    }
-    p <- x$lag
-    y <- t(x$model[, 1:k])
-    type <- x$include
-    yOut <- x$model[, 1:k]
-  }else if(inherits(x, "list")){
-    p <- x$order
-    y <- t(x$data)
-    yOut <- x$data
-  }else{
-    stop("Object class is not supported")
-  }
+u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
+get_var_objects(x)
 
   if(is.numeric(SB)){
     SBcharacter <- NULL
@@ -164,27 +134,31 @@ if(!is.numeric(SB)){
 
   TB <- SB - p
 
-  resid1 <- u_t[1:TB-1,]
-  resid2 <- u_t[TB:Tob,]
+  resid1 <- u[1:TB-1,]
+  resid2 <- u[TB:Tob,]
   Sigma_hat1 <- (crossprod(resid1)) / (TB-1)
   Sigma_hat2 <- (crossprod(resid2)) / (Tob-TB+1)
 
   if(!is.null(restriction_matrix)){
-   resultUnrestricted <- identifyVolatility(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = NULL,
+   resultUnrestricted <- identifyVolatility(x, SB, Tob = Tob, u = u, k = k, y = y, restriction_matrix = NULL,
                                  Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
                                  max.iter = max.iter, crit = crit, yOut = yOut, type = type)
-    result <- identifyVolatility(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = restriction_matrix,
+    result <- identifyVolatility(x, SB, Tob = Tob, u = u, k = k, y = y, restriction_matrix = restriction_matrix,
                                            Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
                                  max.iter = max.iter, crit = crit, yOut = yOut, type = type)
 
     lRatioTestStatistic = 2 * (resultUnrestricted$Lik - result$Lik)
     pValue = round(1 - pchisq(lRatioTestStatistic, result$restrictions), 4)
 
-    result$lRatioTestStatistic = lRatioTestStatistic
-    result$lRatioTestPValue = pValue
+    #result$lRatioTestStatistic = lRatioTestStatistic
+    #result$lRatioTestPValue = pValue
+    lRatioTest <- data.frame(testStatistic = lRatioTestStatistic, p.value = pValue)
+    rownames(lRatioTest) <- ""
+    colnames(lRatioTest) <- c("Test statistic", "p-value")
+    result$lRatioTest <- lRatioTest
   }else{
     restriction_matrix <- NULL
-    result <- identifyVolatility(x, SB, Tob = Tob, u_t = u_t, k = k, y = y, restriction_matrix = restriction_matrix,
+    result <- identifyVolatility(x, SB, Tob = Tob, u = u, k = k, y = y, restriction_matrix = restriction_matrix,
                                  Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
                                  max.iter = max.iter, crit = crit, yOut = yOut, type = type)
   }

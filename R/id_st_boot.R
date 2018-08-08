@@ -2,43 +2,8 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
                   gamma_fix = NULL, nc = 1, Z,
                   max.iter = 5, crit = 0.01, restriction_matrix = NULL){
 
-  if(inherits(x, "var.boot")){
-    u_t <- x$residuals
-    Tob <- nrow(u_t)
-    k <- ncol(u_t)
-    residY <- u_t
-    yOut <- x$y
-  }else{
-    u_t <- residuals(x)
-    Tob <- nrow(u_t)
-    k <- ncol(u_t)
-    residY <- u_t
-    yOut <- x$y
-  }
-
-  if(inherits(x, "var.boot")){
-    p <- x$p
-    y <- t(x$y)
-    type = x$type
-    coef_x = x$coef_x
-    yOut <- x$y
-  }else if(inherits(x, "varest")){
-    p <- x$p
-    y <- t(x$y)
-    yOut <- x$y
-  }else if(inherits(x, "nlVar")){
-    if(inherits(x, "VECM")){
-      stop("id.cv is not available for VECMs")
-    }
-    p <- x$lag
-    y <- t(x$model[, 1:k])
-  }else if(inherits(x, "list")){
-    p <- x$order
-    y <- t(x$data)
-  }else{
-    stop("Object class is not supported")
-  }
-
+  u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
+  get_var_objects(x)
 
   # Function for Z matrix
   y_lag_cr <- function(y, lag_length){
@@ -87,7 +52,7 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
     y_loop <- y
   }
 
-    best_estimation <- iterative_smooth_transition(transition = G_grid, u_t = u_t, y = y, Tob = Tob, k = k,
+    best_estimation <- iterative_smooth_transition(transition = G_grid, u = u, y = y, Tob = Tob, k = k,
                                                    p = p, crit = crit, max.iter = max.iter, Z_t = Z_t, y_loop = y_loop,
                                                    restriction_matrix = restriction_matrix)
     transition_function <- G_grid
