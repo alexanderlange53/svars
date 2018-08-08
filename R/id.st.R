@@ -41,7 +41,7 @@
 #' \item{est_c}{Structural break (number of observations)}
 #' \item{est_g}{Transition coefficient}
 #' \item{transition_variable}{Vector of transition variable}
-#' \item{comb}{Number of all grid combinations of gamme and c}
+#' \item{comb}{Number of all grid combinations of gamma and c}
 #' \item{transition_function}{Vector of transition function}
 #' \item{A_hat}{Estimated VAR paramter via GLS}
 #' \item{type}{Type of the VAR model e.g., 'const'}
