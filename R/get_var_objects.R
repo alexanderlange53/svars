@@ -67,10 +67,13 @@ get_var_objects <- function(x){
     assign("coef_x", lapply(coef_x, as.matrix), envir = parent.frame())
 
   }else if(inherits(x, "vec2var")){
+    assign("k", ncol(x$resid), envir = parent.frame())
+    k <- ncol(x$resid)
     coef_x <- vector("list", length = k)
     names(coef_x) <- colnames(x$y)
     assign("coef_x", coef_x, envir = parent.frame())
     assign("yOut", x$y, envir = parent.frame())
+    p <- x$p
     assign("p", x$p, envir = parent.frame())
     assign("y", t(x$y), envir = parent.frame())
 
