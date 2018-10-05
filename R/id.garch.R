@@ -105,10 +105,21 @@ id.garch <- function(x, max.iter = 50, crit = 0.001, restriction_matrix = NULL){
   get_var_objects(x)
 
   sigg <- crossprod(u)/(Tob-1-k*p)
-  B_0 <- sqrtm(sigg)
+
+  # Polar decomposition as in Lanne Saikkonen
+  eigVectors <- eigen(sigg)$vectors
+  eigVectors <- eigVectors[,rev(1:ncol(eigVectors))]
+  eigValues <- diag(rev(eigen(sigg)$values))
+  eigVectors[,2] <- eigVectors[,2]*(-1)
+
+  CC <- eigVectors %*% sqrt(eigValues) %*% t(eigVectors)
+  B0 <- solve(solve(sqrt(eigValues)) %*% t(eigVectors))
+
+  #B_0 <- sqrtm(sigg)
 
   # Initial structural erros
-  ste <- solve(B_0) %*% t(u)
+  #ste <- B_0 %*% t(u)
+  ste <- solve(sqrt(eigValues)) %*% t(eigVectors) %*% t(u)
 
   ## Stage 1: Univariate optimization of GARCH(1, 1) parameter
   # Initial values as in Lütkepohl + Schlaak (2018)
@@ -128,13 +139,15 @@ id.garch <- function(x, max.iter = 50, crit = 0.001, restriction_matrix = NULL){
       }
     }
   }
-
+  init_gamma <- rep(0.01, 5)
+  init_g <- rep(0.83261, 5)
 
   Sigma_e_0 <-  matrix(1, Tob-p, k)
   # first observstion of strucutral variance is the estimated sample variance
-  Sigma_e_0 <-  sapply(1:k, function(x) rep(diag(var(t(ste)))[x], Tob-p))
+  Sigma_e_0 <-  matrix(diag(var(t(ste)))[1],  Tob-p, k)
+  Sigma_e_0 <-  matrix(1,  Tob-p, k)
 
-  parameter <- cbind(init_gamma, init_g)
+  parameter_ini_univ <- cbind(init_gamma, init_g)
 
   # optimizing the univariate likelihood functions
   maxL <- list()
@@ -144,16 +157,88 @@ id.garch <- function(x, max.iter = 50, crit = 0.001, restriction_matrix = NULL){
   Sigma_e_univ <- matrix(NA, Tob-p, k)
 
   for(i in 1:k){
-    maxL <- nlm(p = parameter[i, ], f = likelihood_garch_uni, k = k, Tob = Tob,
+    maxL <- nlm(p = parameter_ini_univ[i, ], f = likelihood_garch_uni, k = k, Tob = Tob,
                 Sigma_1 = Sigma_e_0[, i] , est = ste[i, ], lags = p)
+
     gamma_univ[i] <- maxL$estimate[1]
     g_univ[i] <- maxL$estimate[2]
 
-    param_univ[, i] <- rbind( (1- gamma_univ[i]- g_univ[i]), gamma_univ[i], g_univ[i])
+    param_univ[, i] <- rbind((1- gamma_univ[i]- g_univ[i]), gamma_univ[i], g_univ[i])
     Sigma_e_univ[,i] <- sigma_garch_univ(param_univ[,i], Tob, k, Sigma_e_0[,i], ste[i,], p)
   }
 
+  # Multivariate optimization
+  # INITIAL VALUES: construct B, i.e. insert 1 on main diagonal, only K^2-K parameters need to be estiated
+  # normalize the inverse of B to have ones on main diagonal
+  B_0_inv <- solve(B0)
+  norm_inv <- solve(diag(diag(B_0_inv), k, k))
+  B_0_inv_norm <-  norm_inv%*%B_0_inv
+  B_0_norm <- solve(norm_inv%*%B_0_inv)
 
+  B_param_ini <- B_0_norm[col(B_0_norm) != row(B_0_norm)]
+  diag_elements <- 1/(diag(B_0_inv))
+
+  ini <- c(B_param_ini, diag_elements)
+
+  # create empty vectors that hold the estimated parameters and paste initial values
+  gamma <- rep(NA, k)
+  g <-  rep(NA, k)
+  # const <- vector(mode="numeric", length = spec$gcomp)
+  const <- const_ini
+  param <-  param_univ
+  results_B <- vector(mode = "list")
+  results_param <- vector(mode = "list")
+  round <-  1
+  SSR <- matrix(NA, 1, 2)
+  SSR_help <-  matrix(NA, 1,2)
+  SSR[,1:2] <- c(1,1)
+  while (SSR[round,2] > 10^-4){
+    max_ml <- nlm(ini, f = garch_ll_first_Binv, k = k, Tob = Tob,
+                  Sigma_e = Sigma_e_univ , u = u, lags = p)
+    max_ml$minimum
+    # initials for next round of estimation
+    ini <- max_ml$estimate
+    # get the B matrix from the estimated parameters
+    B_inv[col(B_inv) != row(B_inv)] <- ini[1:(k^2-k)]
+    B <- solve(B_inv)
+
+    diagonal_mat <- diag(ini[(k^2-k+1):k^2])
+
+    B_est <- B%*%diagonal_mat
+    B_est_inv <- solve(B_est)
+    # save individual B matrices for each round
+    results_B[[round]] <- B
+    # calculate new structural residuals for update of the GARCH parameters
+    est_r <- solve(B_est) %*% t(u)
+
+    # calculate the new "starting value" for the variance of structural error
+    SSR_help[1,1] <- max_ml$minimum
+    SSR_help[1,2] <- abs((SSR_help[1,1] - SSR[round,1] ) / SSR[round,1]);
+    SSR <- rbind(SSR, SSR_help)
+
+    # re-estimate GARCH part, based on update of estimate of B
+    # optimizing the univariate likelihood functions
+    maxL <- list()
+    gamma_univ <- rep(NA, k)
+    g_univ <- rep(NA, k)
+    param_univ <- matrix(NA, 3, k)
+    Sigma_e_univ <- matrix(NA, Tob-p, k)
+
+    for(i in 1:k){
+      maxL <- nlm(p = parameter_ini_univ[i, ], f = likelihood_garch_uni, k = k, Tob = Tob,
+                  Sigma_1 = Sigma_e_0[, i] , est = est_r[i, ], lags = p)
+
+      gamma_univ[i] <- maxL$estimate[1]
+      g_univ[i] <- maxL$estimate[2]
+
+      param_univ[, i] <- rbind((1- gamma_univ[i]- g_univ[i]), gamma_univ[i], g_univ[i])
+      Sigma_e_univ[,i] <- sigma_garch_univ(param_univ[,i], Tob, k, Sigma_e_0[,i], ste[i,], p)
+    }
+
+    results_param[[round]] <- param_univ
+    cat("Round of algorithm is ", round,". LL:", SSR_help[1,1],  ". LL-change: ", SSR_help[1,2], ".\n")
+    round <-  round + 1
+  } # end of while loop
 
 
 }
