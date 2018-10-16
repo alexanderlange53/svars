@@ -158,7 +158,7 @@ id.garch <- function(x, max.iter = 10, crit = 0.001, restriction_matrix = NULL){
     # Including a constant
     param_univ[, i] <- rbind((1- gamma_univ[i]- g_univ[i]), gamma_univ[i], g_univ[i])
     # estimated conditional heteroskedasticity
-    Sigma_e_univ[,i] <- sigma_garch_univ(param_univ[,i], Tob, k, Sigma_e_0[,i], ste[i,], p)
+    Sigma_e_univ[,i] <- sigma_garch_univ(param_univ[,i], Tob, k, Sigma_e_0[,i], ste[i,])
   }
 
   # Store estimtated GARCH parameter as initial values for multivariate optimization
@@ -238,7 +238,7 @@ id.garch <- function(x, max.iter = 10, crit = 0.001, restriction_matrix = NULL){
       g_univ[i] <- maxL$estimate[2]
 
       param_univ[, i] <- rbind((1- gamma_univ[i]- g_univ[i]), gamma_univ[i], g_univ[i])
-      Sigma_e_univ[,i] <- sigma_garch_univ(param_univ[,i], Tob, k, Sigma_e_0[,i], est_r[i,], p)
+      Sigma_e_univ[,i] <- sigma_garch_univ(param_univ[,i], Tob, k, Sigma_e_0[,i], est_r[i,])
     }
 
     uni_ml[[round]] <- uni_single_ml
