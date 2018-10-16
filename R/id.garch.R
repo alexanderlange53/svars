@@ -139,19 +139,18 @@ id.garch <- function(x, max.iter = 10, crit = 0.001, restriction_matrix = NULL){
   parameter_ini_univ <- cbind(init_gamma, init_g)
 
   # first observstion of strucutral variance is the estimated sample variance
-  Sigma_e_0 <-  matrix(diag(var(t(ste))),  Tob-p, k, byrow = T)
-  #Sigma_e_0 <-  matrix(1,  Tob-p, k)
+  Sigma_e_0 <-  matrix(diag(var(t(ste))),  Tob, k, byrow = T)
 
   # optimizing the univariate likelihood functions
   maxL <- list()
   gamma_univ <- rep(NA, k)
   g_univ <- rep(NA, k)
   param_univ <- matrix(NA, 3, k)
-  Sigma_e_univ <- matrix(NA, Tob-p, k)
+  Sigma_e_univ <- matrix(NA, Tob, k)
 
   for(i in 1:k){
     maxL <- nlm(p = parameter_ini_univ[i, ], f = likelihood_garch_uni, k = k, Tob = Tob,
-                Sigma_1 = Sigma_e_0[, i] , est = ste[i, ], lags = p)
+                Sigma_1 = Sigma_e_0[, i] , est = ste[i, ])
 
     # Optimized GARCH parameter
     gamma_univ[i] <- maxL$estimate[1]
@@ -195,7 +194,7 @@ id.garch <- function(x, max.iter = 10, crit = 0.001, restriction_matrix = NULL){
 
   while (Exit > crit & round < max.iter){
     max_ml <- nlm(ini, f = likelihood_garch_multi, k = k, Tob = Tob,
-                  Sigma_e = Sigma_e_univ , u = u, lags = p, iterlim = 150, hessian = T)
+                  Sigma_e = Sigma_e_univ , u = u, iterlim = 150, hessian = T)
 
     multi_ml[[round]] <- max_ml
     # initials for next round of univariate estimation
@@ -225,14 +224,14 @@ id.garch <- function(x, max.iter = 10, crit = 0.001, restriction_matrix = NULL){
     gamma_univ <- rep(NA, k)
     g_univ <- rep(NA, k)
     param_univ <- matrix(NA, 3, k)
-    Sigma_e_univ <- matrix(NA, Tob-p, k)
+    Sigma_e_univ <- matrix(NA, Tob, k)
 
     # first observstion of strucutral variance is the estimated sample variance
-    Sigma_e_0 <-  matrix(diag(var(t(est_r))),  Tob-p, k, byrow = T)
+    Sigma_e_0 <-  matrix(diag(var(t(est_r))),  Tob, k, byrow = T)
 
     for(i in 1:k){
       maxL <- nlm(p = parameter_ini_univ[i, ], f = likelihood_garch_uni, k = k, Tob = Tob,
-                  Sigma_1 = Sigma_e_0[, i] , est = est_r[i, ], lags = p, iterlim = 150, hessian = T)
+                  Sigma_1 = Sigma_e_0[, i] , est = est_r[i, ], iterlim = 150, hessian = T)
       uni_single_ml[[i]] <- maxL$hessian
 
       gamma_univ[i] <- maxL$estimate[1]
