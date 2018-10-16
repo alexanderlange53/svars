@@ -101,7 +101,7 @@ chow.test <- function(x, SB, nboot = 500, rademacher = TRUE ,start = NULL, end =
   get_var_objects(x)
 
   # Null hypothesis of no sample split is rejected for large values of lambda
-  Tob <- x$obs
+  #Tob <- x$obs
   if(is.numeric(SB)){
     SBcharacter <- NULL
   }
@@ -169,7 +169,7 @@ if(!is.null(nboot)){
 
   # bootstrapping the test statistic to obtain empirical distribution
   # obtaining VAR parameter
-  coef_x <- coef(x)
+  #coef_x <- coef(x)
 
   A <- matrix(0, nrow =k, ncol = k* p)
   yl <- t(y_lag_cr(y, p)$lags)
