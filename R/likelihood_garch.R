@@ -28,7 +28,7 @@ likelihood_garch_uni <- function(parameter, est, Sigma_1, Tob, k, lags){
   }
 }
 
-garch_ll_first_Binv <-  function(parameter, Sigma_e, Tob, k, lags, u){
+likelihood_garch_multi <-  function(parameter, Sigma_e, Tob, k, lags, u){
 
   B_inv <- diag(k)
   B_inv[col(B_inv) != row(B_inv)] <- parameter[1:(k^2-k)]
@@ -37,7 +37,7 @@ garch_ll_first_Binv <-  function(parameter, Sigma_e, Tob, k, lags, u){
   diag_comp <- diag(parameter[(k^2-k+1):(k^2)])
   # diag_comp is the inverted and squared diagonal elements of B_inv-matrix (i.e. (norm_inv)^2 ) = sqrt(diag_comp)
 
-  # # B = B_norm%*% solve(diag(diag(B_inv),K,K))
+  #
   B <- solve(solve(diag_comp)%*%solve(B_norm))
 
   L <- 0
@@ -46,7 +46,7 @@ garch_ll_first_Binv <-  function(parameter, Sigma_e, Tob, k, lags, u){
   }
 
   if(is.na(L) == 0){
-    return(-L) ;
+    return(L) ;
   }else{
     return(1e25) ;
   }
