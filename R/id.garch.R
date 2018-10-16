@@ -243,13 +243,14 @@ id.garch <- function(x, max.iter = 10, crit = 0.001, restriction_matrix = NULL){
 
     uni_ml[[round]] <- uni_single_ml
     results_param[[round]] <- parameter_ini_univ <-  cbind(gamma_univ, g_univ)
-    cat("Round of algorithm is ", round,". LL:", Exit,  ". LL-change: ", ll[[round]], ".\n")
     round <-  round + 1
   } # end of while loop
 
   # extracting the best estimates
   ll <- unlist(ll)
   llf <- ll[which.min(ll)]
+  # Calculate log likelihood with normalizing constant
+  llf <- log(sqrt(1/(2 * pi)^k)) * Tob - llf
   cc <- which.min(ll)
   B_hat <- results_B[[cc]]
   GARCH_param_hat <- results_param[[cc]]
