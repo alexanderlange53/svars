@@ -53,12 +53,8 @@
 #' # i = interest rates
 #' set.seed(23211)
 #' v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
-#' x1 <- id.cv(v1, SB = 59)
+#' x1 <- id.garch(v1)
 #' summary(x1)
-#'
-#' # switching columns according to sign patter
-#' x1$B <- x1$B[,c(3,2,1)]
-#' x1$B[,3] <- x1$B[,3]*(-1)
 #'
 #' # Impulse response analysis
 #' i1 <- irf(x1, n.ahead = 30)
@@ -71,7 +67,7 @@
 #' x2 <- id.cv(v1, SB = 59, restriction_matrix = restMat)
 #' summary(x2)
 #'
-#' #Structural brake via Dates
+#' # Structural brake via Dates
 #' # given that time series vector with dates is available
 #' dateVector = seq(as.Date("1965/1/1"), as.Date("2008/7/1"), "quarter")
 #' x3 <- id.cv(v1, SB = "1979-07-01", format = "%Y-%m-%d", dateVector = dateVector)
@@ -98,7 +94,7 @@
 # SB : structural break
 
 
-id.garch <- function(x, max.iter = 10, crit = 0.001, restriction_matrix = NULL){
+id.garch <- function(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL){
 
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
   get_var_objects(x)
@@ -278,6 +274,50 @@ id.garch <- function(x, max.iter = 10, crit = 0.001, restriction_matrix = NULL){
   rownames(B_inv_SE) <- colnames(u)
   colnames(GARCH_SE) <- colnames(GARCH_param_hat) <- c('gamma', 'g')
 
+  # obtaining VAR parameter
+  if(inherits(x, "var.boot")){
+    A_hat <- coef_x
+  }else{
+    A <- matrix(0, nrow = k, ncol = k*p)
+    for(i in 1:k){
+      A[i,] <- coef_x[[i]][1:(k*p),1]
+    }
+
+    A_hat <- A
+
+    if(type == "const"){
+      v <- rep(1, k)
+
+      for(i in 1:k){
+        v[i] <- coef_x[[i]][(k*p+1), 1]
+      }
+
+      A_hat <- cbind(v, A)
+    }else if (type == "trend"){
+      trend <- rep(1, k)
+
+      for(i in 1:k){
+        trend[i] <- coef_x[[i]][(k*p+1), 1]
+      }
+
+      A_hat <- cbind(trend, A)
+    }else if(type == "both"){
+      v <- rep(1, k)
+
+      for(i in 1:k){
+        v[i] <- coef_x[[i]][(k*p+1), 1]
+      }
+
+      trend <- rep(1, k)
+
+      for(i in 1:k){
+        trend[i] <- coef_x[[i]][(k*p+2), 1]
+      }
+
+      A_hat <- cbind(v, trend, A)
+    }
+  }
+
   result <- list(
     B = B_hat,              # estimated B matrix (unique decomposition of the covariance matrix)
     B_inv_SE = B_inv_SE,            # standard errors of B matrix
@@ -288,12 +328,14 @@ id.garch <- function(x, max.iter = 10, crit = 0.001, restriction_matrix = NULL){
     Lik = -llf,             # function value of likelihood
     iteration = round,     # number of gls estimations
     method = "GARCH",
-    #A_hat = GLSE,            # VAR parameter estimated with gls
+    A_hat = A_hat,            # VAR parameter estimated with gls
     type = type,          # type of the VAR model e.g 'const'
     y = yOut,                # Data
     p = unname(p),                # number of lags
     K = k                 # number of time series
   )
+  class(result) <- "svars"
+
   return(result)
 
 }
