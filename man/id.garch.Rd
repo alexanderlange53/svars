@@ -4,7 +4,7 @@
 \alias{id.garch}
 \title{GARCH identification of SVAR models}
 \usage{
-id.garch(x, max.iter = 10, crit = 0.001, restriction_matrix = NULL)
+id.garch(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL)
 }
 \arguments{
 \item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object}
@@ -24,13 +24,10 @@ A list of class "svars" with elements
 \item{n}{Number of observations}
 \item{Fish}{Observed Fisher information matrix}
 \item{Lik}{Function value of likelihood}
-\item{wald_statistic}{Results of pairwise Wald tests}
 \item{iteration}{Number of GLS estimations}
 \item{method}{Method applied for identification}
-\item{SB}{Structural break (number of observations)}
 \item{A_hat}{Estimated VAR paramter via GLS}
 \item{type}{Type of the VAR model, e.g. 'const'}
-\item{SBcharacter}{Structural break (date; if provided in function arguments)}
 \item{restrictions}{Number of specified restrictions}
 \item{restriction_matrix}{Specified restriction matrix}
 \item{y}{Data matrix}
@@ -53,12 +50,8 @@ The post-break covariance corresponds to \eqn{\Sigma_2=B\Lambda B'} where \eqn{\
 # i = interest rates
 set.seed(23211)
 v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
-x1 <- id.cv(v1, SB = 59)
+x1 <- id.garch(v1)
 summary(x1)
-
-# switching columns according to sign patter
-x1$B <- x1$B[,c(3,2,1)]
-x1$B[,3] <- x1$B[,3]*(-1)
 
 # Impulse response analysis
 i1 <- irf(x1, n.ahead = 30)
@@ -71,20 +64,6 @@ restMat[1,3] <- 0
 x2 <- id.cv(v1, SB = 59, restriction_matrix = restMat)
 summary(x2)
 
-#Structural brake via Dates
-# given that time series vector with dates is available
-dateVector = seq(as.Date("1965/1/1"), as.Date("2008/7/1"), "quarter")
-x3 <- id.cv(v1, SB = "1979-07-01", format = "\%Y-\%m-\%d", dateVector = dateVector)
-summary(x3)
-
-# or pass sequence arguments directly
-x4 <- id.cv(v1, SB = "1979-07-01", format = "\%Y-\%m-\%d", start = "1965-01-01", end = "2008-07-01",
-frequency = "quarter")
-summary(x4)
-
-# or provide ts date format (For quarterly, monthly, weekly and daily frequencies only)
-x5 <- id.cv(v1, SB = c(1979, 3))
-summary(x5)
 
 }
 }
