@@ -7,14 +7,6 @@
 #' The post-break covariance corresponds to \eqn{\Sigma_2=B\Lambda B'} where \eqn{\Lambda} is the estimated unconditional heteroskedasticity matrix.
 #'
 #' @param x An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object
-#' @param SB Integer, vector or date character. The structural break is specified either by an integer (number of observations in the pre-break period),
-#'                    a vector of ts() frequencies if a ts object is used in the VAR or a date character. If a date character is provided, either a date vector containing the whole time line
-#'                    in the corresponding format (see examples) or common time parameters need to be provided
-#' @param dateVector Vector. Vector of time periods containing SB in corresponding format
-#' @param start Character. Start of the time series (only if dateVector is empty)
-#' @param end Character. End of the time series (only if dateVector is empty)
-#' @param frequency Character. Frequency of the time series (only if dateVector is empty)
-#' @param format Character. Date format (only if dateVector is empty)
 #' @param restriction_matrix Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)
 #' @param max.iter Integer. Number of maximum GLS iterations
 #' @param crit Integer. Critical value for the precision of the GLS estimation
@@ -26,13 +18,10 @@
 #' \item{n}{Number of observations}
 #' \item{Fish}{Observed Fisher information matrix}
 #' \item{Lik}{Function value of likelihood}
-#' \item{wald_statistic}{Results of pairwise Wald tests}
 #' \item{iteration}{Number of GLS estimations}
 #' \item{method}{Method applied for identification}
-#' \item{SB}{Structural break (number of observations)}
 #' \item{A_hat}{Estimated VAR paramter via GLS}
 #' \item{type}{Type of the VAR model, e.g. 'const'}
-#' \item{SBcharacter}{Structural break (date; if provided in function arguments)}
 #' \item{restrictions}{Number of specified restrictions}
 #' \item{restriction_matrix}{Specified restriction matrix}
 #' \item{y}{Data matrix}
@@ -67,20 +56,6 @@
 #' x2 <- id.cv(v1, SB = 59, restriction_matrix = restMat)
 #' summary(x2)
 #'
-#' # Structural brake via Dates
-#' # given that time series vector with dates is available
-#' dateVector = seq(as.Date("1965/1/1"), as.Date("2008/7/1"), "quarter")
-#' x3 <- id.cv(v1, SB = "1979-07-01", format = "%Y-%m-%d", dateVector = dateVector)
-#' summary(x3)
-#'
-#' # or pass sequence arguments directly
-#' x4 <- id.cv(v1, SB = "1979-07-01", format = "%Y-%m-%d", start = "1965-01-01", end = "2008-07-01",
-#' frequency = "quarter")
-#' summary(x4)
-#'
-#' # or provide ts date format (For quarterly, monthly, weekly and daily frequencies only)
-#' x5 <- id.cv(v1, SB = c(1979, 3))
-#' summary(x5)
 #'
 #' }
 #' @export
@@ -89,10 +64,6 @@
 #----------------------------#
 ## Identification via GARCH ##
 #----------------------------#
-
-# x  : object of class VAR
-# SB : structural break
-
 
 id.garch <- function(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL){
 
@@ -106,7 +77,6 @@ id.garch <- function(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL){
   eigValues <- diag(eigen(sigg)$values)
   eigVectors <- eigVectors[,rev(1:ncol(eigVectors))]
   eigValues <- diag(rev(eigen(sigg)$values))
-  #eigVectors[,2] <- eigVectors[,2]*(-1)
 
   CC <- eigVectors %*% sqrt(eigValues) %*% t(eigVectors)
   B0 <- solve(solve(sqrt(eigValues)) %*% t(eigVectors))
@@ -154,7 +124,7 @@ id.garch <- function(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL){
     # Including a constant
     param_univ[, i] <- rbind((1- gamma_univ[i]- g_univ[i]), gamma_univ[i], g_univ[i])
     # estimated conditional heteroskedasticity
-    Sigma_e_univ[,i] <- sigma_garch_univ(param_univ[,i], Tob, k, Sigma_e_0[,i], ste[i,])
+    Sigma_e_univ[,i] <- sigma_garch_univ(param_univ[,i], Tob, Sigma_e_0[,i], ste[i,])
   }
 
   # Store estimtated GARCH parameter as initial values for multivariate optimization
@@ -234,7 +204,7 @@ id.garch <- function(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL){
       g_univ[i] <- maxL$estimate[2]
 
       param_univ[, i] <- rbind((1- gamma_univ[i]- g_univ[i]), gamma_univ[i], g_univ[i])
-      Sigma_e_univ[,i] <- sigma_garch_univ(param_univ[,i], Tob, k, Sigma_e_0[,i], est_r[i,])
+      Sigma_e_univ[,i] <- sigma_garch_univ(param_univ[,i], Tob, Sigma_e_0[,i], est_r[i,])
     }
 
     uni_ml[[round]] <- uni_single_ml
@@ -325,7 +295,7 @@ id.garch <- function(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL){
     GARCH_SE  = GARCH_SE,
     n = Tob,                # number of observations
     Fish = HESS,            # observerd fisher information matrix
-    Lik = -llf,             # function value of likelihood
+    Lik = llf,             # function value of likelihood
     iteration = round,     # number of gls estimations
     method = "GARCH",
     A_hat = A_hat,            # VAR parameter estimated with gls

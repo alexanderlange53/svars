@@ -14,20 +14,6 @@ id.garch(x, max.iter = 10, crit = 0.001, restriction_matrix = NULL)
 \item{crit}{Integer. Critical value for the precision of the GLS estimation}
 
 \item{restriction_matrix}{Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)}
-
-\item{SB}{Integer, vector or date character. The structural break is specified either by an integer (number of observations in the pre-break period),
-a vector of ts() frequencies if a ts object is used in the VAR or a date character. If a date character is provided, either a date vector containing the whole time line
-in the corresponding format (see examples) or common time parameters need to be provided}
-
-\item{dateVector}{Vector. Vector of time periods containing SB in corresponding format}
-
-\item{start}{Character. Start of the time series (only if dateVector is empty)}
-
-\item{end}{Character. End of the time series (only if dateVector is empty)}
-
-\item{frequency}{Character. Frequency of the time series (only if dateVector is empty)}
-
-\item{format}{Character. Date format (only if dateVector is empty)}
 }
 \value{
 A list of class "svars" with elements
