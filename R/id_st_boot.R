@@ -41,9 +41,9 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
     if(x$type == 'const'){
       Z_t <- rbind(rep(1, ncol(yl)), yl)
     }else if(x$type == 'trend'){
-      Z_t <- rbind(seq(1, ncol(yl)), yl)
+      Z_t <- rbind(seq(p + 1, Tob), yl)
     }else if(x$type == 'both'){
-      Z_t <- rbind(rep(1, ncol(yl)), seq(1, ncol(yl)), yl)
+      Z_t <- rbind(rep(1, ncol(yl)), seq(p + 1, Tob), yl)
     }else{
       Z_t <- yl
     }

@@ -52,9 +52,9 @@ identifyVolatility_boot = function(x, SB, Tob = Tob, u = u, k = k, y = y, restri
     if(x$type == 'const'){
       Z_t <- rbind(rep(1, ncol(yl)), yl)
     }else if(x$type == 'trend'){
-      Z_t <- rbind(seq(1, ncol(yl)), yl)
+      Z_t <- rbind(seq(p + 1, ncol(yret)), yl)
     }else if(x$type == 'both'){
-      Z_t <- rbind(rep(1, ncol(yl)), seq(1, ncol(yl)), yl)
+      Z_t <- rbind(rep(1, ncol(yl)), seq(p + 1, ncol(yret)), yl)
     }else{
       Z_t <- yl
     }

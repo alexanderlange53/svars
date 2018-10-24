@@ -126,7 +126,7 @@ identifyNGML <- function(x, coef_x, Sigma_hat, u, k, p, Tob, yOut, type, y,
       }
 
       A <- cbind(trend, A)
-      Z_t <- rbind(seq(1, ncol(yl)), yl)
+      Z_t <- rbind(seq(p +1, ncol(y_return)), yl)
     }else if(type == "both"){
       v <- rep(1, k)
 
@@ -135,7 +135,7 @@ identifyNGML <- function(x, coef_x, Sigma_hat, u, k, p, Tob, yOut, type, y,
       }
 
       trend <- rep(1, k)
-      Z_t <- rbind(rep(1, ncol(yl)), seq(1, ncol(yl)), yl)
+      Z_t <- rbind(rep(1, ncol(yl)), seq(p + 1, ncol(y_return)), yl)
       for(i in 1:k){
         trend[i] <- coef_x[[i]][(k*p+2), 1]
       }

@@ -96,9 +96,9 @@ wild.boot <- function(x, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1, d
   if(x$type == 'const'){
     Z <- rbind(rep(1, ncol(Z)), Z)
   }else if(x$type == 'trend'){
-    Z <- rbind(seq(1, ncol(Z)), Z)
+    Z <- rbind(seq(p + 1, ncol(Z)+ p), Z)
   }else if(x$type == 'both'){
-    Z <- rbind(rep(1, ncol(Z)), seq(1, ncol(Z)), Z)
+    Z <- rbind(rep(1, ncol(Z)), seq(p + 1, ncol(Z) + p), Z)
   }else{
     Z <- Z
   }
