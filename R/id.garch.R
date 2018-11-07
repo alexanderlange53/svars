@@ -53,7 +53,7 @@
 #' # Assuming that the interest rate doesn't influence the output gap on impact
 #' restMat <- matrix(rep(NA, 9), ncol = 3)
 #' restMat[1,3] <- 0
-#' x2 <- id.cv(v1, SB = 59, restriction_matrix = restMat)
+#' x2 <- id.garch(v1, restriction_matrix = restMat)
 #' summary(x2)
 #'
 #'
