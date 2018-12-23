@@ -28,13 +28,17 @@ likelihood_garch_uni <- function(parameter, est, Sigma_1, Tob, k){
   }
 }
 
+#===========================================#
+## Likelihood for multivariate GARCH model ##
+#===========================================#
+
 likelihood_garch_multi <-  function(parameter, Sigma_e, Tob, k, u){
 
   B_inv <- diag(k)
-  B_inv[col(B_inv) != row(B_inv)] <- parameter[1:(k^2-k)]
+  B_inv[col(B_inv) != row(B_inv)] <- parameter[1: (k^2 - k)]
   B_norm <-  solve(B_inv)
 
-  diag_comp <- diag(parameter[(k^2-k+1):(k^2)])
+  diag_comp <- diag(parameter[(k^2 - k + 1): (k^2)])
   # diag_comp is the inverted and squared diagonal elements of B_inv-matrix (i.e. (norm_inv)^2 ) = sqrt(diag_comp)
 
   B <- solve(solve(diag_comp)%*%solve(B_norm))
