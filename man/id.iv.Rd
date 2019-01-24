@@ -21,6 +21,7 @@ A list of class "svars" with elements
 \item{y}{Data matrix}
 \item{p}{Number of lags}
 \item{K}{Dimension of the VAR}
+\item{F_statistic}{Test statistic for weak instrument}
 }
 \description{
 Given an estimated VAR model, this function applies independence-based identification for the structural impact matrix B of the corresponding SVAR model
@@ -30,29 +31,10 @@ A nonparametric dependence measure, the distance covariance (Szekely et al, 2007
 }
 \examples{
 
-# data contains quarterly observations from 1965Q1 to 2008Q3
-# x = output gap
-# pi = inflation
-# i = interest rates
-set.seed(23211)
-v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
-x1 <- id.dc(v1)
-summary(x1)
-
-# switching columns according to sign pattern
-x1$B <- x1$B[,c(3,2,1)]
-x1$B[,3] <- x1$B[,3]*(-1)
-
-# impulse response analysis
-i1 <- irf(x1, n.ahead = 30)
-plot(i1, scales = 'free_y')
-
 
 }
 \references{
-Matteson, D. S. & Tsay, R. S., 2013. Independent Component Analysis via Distance Covariance, pre-print\cr
-     Szekely, G. J.; Rizzo, M. L. & Bakirov, N. K., 2007. Measuring and testing dependence by correlation of distances Ann. Statist., 35, 2769-2794\cr
-     Comon, P., 1994. Independent component analysis, A new concept?, Signal Processing, 36, 287-314
+Lunsford, K. G., 2016. "Identifying Structural VARs with a Proxy Variable and a Test for a Weak Proxy"
 }
 \seealso{
 For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.cvm}}, \code{\link{id.cv}} or \code{\link{id.ngml}}

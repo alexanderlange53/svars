@@ -16,30 +16,12 @@
 #' \item{y}{Data matrix}
 #' \item{p}{Number of lags}
 #' \item{K}{Dimension of the VAR}
+#' \item{F_statistic}{Test statistic for weak instrument}
 #'
 #' @seealso For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.cvm}}, \code{\link{id.cv}} or \code{\link{id.ngml}}
 #'
-#'@references Matteson, D. S. & Tsay, R. S., 2013. Independent Component Analysis via Distance Covariance, pre-print\cr
-#'      Szekely, G. J.; Rizzo, M. L. & Bakirov, N. K., 2007. Measuring and testing dependence by correlation of distances Ann. Statist., 35, 2769-2794\cr
-#'      Comon, P., 1994. Independent component analysis, A new concept?, Signal Processing, 36, 287-314
+#'@references Lunsford, K. G., 2016. "Identifying Structural VARs with a Proxy Variable and a Test for a Weak Proxy"
 #' @examples
-#'
-#' # data contains quarterly observations from 1965Q1 to 2008Q3
-#' # x = output gap
-#' # pi = inflation
-#' # i = interest rates
-#' set.seed(23211)
-#' v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
-#' x1 <- id.dc(v1)
-#' summary(x1)
-#'
-#' # switching columns according to sign pattern
-#' x1$B <- x1$B[,c(3,2,1)]
-#' x1$B[,3] <- x1$B[,3]*(-1)
-#'
-#' # impulse response analysis
-#' i1 <- irf(x1, n.ahead = 30)
-#' plot(i1, scales = 'free_y')
 #'
 #'
 #' @export
@@ -134,7 +116,7 @@ id.iv <- function(x, instruments = NULL){
                  y = yOut,       # Data
                  p = unname(p),  # number of lags
                  K = k,          # number of time series
-                 F_test = F_test # Test on weak instrument
+                 F_statistic = F_test # Test on weak instrument
   )
   class(result) <- "svars"
   return(result)

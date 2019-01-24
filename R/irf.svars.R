@@ -79,17 +79,38 @@ irf.svars <- function(x, ..., n.ahead = 20){
 
   IR <- IrF(A_hat, B_hat, n.ahead)
 
-  impulse <- matrix(0, ncol = dim(IR)[2]^2 + 1, nrow = dim(IR)[3])
-  colnames(impulse) <- rep("V1", ncol(impulse))
-  cc <- 1
-  impulse[,1] <- seq(1, dim(IR)[3])
-  for(i in 1:dim(IR)[2]){
-    for(j in 1:dim(IR)[2]){
-      cc <- cc + 1
-      impulse[,cc] <- IR[i,j,]
-      colnames(impulse)[cc] <- paste("epsilon[",colnames(x$y)[j],"]", "%->%", colnames(x$y)[i])
+  if(x$method == "Instrument Variables"){
+    IR2 <- array(0, c(nrow(B_hat), ncol(B_hat), dim(IR)[3]))
+    for(i in 1:dim(IR)[3]){
+      IR2[, , i] <- IR[, 1:ncol(B_hat), i]
+    }
+    IR <- IR2
+
+    impulse <- matrix(0, ncol = dim(IR)[2]*dim(IR)[1] + 1, nrow = dim(IR)[3])
+    colnames(impulse) <- rep("V1", ncol(impulse))
+    cc <- 1
+    impulse[,1] <- seq(1, dim(IR)[3])
+    for(i in 1:dim(IR)[1]){
+      for(j in 1:dim(IR)[2]){
+        cc <- cc + 1
+        impulse[,cc] <- IR[i,j,]
+        colnames(impulse)[cc] <- paste("epsilon", "%->%", colnames(x$y)[i])
+      }
+    }
+  }else{
+    impulse <- matrix(0, ncol = dim(IR)[2]^2 + 1, nrow = dim(IR)[3])
+    colnames(impulse) <- rep("V1", ncol(impulse))
+    cc <- 1
+    impulse[,1] <- seq(1, dim(IR)[3])
+    for(i in 1:dim(IR)[2]){
+      for(j in 1:dim(IR)[2]){
+        cc <- cc + 1
+        impulse[,cc] <- IR[i,j,]
+        colnames(impulse)[cc] <- paste("epsilon[",colnames(x$y)[j],"]", "%->%", colnames(x$y)[i])
+      }
     }
   }
+
   impulse <- list(irf = as.data.frame(impulse))
   class(impulse) <- "svarirf"
   return(impulse)

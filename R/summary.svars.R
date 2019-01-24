@@ -10,7 +10,7 @@ summary.svars <- function(object, ...){
   cat(svarsObject$method)
   cat("\nSample size: ")
   cat(svarsObject$n)
-  if(!svarsObject$method %in% c("Distance covariances", "Cramer-von Mises distance")){
+  if(!svarsObject$method %in% c("Distance covariances", "Cramer-von Mises distance", "Instrument Variables")){
   cat("\nLikelihood: ")
   cat(svarsObject$Lik)
 }
@@ -107,6 +107,13 @@ summary.svars <- function(object, ...){
    cat(svarsObject$rotation_angles, "\n")
    cat("Cramer-von Mises test statistic: ")
    cat(svarsObject$test.stats)
+ }
+  else if(svarsObject$method == "Instrument Variables"){
+    cat("\n")
+    cat("\nImpact effects of identified shock B_1: \n")
+    print(svarsObject$B)
+    cat("\nTest statistic on weak instruments: \n")
+    print(svarsObject$F_statistic)
   }
 
 
