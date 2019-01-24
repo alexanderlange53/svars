@@ -1,0 +1,23 @@
+id.iv <- function(x, instruments = NULL){
+
+  u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
+  get_var_objects(x)
+
+  if(is.null(instruments)){
+    stop('Please provide a valid instrument')
+  }
+
+  # Checking length of instrument
+  if(Tob != length(instruments)){
+    stop('length of instrument variable is unequal to data length')
+  }
+
+  # regressing instruments on residuals
+  Pi <- solve(crossprod(u)/Tob) %*% crossprod(u, instruments)
+
+  # covariance of VAR innovations and instrument
+  phi2 <- (crossprod(instruments, u)/Tob) %*% solve(crossprod(u)/Tob) %*% (crossprod(u, instruments)/Tob)
+
+  # Impact relation
+  B_1 <- (crossprod(u, instruments)/Tob) %*% ((crossprod(instruments, u)/Tob) %*% solve(crossprod(u)/Tob) %*% (crossprod(u, instruments)/Tob))
+}
