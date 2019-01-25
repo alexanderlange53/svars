@@ -17,6 +17,7 @@
 #' \item{p}{Number of lags}
 #' \item{K}{Dimension of the VAR}
 #' \item{F_statistic}{Test statistic for weak instrument}
+#' \item{Instrument}{Proxy used in the estimation}
 #'
 #' @seealso For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.cvm}}, \code{\link{id.cv}} or \code{\link{id.ngml}}
 #'
@@ -116,7 +117,8 @@ id.iv <- function(x, instruments = NULL){
                  y = yOut,       # Data
                  p = unname(p),  # number of lags
                  K = k,          # number of time series
-                 F_statistic = F_test # Test on weak instrument
+                 F_statistic = F_test, # Test on weak instrument
+                 Instrument = instruments
   )
   class(result) <- "svars"
   return(result)

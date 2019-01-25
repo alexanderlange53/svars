@@ -74,6 +74,34 @@ mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NU
     return(yy)
   }
 
+  if(x$method == "Instrument Variables"){
+    bootstraps <- mb.boot_iv(x = x, b.length = b.length, n.ahead = n.ahead, nboot = nboot, nc = nc)
+
+    delnull  <-  function(x){
+      x[unlist(lapply(x, length) != 0)]
+    }
+
+    bootstraps <- lapply(bootstraps, function (x)x[any(!is.na(x))])
+    bootstraps <- delnull(bootstraps)
+
+    Bs <- array(0, c(k, ncol(x$B), length(bootstraps)))
+    ipb <- list()
+    for(i in 1:length(bootstraps)){
+      Bs[,,i] <- bootstraps[[i]][[2]]
+      ipb[[i]] <- bootstraps[[i]][[1]]
+    }
+
+    # calculating covariance matrix of vectorized bootstrap matrices
+    v.b <-  matrix(Bs, ncol = nrow(x$B)*ncol(x$B), byrow = T)
+    cov.bs <- cov(v.b)
+
+    # Calculating Bootstrap means
+    boot.mean <- matrix(colMeans(v.b), k, ncol(x$B))
+    rownames(boot.mean) <- rownames(x$B)
+
+    SE <- matrix(sqrt(diag(cov.bs)), k, ncol(x$B))
+    rownames(SE) <- rownames(x$B)
+  }else{
 
   # gathering informations from vars object
   y <- x$y
@@ -236,8 +264,10 @@ mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NU
   boot.mean <- matrix(colMeans(v.b),k,k)
   rownames(boot.mean) <- rownames(x$B)
 
+  }
+
   # Checking for signs
-  if(!is.null(x$restriction_matrix)){
+  if(!is.null(x$restriction_matrix) | x$method == "Instrument Variables"){
     if(!is.null(signrest)){
       cat('Testing signs only possible for unrestricted model \n')
     }
