@@ -7,6 +7,7 @@ mb.boot_iv <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1){
   k <- x$K
   B <- x$B
   instruments <- as.matrix(x$Instrument)
+  row.names(instruments) <- NULL
 
   # calculating covariance from actual VAR
   A <- x$A_hat
@@ -49,9 +50,9 @@ mb.boot_iv <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1){
     }
   }
 
-  u_center <- do.call(rbind, replicate(N, u_center, simplify=FALSE))
+  u_center <- do.call(rbind, replicate(N, u_center, simplify = FALSE))
   u_center <- u_center[1:obs, ]
-  ins_center <- do.call(rbind, replicate(N, ins_center, simplify=FALSE))
+  ins_center <- do.call(rbind, replicate(N, ins_center, simplify = FALSE))
   ins_center <- ins_center[1:obs, ]
 
   for(i in 1:nboot){

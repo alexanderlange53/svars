@@ -130,38 +130,42 @@ mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NU
   u <- t(y[-c(1:p),]) - A %*% Z
   Sigma_u_hat_old <- tcrossprod(u)/(obs - 1 - k * p)
 
-  # creating new error terms
+  # creating new error terms and instruments
   errors <- list()
 
   # creating blocks
-  N <- obs/b.length
+  N <- ceiling(obs/b.length)
   blocks <- array(NA, c(b.length, k, obs - b.length + 1))
   u <- t(u)
-  for(i in 0:(obs-b.length)){
-    blocks[,,(i+1)] <- u[(i+1):(i+b.length),]
+  for(i in 1:(obs - b.length + 1)){
+    blocks[, , i] <- u[i:(i + b.length - 1),]
   }
 
+  # centering errors and instruments
+  u_center <- matrix(NA, b.length, k)
+  for(i in 1:b.length){
+    u_center[i, ] <- colMeans(u[i:(obs-b.length+i),])
+  }
+
+  u_center <- do.call(rbind, replicate(N, u_center, simplify=FALSE))
+  u_center <- u_center[1:obs, ]
+
   for(i in 1:nboot){
-    epsilon.star <- matrix(0, b.length*(ceiling(N)+1), ncol(u))
+    epsilon.star <- matrix(0, b.length*N, ncol(u))
     epsilon.star <- list()
+
     # stacking randomly selected blocks at each other
-    for(kk in 1:(ceiling(N)+1)){
-      epsilon.star[[kk]] <- blocks[,,floor(runif(1, 1, obs - b.length+2))]
+    for(kk in 1:N){
+      epsilon.star[[kk]] <- blocks[, , ceiling(runif(1, 1, obs - b.length + 1))]
     }
     epsilon.star <- do.call('rbind', epsilon.star)
 
-    # centering new errors
-    for(s in 1:b.length){
-      b.mean <- colSums(epsilon.star[1 : (s+(obs - b.length)),])/(obs - b.length +1)
-      for(j in 0:floor(N)){
-        epsilon.star[j*b.length + s,] <- epsilon.star[j*b.length + s,] - b.mean
-      }
-    }
+    epsilon.star <- epsilon.star[1:obs, ]
 
-    # cutting of unnecessary observations
-    epsilon.star <- epsilon.star[1:obs,]
+    # centering new errors and instruments
+    epsilon.star <- epsilon.star - u_center
 
-    errors[[i]] <- t(epsilon.star)
+    errors[[i]] <-t(epsilon.star)
   }
 
   # Bootstrapfunction
