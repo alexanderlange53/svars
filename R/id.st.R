@@ -10,8 +10,8 @@
 #' @param c_lower Integer. Starting point for the algorithm to start searching for the volatility shift.
 #'                Default is 0.3*(Total number of observations)
 #' @param c_upper Integer. Ending point for the algorithm to stop searching for the volatility shift.
-#'                Default is 0.7*(Total number of observations)
-#' @param c_step Integer. Step width of c. Default is 5
+#'                Default is 0.7*(Total number of observations). Note that in case of a stochastic transition variable, the input requires an absolute value
+#' @param c_step Integer. Step width of c. Default is 5. Note that in case of a stochastic transition variable, the input requires an absolute value
 #' @param c_fix Integer. If the transition point is known, it can be passed as an argument
 #'              where transition point = Number of observations - c_fix
 #' @param transition_variable A numeric vector that represents the transition variable. By default (NULL), the time is used
@@ -107,14 +107,16 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
   if(is.null(gamma_fix) &  is.null(c_fix)){
     # Creating grid for iterative procedure with gamma and break point unknown
     gamma_grid <-  seq(gamma_lower, gamma_upper, by = gamma_step)
-    cc_grid <- seq(ceiling(c_lower*Tob), floor(c_upper*Tob), by = c_step)
-    grid_comb <- unique(expand.grid(gamma_grid, cc_grid))
     if(is.null(transition_variable)){
+      cc_grid <- seq(ceiling(c_lower*Tob), floor(c_upper*Tob), by = c_step)
+      grid_comb <- unique(expand.grid(gamma_grid, cc_grid))
       G_grid <- mapply(transition_f, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
     }else{
       if(length(transition_variable) != Tob){
         stop('length of transition variable is unequal to data length')
       }
+      cc_grid <- seq(c_lower, c_upper, by = c_step)
+      grid_comb <- unique(expand.grid(gamma_grid, cc_grid))
       G_grid <- mapply(transition_f, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = transition_variable))
     }
   }else if(is.null(gamma_fix)){
@@ -124,14 +126,17 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     G_grid <- mapply(transition_f, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
   }else if(is.null(c_fix)){
     # Creating grid for iterative procedure with fix shape of transition function
-    cc_grid <- seq(ceiling(c_lower*Tob), floor(c_upper*Tob), by = c_step)
-    grid_comb <- unique(expand.grid(gamma_fix, cc_grid))
+
     if(is.null(transition_variable)){
+      cc_grid <- seq(ceiling(c_lower*Tob), floor(c_upper*Tob), by = c_step)
+      grid_comb <- unique(expand.grid(gamma_fix, cc_grid))
       G_grid <- mapply(transition_f, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
     }else{
       if(length(transition_variable) != Tob){
         stop('length of transition variable is unequal to data length')
       }
+      cc_grid <- seq(c_lower, c_upper, by = c_step)
+      grid_comb <- unique(expand.grid(gamma_fix, cc_grid))
       G_grid <- mapply(transition_f, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = transition_variable))
     }
   }else{

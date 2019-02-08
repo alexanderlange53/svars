@@ -16,9 +16,9 @@ id.st(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL,
 Default is 0.3*(Total number of observations)}
 
 \item{c_upper}{Integer. Ending point for the algorithm to stop searching for the volatility shift.
-Default is 0.7*(Total number of observations)}
+Default is 0.7*(Total number of observations). Note that in case of a stochastic transition variable, the input requires an absolute value}
 
-\item{c_step}{Integer. Step width of c. Default is 5}
+\item{c_step}{Integer. Step width of c. Default is 5. Note that in case of a stochastic transition variable, the input requires an absolute value}
 
 \item{c_fix}{Integer. If the transition point is known, it can be passed as an argument
 where transition point = Number of observations - c_fix}
