@@ -4,7 +4,8 @@
 \alias{id.garch}
 \title{GARCH identification of SVAR models}
 \usage{
-id.garch(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL)
+id.garch(x, max.iter = 5, crit = 0.001, start.iter = 100,
+  restriction_matrix = NULL)
 }
 \arguments{
 \item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object}
@@ -12,6 +13,8 @@ id.garch(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL)
 \item{max.iter}{Integer. Number of maximum GLS iterations}
 
 \item{crit}{Integer. Critical value for the precision of the GLS estimation}
+
+\item{start.iter}{Integer. Number of random initial GARCH parameter for univariate optimization. The estimation proceeds with the GARCH parameter, which maximizes the univariate likelihood}
 
 \item{restriction_matrix}{Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)}
 }
@@ -61,7 +64,7 @@ plot(i1, scales = 'free_y')
 # Assuming that the interest rate doesn't influence the output gap on impact
 restMat <- matrix(rep(NA, 9), ncol = 3)
 restMat[1,3] <- 0
-x2 <- id.cv(v1, SB = 59, restriction_matrix = restMat)
+x2 <- id.garch(v1, restriction_matrix = restMat)
 summary(x2)
 
 
