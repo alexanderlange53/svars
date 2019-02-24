@@ -34,31 +34,17 @@ likelihood_garch_uni <- function(parameter, est, Sigma_1, Tob, k){
 
 likelihood_garch_multi <-  function(parameter, Sigma_e, Tob, k, u, restriction_matrix){
 
-  if(!is.null(restriction_matrix)){
-    if(!is.matrix(restriction_matrix)){
-      stop("Please provide a valid input matrix")
-    }
-    naElements <- is.na(restriction_matrix)
-    diag(naElements) <- FALSE
-    toFillMatrix <- restriction_matrix
-    toFillMatrix[naElements] <- parameter[1:sum(naElements)]
-    diag(toFillMatrix) <- 1
-    B_inv <- toFillMatrix
-    B_norm <-  solve(B_inv)
+   if(!is.null(restriction_matrix)){
+     if(!is.matrix(restriction_matrix)){
+       stop("Please provide a valid input matrix")
+     }
+     naElements <- is.na(restriction_matrix)
 
-    diag_comp <- diag(parameter[(sum(naElements) + 1): (sum(naElements) + k)])
-  }else{
-    B_inv <- diag(k)
-    B_inv[col(B_inv) != row(B_inv)] <- parameter[1: (k^2 - k)]
-    B_norm <-  solve(B_inv)
-
-    diag_comp <- diag(parameter[(k^2 - k + 1): (k^2)])
-  }
-
-
-  # diag_comp is the inverted and squared diagonal elements of B_inv-matrix (i.e. (norm_inv)^2 ) = sqrt(diag_comp)
-
-  B <- solve(solve(diag_comp)%*%solve(B_norm))
+     B <- restriction_matrix
+     B[naElements] <- parameter[1:sum(naElements)]
+   }else{
+     B <- matrix(parameter, k, k)
+   }
 
   L <- 0
   for (i in 1:Tob){

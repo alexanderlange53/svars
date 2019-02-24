@@ -1,34 +1,15 @@
 identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, parameter_ini_univ, max.iter, crit, u, p, x, type, yOut, coef_x){
   ## Stage 2: Multivariate optimization
 
-  if(!is.null(restriction_matrix)){
-    # normalize the inverse of B to have ones on main diagonal
-    naElements <- is.na(restriction_matrix)
-    naElements_inv <- !is.na(restriction_matrix)
-    B0[naElements_inv] <- restriction_matrix[naElements_inv]
-
-    B_0_inv <- solve(B0)
-    norm_inv <- solve(diag(diag(B_0_inv), k, k))
-    B_0_inv_norm <-  norm_inv %*% B_0_inv
-    B_0_norm <- solve(norm_inv %*% B_0_inv)
-    B_0_norm[naElements_inv] <- restriction_matrix[naElements_inv]
-
-    B_param_ini <- B_0_inv_norm [col(B_0_inv_norm ) != row(B_0_inv_norm )]
-    diag_elements <- 1/(diag(B_0_inv))
-    restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
-  }else{
-    # normalize the inverse of B to have ones on main diagonal
-    B_0_inv <- solve(B0)
-    norm_inv <- solve(diag(diag(B_0_inv), k, k))
-    B_0_inv_norm <-  norm_inv %*% B_0_inv
-    B_0_norm <- solve(norm_inv %*% B_0_inv)
-
-    B_param_ini <- B_0_inv_norm [col(B_0_inv_norm ) != row(B_0_inv_norm )]
-    diag_elements <- 1/(diag(B_0_inv))
-    restrictions <- 0
+   if(!is.null(restriction_matrix)){
+     naElements <- is.na(restriction_matrix)
+     naElements_inv <- !is.na(restriction_matrix)
+     ini <- B0[naElements]
+     restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
+   }else{
+     restrictions <- 0
+     ini <- c(B0)
   }
-
-  ini <- c(B_param_ini, diag_elements)
 
   # create empty vectors and lists for results
   gamma <- rep(NA, k)
@@ -39,7 +20,7 @@ identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, paramete
   round <-  1
   Exit <- 1
 
-  B_inv <- diag(k)
+  #B_inv <- diag(k)
   ll <- list()
   multi_ml <- list()
   uni_ml <- list()
@@ -50,29 +31,19 @@ identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, paramete
     max_ml <- nlm(ini, f = likelihood_garch_multi, k = k, Tob = Tob, restriction_matrix = restriction_matrix,
                   Sigma_e = Sigma_e_univ , u = u, iterlim = 150, hessian = T)
 
+
     multi_ml[[round]] <- max_ml
     # initials for next round of univariate estimation
     ini <- max_ml$estimate
 
-    if(!is.null(restriction_matrix)){
-      # get the B matrix from the estimated parameters
-      naElements <- is.na(restriction_matrix)
-      diag(naElements) <- FALSE
-      B_inv <- restriction_matrix
-      B_inv[naElements] <- ini[1:sum(naElements)]
-      diag(B_inv) <- 1
-      B <- solve(B_inv)
+     if(!is.null(restriction_matrix)){
+       naElements <- is.na(restriction_matrix)
+       B_est <- restriction_matrix
+       B_est[naElements] <- ini[1:sum(naElements)]
+     }else{
+       B_est <- matrix(ini, k, k)
+     }
 
-      diagonal_mat <- diag(ini[(sum(naElements) + 1):(sum(naElements) + 3)])
-    }else{
-      # get the B matrix from the estimated parameters
-      B_inv[col(B_inv) != row(B_inv)] <- ini[1:(k^2-k)]
-      B <- solve(B_inv)
-
-      diagonal_mat <- diag(ini[(k^2-k+1):k^2])
-    }
-
-    B_est <- B %*% diagonal_mat
     B_est_inv <- solve(B_est)
     # save individual B matrices for each round
     results_B[[round]] <- B_est
@@ -141,16 +112,14 @@ identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, paramete
 
   if(!is.null(restriction_matrix)){
     naElements <- is.na(restriction_matrix)
-    diag(naElements) <- FALSE
     B_inv_SE <- restriction_matrix
     B_inv_SE[naElements] <- FishObs[1:sum(naElements)]
-    diag(B_inv) <- 0
 
-    B_inv_diag_SE <- diag(FishObs[(sum(naElements) + 1):(sum(naElements) + k)])
+    #B_inv_diag_SE <- diag(FishObs[(sum(naElements) + 1):(sum(naElements) + k)])
   }else{
-    B_inv_SE[col(B_inv_SE) != row(B_inv_SE)] <- FishObs[1:(k * k - k)]
-    diag(B_inv_SE) <- 0
-    B_inv_diag_SE <- diag(FishObs[(k * k - k + 1):(k * k)])
+    B_inv_SE <- matrix(FishObs, k, k)
+    # diag(B_inv_SE) <- 0
+    # B_inv_diag_SE <- diag(FishObs[(k * k - k + 1):(k * k)])
   }
 
   rownames(B_hat) <- colnames(u)
@@ -203,7 +172,7 @@ identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, paramete
 
   return(list(
     B = B_hat,              # estimated B matrix (unique decomposition of the covariance matrix)
-    B_inv_SE = B_inv_SE,            # standard errors of B matrix
+    B_SE = B_inv_SE,            # standard errors of B matrix
     GARCH_parameter = GARCH_param_hat,
     GARCH_SE  = GARCH_SE,
     n = Tob,                # number of observations

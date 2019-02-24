@@ -104,6 +104,13 @@ summary.svars <- function(object, ...){
    print(svarsObject$GARCH_parameter)
    cat("\nStandard errors of GARCH(1, 1) parameter: \n")
    print(svarsObject$GARCH_SE)
+   if(svarsObject$restrictions > 0){
+     cat("\nLikelihood Ratio Test: \n")
+     #cat(svarsObject$lRatioTestStatistic)
+     #cat(", p-value:")
+     #cat(svarsObject$lRatioTestPValue)
+     printCoefmat(svarsObject$lRatioTest, has.Pvalue = T)
+   }
  }else if(svarsObject$method == "Distance covariances"){
    cat("\n")
    cat("\nEstimated B Matrix (unique decomposition of the covariance matrix): \n")
