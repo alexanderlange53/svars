@@ -98,8 +98,8 @@ identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, paramete
   HESS <- solve(multi_ml$hessian)
 
   uni_ml <- uni_ml[[cc]]
-  HESS_univ <- tryCatch(lapply(uni_ml, function(x) diag(solve(x))), function(e) NA)
-  if(any(is.na(tt))){
+  HESS_univ <- tryCatch(lapply(uni_ml, function(x) diag(solve(x))), error = function(e) NA)
+  if(any(is.na(HESS_univ))){
     GARCH_SE <- NA
   }else{
     GARCH_SE <- do.call('rbind', HESS_univ)
@@ -129,7 +129,9 @@ identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, paramete
 
   rownames(B_hat) <- colnames(u)
   rownames(B_inv_SE) <- colnames(u)
-  colnames(GARCH_SE) <- colnames(GARCH_param_hat) <- c('gamma', 'g')
+  if(all(!is.na(GARCH_SE))){
+    colnames(GARCH_SE) <- colnames(GARCH_param_hat) <- c('gamma', 'g')
+  }
 
   # obtaining VAR parameter
   if(inherits(x, "var.boot")){
