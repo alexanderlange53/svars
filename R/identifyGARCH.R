@@ -98,8 +98,13 @@ identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, paramete
   HESS <- solve(multi_ml$hessian)
 
   uni_ml <- uni_ml[[cc]]
-  HESS_univ <- lapply(uni_ml, function(x) diag(solve(x)))
-  GARCH_SE <- do.call('rbind', HESS_univ)
+  HESS_univ <- tryCatch(lapply(uni_ml, function(x) diag(solve(x))), function(e) NA)
+  if(any(is.na(tt))){
+    GARCH_SE <- NA
+  }else{
+    GARCH_SE <- do.call('rbind', HESS_univ)
+  }
+
 
   for(i in 1:nrow(HESS)){
     if(HESS[i,i] < 0){
