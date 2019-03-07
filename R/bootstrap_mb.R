@@ -236,7 +236,7 @@ mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NU
   cov.bs <- cov(v.b)
 
   # Calculating Standard errors for LDI methods
-  if(x$method == "Cramer-von Mises distance" | x$method == "Distance covariances"){
+  if(x$method == "Cramer-von Mises distance" | x$method == "Distance covariances" | x$method == "GARCH"){
     SE <- matrix(sqrt(diag(cov.bs)),k,k)
     rownames(SE) <- rownames(x$B)
   }else{
