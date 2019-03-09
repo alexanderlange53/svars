@@ -188,6 +188,7 @@ identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, paramete
     iteration = round,     # number of gls estimations
     method = "GARCH",
     restrictions = restrictions, # number of restrictions
+    Sigma_e = Sigma_e_univ,
     A_hat = A_hat,            # VAR parameter estimated with gls
     type = type,          # type of the VAR model e.g 'const'
     y = yOut,                # Data

@@ -26,7 +26,7 @@ likelihood_cv <- function(S, Tob, TB, Sigma_hat1, k,  Sigma_hat2, restriction_ma
     return(1e25)
   }
 
-  L <- suppressWarnings(-(((TB - 1) / 2) * (log(MW) + sum(diag((Sigma_hat1 %*% solve(MMM)))))) -
+  L <- suppressWarnings(-(K*Tob)/2*log(2*pi) -(((TB - 1) / 2) * (log(MW) + sum(diag((Sigma_hat1 %*% solve(MMM)))))) -
                           (((Tob - TB + 1) / 2) * (log(MW2) + sum(diag((Sigma_hat2 %*% solve(MMM2)))))))
   return(-L)
 
