@@ -188,7 +188,8 @@ mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NU
       temp <- id.st(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,
                     gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01)
     }else if(x$method == "GARCH"){
-      temp <- tryCatch(id.garch(varb, restriction_matrix = x$restriction_matrix),
+      temp <- tryCatch(id.garch(varb, restriction_matrix = x$restriction_matrix, max.iter = x$max.iter,
+                                crit = x$crit, start.iter = x$start.iter),
                        error = function(e) NULL)
     }
 

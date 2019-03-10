@@ -144,9 +144,9 @@ id.garch <- function(x, max.iter = 5, crit = 0.001, start.iter = 200, restrictio
   # Store estimtated GARCH parameter as initial values for multivariate optimization
 
   if(!is.null(restriction_matrix)){
-    resultUnrestricted <- identifyGARCH(B0 = B0, k = k, Tob = Tob, restriction_matrix = NULL, Sigma_e_univ = Sigma_e_univ, coef_x = coef_x, x = x,
+    resultUnrestricted <- identifyGARCH(B0 = B0, k = k, Tob = Tob, restriction_matrix = NULL, Sigma_e_univ = Sigma_e_univ, coef_x = coef_x, x = x, start.iter,
                                         parameter_ini_univ = parameter_ini_univ, max.iter = max.iter, crit = crit, u = u, p = p, yOut = yOut, type = type)
-    result <- identifyGARCH(B0 = B0, k = k, Tob = Tob, restriction_matrix = restriction_matrix, Sigma_e_univ = Sigma_e_univ, coef_x = coef_x, x = x,
+    result <- identifyGARCH(B0 = B0, k = k, Tob = Tob, restriction_matrix = restriction_matrix, Sigma_e_univ = Sigma_e_univ, coef_x = coef_x, x = x, start.iter,
                             parameter_ini_univ = parameter_ini_univ, max.iter = max.iter, crit = crit, u = u, p = p, yOut = yOut, type = type)
 
     lRatioTestStatistic = 2 * (resultUnrestricted$Lik - result$Lik)
@@ -160,7 +160,7 @@ id.garch <- function(x, max.iter = 5, crit = 0.001, start.iter = 200, restrictio
     result$lRatioTest <- lRatioTest
   }else{
     restriction_matrix <- NULL
-    result <- identifyGARCH(B0 = B0, k = k, Tob = Tob, restriction_matrix = restriction_matrix, Sigma_e_univ = Sigma_e_univ, coef_x = coef_x, x = x,
+    result <- identifyGARCH(B0 = B0, k = k, Tob = Tob, restriction_matrix = restriction_matrix, Sigma_e_univ = Sigma_e_univ, coef_x = coef_x, x = x, start.iter,
                             parameter_ini_univ = parameter_ini_univ, max.iter = max.iter, crit = crit, u = u, p = p, yOut = yOut, type = type)
   }
   class(result) <- "svars"

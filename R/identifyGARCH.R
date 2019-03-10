@@ -191,6 +191,9 @@ identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, paramete
     Sigma_e = Sigma_e_univ,
     A_hat = A_hat,            # VAR parameter estimated with gls
     type = type,          # type of the VAR model e.g 'const'
+    max.iter = max.iter,
+    crit = crit,
+    start.iter = start.iter,
     y = yOut,                # Data
     p = unname(p),                # number of lags
     K = k                 # number of time series
