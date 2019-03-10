@@ -1,4 +1,4 @@
-identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, parameter_ini_univ, max.iter, crit, u, p, x, type, yOut, coef_x){
+identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, parameter_ini_univ, max.iter, crit, u, p, x, type, yOut, coef_x, start.iter){
   ## Stage 2: Multivariate optimization
 
    if(!is.null(restriction_matrix)){
