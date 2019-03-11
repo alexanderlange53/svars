@@ -25,6 +25,7 @@ identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, paramete
   multi_ml <- list()
   uni_ml <- list()
   uni_single_ml <- list()
+  Sigma_e_univ_l <- list()
 
 
   while (Exit > crit & round < max.iter){
@@ -78,6 +79,7 @@ identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, paramete
       param_univ[, i] <- rbind((1- gamma_univ[i]- g_univ[i]), gamma_univ[i], g_univ[i])
       Sigma_e_univ[,i] <- sigma_garch_univ(param_univ[,i], Tob, Sigma_e_0[,i], est_r[i,])
     }
+    Sigma_e_univ_l[[round]] <- Sigma_e_univ
 
     uni_ml[[round]] <- uni_single_ml
     results_param[[round]] <- parameter_ini_univ <-  cbind(gamma_univ, g_univ)
@@ -92,6 +94,7 @@ identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, paramete
   cc <- which.min(ll)
   B_hat <- results_B[[cc]]
   GARCH_param_hat <- results_param[[cc]]
+  Sigma_e_univ <- Sigma_e_univ_l[[cc]]
 
   # Standard errors
   multi_ml <- multi_ml[[cc]]
