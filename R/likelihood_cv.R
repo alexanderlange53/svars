@@ -22,7 +22,7 @@ likelihood_cv <- function(S, Tob, TB, Sigma_hat1, k,  Sigma_hat2, restriction_ma
   MMM <- tcrossprod(W)
   MMM2 <- W %*% tcrossprod(Psi, W)
 
-  if(any(Psi < 0) | MW < 0.01 |  MW2 < 0.01){
+  if(any(Psi < 0) | MW < 0.001 |  MW2 < 0.001){
     return(1e25)
   }
 

@@ -196,12 +196,12 @@ wild.boot <- function(x, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1, d
   cov.bs <- cov(v.b)
 
   # Calculating Standard errors for LDI methods
-  if(x$method == "Cramer-von Mises distance" | x$method == "Distance covariances"){
+  #if(x$method == "Cramer-von Mises distance" | x$method == "Distance covariances"){
     SE <- matrix(sqrt(diag(cov.bs)),k,k)
     rownames(SE) <- rownames(x$B)
-  }else{
-    SE <- NULL
-  }
+  #}else{
+  #  SE <- NULL
+  # }
 
   # Calculating Bootstrap means
   boot.mean <- matrix(colMeans(v.b),k,k)
