@@ -15,7 +15,7 @@
 #' @param end Character. End of the time series (only if dateVector is empty)
 #' @param frequency Character. Frequency of the time series (only if dateVector is empty)
 #' @param format Character. Date format (only if dateVector is empty)
-#' @param restriction_matrix Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)
+#' @param restriction_matrix Matrix or vector. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, vectorized restrictions can be passed where zeroes indicate no restriction and 1 the zero-restriction (as suggested in Luetkepohl, 2017, section 5.2.1).
 #' @param max.iter Integer. Number of maximum GLS iterations
 #' @param crit Integer. Critical value for the precision of the GLS estimation
 #' @return A list of class "svars" with elements
@@ -71,6 +71,11 @@
 #' x2 <- id.cv(v1, SB = 59, restriction_matrix = restMat)
 #' summary(x2)
 #'
+#' # In vectorized Form
+#' restMat <- c(rep(0,6), 1, 0,0)
+#' x2 <- id.cv(v1, SB = 59, restriction_matrix = restMat)
+#' summary(x2)
+#'
 #' #Structural brake via Dates
 #' # given that time series vector with dates is available
 #' dateVector = seq(as.Date("1965/1/1"), as.Date("2008/7/1"), "quarter")
@@ -100,9 +105,16 @@
 
 
 id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
-                        format = NULL, dateVector = NULL, max.iter = 50, crit = 0.001, restriction_matrix = NULL){
+                        format = NULL, dateVector = NULL, max.iter = 50, crit = 0.001,
+                  restriction_matrix = NULL){
+
+
+
 u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
 get_var_objects(x)
+
+restriction_matrix <- get_restriction_matrix(restriction_matrix, k)
+
 
   if(is.numeric(SB)){
     SBcharacter <- NULL

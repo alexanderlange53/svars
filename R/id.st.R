@@ -25,7 +25,7 @@
 #'           Note that the smooth transition model is computationally extremely demanding.
 #' @param max.iter Integer. Number of maximum GLS iterations
 #' @param crit Integer. Critical value for the precision of the GLS estimation
-#' @param restriction_matrix Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)
+#' @param restriction_matrix Matrix or vector. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, vectorized restrictions can be passed where zeroes indicate no restriction and 1 the zero-restriction (as suggested in Luetkepohl, 2017, section 5.2.1).
 #' @param lr_test Logical. Indicates whether the restricted model should be tested against the unrestricted model via a likelihood ratio test
 #' @return A list of class "svars" with elements
 #' \item{Lambda}{Estimated heteroscedasticity matrix \eqn{\Lambda}}
@@ -96,7 +96,7 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
   # Gathering information from reduced form model
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
   get_var_objects(x)
-
+  restriction_matrix = get_restriction_matrix(restriction_matrix, k)
   # Transition function
   transition_f <- function(gamma, cc, st){
     G <- (1 + exp(-exp(gamma)*(st - cc)))^(-1)

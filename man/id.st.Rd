@@ -42,7 +42,7 @@ Note that the smooth transition model is computationally extremely demanding.}
 
 \item{crit}{Integer. Critical value for the precision of the GLS estimation}
 
-\item{restriction_matrix}{Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)}
+\item{restriction_matrix}{Matrix or vector. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, vectorized restrictions can be passed where zeroes indicate no restriction and 1 the zero-restriction (as suggested in Luetkepohl, 2017, section 5.2.1).}
 
 \item{lr_test}{Logical. Indicates whether the restricted model should be tested against the unrestricted model via a likelihood ratio test}
 }

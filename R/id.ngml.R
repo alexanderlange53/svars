@@ -7,7 +7,7 @@
 #'
 #' @param x An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object
 #' @param stage3 Logical. If stage3="TRUE", the VAR parameters are estimated via non-gaussian maximum likelihood (computationally demanding)
-#' @param restriction_matrix Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)
+#' @param restriction_matrix Matrix or vector. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, vectorized restrictions can be passed where zeroes indicate no restriction and 1 the zero-restriction (as suggested in Luetkepohl, 2017, section 5.2.1).
 #' @return A list of class "svars" with elements
 #' \item{B}{Estimated structural impact matrix B, i.e. unique decomposition of the covariance matrix of reduced form errors}
 #' \item{sigma}{Estimated scale of the standardized matrix B_stand, i.e. \eqn{B=B_stand*diag(\sigma_1,...,\sigma_K)}}
@@ -65,6 +65,8 @@ id.ngml <- function(x, stage3 = FALSE, restriction_matrix = NULL){
 
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
   get_var_objects(x)
+  restriction_matrix = get_restriction_matrix(restriction_matrix, k)
+
   # calculating the covariance matrix
   Sigma_hat <- crossprod(residY)/(Tob-1-k*p)
 
