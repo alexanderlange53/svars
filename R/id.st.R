@@ -96,7 +96,9 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
   # Gathering information from reduced form model
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
   get_var_objects(x)
+  rmOut = restriction_matrix
   restriction_matrix = get_restriction_matrix(restriction_matrix, k)
+
   # Transition function
   transition_f <- function(gamma, cc, st){
     G <- (1 + exp(-exp(gamma)*(st - cc)))^(-1)
@@ -269,7 +271,7 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     p = p,                # number of lags
     K = k,                 # number of time series
     restrictions = restrictions,
-    restriction_matrix = restriction_matrix,
+    restriction_matrix = rmOut,
     lr_test = lr_test,
     lRatioTest = lRatioTest
   )

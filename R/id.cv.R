@@ -113,6 +113,7 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
 u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
 get_var_objects(x)
 
+rmOut = restriction_matrix
 restriction_matrix <- get_restriction_matrix(restriction_matrix, k)
 
 
@@ -174,6 +175,8 @@ if(!is.numeric(SB)){
                                  Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
                                  max.iter = max.iter, crit = crit, yOut = yOut, type = type)
   }
+
+  result$restriction_matrix = rmOut
 
   if(is.null(result$A_hat)){
     if(inherits(x, "varest")){
