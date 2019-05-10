@@ -19,4 +19,5 @@ Imports: expm, reshape2, ggplot2, copula, clue, pbapply, steadyICA, tsDyn, DEopt
 License: MIT + file LICENSE
 LazyData: TRUE
 RoxygenNote: 6.1.1
-Suggests: testthat
+Suggests: 
+    testthat (>= 2.1.0)
