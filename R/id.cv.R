@@ -15,7 +15,7 @@
 #' @param end Character. End of the time series (only if dateVector is empty)
 #' @param frequency Character. Frequency of the time series (only if dateVector is empty)
 #' @param format Character. Date format (only if dateVector is empty)
-#' @param restriction_matrix Matrix or vector. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, vectorized restrictions can be passed where zeroes indicate no restriction and 1 the zero-restriction (as suggested in Luetkepohl, 2017, section 5.2.1).
+#' @param restriction_matrix Matrix or vector. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*J (or J*K^2) matrix can be passed, where J is the number of restrictions and K the number of time series. (as suggested in Luetkepohl, 2017, section 5.2.1).
 #' @param max.iter Integer. Number of maximum GLS iterations
 #' @param crit Integer. Critical value for the precision of the GLS estimation
 #' @return A list of class "svars" with elements
@@ -71,7 +71,7 @@
 #' x2 <- id.cv(v1, SB = 59, restriction_matrix = restMat)
 #' summary(x2)
 #'
-#' # In vectorized Form
+#' # In alternative Form
 #' restMat <- c(rep(0,6), 1, 0,0)
 #' x2 <- id.cv(v1, SB = 59, restriction_matrix = restMat)
 #' summary(x2)

@@ -25,7 +25,7 @@
 #'           Note that the smooth transition model is computationally extremely demanding.
 #' @param max.iter Integer. Number of maximum GLS iterations
 #' @param crit Integer. Critical value for the precision of the GLS estimation
-#' @param restriction_matrix Matrix or vector. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, vectorized restrictions can be passed where zeroes indicate no restriction and 1 the zero-restriction (as suggested in Luetkepohl, 2017, section 5.2.1).
+#' @param restriction_matrix Matrix or vector. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*J (or J*K^2) matrix can be passed, where J is the number of restrictions and K the number of time series. (as suggested in Luetkepohl, 2017, section 5.2.1).
 #' @param lr_test Logical. Indicates whether the restricted model should be tested against the unrestricted model via a likelihood ratio test
 #' @return A list of class "svars" with elements
 #' \item{Lambda}{Estimated heteroscedasticity matrix \eqn{\Lambda}}
