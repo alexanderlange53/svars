@@ -87,7 +87,7 @@ restMat[1,3] <- 0
 x2 <- id.cv(v1, SB = 59, restriction_matrix = restMat)
 summary(x2)
 
-# In vectorized Form
+# In alternative Form
 restMat <- c(rep(0,6), 1, 0,0)
 x2 <- id.cv(v1, SB = 59, restriction_matrix = restMat)
 summary(x2)

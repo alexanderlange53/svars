@@ -2,7 +2,7 @@
 
 // [[Rcpp::depends(RcppArmadillo)]]
 
-
+// [[Rcpp::export]]
 
 double LikelihoodCV(arma::vec& S, double& Tob, double& TB,  arma::mat& Sigma_hat1, int& k,
                     arma::mat& Sigma_hat2, arma::mat& RestrictionMatrix, int& restrictions){
@@ -19,7 +19,7 @@ double LikelihoodCV(arma::vec& S, double& Tob, double& TB,  arma::mat& Sigma_hat
   double MW2 = arma::det(MMM2);
 
 
-  if(any(vectorise(Psi) < 0.0) || MW < 0.01 ||  MW2 < 0.01){
+  if(any(vectorise(Psi.diag()) < 0.0) || MW < 0.01 ||  MW2 < 0.01){
     return 1e25;
   }
 
@@ -39,7 +39,6 @@ Rcpp::List nlm_rcpp(const arma::vec& S, double& Tob, double& TB,  const arma::ma
 
     Rcpp::List MLEgls = nlm(Rcpp::_["f"] = Rcpp::InternalFunction(LikelihoodCV),
                           Rcpp::_["p"] = S,
-                          //Rcpp::_["method"] = "Nelder-Mead",
                           Rcpp::_["hessian"] = "T",
                           Rcpp::_["iterlim"] = 150,
                           Rcpp::_["Tob"] = Tob,
@@ -50,8 +49,7 @@ Rcpp::List nlm_rcpp(const arma::vec& S, double& Tob, double& TB,  const arma::ma
                           Rcpp::_["RestrictionMatrix"] = RestrictionMatrix,
                           Rcpp::_["restrictions"] = restrictions);
 
-   //  arma::vec MLEestimate = Rcpp::as<arma::vec>(MLEgls[0]);
- //   return bfgs(S, LikelihoodCV, );
+
  return MLEgls;
   }
 

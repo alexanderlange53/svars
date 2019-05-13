@@ -20,7 +20,7 @@ likelihood_st <- function(parameter, u, G, k, Tob, restriction_matrix, restricti
   Lambda <-  diag(parameter[((k*k+1) - restrictions):((k*k+k)-restrictions)])
 
   if(any(diag(Lambda) < 0)){
-    return(return(1e25))
+    return(1e25)
   }
 
 
@@ -33,7 +33,7 @@ likelihood_st <- function(parameter, u, G, k, Tob, restriction_matrix, restricti
   }
 
   ll <- sapply(1:length(G), lik)
-  ll <- sum(ll) * 0.5
+  L <- ll <- sum(ll) * 0.5
 
   L <- - (- Tob * k / 2 * log(2 * pi) - ll)
 
