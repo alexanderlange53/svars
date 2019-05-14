@@ -9,15 +9,11 @@ nlmST <- function(S, Tob, u, k, G, RestrictionMatrix, restrictions) {
     .Call('_svars_nlmST', PACKAGE = 'svars', S, Tob, u, k, G, RestrictionMatrix, restrictions)
 }
 
-IdentifyVolatilityNew <- function(counter, Bhat, LambdaHat, Exit, crit, MaxIter, Zt, TB, y, p, k, RestrictionMatrix, restrictions, S, Tob) {
-    .Call('_svars_IdentifyVolatilityNew', PACKAGE = 'svars', counter, Bhat, LambdaHat, Exit, crit, MaxIter, Zt, TB, y, p, k, RestrictionMatrix, restrictions, S, Tob)
-}
-
 LikelihoodCV <- function(S, Tob, TB, Sigma_hat1, k, Sigma_hat2, RestrictionMatrix, restrictions) {
     .Call('_svars_LikelihoodCV', PACKAGE = 'svars', S, Tob, TB, Sigma_hat1, k, Sigma_hat2, RestrictionMatrix, restrictions)
 }
 
-nlm_rcpp <- function(S, Tob, TB, Sigma_hat1, k, Sigma_hat2, RestrictionMatrix, restrictions) {
-    .Call('_svars_nlm_rcpp', PACKAGE = 'svars', S, Tob, TB, Sigma_hat1, k, Sigma_hat2, RestrictionMatrix, restrictions)
+IdentifyVolatilityNew <- function(counter, Bhat, LambdaHat, Exit, crit, MaxIter, Zt, TB, y, p, k, RestrictionMatrix, restrictions, S, Tob) {
+    .Call('_svars_IdentifyVolatilityNew', PACKAGE = 'svars', counter, Bhat, LambdaHat, Exit, crit, MaxIter, Zt, TB, y, p, k, RestrictionMatrix, restrictions, S, Tob)
 }
 

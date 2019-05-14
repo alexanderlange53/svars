@@ -36,14 +36,20 @@ iterative_smooth_transition <- function(transition, u, y, Tob, k, p, crit, max.i
   }else{
     init_B <- t(chol(Sigma_hat))
     B_hat <- list(init_B)
+    restrictions <- 0
   }
   #init_B <- suppressMessages(expm::sqrtm(Sigma_hat))
   init_Lambda <- diag(k)
 
   #B_hat <- list(init_B)
   Lambda_hat <- list(init_Lambda)
-  ll <- list(likelihood_st(parameter = c(init_B, diag(init_Lambda)), u = u, G = transition, k = k, Tob = Tob,
-                           restriction_matrix = restriction_matrix, restrictions = restrictions))
+  # ll <- list(likelihood_st(parameter = c(init_B, diag(init_Lambda)), u = u, G = transition, k = k, Tob = Tob,
+  #                          restriction_matrix = restriction_matrix, restrictions = restrictions))
+  if(is.null(restriction_matrix)){
+    restriction_matrix <- matrix(NA, k, k)
+  }
+  ll <- list(LikelihoodST(parameter = c(init_B, diag(init_Lambda)), u = u, G = transition, k = k, Tob = Tob,
+                           RestrictionMatrix = restriction_matrix, restrictions = restrictions))
 
 
   while( (abs(Exit) > crit) & (count < max.iter) ){
@@ -64,8 +70,8 @@ iterative_smooth_transition <- function(transition, u, y, Tob, k, p, crit, max.i
     parameter <- c(init_B, diag(Lambda_hat[[count]]))
 
     # Step 1: Optimizing likelihood
-    mle <- nlm(f = likelihood_st, p = parameter, u = u_gls, G = transition, k = k, Tob = Tob,
-               restriction_matrix = restriction_matrix, restrictions = restrictions,
+    mle <- nlm(f = LikelihoodST, p = parameter, u = u_gls, G = transition, k = k, Tob = Tob,
+               RestrictionMatrix = restriction_matrix, restrictions = restrictions,
                hessian = T, iterlim = 150)
 
     if(!is.null(restriction_matrix)){
