@@ -7,10 +7,8 @@
 double LikelihoodST(arma::vec& parameter, double& Tob, arma::mat& u, int& k,
                     arma::vec& G, arma::mat& RestrictionMatrix, int& restrictions){
 
-
-  RestrictionMatrix.elem(find_nonfinite(RestrictionMatrix)) = parameter.elem(find_nonfinite(RestrictionMatrix));
-  arma::mat B = RestrictionMatrix;
-
+  arma::mat B(size(RestrictionMatrix), arma::fill::zeros);
+  B.elem(find_nonfinite(RestrictionMatrix)) = parameter.subvec(0, (k * k - 1) - restrictions);
   arma::mat Lambda =  arma::diagmat(parameter.subvec((k * k - restrictions), (k * k + (k - 1) - restrictions)));
 
  if (any(Lambda.diag() < 0.0)) {
@@ -29,8 +27,8 @@ double LikelihoodST(arma::vec& parameter, double& Tob, arma::mat& u, int& k,
     ll(i) = log(arma::det(Omega)) +  arma::as_scalar(u.row(i) * arma::inv(Omega) * u.row(i).t());
   }
 
-
   return (-1) * (- Tob * k / 2 * log(2 * M_PI) - arma::sum(ll) * 0.5);
+
 }
 
 // [[Rcpp::export]]
