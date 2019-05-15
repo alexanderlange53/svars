@@ -9,6 +9,10 @@ nlmST <- function(S, Tob, u, k, G, RestrictionMatrix, restrictions) {
     .Call('_svars_nlmST', PACKAGE = 'svars', S, Tob, u, k, G, RestrictionMatrix, restrictions)
 }
 
+mGLSst <- function(transition, B, Lambda, Z_t, k, Y) {
+    .Call('_svars_mGLSst', PACKAGE = 'svars', transition, B, Lambda, Z_t, k, Y)
+}
+
 LikelihoodCV <- function(S, Tob, TB, Sigma_hat1, k, Sigma_hat2, RestrictionMatrix, restrictions) {
     .Call('_svars_LikelihoodCV', PACKAGE = 'svars', S, Tob, TB, Sigma_hat1, k, Sigma_hat2, RestrictionMatrix, restrictions)
 }

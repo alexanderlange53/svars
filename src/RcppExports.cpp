@@ -40,6 +40,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// mGLSst
+arma::vec mGLSst(const arma::vec& transition, const arma::mat& B, const arma::mat& Lambda, const arma::mat& Z_t, int& k, const arma::mat& Y);
+RcppExport SEXP _svars_mGLSst(SEXP transitionSEXP, SEXP BSEXP, SEXP LambdaSEXP, SEXP Z_tSEXP, SEXP kSEXP, SEXP YSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type transition(transitionSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type B(BSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Lambda(LambdaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Z_t(Z_tSEXP);
+    Rcpp::traits::input_parameter< int& >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Y(YSEXP);
+    rcpp_result_gen = Rcpp::wrap(mGLSst(transition, B, Lambda, Z_t, k, Y));
+    return rcpp_result_gen;
+END_RCPP
+}
 // LikelihoodCV
 double LikelihoodCV(arma::vec& S, double& Tob, double& TB, arma::mat& Sigma_hat1, int& k, arma::mat& Sigma_hat2, arma::mat& RestrictionMatrix, int& restrictions);
 RcppExport SEXP _svars_LikelihoodCV(SEXP SSEXP, SEXP TobSEXP, SEXP TBSEXP, SEXP Sigma_hat1SEXP, SEXP kSEXP, SEXP Sigma_hat2SEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP) {
@@ -87,6 +103,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_svars_LikelihoodST", (DL_FUNC) &_svars_LikelihoodST, 7},
     {"_svars_nlmST", (DL_FUNC) &_svars_nlmST, 7},
+    {"_svars_mGLSst", (DL_FUNC) &_svars_mGLSst, 6},
     {"_svars_LikelihoodCV", (DL_FUNC) &_svars_LikelihoodCV, 8},
     {"_svars_IdentifyVolatilityNew", (DL_FUNC) &_svars_IdentifyVolatilityNew, 15},
     {NULL, NULL, 0}

@@ -97,12 +97,13 @@ iterative_smooth_transition <- function(transition, u, y, Tob, k, p, crit, max.i
 
 
     # Step 2: Reestimation of VAR parameter with GLS
-    Omega_i <- lapply(transition, function(x, B, Lambda){solve((1 - x)*tcrossprod(B, B) + x*B%*%tcrossprod(Lambda, B))},
-                      B = B_hat[[(count + 1)]], Lambda = Lambda_hat[[(count + 1)]])
-
-    W <- block.diagonal(Omega_i)
-
-    b_gls <- solve(kronecker(Z_t, diag(k))%*%W%*%kronecker(t(Z_t), diag(k)))%*%kronecker(Z_t, diag(k))%*%W%*%c(y_loop)
+    # Omega_i <- lapply(transition, function(x, B, Lambda){solve((1 - x)*tcrossprod(B, B) + x*B%*%tcrossprod(Lambda, B))},
+    #                   B = B_hat[[(count + 1)]], Lambda = Lambda_hat[[(count + 1)]])
+    #
+    # W <- block.diagonal(Omega_i)
+    #
+    # b_gls <- solve(kronecker(Z_t, diag(k))%*%W%*%kronecker(t(Z_t), diag(k)))%*%kronecker(Z_t, diag(k))%*%W%*%c(y_loop)
+    b_gls <- mGLSst(transition = transition, B = B_hat[[(count + 1)]], Lambda = Lambda_hat[[(count + 1)]], Z_t = Z_t, k = k, Y = y_loop)
 
     if(count == 1){
       GLSE <- list(b_gls)
