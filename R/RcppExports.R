@@ -5,12 +5,16 @@ LikelihoodST <- function(parameter, Tob, u, k, G, RestrictionMatrix, restriction
     .Call('_svars_LikelihoodST', PACKAGE = 'svars', parameter, Tob, u, k, G, RestrictionMatrix, restrictions)
 }
 
-nlmST <- function(S, Tob, u, k, G, RestrictionMatrix, restrictions) {
-    .Call('_svars_nlmST', PACKAGE = 'svars', S, Tob, u, k, G, RestrictionMatrix, restrictions)
+nlmST <- function(S, Tob, u, k, transition, RestrictionMatrix, restrictions) {
+    .Call('_svars_nlmST', PACKAGE = 'svars', S, Tob, u, k, transition, RestrictionMatrix, restrictions)
 }
 
 mGLSst <- function(transition, B, Lambda, Z_t, k, Y) {
     .Call('_svars_mGLSst', PACKAGE = 'svars', transition, B, Lambda, Z_t, k, Y)
+}
+
+IterativeSmoothTransition <- function(transition, u, Y, Tob, k, p, crit, maxIter, Z_t, Yloop, RestrictionMatrix, restrictions) {
+    .Call('_svars_IterativeSmoothTransition', PACKAGE = 'svars', transition, u, Y, Tob, k, p, crit, maxIter, Z_t, Yloop, RestrictionMatrix, restrictions)
 }
 
 LikelihoodCV <- function(S, Tob, TB, Sigma_hat1, k, Sigma_hat2, RestrictionMatrix, restrictions) {

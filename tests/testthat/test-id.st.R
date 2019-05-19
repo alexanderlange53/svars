@@ -96,11 +96,11 @@ test_that("Replication of Luetkepohl + Netsunajev 2017 5-dim works", {
 
   x1 <- id.st(v1, c_fix = 167, gamma_fix = -2.77)
 
-  expect_equal(round(x1$Lik, 3),  -2878.27)
-  expect_equal(round(sum(diag(x1$Lambda)), 4), 2.6765)
-  expect_equal(round(sum(x1$B), 4), 3.1944)
+  expect_equal(round(x1$Lik, 2),  -2878.27)
+  expect_equal(round(sum(diag(x1$Lambda)), 3), 2.677)
+  expect_equal(round(sum(x1$B), 3), 3.263)
 
-  expect_equal(round(sum(x1$Lambda_SE), 4), 0.4173)
+  expect_equal(round(sum(x1$Lambda_SE), 3), 0.424)
 
   expect_equal(x1$K, 5)
   expect_equal(x1$n, 447)
