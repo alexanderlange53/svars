@@ -152,33 +152,54 @@ if(!is.numeric(SB)){
   Sigma_hat1 <- (crossprod(resid1)) / (TB-1)
   Sigma_hat2 <- (crossprod(resid2)) / (Tob-TB+1)
 
-  if(!is.null(restriction_matrix)){
-   resultUnrestricted <- identifyVolatility(x, SB, Tob = Tob, u = u, k = k, y = y, restriction_matrix = NULL,
-                                 Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
-                                 max.iter = max.iter, crit = crit, yOut = yOut, type = type)
-    result <- identifyVolatility(x, SB, Tob = Tob, u = u, k = k, y = y, restriction_matrix = restriction_matrix,
-                                           Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
-                                 max.iter = max.iter, crit = crit, yOut = yOut, type = type)
+  yl <- t(y_lag_cr(t(y), p)$lags)
+  yret <- y
+  y <- y[,-c(1:p)]
 
-    lRatioTestStatistic = 2 * (resultUnrestricted$Lik - result$Lik)
-    pValue = round(1 - pchisq(lRatioTestStatistic, result$restrictions), 4)
+  if(x$type == 'const'){
+    Z_t <- rbind(rep(1, ncol(yl)), yl)
+  }else if(x$type == 'trend'){
+    Z_t <- rbind(seq(p + 1, ncol(yret)), yl)
+  }else if(x$type == 'both'){
+    Z_t <- rbind(rep(1, ncol(yl)), seq(p + 1, ncol(yret)), yl)
+  }else{
+    Z_t <- yl
+  }
 
-    #result$lRatioTestStatistic = lRatioTestStatistic
-    #result$lRatioTestPValue = pValue
+  if (!is.null(restriction_matrix)) {
+    restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
+  } else {
+    restrictions <- 0
+    restriction_matrix <- matrix(NA, k, k)
+  }
+
+  best_estimation = IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k,
+                                       RestrictionMatrix = restriction_matrix, restrictions = restrictions,
+                                       Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, Zt = Z_t, y = y,
+                                       maxIter = max.iter)
+
+  if(restrictions > 0 ){
+
+
+    unrestricted_estimation <- IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k,
+                                                  RestrictionMatrix = matrix(NA, k, k), restrictions = 0,
+                                                  Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, Zt = Z_t, y = y,
+                                                  maxIter = max.iter)
+
+    lRatioTestStatistic = 2 * (unrestricted_estimation$Lik - best_estimation$Lik)
+    restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
+    pValue = round(1 - pchisq(lRatioTestStatistic, restrictions), 4)
     lRatioTest <- data.frame(testStatistic = lRatioTestStatistic, p.value = pValue)
     rownames(lRatioTest) <- ""
     colnames(lRatioTest) <- c("Test statistic", "p-value")
-    result$lRatioTest <- lRatioTest
   }else{
-    restriction_matrix <- NULL
-    result <- identifyVolatility(x, SB, Tob = Tob, u = u, k = k, y = y, restriction_matrix = restriction_matrix,
-                                 Sigma_hat1 = Sigma_hat1, Sigma_hat2 = Sigma_hat2, p = p, TB = TB, SBcharacter,
-                                 max.iter = max.iter, crit = crit, yOut = yOut, type = type)
+    lRatioTest <- NULL
   }
 
-  result$restriction_matrix = rmOut
 
-  if(is.null(result$A_hat)){
+  #result$restriction_matrix = rmOut
+
+  if(is.null(best_estimation$A_hat)){
     if(inherits(x, "varest")){
       p <- x$p
       y <- t(x$y)
@@ -259,6 +280,34 @@ if(!is.numeric(SB)){
     }
   }
 
+  wald <- wald.test(best_estimation$Lambda, best_estimation$Fish, restrictions)
+  rownames(best_estimation$B) <- colnames(u)
+  rownames(best_estimation$Lambda) <- colnames(u)
+  rownames(best_estimation$Lambda_SE) <- colnames(u)
+  rownames(best_estimation$B_SE) <- colnames(u)
+
+  result <- list(
+    Lambda = best_estimation$Lambda,    # estimated Lambda matrix (unconditional heteroscedasticity)
+    Lambda_SE = best_estimation$Lambda_SE,  # standard errors of Lambda matrix
+    B = best_estimation$B,              # estimated B matrix (unique decomposition of the covariance matrix)
+    B_SE = best_estimation$B_SE,            # standard errors of B matrix
+    n = Tob,                # number of observations
+    Fish = best_estimation$Fish,            # observerd fisher information matrix
+    Lik = best_estimation$Lik,             # function value of likelihood
+    wald_statistic = wald,  # results of wald test
+    iteration = best_estimation$iteration,     # number of gls estimations
+    method = "Changes in Volatility",
+    SB = SB,                # Structural Break in number format
+    A_hat = best_estimation$A_hat,            # VAR parameter estimated with gls
+    type = type,          # type of the VAR model e.g 'const'
+    SBcharacter = SBcharacter,             # Structural Break in input character format
+    restrictions = restrictions, # number of restrictions
+    restriction_matrix = rmOut,
+    y = yOut,                # Data
+    p = unname(p),                # number of lags
+    K = k,# number of time series
+    lRatioTest = lRatioTest
+  )
   class(result) <- "svars"
  return(result)
 }

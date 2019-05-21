@@ -7,45 +7,61 @@
 using namespace Rcpp;
 
 // LikelihoodCV
-double LikelihoodCV(arma::vec& S, double& Tob, double& TB, arma::mat& Sigma_hat1, int& k, arma::mat& Sigma_hat2, arma::mat& RestrictionMatrix, int& restrictions);
-RcppExport SEXP _svars_LikelihoodCV(SEXP SSEXP, SEXP TobSEXP, SEXP TBSEXP, SEXP Sigma_hat1SEXP, SEXP kSEXP, SEXP Sigma_hat2SEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP) {
+double LikelihoodCV(arma::vec& S, double& Tob, double& TB, arma::mat& SigmaHat1, int& k, arma::mat& SigmaHat2, arma::mat& RestrictionMatrix, int& restrictions);
+RcppExport SEXP _svars_LikelihoodCV(SEXP SSEXP, SEXP TobSEXP, SEXP TBSEXP, SEXP SigmaHat1SEXP, SEXP kSEXP, SEXP SigmaHat2SEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::vec& >::type S(SSEXP);
     Rcpp::traits::input_parameter< double& >::type Tob(TobSEXP);
     Rcpp::traits::input_parameter< double& >::type TB(TBSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type Sigma_hat1(Sigma_hat1SEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type SigmaHat1(SigmaHat1SEXP);
     Rcpp::traits::input_parameter< int& >::type k(kSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type Sigma_hat2(Sigma_hat2SEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type SigmaHat2(SigmaHat2SEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type RestrictionMatrix(RestrictionMatrixSEXP);
     Rcpp::traits::input_parameter< int& >::type restrictions(restrictionsSEXP);
-    rcpp_result_gen = Rcpp::wrap(LikelihoodCV(S, Tob, TB, Sigma_hat1, k, Sigma_hat2, RestrictionMatrix, restrictions));
+    rcpp_result_gen = Rcpp::wrap(LikelihoodCV(S, Tob, TB, SigmaHat1, k, SigmaHat2, RestrictionMatrix, restrictions));
     return rcpp_result_gen;
 END_RCPP
 }
-// IdentifyVolatilityNew
-Rcpp::List IdentifyVolatilityNew(int& counter, arma::mat& Bhat, arma::mat& LambdaHat, int& Exit, int& crit, int& MaxIter, arma::mat& Zt, double& TB, arma::mat& y, int& p, int& k, arma::mat& RestrictionMatrix, int& restrictions, arma::vec& S, double& Tob);
-RcppExport SEXP _svars_IdentifyVolatilityNew(SEXP counterSEXP, SEXP BhatSEXP, SEXP LambdaHatSEXP, SEXP ExitSEXP, SEXP critSEXP, SEXP MaxIterSEXP, SEXP ZtSEXP, SEXP TBSEXP, SEXP ySEXP, SEXP pSEXP, SEXP kSEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP, SEXP SSEXP, SEXP TobSEXP) {
+// nlmCV
+Rcpp::List nlmCV(const arma::vec& S, double Tob, double TB, const arma::mat SigmaHat1, int k, const arma::mat SigmaHat2, arma::mat RestrictionMatrix, int restrictions);
+RcppExport SEXP _svars_nlmCV(SEXP SSEXP, SEXP TobSEXP, SEXP TBSEXP, SEXP SigmaHat1SEXP, SEXP kSEXP, SEXP SigmaHat2SEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int& >::type counter(counterSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type Bhat(BhatSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type LambdaHat(LambdaHatSEXP);
-    Rcpp::traits::input_parameter< int& >::type Exit(ExitSEXP);
-    Rcpp::traits::input_parameter< int& >::type crit(critSEXP);
-    Rcpp::traits::input_parameter< int& >::type MaxIter(MaxIterSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type Zt(ZtSEXP);
-    Rcpp::traits::input_parameter< double& >::type TB(TBSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< int& >::type p(pSEXP);
-    Rcpp::traits::input_parameter< int& >::type k(kSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type RestrictionMatrix(RestrictionMatrixSEXP);
-    Rcpp::traits::input_parameter< int& >::type restrictions(restrictionsSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type S(SSEXP);
-    Rcpp::traits::input_parameter< double& >::type Tob(TobSEXP);
-    rcpp_result_gen = Rcpp::wrap(IdentifyVolatilityNew(counter, Bhat, LambdaHat, Exit, crit, MaxIter, Zt, TB, y, p, k, RestrictionMatrix, restrictions, S, Tob));
+    Rcpp::traits::input_parameter< const arma::vec& >::type S(SSEXP);
+    Rcpp::traits::input_parameter< double >::type Tob(TobSEXP);
+    Rcpp::traits::input_parameter< double >::type TB(TBSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type SigmaHat1(SigmaHat1SEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type SigmaHat2(SigmaHat2SEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type RestrictionMatrix(RestrictionMatrixSEXP);
+    Rcpp::traits::input_parameter< int >::type restrictions(restrictionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(nlmCV(S, Tob, TB, SigmaHat1, k, SigmaHat2, RestrictionMatrix, restrictions));
+    return rcpp_result_gen;
+END_RCPP
+}
+// IdentifyVolatility
+Rcpp::List IdentifyVolatility(int crit, const arma::mat& u, double TB, int p, int k, arma::mat RestrictionMatrix, int restrictions, double Tob, arma::mat SigmaHat1, arma::mat SigmaHat2, arma::mat Zt, arma::mat y, int maxIter);
+RcppExport SEXP _svars_IdentifyVolatility(SEXP critSEXP, SEXP uSEXP, SEXP TBSEXP, SEXP pSEXP, SEXP kSEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP, SEXP TobSEXP, SEXP SigmaHat1SEXP, SEXP SigmaHat2SEXP, SEXP ZtSEXP, SEXP ySEXP, SEXP maxIterSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type crit(critSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type u(uSEXP);
+    Rcpp::traits::input_parameter< double >::type TB(TBSEXP);
+    Rcpp::traits::input_parameter< int >::type p(pSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type RestrictionMatrix(RestrictionMatrixSEXP);
+    Rcpp::traits::input_parameter< int >::type restrictions(restrictionsSEXP);
+    Rcpp::traits::input_parameter< double >::type Tob(TobSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type SigmaHat1(SigmaHat1SEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type SigmaHat2(SigmaHat2SEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type Zt(ZtSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type y(ySEXP);
+    Rcpp::traits::input_parameter< int >::type maxIter(maxIterSEXP);
+    rcpp_result_gen = Rcpp::wrap(IdentifyVolatility(crit, u, TB, p, k, RestrictionMatrix, restrictions, Tob, SigmaHat1, SigmaHat2, Zt, y, maxIter));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -124,7 +140,8 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_svars_LikelihoodCV", (DL_FUNC) &_svars_LikelihoodCV, 8},
-    {"_svars_IdentifyVolatilityNew", (DL_FUNC) &_svars_IdentifyVolatilityNew, 15},
+    {"_svars_nlmCV", (DL_FUNC) &_svars_nlmCV, 8},
+    {"_svars_IdentifyVolatility", (DL_FUNC) &_svars_IdentifyVolatility, 13},
     {"_svars_LikelihoodST", (DL_FUNC) &_svars_LikelihoodST, 7},
     {"_svars_nlmST", (DL_FUNC) &_svars_nlmST, 7},
     {"_svars_mGLSst", (DL_FUNC) &_svars_mGLSst, 6},

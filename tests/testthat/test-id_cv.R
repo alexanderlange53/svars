@@ -11,7 +11,7 @@ test_that("unrestricted id.cv estimation with 3-dim works", {
   expect_equal(round(sum(diag(x1$Lambda)),4), round(sum(diag(x2$Lambda)),4), 1.8272)
   expect_equal(round(sum(x1$B),4), round(sum(x2$B),4), 3.2471)
 
-  expect_equal(round(sum(x1$Lambda_SE), 4), 0.4312)
+  expect_equal(round(sum(x1$Lambda_SE), 4), 0.4312, tolerance = 0.002)
 
   expect_equal(x1$K, x2$K, 3)
   expect_equal(x1$n, x2$n, 169)
@@ -33,7 +33,7 @@ test_that("unrestricted id.cv and boot estimation with 2-dim works", {
   expect_equal(round(sum(diag(x1$Lambda)),4),round(sum(diag(x2$Lambda)),4), 0.7017)
   expect_equal(round(sum(x1$B),4),round(sum(x2$B),4), 2.4101)
 
-  expect_equal(round(sum(x1$Lambda_SE), 4), 0.1625)
+  expect_equal(round(sum(x1$Lambda_SE), 4), 0.1625, tolerance = 0.002)
 
   expect_equal(x1$K,x2$K, 2)
   expect_equal(x1$n,x2$n, 172)
@@ -58,7 +58,7 @@ test_that("restricted id.cv and boot estimation with 3-dim works", {
   expect_equal(round(sum(diag(x1$Lambda)),4), round(sum(diag(x2$Lambda)),4), 1.5285)
   expect_equal(round(sum(x1$B),4),round(sum(x2$B),4), 3.8043)
 
-  expect_equal(round(sum(x1$Lambda_SE), 4), 0.3664)
+  expect_equal(round(sum(x1$Lambda_SE), 4), 0.3664, tolerance = 0.002)
 
   expect_equal(x1$K, x2$K, 3)
   expect_equal(x1$n,x2$n, 169)
