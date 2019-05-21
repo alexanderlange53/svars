@@ -51,9 +51,6 @@ Rcpp::List nlmST(const arma::vec& S, double Tob, const arma::mat u, int k,
                           Rcpp::_["RestrictionMatrix"] = RestrictionMatrix,
                           Rcpp::_["restrictions"] = restrictions);
 
-  // Extract and coerce from list.
-  //arma::vec out = Rcpp::as<arma::vec>(MLE[0]);
-
   return MLE;
 }
 
@@ -83,9 +80,9 @@ arma::vec mGLSst(const arma::vec transition, const arma::mat& B, const arma::mat
   return arma::inv(arma::kron(Z_t, I) * W * arma::kron(Z_t.t(), I)) * arma::kron(Z_t, I) * W * arma::vectorise(Y);
 }
 
-// Algorithm from GLS estimation and likelihood optimization for St model
+// Algorithm from GLS estimation and likelihood optimization for ST model
 // [[Rcpp::export]]
-Rcpp::List IterativeSmoothTransition(const arma::vec& transition, const arma::mat& u, arma::mat& Y, int& Tob, int& k, int& p,
+Rcpp::List IterativeSmoothTransition(const arma::vec& transition, const arma::mat& u, int& Tob, int& k, int& p,
                                      double& crit, int& maxIter, arma::mat& Z_t, arma::mat& Yloop, arma::mat& RestrictionMatrix,
                                      int&  restrictions){
   int count = 0;

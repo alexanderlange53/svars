@@ -175,7 +175,7 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
       restriction_matrix <- matrix(NA, k, k)
     }
 
-    best_estimation <- IterativeSmoothTransition(transition = G_grid, u = u, Y = y, Tob = Tob, k = k, p = p,
+    best_estimation <- IterativeSmoothTransition(transition = G_grid, u = u, Tob = Tob, k = k, p = p,
                                                  crit = crit, maxIter = max.iter, Z_t = Z_t, Yloop = y_loop,
                                                  RestrictionMatrix = restriction_matrix, restrictions = restrictions)
     transition_function <- G_grid
@@ -186,7 +186,7 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
 
     if(lr_test == TRUE & !is.null(restriction_matrix)){
 
-      unrestricted_estimation <- IterativeSmoothTransition(transition = G_grid, u = u, Y = y, Tob = Tob, k = k, p = p,
+      unrestricted_estimation <- IterativeSmoothTransition(transition = G_grid, u = u, Tob = Tob, k = k, p = p,
                                                            crit = crit, maxIter = max.iter, Z_t = Z_t, Yloop = y_loop,
                                                            RestrictionMatrix = matrix(NA, k, k), restrictions = 0)
 
@@ -211,11 +211,9 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     G_grid <- apply(G_grid, 2, list)
 
     grid_optimization <- pblapply(G_grid, function(x){IterativeSmoothTransition(unlist(x),
-                                                                                  u = u, Y = y,
-                                                                                  Tob = Tob, k = k,
-                                                                                  p = p, crit = crit,
+                                                                                  u = u, Tob = Tob, k = k,
+                                                                                  p = p, crit = crit, Yloop = y_loop,
                                                                                   maxIter = max.iter, Z_t = Z_t,
-                                                                                  Yloop = y_loop,
                                                                                   RestrictionMatrix = restriction_matrix,
                                                                                   restrictions = restrictions)},
                                   cl = nc)
@@ -239,7 +237,7 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
         G_grid <- mapply(transition_f, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = transition_variable))
       }
 
-      unrestricted_estimation <- IterativeSmoothTransition(G_grid, u = u, Y = y, Tob = Tob, k = k,
+      unrestricted_estimation <- IterativeSmoothTransition(G_grid, u = u, Tob = Tob, k = k,
                                                              p = p, crit = crit, maxIter = max.iter, Z_t = Z_t, Yloop = y_loop,
                                                              RestrictionMatrix = matrix(NA, k, k), restrictions = 0)
       lRatioTestStatistic = 2 * (unrestricted_estimation$Lik - best_estimation$Lik)

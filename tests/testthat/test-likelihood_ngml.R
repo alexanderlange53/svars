@@ -12,10 +12,10 @@ test_that("Likelihood function within ngml, stage2 works for 3x3 no restriction"
   il1[5,5] <- 1
   il1[9,9] <- 1
   rows1 = c(1,5,9)
-  likelihood_result = likelihood_ngml_stage2(theta = theta1,
-                                    u = u1, k = k1,
+  likelihood_result = LikelihoodNGMLStage2(theta = theta1,
+                                    u = u1, k = k1, Tob = Tob1,
                                     il = il1, restrictions = 0,
-                                    rows = rows1, restriction_matrix = NULL)
+                                    rows = rows1, RestrictionMatrix = matrix(NA, k1, k1))
   expect_equal(round(likelihood_result, 3), 1612.772)
 })
 

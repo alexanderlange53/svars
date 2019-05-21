@@ -100,14 +100,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // IterativeSmoothTransition
-Rcpp::List IterativeSmoothTransition(const arma::vec& transition, const arma::mat& u, arma::mat& Y, int& Tob, int& k, int& p, double& crit, int& maxIter, arma::mat& Z_t, arma::mat& Yloop, arma::mat& RestrictionMatrix, int& restrictions);
-RcppExport SEXP _svars_IterativeSmoothTransition(SEXP transitionSEXP, SEXP uSEXP, SEXP YSEXP, SEXP TobSEXP, SEXP kSEXP, SEXP pSEXP, SEXP critSEXP, SEXP maxIterSEXP, SEXP Z_tSEXP, SEXP YloopSEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP) {
+Rcpp::List IterativeSmoothTransition(const arma::vec& transition, const arma::mat& u, int& Tob, int& k, int& p, double& crit, int& maxIter, arma::mat& Z_t, arma::mat& Yloop, arma::mat& RestrictionMatrix, int& restrictions);
+RcppExport SEXP _svars_IterativeSmoothTransition(SEXP transitionSEXP, SEXP uSEXP, SEXP TobSEXP, SEXP kSEXP, SEXP pSEXP, SEXP critSEXP, SEXP maxIterSEXP, SEXP Z_tSEXP, SEXP YloopSEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::vec& >::type transition(transitionSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type u(uSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type Y(YSEXP);
     Rcpp::traits::input_parameter< int& >::type Tob(TobSEXP);
     Rcpp::traits::input_parameter< int& >::type k(kSEXP);
     Rcpp::traits::input_parameter< int& >::type p(pSEXP);
@@ -117,7 +116,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::mat& >::type Yloop(YloopSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type RestrictionMatrix(RestrictionMatrixSEXP);
     Rcpp::traits::input_parameter< int& >::type restrictions(restrictionsSEXP);
-    rcpp_result_gen = Rcpp::wrap(IterativeSmoothTransition(transition, u, Y, Tob, k, p, crit, maxIter, Z_t, Yloop, RestrictionMatrix, restrictions));
+    rcpp_result_gen = Rcpp::wrap(IterativeSmoothTransition(transition, u, Tob, k, p, crit, maxIter, Z_t, Yloop, RestrictionMatrix, restrictions));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -128,7 +127,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_svars_LikelihoodST", (DL_FUNC) &_svars_LikelihoodST, 7},
     {"_svars_nlmST", (DL_FUNC) &_svars_nlmST, 7},
     {"_svars_mGLSst", (DL_FUNC) &_svars_mGLSst, 6},
-    {"_svars_IterativeSmoothTransition", (DL_FUNC) &_svars_IterativeSmoothTransition, 12},
+    {"_svars_IterativeSmoothTransition", (DL_FUNC) &_svars_IterativeSmoothTransition, 11},
     {NULL, NULL, 0}
 };
 

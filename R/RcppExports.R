@@ -21,7 +21,7 @@ mGLSst <- function(transition, B, Lambda, Z_t, k, Y) {
     .Call('_svars_mGLSst', PACKAGE = 'svars', transition, B, Lambda, Z_t, k, Y)
 }
 
-IterativeSmoothTransition <- function(transition, u, Y, Tob, k, p, crit, maxIter, Z_t, Yloop, RestrictionMatrix, restrictions) {
-    .Call('_svars_IterativeSmoothTransition', PACKAGE = 'svars', transition, u, Y, Tob, k, p, crit, maxIter, Z_t, Yloop, RestrictionMatrix, restrictions)
+IterativeSmoothTransition <- function(transition, u, Tob, k, p, crit, maxIter, Z_t, Yloop, RestrictionMatrix, restrictions) {
+    .Call('_svars_IterativeSmoothTransition', PACKAGE = 'svars', transition, u, Tob, k, p, crit, maxIter, Z_t, Yloop, RestrictionMatrix, restrictions)
 }
 
