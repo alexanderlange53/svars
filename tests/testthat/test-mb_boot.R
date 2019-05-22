@@ -68,58 +68,53 @@ test_that("wild.boot returns valid object for id.cv", {
 
   expect_length(bbcv2, 12)
   expect_equal(bbcv2$nboot, 20)
-
-  # bbcv3 <- wild.boot(x1, rademacher = TRUE, nboot = 50, n.ahead = 30, nc = 1, signrest = NULL)
-  # expect_length(bbcv3, 12)
-  # expect_equal(bbcv3$nboot, 50)
-
 })
 
-test_that("wild.boot returns valid object for id.ngml", {
-  skip_on_cran()
-  set.seed(23211)
-  v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
-  x1 <- id.ngml(v1)
-
-  signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
-  bbngml <- mb.boot(x1, b.length = 15, nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
-
-  expect_length(bbngml, 12)
-  expect_equal(bbngml$nboot, 10)
-
-  bbngml1 <- mb.boot(x1, b.length = 15, nboot = 10, n.ahead = 30, nc = 1, signrest = NULL)
-  expect_length(bbngml1, 12)
-  expect_equal(bbngml1$nboot, 10)
-
-  x1 <- id.ngml(v1, stage3 = TRUE)
-
-  signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
-  bbngml3 <- mb.boot(x1, b.length = 15, nboot = 5, n.ahead = 30, nc = 1, signrest = signrest)
-
-  expect_length(bbngml3, 12)
-  expect_equal(bbngml3$nboot, 5)
-
-  bbngml4 <- mb.boot(x1, b.length = 15, nboot = 5, n.ahead = 30, nc = 1, signrest = NULL)
-  expect_length(bbngml4, 12)
-  expect_equal(bbngml4$nboot, 5)
-
-  restmat <- matrix(NA, 3,3)
-  restmat[1,c(2,3)] <- 0
-  restmat[2,3] <- 0
-
-  x1 <- id.ngml(v1, stage3 = F, restriction_matrix = restmat)
-
-  bbngml5 <- mb.boot(x1, b.length = 15, nboot = 5, n.ahead = 30, nc = 1, signrest = NULL)
-  expect_length(bbngml5, 12)
-  expect_equal(bbngml5$nboot, 5)
-
-  restmat <- matrix(NA, 3,3)
-  restmat[1,c(2,3)] <- 0
-  restmat[2,3] <- 0
-
-  x1 <- id.ngml(v1, stage3 = T, restriction_matrix = restmat)
-
-  bbngml6 <- mb.boot(x1, b.length = 15, nboot = 5, n.ahead = 30, nc = 1, signrest = NULL)
-  expect_length(bbngml6, 12)
-  expect_equal(bbngml6$nboot, 5)
-})
+# test_that("wild.boot returns valid object for id.ngml", {
+#   skip_on_cran()
+#   set.seed(23211)
+#   v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
+#   x1 <- id.ngml(v1)
+#
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bbngml <- mb.boot(x1, b.length = 15, nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
+#
+#   expect_length(bbngml, 12)
+#   expect_equal(bbngml$nboot, 10)
+#
+#   bbngml1 <- mb.boot(x1, b.length = 15, nboot = 10, n.ahead = 30, nc = 1, signrest = NULL)
+#   expect_length(bbngml1, 12)
+#   expect_equal(bbngml1$nboot, 10)
+#
+#   x1 <- id.ngml(v1, stage3 = TRUE)
+#
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bbngml3 <- mb.boot(x1, b.length = 15, nboot = 5, n.ahead = 30, nc = 1, signrest = signrest)
+#
+#   expect_length(bbngml3, 12)
+#   expect_equal(bbngml3$nboot, 5)
+#
+#   bbngml4 <- mb.boot(x1, b.length = 15, nboot = 5, n.ahead = 30, nc = 1, signrest = NULL)
+#   expect_length(bbngml4, 12)
+#   expect_equal(bbngml4$nboot, 5)
+#
+#   restmat <- matrix(NA, 3,3)
+#   restmat[1,c(2,3)] <- 0
+#   restmat[2,3] <- 0
+#
+#   x1 <- id.ngml(v1, stage3 = F, restriction_matrix = restmat)
+#
+#   bbngml5 <- mb.boot(x1, b.length = 15, nboot = 5, n.ahead = 30, nc = 1, signrest = NULL)
+#   expect_length(bbngml5, 12)
+#   expect_equal(bbngml5$nboot, 5)
+#
+#   restmat <- matrix(NA, 3,3)
+#   restmat[1,c(2,3)] <- 0
+#   restmat[2,3] <- 0
+#
+#   x1 <- id.ngml(v1, stage3 = T, restriction_matrix = restmat)
+#
+#   bbngml6 <- mb.boot(x1, b.length = 15, nboot = 5, n.ahead = 30, nc = 1, signrest = NULL)
+#   expect_length(bbngml6, 12)
+#   expect_equal(bbngml6$nboot, 5)
+# })

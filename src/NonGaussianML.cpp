@@ -3,16 +3,16 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::plugins(cpp11)]]
 
-// [[Rcpp::export]]
+
 // Creating matrix with off diagonal elements
-arma::mat BoffDiag(arma::vec& beta, int k, arma::mat RestrictionMatrix){
+/*arma::mat BoffDiag(arma::vec& beta, int k, arma::mat RestrictionMatrix){
 
   arma::mat Boff = arma::eye(k, k);
 
   Boff.elem(find_nonfinite(RestrictionMatrix)) = beta;
 
   return Boff;
-}
+}*/
 
 
 // Likelihood for Non-Gaussian ML Model

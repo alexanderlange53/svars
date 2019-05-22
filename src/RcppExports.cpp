@@ -65,6 +65,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// LikelihoodNGMLStage2
+arma::vec LikelihoodNGMLStage2(const arma::vec& theta, const arma::mat& u, const arma::mat& il, int Tob, int& k, arma::vec& rows, arma::mat RestrictionMatrix, int& restrictions);
+RcppExport SEXP _svars_LikelihoodNGMLStage2(SEXP thetaSEXP, SEXP uSEXP, SEXP ilSEXP, SEXP TobSEXP, SEXP kSEXP, SEXP rowsSEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type u(uSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type il(ilSEXP);
+    Rcpp::traits::input_parameter< int >::type Tob(TobSEXP);
+    Rcpp::traits::input_parameter< int& >::type k(kSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type rows(rowsSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type RestrictionMatrix(RestrictionMatrixSEXP);
+    Rcpp::traits::input_parameter< int& >::type restrictions(restrictionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(LikelihoodNGMLStage2(theta, u, il, Tob, k, rows, RestrictionMatrix, restrictions));
+    return rcpp_result_gen;
+END_RCPP
+}
 // LikelihoodST
 double LikelihoodST(arma::vec& parameter, double& Tob, arma::mat& u, int& k, arma::vec& G, arma::mat& RestrictionMatrix, int& restrictions);
 RcppExport SEXP _svars_LikelihoodST(SEXP parameterSEXP, SEXP TobSEXP, SEXP uSEXP, SEXP kSEXP, SEXP GSEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP) {
@@ -141,6 +159,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_svars_LikelihoodCV", (DL_FUNC) &_svars_LikelihoodCV, 8},
     {"_svars_nlmCV", (DL_FUNC) &_svars_nlmCV, 8},
     {"_svars_IdentifyVolatility", (DL_FUNC) &_svars_IdentifyVolatility, 13},
+    {"_svars_LikelihoodNGMLStage2", (DL_FUNC) &_svars_LikelihoodNGMLStage2, 8},
     {"_svars_LikelihoodST", (DL_FUNC) &_svars_LikelihoodST, 7},
     {"_svars_nlmST", (DL_FUNC) &_svars_nlmST, 7},
     {"_svars_mGLSst", (DL_FUNC) &_svars_mGLSst, 6},
