@@ -6,8 +6,6 @@ addons:
   apt:
     packages:
       - libgsl-dev
-      #- libgsl0-dev
-      #- libgsl-dev
 script:
   - |
     R CMD build .
