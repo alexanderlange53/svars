@@ -13,8 +13,12 @@ IdentifyVolatility <- function(crit, u, TB, p, k, RestrictionMatrix, restriction
     .Call('_svars_IdentifyVolatility', PACKAGE = 'svars', crit, u, TB, p, k, RestrictionMatrix, restrictions, Tob, SigmaHat1, SigmaHat2, Zt, y, maxIter)
 }
 
-LikelihoodNGMLStage2 <- function(theta, u, il, Tob, k, rows, RestrictionMatrix, restrictions) {
-    .Call('_svars_LikelihoodNGMLStage2', PACKAGE = 'svars', theta, u, il, Tob, k, rows, RestrictionMatrix, restrictions)
+LikelihoodNGMLStage2 <- function(theta, u, Tob, k, RestrictionMatrix, restrictions) {
+    .Call('_svars_LikelihoodNGMLStage2', PACKAGE = 'svars', theta, u, Tob, k, RestrictionMatrix, restrictions)
+}
+
+LikelihoodNGMLStage3 <- function(A, Z_t, Y, B_stand_est, sigma_est, d_freedom, k, Tob) {
+    .Call('_svars_LikelihoodNGMLStage3', PACKAGE = 'svars', A, Z_t, Y, B_stand_est, sigma_est, d_freedom, k, Tob)
 }
 
 LikelihoodST <- function(parameter, Tob, u, k, G, RestrictionMatrix, restrictions) {

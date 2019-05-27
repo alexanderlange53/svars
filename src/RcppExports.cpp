@@ -66,20 +66,36 @@ BEGIN_RCPP
 END_RCPP
 }
 // LikelihoodNGMLStage2
-arma::vec LikelihoodNGMLStage2(const arma::vec& theta, const arma::mat& u, const arma::mat& il, int Tob, int& k, arma::vec& rows, arma::mat RestrictionMatrix, int& restrictions);
-RcppExport SEXP _svars_LikelihoodNGMLStage2(SEXP thetaSEXP, SEXP uSEXP, SEXP ilSEXP, SEXP TobSEXP, SEXP kSEXP, SEXP rowsSEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP) {
+double LikelihoodNGMLStage2(const arma::vec& theta, const arma::mat& u, int Tob, int& k, arma::mat& RestrictionMatrix, int& restrictions);
+RcppExport SEXP _svars_LikelihoodNGMLStage2(SEXP thetaSEXP, SEXP uSEXP, SEXP TobSEXP, SEXP kSEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::vec& >::type theta(thetaSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type u(uSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type il(ilSEXP);
     Rcpp::traits::input_parameter< int >::type Tob(TobSEXP);
     Rcpp::traits::input_parameter< int& >::type k(kSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type rows(rowsSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type RestrictionMatrix(RestrictionMatrixSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type RestrictionMatrix(RestrictionMatrixSEXP);
     Rcpp::traits::input_parameter< int& >::type restrictions(restrictionsSEXP);
-    rcpp_result_gen = Rcpp::wrap(LikelihoodNGMLStage2(theta, u, il, Tob, k, rows, RestrictionMatrix, restrictions));
+    rcpp_result_gen = Rcpp::wrap(LikelihoodNGMLStage2(theta, u, Tob, k, RestrictionMatrix, restrictions));
+    return rcpp_result_gen;
+END_RCPP
+}
+// LikelihoodNGMLStage3
+double LikelihoodNGMLStage3(arma::vec& A, arma::mat& Z_t, const arma::mat& Y, const arma::mat& B_stand_est, arma::vec& sigma_est, arma::vec& d_freedom, int& k, int& Tob);
+RcppExport SEXP _svars_LikelihoodNGMLStage3(SEXP ASEXP, SEXP Z_tSEXP, SEXP YSEXP, SEXP B_stand_estSEXP, SEXP sigma_estSEXP, SEXP d_freedomSEXP, SEXP kSEXP, SEXP TobSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec& >::type A(ASEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type Z_t(Z_tSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type B_stand_est(B_stand_estSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type sigma_est(sigma_estSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type d_freedom(d_freedomSEXP);
+    Rcpp::traits::input_parameter< int& >::type k(kSEXP);
+    Rcpp::traits::input_parameter< int& >::type Tob(TobSEXP);
+    rcpp_result_gen = Rcpp::wrap(LikelihoodNGMLStage3(A, Z_t, Y, B_stand_est, sigma_est, d_freedom, k, Tob));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -159,7 +175,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_svars_LikelihoodCV", (DL_FUNC) &_svars_LikelihoodCV, 8},
     {"_svars_nlmCV", (DL_FUNC) &_svars_nlmCV, 8},
     {"_svars_IdentifyVolatility", (DL_FUNC) &_svars_IdentifyVolatility, 13},
-    {"_svars_LikelihoodNGMLStage2", (DL_FUNC) &_svars_LikelihoodNGMLStage2, 8},
+    {"_svars_LikelihoodNGMLStage2", (DL_FUNC) &_svars_LikelihoodNGMLStage2, 6},
+    {"_svars_LikelihoodNGMLStage3", (DL_FUNC) &_svars_LikelihoodNGMLStage3, 8},
     {"_svars_LikelihoodST", (DL_FUNC) &_svars_LikelihoodST, 7},
     {"_svars_nlmST", (DL_FUNC) &_svars_nlmST, 7},
     {"_svars_mGLSst", (DL_FUNC) &_svars_mGLSst, 6},

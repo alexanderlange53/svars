@@ -18,26 +18,18 @@ id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL, restriction_matrix = NULL)
     beta0 <- beta0[-(which(!is.na(restriction_matrix))-floor(which(!is.na(restriction_matrix))/k))]
     restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
     diag(naElements) <- FALSE
+
+    restriction_matrix_optim <- restriction_matrix
   }else{
     beta0 <- B_l_st[row(B_l)!=col(B_l)]
     restrictions <- 0
+
+    restriction_matrix_optim <- matrix(NA, k, k)
   }
+
   sigma0 <- rep(1,k)
   lambda0 <- rep(5,k)
   theta0 <- c(beta0,sigma0,lambda0)
-
-  # Creating selection matrix for likelihood
-  il <- matrix(0, k*k, k*k)
-  rows <- rep(0, k)
-  for(i in 1:k){
-    if(i == 1){
-      il[i,i] <- 1
-      rows[i] <- 1
-    }else{
-      il[(i+(k*(i-1))),(i+(k*(i-1)))] <- 1
-      rows[i] <- i+(k*(i-1))
-    }
-  }
 
   # Creating matrix with off diagonal elemts
   B_hat <- function(beta, k){
@@ -51,9 +43,8 @@ id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL, restriction_matrix = NULL)
   }
 
   # optimizing the likelihood function 2. stage
-  maxL <- nlm(p = theta0, f = likelihood_ngml_stage2, u = u, k = k, il = il, rows = rows, restriction_matrix = restriction_matrix,
-              restrictions = restrictions,
-              hessian = FALSE)
+  maxL <- nlm(p = theta0, f = LikelihoodNGMLStage2, u = u, k = k, RestrictionMatrix = restriction_matrix_optim, Tob = Tob,
+              restrictions = restrictions, hessian = TRUE)
   beta_est <- maxL$estimate[1:(k*k-k-restrictions)]
 
   sigma_est <- maxL$estimate[(k*k-k+1-restrictions):(k*k-restrictions)]
@@ -114,9 +105,9 @@ id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL, restriction_matrix = NULL)
 
 
     A <- c(A)
-    maxL2 <- suppressMessages(nlm(p = A, f = likelihood_ngml_stage3, Z_t = Z_t, y = y, il = il,
-                 B_stand_est = B_stand_est, rows = rows, sigma_est = sigma_est,
-                 d_freedom = d_freedom, k=k, hessian = FALSE))
+    maxL2 <- suppressMessages(nlm(p = A, f = LikelihoodNGMLStage3, Z_t = Z_t, Y = y,
+                                  B_stand_est = B_stand_est, sigma_est = sigma_est,
+                                  d_freedom = d_freedom, Tob = Tob, k = k, hessian = TRUE))
 
     A_hat <- matrix(maxL2$estimate, nrow = k)
   }else{
