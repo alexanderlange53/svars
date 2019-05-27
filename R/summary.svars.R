@@ -80,7 +80,7 @@ summary.svars <- function(object, ...){
    cat("\n")
    cat("\nEstimated B Matrix (unique decomposition of the covariance matrix): \n")
    print(svarsObject$B)
-   cat("\nestimated standardized B matrix:\n")
+   cat("\nEstimated standardized B matrix:\n")
    print(svarsObject$B_stand)
    cat("\nStandard errors of standardized B matrix:\n")
    print(svarsObject$B_stand_SE)
@@ -94,6 +94,23 @@ summary.svars <- function(object, ...){
 
    }
 
+ }else if(svarsObject$method == "GARCH"){
+   cat("\n")
+   cat("\nEstimated B Matrix (unique decomposition of the covariance matrix): \n")
+   print(svarsObject$B)
+   # cat("\nStandard errors of inverse B matrix: \n")
+   # print(svarsObject$B_inv_SE)
+   cat("\nEstimated GARCH(1, 1) parameter: \n")
+   print(svarsObject$GARCH_parameter)
+   cat("\nStandard errors of GARCH(1, 1) parameter: \n")
+   print(svarsObject$GARCH_SE)
+   if(svarsObject$restrictions > 0){
+     cat("\nLikelihood Ratio Test: \n")
+     #cat(svarsObject$lRatioTestStatistic)
+     #cat(", p-value:")
+     #cat(svarsObject$lRatioTestPValue)
+     printCoefmat(svarsObject$lRatioTest, has.Pvalue = T)
+   }
  }else if(svarsObject$method == "Distance covariances"){
    cat("\n")
    cat("\nEstimated B Matrix (unique decomposition of the covariance matrix): \n")

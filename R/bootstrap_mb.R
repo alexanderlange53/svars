@@ -176,9 +176,13 @@ mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NU
       temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
     }else if(x$method == "Distance covariances"){
       temp <- id.dc(varb, PIT=x$PIT)
-    }else{
+    }else if(x$method == "Smooth transition"){
       temp <- id.st(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,
                     gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01)
+    }else if(x$method == "GARCH"){
+      temp <- tryCatch(id.garch(varb, restriction_matrix = x$restriction_matrix, max.iter = x$max.iter,
+                                crit = x$crit, start.iter = x$start.iter),
+                       error = function(e) NULL)
     }
 
 
@@ -225,12 +229,12 @@ mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NU
   cov.bs <- cov(v.b)
 
   # Calculating Standard errors for LDI methods
-  if(x$method == "Cramer-von Mises distance" | x$method == "Distance covariances"){
+  #if(x$method == "Cramer-von Mises distance" | x$method == "Distance covariances" | x$method == "GARCH"){
     SE <- matrix(sqrt(diag(cov.bs)),k,k)
     rownames(SE) <- rownames(x$B)
-  }else{
-    SE <- NULL
-  }
+  #}else{
+  #  SE <- NULL
+  #}
 
   # Calculating Bootstrap means
   boot.mean <- matrix(colMeans(v.b),k,k)

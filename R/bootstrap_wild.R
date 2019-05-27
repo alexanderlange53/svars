@@ -144,6 +144,9 @@ wild.boot <- function(x, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1, d
       temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
     }else if(x$method == "Distance covariances"){
       temp <- id.dc(varb, PIT=x$PIT)
+    }else if(x$method == "GARCH"){
+      temp <- tryCatch(id.garch(varb, restriction_matrix = restriction_matrix),
+                       error = function(e) NULL)
     }else{
       temp <- tryCatch(id.st_boot(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,
                     gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01, Z = Z),
@@ -193,12 +196,12 @@ wild.boot <- function(x, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1, d
   cov.bs <- cov(v.b)
 
   # Calculating Standard errors for LDI methods
-  if(x$method == "Cramer-von Mises distance" | x$method == "Distance covariances"){
+  #if(x$method == "Cramer-von Mises distance" | x$method == "Distance covariances"){
     SE <- matrix(sqrt(diag(cov.bs)),k,k)
     rownames(SE) <- rownames(x$B)
-  }else{
-    SE <- NULL
-  }
+  #}else{
+  #  SE <- NULL
+  # }
 
   # Calculating Bootstrap means
   boot.mean <- matrix(colMeans(v.b),k,k)
