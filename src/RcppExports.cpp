@@ -66,17 +66,58 @@ BEGIN_RCPP
 END_RCPP
 }
 // LikelihoodGARCHu
-double LikelihoodGARCHu(arma::vec& parameter, arma::vec& est, double& Sigma1, int Tob, int k);
-RcppExport SEXP _svars_LikelihoodGARCHu(SEXP parameterSEXP, SEXP estSEXP, SEXP Sigma1SEXP, SEXP TobSEXP, SEXP kSEXP) {
+double LikelihoodGARCHu(const arma::vec& parameter, arma::vec& est, double& Sigma1, int& Tob);
+RcppExport SEXP _svars_LikelihoodGARCHu(SEXP parameterSEXP, SEXP estSEXP, SEXP Sigma1SEXP, SEXP TobSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::vec& >::type parameter(parameterSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type parameter(parameterSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type est(estSEXP);
     Rcpp::traits::input_parameter< double& >::type Sigma1(Sigma1SEXP);
+    Rcpp::traits::input_parameter< int& >::type Tob(TobSEXP);
+    rcpp_result_gen = Rcpp::wrap(LikelihoodGARCHu(parameter, est, Sigma1, Tob));
+    return rcpp_result_gen;
+END_RCPP
+}
+// nlmGARCHu
+Rcpp::List nlmGARCHu(const arma::vec parameter, const arma::vec est, double Sigma1, int Tob);
+RcppExport SEXP _svars_nlmGARCHu(SEXP parameterSEXP, SEXP estSEXP, SEXP Sigma1SEXP, SEXP TobSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec >::type parameter(parameterSEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type est(estSEXP);
+    Rcpp::traits::input_parameter< double >::type Sigma1(Sigma1SEXP);
     Rcpp::traits::input_parameter< int >::type Tob(TobSEXP);
-    Rcpp::traits::input_parameter< int >::type k(kSEXP);
-    rcpp_result_gen = Rcpp::wrap(LikelihoodGARCHu(parameter, est, Sigma1, Tob, k));
+    rcpp_result_gen = Rcpp::wrap(nlmGARCHu(parameter, est, Sigma1, Tob));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SigmaGARCHuniv
+arma::vec SigmaGARCHuniv(const arma::vec& param, int Tob, double& SigmaE, const arma::vec est);
+RcppExport SEXP _svars_SigmaGARCHuniv(SEXP paramSEXP, SEXP TobSEXP, SEXP SigmaESEXP, SEXP estSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< int >::type Tob(TobSEXP);
+    Rcpp::traits::input_parameter< double& >::type SigmaE(SigmaESEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type est(estSEXP);
+    rcpp_result_gen = Rcpp::wrap(SigmaGARCHuniv(param, Tob, SigmaE, est));
+    return rcpp_result_gen;
+END_RCPP
+}
+// GarchStart
+Rcpp::List GarchStart(int& StartIter, int& k, arma::mat& ste, int& Tob);
+RcppExport SEXP _svars_GarchStart(SEXP StartIterSEXP, SEXP kSEXP, SEXP steSEXP, SEXP TobSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int& >::type StartIter(StartIterSEXP);
+    Rcpp::traits::input_parameter< int& >::type k(kSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type ste(steSEXP);
+    Rcpp::traits::input_parameter< int& >::type Tob(TobSEXP);
+    rcpp_result_gen = Rcpp::wrap(GarchStart(StartIter, k, ste, Tob));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -207,7 +248,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_svars_LikelihoodCV", (DL_FUNC) &_svars_LikelihoodCV, 8},
     {"_svars_nlmCV", (DL_FUNC) &_svars_nlmCV, 8},
     {"_svars_IdentifyVolatility", (DL_FUNC) &_svars_IdentifyVolatility, 13},
-    {"_svars_LikelihoodGARCHu", (DL_FUNC) &_svars_LikelihoodGARCHu, 5},
+    {"_svars_LikelihoodGARCHu", (DL_FUNC) &_svars_LikelihoodGARCHu, 4},
+    {"_svars_nlmGARCHu", (DL_FUNC) &_svars_nlmGARCHu, 4},
+    {"_svars_SigmaGARCHuniv", (DL_FUNC) &_svars_SigmaGARCHuniv, 4},
+    {"_svars_GarchStart", (DL_FUNC) &_svars_GarchStart, 4},
     {"_svars_likelihoodGARCHm", (DL_FUNC) &_svars_likelihoodGARCHm, 7},
     {"_svars_LikelihoodNGMLStage2", (DL_FUNC) &_svars_LikelihoodNGMLStage2, 6},
     {"_svars_LikelihoodNGMLStage3", (DL_FUNC) &_svars_LikelihoodNGMLStage3, 8},

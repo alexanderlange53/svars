@@ -54,17 +54,6 @@ Rcpp::List nlmST(const arma::vec& S, double Tob, const arma::mat u, int k,
   return MLE;
 }
 
-// Creating Regressor matrix (used in multiple models)
-/*
-arma::mat = crZ(const arma::mat& y, int& p){
-  arma::mat Z = arma::zeros(y.cols - p, y.rows * p);
-
-  for (int i = 0; i < p; ++i) {
-    Z.col(i * Z.ncol, (i + 1) * Z.ncol - 1) = y(0, span(y.nrows - p), span());
-  }
-}
-*/
-
 // Multivariate GLS estimator for smooth transition model
 // [[Rcpp::export]]
 arma::vec mGLSst(const arma::vec transition, const arma::mat& B, const arma::mat& Lambda,

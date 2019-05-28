@@ -6,8 +6,8 @@ test_that("unrestricted id.garch estimation with 3-dim works", {
   v1 <- vars::VAR(USA, p = 6)
   x1 <- id.garch(v1)
 
-  expect_equal(round(x1$Lik, 1),  -548.4)
-  expect_equal(round(sum(x1$B), 4), -0.9508)
+  expect_equal(round(x1$Lik, 1),  -547.2)
+  expect_equal(round(sum(x1$B), 4), 2.6492)
 
 
   expect_equal(x1$K, 3)
@@ -24,8 +24,8 @@ test_that("unrestricted id.garch with 2-dim works", {
   set.seed(23211)
   v1 <- vars::VAR(USA[,-3], p = 3, ic = "AIC" )
   x1 <- id.garch(v1)
-  expect_equal(round(x1$Lik, 4), -412.1135)
-  expect_equal(round(sum(x1$B),4), -2.0123)
+  expect_equal(round(x1$Lik, 4), -411.4529)
+  expect_equal(round(sum(x1$B), 4), -0.5087)
 
   expect_equal(x1$K, 2)
   expect_equal(x1$n, 172)
@@ -41,6 +41,7 @@ test_that("unrestricted id.garch Luetkepohl Netsunajev example works", {
   set.seed(23211)
   v1 <- vars::VAR(LN, p = 3)
   x1 <- id.garch(v1, max.iter = 10)
+
   expect_equal(round(x1$Lik), -2891)
   expect_equal(round(sum(x1$B), 2), -4.89)
 
@@ -75,8 +76,8 @@ test_that("restricted id.garch with 3-dim works", {
   restmat[2,3] <- 0
 
   x1 <- id.garch(v1, restriction_matrix = restmat)
-  expect_equal(round(x1$Lik, 4),  -551.5636)
-  expect_equal(round(sum(x1$B),4), 0.3402)
+  expect_equal(round(x1$Lik, 4),  -551.6813)
+  expect_equal(round(sum(x1$B),4), 0.268)
 
   expect_equal(x1$K, 3)
   expect_equal(x1$n, 169)
@@ -97,8 +98,8 @@ test_that("Restricted id.garch Luetkepohl Netsunajev example works with R3 model
   restmat[3,4:5] <- 0
 
   x1 <- id.garch(v1, max.iter = 10, restriction_matrix = restmat)
-  expect_equal(round(x1$Lik), -2984)
-  expect_equal(round(sum(x1$B), 4), -1.5823)
+  expect_equal(round(x1$Lik), -3050)
+  expect_equal(round(sum(x1$B), 4), -0.3424)
 
   expect_equal(x1$K, 5)
   expect_equal(x1$n, 447)

@@ -73,15 +73,15 @@ identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, paramete
     Sigma_e_0 <-  matrix(diag(var(t(est_r))),  Tob, k, byrow = T)
 
     for(i in 1:k){
-      maxL <- nlm(p = parameter_ini_univ[i, ], f = likelihood_garch_uni, k = k, Tob = Tob,
-                  Sigma_1 = Sigma_e_0[, i] , est = est_r[i, ], iterlim = 150, hessian = T)
+      maxL <- nlm(p = parameter_ini_univ[i, ], f = LikelihoodGARCHu, Tob = Tob,
+                  Sigma1 = Sigma_e_0[1, i] , est = est_r[i, ], iterlim = 150, hessian = T)
       uni_single_ml[[i]] <- maxL$hessian
 
       gamma_univ[i] <- maxL$estimate[1]
       g_univ[i] <- maxL$estimate[2]
 
       param_univ[, i] <- rbind((1- gamma_univ[i]- g_univ[i]), gamma_univ[i], g_univ[i])
-      Sigma_e_univ[,i] <- sigma_garch_univ(param_univ[,i], Tob, Sigma_e_0[,i], est_r[i,])
+      Sigma_e_univ[,i] <- SigmaGARCHuniv(param_univ[,i], Tob, Sigma_e_0[1,i], est_r[i,])
     }
     Sigma_e_univ_l[[round]] <- Sigma_e_univ
 
@@ -127,11 +127,8 @@ identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, paramete
     B_inv_SE <- restriction_matrix
     B_inv_SE[naElements] <- FishObs[1:sum(naElements)]
 
-    #B_inv_diag_SE <- diag(FishObs[(sum(naElements) + 1):(sum(naElements) + k)])
   }else{
     B_inv_SE <- matrix(FishObs, k, k)
-    # diag(B_inv_SE) <- 0
-    # B_inv_diag_SE <- diag(FishObs[(k * k - k + 1):(k * k)])
   }
 
   rownames(B_hat) <- colnames(u)

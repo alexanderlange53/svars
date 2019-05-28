@@ -21,7 +21,7 @@ test_that("Univariate GARCH likelihood 3dims works", {
   Sigma_e_0 <-  matrix(runif(Tob*k),  Tob, k)
   ste <- matrix(rnorm(Tob*k), k, Tob)
 
-  l <- LikelihoodGARCHu(parameter_ini_univ[1, ], Sigma1 = Sigma_e_0[1, 1], est = ste[1, ], k = k, Tob = Tob)
+  l <- LikelihoodGARCHu(parameter_ini_univ[1, ],  est = ste[1, ], Sigma1 = Sigma_e_0[1, 1], Tob = Tob)
 
   expect_equal(round(l,3), 147.243)
 })
@@ -49,7 +49,7 @@ test_that("Univariate GARCH likelihood 5dims works", {
   Sigma_e_0 <-  matrix(runif(Tob*k),  Tob, k)
   ste <- matrix(rnorm(Tob*k), k, Tob)
 
-  l <- LikelihoodGARCHu(parameter_ini_univ[1, ], Sigma1 = Sigma_e_0[1, 1], est = ste[1, ], k = k, Tob = Tob)
+  l <- LikelihoodGARCHu(parameter_ini_univ[1, ], Sigma1 = Sigma_e_0[1, 1], est = ste[1, ], Tob = Tob)
 
   expect_equal(round(l,3), 119.634)
 })
