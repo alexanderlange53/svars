@@ -4,7 +4,7 @@
 \alias{id.garch}
 \title{GARCH identification of SVAR models}
 \usage{
-id.garch(x, max.iter = 5, crit = 0.001, start.iter = 100,
+id.garch(x, max.iter = 5, crit = 0.001, start.iter = 200,
   restriction_matrix = NULL)
 }
 \arguments{

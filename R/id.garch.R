@@ -123,8 +123,9 @@ id.garch <- function(x, max.iter = 5, crit = 0.001, start.iter = 200, restrictio
     likvalues <- rep(NA, k)
 
     for(i in 1:k){
-      maxL <- nlm(p = parameter_ini_univ[i, ], f = likelihood_garch_uni, k = k, Tob = Tob,
-                  Sigma_1 = Sigma_e_0[, i] , est = ste[i, ])
+      maxL <- nlm(p = parameter_ini_univ[i, ], f = LikelihoodGARCHu, k = k, Tob = Tob,
+                  Sigma1 = Sigma_e_0[1, i] , est = ste[i, ])
+
       # Likelihood values
       likvalues[i] <- maxL$minimum
 

@@ -6,9 +6,13 @@ identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, paramete
      naElements_inv <- !is.na(restriction_matrix)
      ini <- B0[naElements]
      restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
+
+     restriction_matrix_opt <- restriction_matrix
    }else{
      restrictions <- 0
      ini <- c(B0)
+
+     restriction_matrix_opt <- matrix(NA, k, k)
   }
 
   # create empty vectors and lists for results
@@ -29,8 +33,8 @@ identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, paramete
 
 
   while (Exit > crit & round < max.iter){
-    max_ml <- nlm(ini, f = likelihood_garch_multi, k = k, Tob = Tob, restriction_matrix = restriction_matrix,
-                  Sigma_e = Sigma_e_univ , u = u, iterlim = 150, hessian = T)
+    max_ml <- nlm(ini, f = likelihoodGARCHm, k = k, Tob = Tob, RestrictionMatrix = restriction_matrix_opt,
+                  SigmaE = Sigma_e_univ , u = u, restrictions = restrictions, iterlim = 150, hessian = T)
 
 
     multi_ml[[round]] <- max_ml

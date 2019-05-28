@@ -43,8 +43,8 @@ id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL, restriction_matrix = NULL)
   }
 
   # optimizing the likelihood function 2. stage
-  maxL <- nlm(p = theta0, f = LikelihoodNGMLStage2, u = u, k = k, RestrictionMatrix = restriction_matrix_optim, Tob = Tob,
-              restrictions = restrictions, hessian = TRUE)
+  maxL <- suppressWarnings(nlm(p = theta0, f = LikelihoodNGMLStage2, u = u, k = k, RestrictionMatrix = restriction_matrix_optim, Tob = Tob,
+              restrictions = restrictions, hessian = TRUE))
   beta_est <- maxL$estimate[1:(k*k-k-restrictions)]
 
   sigma_est <- maxL$estimate[(k*k-k+1-restrictions):(k*k-restrictions)]
@@ -105,7 +105,7 @@ id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL, restriction_matrix = NULL)
 
 
     A <- c(A)
-    maxL2 <- suppressMessages(nlm(p = A, f = LikelihoodNGMLStage3, Z_t = Z_t, Y = y,
+    maxL2 <- suppressWarnings(nlm(p = A, f = LikelihoodNGMLStage3, Z_t = Z_t, Y = y,
                                   B_stand_est = B_stand_est, sigma_est = sigma_est,
                                   d_freedom = d_freedom, Tob = Tob, k = k, hessian = TRUE))
 
