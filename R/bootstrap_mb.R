@@ -60,7 +60,7 @@
 #' @export
 
 
-mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NULL, signrest = NULL,  itermax = 300, steptol = 200, iter2 = 50){
+mb.boot <- function(x, recursive =  TRUE, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NULL, signrest = NULL,  itermax = 300, steptol = 200, iter2 = 50){
   # x: vars object
   # B: estimated covariance matrix from true data set
   # n.ahead: Time steps for Irf
@@ -139,6 +139,7 @@ mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NU
   # Bootstrapfunction
   bootf <- function(Ustar1){
 
+    if(recursive == TRUE){
     Ystar <- matrix(0, nrow(y), k)
     # adding pre sample values
     Ystar[1:p,] <- y[1:p,]
@@ -166,6 +167,7 @@ mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NU
     varb <- suppressWarnings(VAR(Ystar, p = x$p, type = x$type))
     Ustar <- residuals(varb)
     Sigma_u_star <- crossprod(Ustar)/(obs - 1 - k * p)
+    }
 
     if(x$method == "Non-Gaussian maximum likelihood"){
       temp <- id.ngml_boot(varb, stage3 = x$stage3, restriction_matrix = x$restriction_matrix)

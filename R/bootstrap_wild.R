@@ -61,7 +61,7 @@
 
 
 
-wild.boot <- function(x, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1, dd = NULL, signrest = NULL, itermax = 300, steptol = 200, iter2 = 50){
+wild.boot <- function(x, recursive = FALSE, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1, dd = NULL, signrest = NULL, itermax = 300, steptol = 200, iter2 = 50){
 
   # x: vars object
   # B: estimated covariance matrix from true data set
@@ -123,6 +123,7 @@ wild.boot <- function(x, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1, d
   # Bootstrapfunction
   bootf <- function(Ustar1){
 
+    if(recursive == FALSE){
     Ystar <- t(A %*% Z + Ustar1)
     Bstar <- t(Ystar) %*% t(Z) %*% solve(Z %*% t(Z))
     Ustar <- Ystar - t(Bstar %*% Z)
@@ -134,6 +135,7 @@ wild.boot <- function(x, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1, d
                  p = p,
                  type = x$type)
     class(varb) <- 'var.boot'
+    }
 
     if(x$method == "Non-Gaussian maximum likelihood"){
       temp <- id.ngml_boot(varb, stage3 = x$stage3, Z = Z, restriction_matrix = x$restriction_matrix)
