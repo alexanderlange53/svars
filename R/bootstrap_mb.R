@@ -169,6 +169,20 @@ mb.boot <- function(x, recursive =  TRUE, b.length = 15, n.ahead = 20, nboot = 5
     Sigma_u_star <- crossprod(Ustar)/(obs - 1 - k * p)
     }
 
+    if(recursive == FALSE){
+      Ystar <- t(A %*% Z + Ustar1)
+      Bstar <- t(Ystar) %*% t(Z) %*% solve(Z %*% t(Z))
+      Ustar <- Ystar - t(Bstar %*% Z)
+      Sigma_u_star <- crossprod(Ustar)/(ncol(Ustar1) - 1 - k * p)
+
+      varb <- list(y = Ystar,
+                   coef_x = Bstar,
+                   residuals = Ustar,
+                   p = p,
+                   type = x$type)
+      class(varb) <- 'var.boot'
+    }
+
     if(x$method == "Non-Gaussian maximum likelihood"){
       temp <- id.ngml_boot(varb, stage3 = x$stage3, restriction_matrix = x$restriction_matrix)
     }else if(x$method == "Changes in Volatility"){

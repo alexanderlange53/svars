@@ -137,6 +137,37 @@ wild.boot <- function(x, recursive = FALSE, rademacher = TRUE, n.ahead = 20, nbo
     class(varb) <- 'var.boot'
     }
 
+
+    if(recursive == TRUE){
+      star <- matrix(0, nrow(y), k)
+      # adding pre sample values
+      Ystar[1:p,] <- y[1:p,]
+
+      if(x$type == 'const' | x$type == 'trend'){
+        for(i in (p+1):nrow(y)){
+          for(j in 1:k){
+            Ystar[i,j] <- A[j,1] + A[j,-1]%*%c(t(Ystar[(i-1):(i-p),])) + Ustar1[j, (i-p)]
+          }
+        }
+      }else if(x$type == 'both'){
+        for(i in (p+1):nrow(y)){
+          for(j in 1:k){
+            Ystar[i,j] <- A[j,c(1,2)] + A[j,-c(1,2)]%*%c(t(Ystar[(i-p):(i-1),])) + Ustar1[j, (i-p)]
+          }
+        }
+      }else if(x$type == 'none'){
+        for(i in (p+1):nrow(y)){
+          for(j in 1:k){
+            Ystar[i,j] <- A[j,]%*%c(t(Ystar[(i-p):(i-1),])) + Ustar1[j, (i-p)]
+          }
+        }
+      }
+
+      varb <- suppressWarnings(VAR(Ystar, p = x$p, type = x$type))
+      Ustar <- residuals(varb)
+      Sigma_u_star <- crossprod(Ustar)/(obs - 1 - k * p)
+    }
+
     if(x$method == "Non-Gaussian maximum likelihood"){
       temp <- id.ngml_boot(varb, stage3 = x$stage3, Z = Z, restriction_matrix = x$restriction_matrix)
     }else if(x$method == "Changes in Volatility"){
