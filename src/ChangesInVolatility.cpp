@@ -16,7 +16,7 @@ double LikelihoodCV(arma::vec& S, double& Tob, double& TB,  arma::mat& SigmaHat1
   double MW2 = arma::det(MMM2);
 
 
-  if (any(vectorise(Psi) < 0.0) | MW == 0.0 |  MW2 < 0.01) {
+  if (any(vectorise(Psi) < 0.0) || MW == 0.0 ||  MW2 < 0.01) {
     return 1e25;
   }
 

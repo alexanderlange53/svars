@@ -24,7 +24,7 @@ double LikelihoodNGMLStage2(const arma::vec& theta, const arma::mat& u, int Tob,
   arma::mat Boff = arma::eye(k, k);
   Boff.elem(find_nonfinite(RM)) = beta;
 
-  if(arma::det(Boff) == 0.0 | any(sigma < 0.0) | any(lambda < 2.0)){
+  if(arma::det(Boff) == 0.0 || any(sigma < 0.0) || any(lambda < 2.0)){
     return 1e25;
   }
 

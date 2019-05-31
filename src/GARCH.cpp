@@ -11,7 +11,7 @@ double LikelihoodGARCHu(const arma::vec& parameter, arma::vec& est, double& Sigm
   double g      =  parameter(1);
 
   // Checking for input validity
-  if (gamma > 0.001 & g >= 0.001 & gamma + g < 0.999) {
+  if (gamma > 0.001 && g >= 0.001 && gamma + g < 0.999) {
 
     // Likelihood function
     double  L = 0;
@@ -303,5 +303,4 @@ Rcpp::List GARCHiterativeP(arma::vec& parameter, arma::mat& SigmaUniv, int& k, a
                             Rcpp::Named("Lik") = llf,
                             Rcpp::Named("FishObsU") = FishObsU,
                             Rcpp::Named("iteration") = round);
-
 }
