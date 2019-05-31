@@ -19,7 +19,8 @@ test_that("Luetkepohl Netsunajev 5*5 example", {
          0.885487887527691,	0.0288063531310017,	0.0196527566892526,	0.0206577929300702,	0.00150251343596967), nrow = 5, byrow = T)
   Lambda <- c(0.0199927489696526, 0.314911226555606, 0.548190884220239,	0.866994133953794, 0.926892018919112)*diag(5)
 
-  expect_equal(round(likelihood_st(parameter = c(B, diag(Lambda)), u = u, G = G_grid, k = 5, Tob = 447, restriction_matrix = NULL), 3),
+  expect_equal(round(LikelihoodST(parameter = c(B, diag(Lambda)), u = u, G = G_grid, k = 5, Tob = 447,
+                                  RestrictionMatrix = matrix(NA, 5,5), restrictions = 0), 3),
                      2976.656)
 })
 
@@ -38,7 +39,8 @@ test_that("Random 2*2 example works", {
   B <- matrix(c(rnorm(mean = 3, 4)), nrow = 2)
   Lambda <- c(rnorm(mean = 2, 2))*diag(2)
 
-  expect_equal(round(likelihood_st(parameter = c(B, diag(Lambda)), u = u, G = G_grid, k = 2, Tob = 200, restriction_matrix = NULL), 3),
+  expect_equal(round(LikelihoodST(parameter = c(B, diag(Lambda)), u = u, G = G_grid, k = 2, Tob = 200,
+                                  RestrictionMatrix = matrix(NA, 2, 2), restrictions = 0), 3),
                906.717)
 })
 
@@ -57,6 +59,7 @@ test_that("2*2 example with negative variance", {
   B <- matrix(c(rnorm(mean = 3, 4)), nrow = 2)
   Lambda <- c(-2, 2)*diag(2)
 
-  expect_equal(round(likelihood_st(parameter = c(B, diag(Lambda)), u = u, G = G_grid, k = 2, Tob = 200, restriction_matrix = NULL), 3),
+  expect_equal(round(LikelihoodST(parameter = c(B, diag(Lambda)), u = u, G = G_grid, k = 2, Tob = 200,
+                                  RestrictionMatrix = matrix(NA, 2, 2), restrictions = 0), 3),
                1e25)
 })

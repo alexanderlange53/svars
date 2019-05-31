@@ -96,9 +96,9 @@ wild.boot <- function(x, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1, d
   if(x$type == 'const'){
     Z <- rbind(rep(1, ncol(Z)), Z)
   }else if(x$type == 'trend'){
-    Z <- rbind(seq(1, ncol(Z)), Z)
+    Z <- rbind(seq(p + 1, ncol(Z)+ p), Z)
   }else if(x$type == 'both'){
-    Z <- rbind(rep(1, ncol(Z)), seq(1, ncol(Z)), Z)
+    Z <- rbind(rep(1, ncol(Z)), seq(p + 1, ncol(Z) + p), Z)
   }else{
     Z <- Z
   }
@@ -145,7 +145,8 @@ wild.boot <- function(x, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1, d
     }else if(x$method == "Distance covariances"){
       temp <- id.dc(varb, PIT=x$PIT)
     }else if(x$method == "GARCH"){
-      temp <- tryCatch(id.garch(varb, restriction_matrix = restriction_matrix),
+      temp <- tryCatch(id.garch(varb, restriction_matrix = x$restriction_matrix, max.iter = x$max.iter,
+                                crit = x$crit, start.iter = x$start.iter),
                        error = function(e) NULL)
     }else{
       temp <- tryCatch(id.st_boot(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,

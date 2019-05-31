@@ -7,7 +7,7 @@
 #'
 #' @param x An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object
 #' @param stage3 Logical. If stage3="TRUE", the VAR parameters are estimated via non-gaussian maximum likelihood (computationally demanding)
-#' @param restriction_matrix Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)
+#' @param restriction_matrix Matrix or vector. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*J (or J*K^2) matrix can be passed, where J is the number of restrictions and K the number of time series. (as suggested in Luetkepohl, 2017, section 5.2.1).
 #' @return A list of class "svars" with elements
 #' \item{B}{Estimated structural impact matrix B, i.e. unique decomposition of the covariance matrix of reduced form errors}
 #' \item{sigma}{Estimated scale of the standardized matrix B_stand, i.e. \eqn{B=B_stand*diag(\sigma_1,...,\sigma_K)}}
@@ -65,6 +65,9 @@ id.ngml <- function(x, stage3 = FALSE, restriction_matrix = NULL){
 
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
   get_var_objects(x)
+  rmOut = restriction_matrix
+  restriction_matrix = get_restriction_matrix(restriction_matrix, k)
+
   # calculating the covariance matrix
   Sigma_hat <- crossprod(residY)/(Tob-1-k*p)
 
@@ -85,7 +88,10 @@ id.ngml <- function(x, stage3 = FALSE, restriction_matrix = NULL){
     restriction_matrix <- NULL
     result <- identifyNGML(x = x, coef_x = coef_x, Sigma_hat = Sigma_hat, u = u, k = k, p = p, Tob = Tob, yOut = yOut, type = type,
                            stage3 = stage3, restriction_matrix = restriction_matrix, y = y)
-     }
+  }
+
+  result$restriction_matrix = rmOut
+
   class(result) <- "svars"
   return(result)
 }

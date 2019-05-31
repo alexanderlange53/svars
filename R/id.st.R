@@ -10,8 +10,8 @@
 #' @param c_lower Integer. Starting point for the algorithm to start searching for the volatility shift.
 #'                Default is 0.3*(Total number of observations)
 #' @param c_upper Integer. Ending point for the algorithm to stop searching for the volatility shift.
-#'                Default is 0.7*(Total number of observations)
-#' @param c_step Integer. Step width of c. Default is 5
+#'                Default is 0.7*(Total number of observations). Note that in case of a stochastic transition variable, the input requires an absolute value
+#' @param c_step Integer. Step width of c. Default is 5. Note that in case of a stochastic transition variable, the input requires an absolute value
 #' @param c_fix Integer. If the transition point is known, it can be passed as an argument
 #'              where transition point = Number of observations - c_fix
 #' @param transition_variable A numeric vector that represents the transition variable. By default (NULL), the time is used
@@ -25,7 +25,7 @@
 #'           Note that the smooth transition model is computationally extremely demanding.
 #' @param max.iter Integer. Number of maximum GLS iterations
 #' @param crit Integer. Critical value for the precision of the GLS estimation
-#' @param restriction_matrix Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)
+#' @param restriction_matrix Matrix or vector. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*J (or J*K^2) matrix can be passed, where J is the number of restrictions and K the number of time series. (as suggested in Luetkepohl, 2017, section 5.2.1).
 #' @param lr_test Logical. Indicates whether the restricted model should be tested against the unrestricted model via a likelihood ratio test
 #' @return A list of class "svars" with elements
 #' \item{Lambda}{Estimated heteroscedasticity matrix \eqn{\Lambda}}
@@ -96,6 +96,8 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
   # Gathering information from reduced form model
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
   get_var_objects(x)
+  rmOut = restriction_matrix
+  restriction_matrix = get_restriction_matrix(restriction_matrix, k)
 
   # Transition function
   transition_f <- function(gamma, cc, st){
@@ -107,14 +109,16 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
   if(is.null(gamma_fix) &  is.null(c_fix)){
     # Creating grid for iterative procedure with gamma and break point unknown
     gamma_grid <-  seq(gamma_lower, gamma_upper, by = gamma_step)
-    cc_grid <- seq(ceiling(c_lower*Tob), floor(c_upper*Tob), by = c_step)
-    grid_comb <- unique(expand.grid(gamma_grid, cc_grid))
     if(is.null(transition_variable)){
+      cc_grid <- seq(ceiling(c_lower*Tob), floor(c_upper*Tob), by = c_step)
+      grid_comb <- unique(expand.grid(gamma_grid, cc_grid))
       G_grid <- mapply(transition_f, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
     }else{
       if(length(transition_variable) != Tob){
         stop('length of transition variable is unequal to data length')
       }
+      cc_grid <- seq(c_lower, c_upper, by = c_step)
+      grid_comb <- unique(expand.grid(gamma_grid, cc_grid))
       G_grid <- mapply(transition_f, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = transition_variable))
     }
   }else if(is.null(gamma_fix)){
@@ -124,14 +128,17 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     G_grid <- mapply(transition_f, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
   }else if(is.null(c_fix)){
     # Creating grid for iterative procedure with fix shape of transition function
-    cc_grid <- seq(ceiling(c_lower*Tob), floor(c_upper*Tob), by = c_step)
-    grid_comb <- unique(expand.grid(gamma_fix, cc_grid))
+
     if(is.null(transition_variable)){
+      cc_grid <- seq(ceiling(c_lower*Tob), floor(c_upper*Tob), by = c_step)
+      grid_comb <- unique(expand.grid(gamma_fix, cc_grid))
       G_grid <- mapply(transition_f, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = seq(1:Tob)))
     }else{
       if(length(transition_variable) != Tob){
         stop('length of transition variable is unequal to data length')
       }
+      cc_grid <- seq(c_lower, c_upper, by = c_step)
+      grid_comb <- unique(expand.grid(gamma_fix, cc_grid))
       G_grid <- mapply(transition_f, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = transition_variable))
     }
   }else{
@@ -153,17 +160,24 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
   if(x$type == 'const'){
     Z_t <- rbind(rep(1, ncol(yl)), yl)
   }else if(x$type == 'trend'){
-    Z_t <- rbind(seq(1, ncol(yl)), yl)
+    Z_t <- rbind(seq(p + 1, Tob), yl)
   }else if(x$type == 'both'){
-    Z_t <- rbind(rep(1, ncol(yl)), seq(1, ncol(yl)), yl)
+    Z_t <- rbind(rep(1, ncol(yl)), seq(p + 1, Tob), yl)
   }else{
     Z_t <- yl
   }
 
   if(!is.null(gamma_fix) &  !is.null(c_fix)){
-    best_estimation <- iterative_smooth_transition(transition = G_grid, u = u, y = y, Tob = Tob, k = k,
-                                           p = p, crit = crit, max.iter = max.iter, Z_t = Z_t, y_loop = y_loop,
-                                           restriction_matrix = restriction_matrix)
+    if (!is.null(restriction_matrix)) {
+      restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
+    } else {
+      restrictions <- 0
+      restriction_matrix <- matrix(NA, k, k)
+    }
+
+    best_estimation <- IterativeSmoothTransition(transition = G_grid, u = u, Tob = Tob, k = k, p = p,
+                                                 crit = crit, maxIter = max.iter, Z_t = Z_t, Yloop = y_loop,
+                                                 RestrictionMatrix = restriction_matrix, restrictions = restrictions)
     transition_function <- G_grid
 
     transition_coefficient <- gamma_fix
@@ -171,9 +185,11 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     comb <- 1
 
     if(lr_test == TRUE & !is.null(restriction_matrix)){
-      unrestricted_estimation <- iterative_smooth_transition(G_grid, u = u, y = y, Tob = Tob, k = k,
-                                                             p = p, crit = crit, max.iter = max.iter, Z_t = Z_t, y_loop = y_loop,
-                                                             restriction_matrix = NULL)
+
+      unrestricted_estimation <- IterativeSmoothTransition(transition = G_grid, u = u, Tob = Tob, k = k, p = p,
+                                                           crit = crit, maxIter = max.iter, Z_t = Z_t, Yloop = y_loop,
+                                                           RestrictionMatrix = matrix(NA, k, k), restrictions = 0)
+
       lRatioTestStatistic = 2 * (unrestricted_estimation$Lik - best_estimation$Lik)
       restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
       pValue = round(1 - pchisq(lRatioTestStatistic, restrictions), 4)
@@ -185,15 +201,21 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     }
 
   }else{
+    if (!is.null(restriction_matrix)) {
+      restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
+    } else {
+      restrictions <- 0
+      restriction_matrix <- matrix(NA, k, k)
+    }
+
     G_grid <- apply(G_grid, 2, list)
 
-    grid_optimization <- pblapply(G_grid, function(x){iterative_smooth_transition(unlist(x),
-                                                                                  u = u, y = y,
-                                                                                  Tob = Tob, k = k,
-                                                                                  p = p, crit = crit,
-                                                                                  max.iter = max.iter, Z_t = Z_t,
-                                                                                  y_loop = y_loop,
-                                                                                  restriction_matrix = restriction_matrix)},
+    grid_optimization <- pblapply(G_grid, function(x){IterativeSmoothTransition(unlist(x),
+                                                                                  u = u, Tob = Tob, k = k,
+                                                                                  p = p, crit = crit, Yloop = y_loop,
+                                                                                  maxIter = max.iter, Z_t = Z_t,
+                                                                                  RestrictionMatrix = restriction_matrix,
+                                                                                  restrictions = restrictions)},
                                   cl = nc)
 
     max_likelihood <- which.max(sapply(grid_optimization, '[[', 'Lik'))
@@ -215,9 +237,9 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
         G_grid <- mapply(transition_f, grid_comb[,1], grid_comb[,2], MoreArgs = list(st = transition_variable))
       }
 
-      unrestricted_estimation <- iterative_smooth_transition(G_grid, u = u, y = y, Tob = Tob, k = k,
-                                                             p = p, crit = crit, max.iter = max.iter, Z_t = Z_t, y_loop = y_loop,
-                                                             restriction_matrix = NULL)
+      unrestricted_estimation <- IterativeSmoothTransition(G_grid, u = u, Tob = Tob, k = k,
+                                                             p = p, crit = crit, maxIter = max.iter, Z_t = Z_t, Yloop = y_loop,
+                                                             RestrictionMatrix = matrix(NA, k, k), restrictions = 0)
       lRatioTestStatistic = 2 * (unrestricted_estimation$Lik - best_estimation$Lik)
       restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
       pValue = round(1 - pchisq(lRatioTestStatistic, restrictions), 4)
@@ -264,7 +286,7 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     p = p,                # number of lags
     K = k,                 # number of time series
     restrictions = restrictions,
-    restriction_matrix = restriction_matrix,
+    restriction_matrix = rmOut,
     lr_test = lr_test,
     lRatioTest = lRatioTest
   )

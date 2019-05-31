@@ -93,13 +93,12 @@ mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NU
   if(x$type == 'const'){
     Z <- rbind(rep(1, ncol(Z)), Z)
   }else if(x$type == 'trend'){
-    Z <- rbind(seq(1, ncol(Z)), Z)
+    Z <- rbind(seq(p + 1, ncol(Z)+ p), Z)
   }else if(x$type == 'both'){
-    Z <- rbind(rep(1, ncol(Z)), seq(1, ncol(Z)), Z)
+    Z <- rbind(rep(1, ncol(Z)), seq(p + 1, ncol(Z) + p), Z)
   }else{
     Z <- Z
   }
-
   u <- t(y[-c(1:p),]) - A %*% Z
   Sigma_u_hat_old <- tcrossprod(u)/(obs - 1 - k * p)
 
@@ -167,13 +166,6 @@ mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NU
     varb <- suppressWarnings(VAR(Ystar, p = x$p, type = x$type))
     Ustar <- residuals(varb)
     Sigma_u_star <- crossprod(Ustar)/(obs - 1 - k * p)
-
-    # varb <- list(y = Ystar,
-    #              coef_x = Bstar,
-    #              residuals = Ustar,
-    #              p = p,
-    #              type = x$type)
-    # class(varb) <- 'var.boot'
 
     if(x$method == "Non-Gaussian maximum likelihood"){
       temp <- id.ngml_boot(varb, stage3 = x$stage3, restriction_matrix = x$restriction_matrix)

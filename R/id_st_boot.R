@@ -5,6 +5,9 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
   get_var_objects(x)
 
+  rmOut = restriction_matrix
+  restriction_matrix <- get_restriction_matrix(restriction_matrix, k)
+
   # Function for Z matrix
   y_lag_cr <- function(y, lag_length){
     # create matrix that stores the lags
@@ -41,9 +44,9 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
     if(x$type == 'const'){
       Z_t <- rbind(rep(1, ncol(yl)), yl)
     }else if(x$type == 'trend'){
-      Z_t <- rbind(seq(1, ncol(yl)), yl)
+      Z_t <- rbind(seq(p + 1, Tob), yl)
     }else if(x$type == 'both'){
-      Z_t <- rbind(rep(1, ncol(yl)), seq(1, ncol(yl)), yl)
+      Z_t <- rbind(rep(1, ncol(yl)), seq(p + 1, Tob), yl)
     }else{
       Z_t <- yl
     }
@@ -52,9 +55,17 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
     y_loop <- y
   }
 
-    best_estimation <- iterative_smooth_transition(transition = G_grid, u = u, y = y, Tob = Tob, k = k,
-                                                   p = p, crit = crit, max.iter = max.iter, Z_t = Z_t, y_loop = y_loop,
-                                                   restriction_matrix = restriction_matrix)
+    if (!is.null(restriction_matrix)) {
+      restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
+    } else {
+      restrictions <- 0
+      restriction_matrix <- matrix(NA, k, k)
+    }
+
+    best_estimation <- IterativeSmoothTransition(transition = G_grid, u = u, Tob = Tob, k = k, p = p,
+                                                 crit = crit, maxIter = max.iter, Z_t = Z_t, Yloop = y_loop,
+                                                 RestrictionMatrix = restriction_matrix, restrictions = restrictions)
+
     transition_function <- G_grid
 
     transition_coefficient <- gamma_fix
@@ -88,7 +99,7 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
     p = p,                # number of lags
     K = k,                 # number of time series
     restrictions = restrictions,
-    restriction_matrix = restriction_matrix
+    restriction_matrix = rmOut
   )
 
   class(result) <- 'svars'

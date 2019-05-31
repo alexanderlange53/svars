@@ -5,7 +5,7 @@ cache: packages
 addons:
   apt:
     packages:
-      - libgsl0-dev
+      - libgsl-dev
 script:
   - |
     R CMD build .

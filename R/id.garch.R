@@ -89,58 +89,11 @@ id.garch <- function(x, max.iter = 5, crit = 0.001, start.iter = 200, restrictio
   #### Finding optimal starting values ##
   ##***********************************##
 
-  parameter_consider <- list()
+  parameter_consider <- GarchStart(start.iter, k, ste, Tob)
+  parameter_ini_univ <- parameter_consider[[which.min(sapply(parameter_consider, '[[', 'Likelihoods'))]]$ParameterE
 
-  for(startround in 1:start.iter){
-    ## Stage 1: Univariate optimization of GARCH(1, 1) parameter
-    # Initial values as in Luetkepohl + Schlaak (2018)
-    init_gamma <- runif(k)
-    init_g <- rep(NA, k)
-    test_g <- NA
-    for(i in 1:k){
-      test_g <- runif(1)
-      if(init_gamma[i] + test_g < 1){
-        init_g[i] <- test_g
-      }else{
-        while(init_gamma[i] + test_g > 1){
-          test_g <- runif(1)
-        }
-        init_g[i] <- test_g
-      }
-    }
-    parameter_ini_univ <- cbind(init_gamma, init_g)
+  Sigma_e_univ <- parameter_consider[[which.min(sapply(parameter_consider, '[[', 'Likelihoods'))]]$ConVariance
 
-    # first observstion of strucutral variance is the estimated sample variance
-    Sigma_e_0 <-  matrix(diag(var(t(ste))),  Tob, k, byrow = T)
-
-    # optimizing the univariate likelihood functions
-    maxL <- list()
-    gamma_univ <- rep(NA, k)
-    g_univ <- rep(NA, k)
-    param_univ <- matrix(NA, 3, k)
-    Sigma_e_univ <- matrix(NA, Tob, k)
-
-    likvalues <- rep(NA, k)
-
-    for(i in 1:k){
-      maxL <- nlm(p = parameter_ini_univ[i, ], f = likelihood_garch_uni, k = k, Tob = Tob,
-                  Sigma_1 = Sigma_e_0[, i] , est = ste[i, ])
-      # Likelihood values
-      likvalues[i] <- maxL$minimum
-
-      # Optimized GARCH parameter
-      gamma_univ[i] <- maxL$estimate[1]
-      g_univ[i] <- maxL$estimate[2]
-      # Including a constant
-      param_univ[, i] <- rbind((1- gamma_univ[i]- g_univ[i]), gamma_univ[i], g_univ[i])
-      # estimated conditional heteroskedasticity
-      Sigma_e_univ[,i] <- sigma_garch_univ(param_univ[,i], Tob, Sigma_e_0[,i], ste[i,])
-    }
-
-    parameter_consider[[startround]] <- list(parameter_ini_univ = cbind(gamma_univ, g_univ), Lik = mean(likvalues))
-  }
-
-  parameter_ini_univ <- parameter_consider[[which.min(sapply(parameter_consider, '[[', 'Lik'))]]$parameter_ini_univ
   # Store estimtated GARCH parameter as initial values for multivariate optimization
 
   if(!is.null(restriction_matrix)){

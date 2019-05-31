@@ -42,9 +42,9 @@ test_that("mb.boot works with parallelization", {
   expect_equal(bb$nboot, 50)
 })
 
-test_that("wild.boot returns valid object for id.cv", {
+test_that("mb.boot returns valid object for id.cv", {
   skip_on_cran()
-  set.seed(23211)
+  set.seed(231)
   v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
   x1 <- id.cv(v1, SB = 59)
 
@@ -68,11 +68,34 @@ test_that("wild.boot returns valid object for id.cv", {
 
   expect_length(bbcv2, 12)
   expect_equal(bbcv2$nboot, 20)
+})
 
-  # bbcv3 <- wild.boot(x1, rademacher = TRUE, nboot = 50, n.ahead = 30, nc = 1, signrest = NULL)
-  # expect_length(bbcv3, 12)
-  # expect_equal(bbcv3$nboot, 50)
+test_that("mb.boot returns valid object for id.st", {
+  skip_on_cran()
+  set.seed(231)
+  v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
+  x1 <- id.st(v1, c_fix = 80, gamma_fix = -1)
 
+  signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+  bbst <- mb.boot(x1, b.length = 20, nboot = 20, n.ahead = 30, nc = 1, signrest = signrest)
+
+  expect_length(bbst, 12)
+  expect_equal(bbst$nboot, 20)
+
+  bbst1 <- mb.boot(x1, b.length = 10, nboot = 20, n.ahead = 30, nc = 2, signrest = NULL)
+  expect_length(bbst1, 12)
+  expect_equal(bbst1$nboot, 20)
+
+  restmat <- matrix(NA, 3,3)
+  restmat[1,c(2,3)] <- 0
+  restmat[2,3] <- 0
+  x1 <- id.st(v1, c_fix = 80, gamma_fix = -1, restriction_matrix = restmat)
+
+  signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+  bbst2 <- mb.boot(x1, b.length = 15, nboot = 20, n.ahead = 30, nc = 2, signrest = signrest)
+
+  expect_length(bbst2, 12)
+  expect_equal(bbst2$nboot, 20)
 })
 
 test_that("wild.boot returns valid object for id.ngml", {
@@ -94,12 +117,12 @@ test_that("wild.boot returns valid object for id.ngml", {
   x1 <- id.ngml(v1, stage3 = TRUE)
 
   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
-  bbngml3 <- mb.boot(x1, b.length = 15, nboot = 5, n.ahead = 30, nc = 1, signrest = signrest)
+  bbngml3 <- mb.boot(x1, b.length = 15, nboot = 5, n.ahead = 30, nc = 2, signrest = signrest)
 
   expect_length(bbngml3, 12)
   expect_equal(bbngml3$nboot, 5)
 
-  bbngml4 <- mb.boot(x1, b.length = 15, nboot = 5, n.ahead = 30, nc = 1, signrest = NULL)
+  bbngml4 <- mb.boot(x1, b.length = 15, nboot = 5, n.ahead = 30, nc = 2, signrest = NULL)
   expect_length(bbngml4, 12)
   expect_equal(bbngml4$nboot, 5)
 
@@ -109,7 +132,7 @@ test_that("wild.boot returns valid object for id.ngml", {
 
   x1 <- id.ngml(v1, stage3 = F, restriction_matrix = restmat)
 
-  bbngml5 <- mb.boot(x1, b.length = 15, nboot = 5, n.ahead = 30, nc = 1, signrest = NULL)
+  bbngml5 <- mb.boot(x1, b.length = 15, nboot = 5, n.ahead = 30, nc = 2, signrest = NULL)
   expect_length(bbngml5, 12)
   expect_equal(bbngml5$nboot, 5)
 
@@ -119,7 +142,35 @@ test_that("wild.boot returns valid object for id.ngml", {
 
   x1 <- id.ngml(v1, stage3 = T, restriction_matrix = restmat)
 
-  bbngml6 <- mb.boot(x1, b.length = 15, nboot = 5, n.ahead = 30, nc = 1, signrest = NULL)
+  bbngml6 <- mb.boot(x1, b.length = 15, nboot = 5, n.ahead = 30, nc = 2, signrest = NULL)
   expect_length(bbngml6, 12)
   expect_equal(bbngml6$nboot, 5)
+})
+
+test_that("mb.boot returns valid object for id.st", {
+  skip_on_cran()
+  set.seed(231)
+  v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
+  x1 <- id.garch(v1)
+
+  signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+  bbgarch <- mb.boot(x1, b.length = 20, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+
+  expect_length(bbgarch, 12)
+  expect_equal(bbgarch$nboot, 10)
+
+  bbgarch1 <- mb.boot(x1, b.length = 10, nboot = 10, n.ahead = 30, nc = 2, signrest = NULL)
+  expect_length(bbgarch1, 12)
+  expect_equal(bbgarch1$nboot, 10)
+
+  restmat <- matrix(NA, 3,3)
+  restmat[1,c(2,3)] <- 0
+  restmat[2,3] <- 0
+  x1 <- id.garch(v1, restriction_matrix = restmat)
+
+  signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+  bbgarch2 <- mb.boot(x1, b.length = 15, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+
+  expect_length(bbgarch2, 12)
+  expect_equal(bbgarch2$nboot, 10)
 })

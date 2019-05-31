@@ -16,9 +16,9 @@ id.st(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL,
 Default is 0.3*(Total number of observations)}
 
 \item{c_upper}{Integer. Ending point for the algorithm to stop searching for the volatility shift.
-Default is 0.7*(Total number of observations)}
+Default is 0.7*(Total number of observations). Note that in case of a stochastic transition variable, the input requires an absolute value}
 
-\item{c_step}{Integer. Step width of c. Default is 5}
+\item{c_step}{Integer. Step width of c. Default is 5. Note that in case of a stochastic transition variable, the input requires an absolute value}
 
 \item{c_fix}{Integer. If the transition point is known, it can be passed as an argument
 where transition point = Number of observations - c_fix}
@@ -42,7 +42,7 @@ Note that the smooth transition model is computationally extremely demanding.}
 
 \item{crit}{Integer. Critical value for the precision of the GLS estimation}
 
-\item{restriction_matrix}{Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)}
+\item{restriction_matrix}{Matrix or vector. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*J (or J*K^2) matrix can be passed, where J is the number of restrictions and K the number of time series. (as suggested in Luetkepohl, 2017, section 5.2.1).}
 
 \item{lr_test}{Logical. Indicates whether the restricted model should be tested against the unrestricted model via a likelihood ratio test}
 }
