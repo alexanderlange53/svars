@@ -66,7 +66,7 @@ test_that("Multivariate GARCH likelihood 3dims works unrestricted", {
   RestrictionMatrix <- matrix(NA, 3, 3)
   restrictions <- 0
 
-  l <- likelihoodGARCHm(parameter, SigmaE, Tob, k, u,
+  l <- LikelihoodGARCHm(parameter, SigmaE, Tob, k, u,
                    RestrictionMatrix, restrictions)
 
   expect_equal(round(l,1), 130620.3)
@@ -86,7 +86,7 @@ test_that("Multivariate GARCH likelihood 3dims works restricted", {
   RestrictionMatrix[2, 3] <- 0
   restrictions <- 3
 
-  l <- likelihoodGARCHm(parameter, SigmaE, Tob, k, u,
+  l <- LikelihoodGARCHm(parameter, SigmaE, Tob, k, u,
                         RestrictionMatrix, restrictions)
 
   expect_equal(round(l), 1334864)
@@ -104,7 +104,7 @@ test_that("Multivariate GARCH likelihood 5dims works unrestricted", {
   RestrictionMatrix <- matrix(NA, 5, 5)
   restrictions <- 0
 
-  l <- likelihoodGARCHm(parameter, SigmaE, Tob, k, u,
+  l <- LikelihoodGARCHm(parameter, SigmaE, Tob, k, u,
                         RestrictionMatrix, restrictions)
 
   expect_equal(round(l,1), 313771.9)
@@ -126,7 +126,7 @@ test_that("Multivariate GARCH likelihood 5dims works unrestricted", {
   RestrictionMatrix[4, 5] <- 0
   restrictions <- 10
 
-  l <- likelihoodGARCHm(parameter, SigmaE, Tob, k, u,
+  l <- LikelihoodGARCHm(parameter, SigmaE, Tob, k, u,
                         RestrictionMatrix, restrictions)
 
   expect_equal(round(l), 15329867)

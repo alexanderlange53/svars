@@ -29,8 +29,16 @@ GarchStart <- function(StartIter, k, ste, Tob) {
     .Call('_svars_GarchStart', PACKAGE = 'svars', StartIter, k, ste, Tob)
 }
 
-likelihoodGARCHm <- function(parameter, SigmaE, Tob, k, u, RestrictionMatrix, restrictions) {
-    .Call('_svars_likelihoodGARCHm', PACKAGE = 'svars', parameter, SigmaE, Tob, k, u, RestrictionMatrix, restrictions)
+LikelihoodGARCHm <- function(parameter, SigmaE, Tob, k, u, RestrictionMatrix, restrictions) {
+    .Call('_svars_LikelihoodGARCHm', PACKAGE = 'svars', parameter, SigmaE, Tob, k, u, RestrictionMatrix, restrictions)
+}
+
+nlmGARCHm <- function(parameter, SigmaE, Tob, k, u, RestrictionMatrix, restrictions) {
+    .Call('_svars_nlmGARCHm', PACKAGE = 'svars', parameter, SigmaE, Tob, k, u, RestrictionMatrix, restrictions)
+}
+
+GARCHiterativeP <- function(parameter, SigmaUniv, k, parameterIniu, u, RestrictionMatrix, restrictions, maxIter, Tob, crit) {
+    .Call('_svars_GARCHiterativeP', PACKAGE = 'svars', parameter, SigmaUniv, k, parameterIniu, u, RestrictionMatrix, restrictions, maxIter, Tob, crit)
 }
 
 LikelihoodNGMLStage2 <- function(theta, u, Tob, k, RestrictionMatrix, restrictions) {

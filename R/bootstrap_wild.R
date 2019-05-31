@@ -145,7 +145,8 @@ wild.boot <- function(x, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1, d
     }else if(x$method == "Distance covariances"){
       temp <- id.dc(varb, PIT=x$PIT)
     }else if(x$method == "GARCH"){
-      temp <- tryCatch(id.garch(varb, restriction_matrix = restriction_matrix),
+      temp <- tryCatch(id.garch(varb, restriction_matrix = x$restriction_matrix, max.iter = x$max.iter,
+                                crit = x$crit, start.iter = x$start.iter),
                        error = function(e) NULL)
     }else{
       temp <- tryCatch(id.st_boot(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,

@@ -142,3 +142,31 @@ test_that("wild.boot returns valid object for id.ngml", {
   expect_length(bbngml6, 12)
   expect_equal(bbngml6$nboot, 5)
 })
+
+test_that("wild.boot returns valid object for id.garch", {
+  skip_on_cran()
+  set.seed(23211)
+  v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
+  x1 <- id.garch(v1)
+
+  signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+  bbgarch <- wild.boot(x1, rademacher = TRUE, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+
+  expect_length(bbgarch, 12)
+  expect_equal(bbgarch$nboot, 10)
+
+  bbgarch1 <- wild.boot(x1, rademacher = TRUE, nboot = 10, n.ahead = 30, nc = 2, signrest = NULL)
+  expect_length(bbgarch1, 12)
+  expect_equal(bbgarch1$nboot, 10)
+
+  restmat <- matrix(NA, 3,3)
+  restmat[1,c(2,3)] <- 0
+  restmat[2,3] <- 0
+  x1 <- id.garch(v1, restriction_matrix = restmat)
+
+  signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+  bbgarch2 <- wild.boot(x1, rademacher = TRUE, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+
+  expect_length(bbgarch2, 12)
+  expect_equal(bbgarch2$nboot, 10)
+})

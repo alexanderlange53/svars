@@ -121,9 +121,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// likelihoodGARCHm
-double likelihoodGARCHm(arma::vec& parameter, arma::mat& SigmaE, int& Tob, int& k, arma::mat& u, arma::mat& RestrictionMatrix, int& restrictions);
-RcppExport SEXP _svars_likelihoodGARCHm(SEXP parameterSEXP, SEXP SigmaESEXP, SEXP TobSEXP, SEXP kSEXP, SEXP uSEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP) {
+// LikelihoodGARCHm
+double LikelihoodGARCHm(arma::vec& parameter, arma::mat& SigmaE, int& Tob, int& k, arma::mat& u, arma::mat& RestrictionMatrix, int& restrictions);
+RcppExport SEXP _svars_LikelihoodGARCHm(SEXP parameterSEXP, SEXP SigmaESEXP, SEXP TobSEXP, SEXP kSEXP, SEXP uSEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -134,7 +134,44 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::mat& >::type u(uSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type RestrictionMatrix(RestrictionMatrixSEXP);
     Rcpp::traits::input_parameter< int& >::type restrictions(restrictionsSEXP);
-    rcpp_result_gen = Rcpp::wrap(likelihoodGARCHm(parameter, SigmaE, Tob, k, u, RestrictionMatrix, restrictions));
+    rcpp_result_gen = Rcpp::wrap(LikelihoodGARCHm(parameter, SigmaE, Tob, k, u, RestrictionMatrix, restrictions));
+    return rcpp_result_gen;
+END_RCPP
+}
+// nlmGARCHm
+Rcpp::List nlmGARCHm(const arma::vec parameter, const arma::mat& SigmaE, int Tob, int k, const arma::mat u, const arma::mat RestrictionMatrix, int restrictions);
+RcppExport SEXP _svars_nlmGARCHm(SEXP parameterSEXP, SEXP SigmaESEXP, SEXP TobSEXP, SEXP kSEXP, SEXP uSEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec >::type parameter(parameterSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type SigmaE(SigmaESEXP);
+    Rcpp::traits::input_parameter< int >::type Tob(TobSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type u(uSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type RestrictionMatrix(RestrictionMatrixSEXP);
+    Rcpp::traits::input_parameter< int >::type restrictions(restrictionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(nlmGARCHm(parameter, SigmaE, Tob, k, u, RestrictionMatrix, restrictions));
+    return rcpp_result_gen;
+END_RCPP
+}
+// GARCHiterativeP
+Rcpp::List GARCHiterativeP(arma::vec& parameter, arma::mat& SigmaUniv, int& k, arma::mat& parameterIniu, arma::mat& u, arma::mat& RestrictionMatrix, int& restrictions, int& maxIter, int& Tob, double& crit);
+RcppExport SEXP _svars_GARCHiterativeP(SEXP parameterSEXP, SEXP SigmaUnivSEXP, SEXP kSEXP, SEXP parameterIniuSEXP, SEXP uSEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP, SEXP maxIterSEXP, SEXP TobSEXP, SEXP critSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec& >::type parameter(parameterSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type SigmaUniv(SigmaUnivSEXP);
+    Rcpp::traits::input_parameter< int& >::type k(kSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type parameterIniu(parameterIniuSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type u(uSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type RestrictionMatrix(RestrictionMatrixSEXP);
+    Rcpp::traits::input_parameter< int& >::type restrictions(restrictionsSEXP);
+    Rcpp::traits::input_parameter< int& >::type maxIter(maxIterSEXP);
+    Rcpp::traits::input_parameter< int& >::type Tob(TobSEXP);
+    Rcpp::traits::input_parameter< double& >::type crit(critSEXP);
+    rcpp_result_gen = Rcpp::wrap(GARCHiterativeP(parameter, SigmaUniv, k, parameterIniu, u, RestrictionMatrix, restrictions, maxIter, Tob, crit));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -252,7 +289,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_svars_nlmGARCHu", (DL_FUNC) &_svars_nlmGARCHu, 4},
     {"_svars_SigmaGARCHuniv", (DL_FUNC) &_svars_SigmaGARCHuniv, 4},
     {"_svars_GarchStart", (DL_FUNC) &_svars_GarchStart, 4},
-    {"_svars_likelihoodGARCHm", (DL_FUNC) &_svars_likelihoodGARCHm, 7},
+    {"_svars_LikelihoodGARCHm", (DL_FUNC) &_svars_LikelihoodGARCHm, 7},
+    {"_svars_nlmGARCHm", (DL_FUNC) &_svars_nlmGARCHm, 7},
+    {"_svars_GARCHiterativeP", (DL_FUNC) &_svars_GARCHiterativeP, 10},
     {"_svars_LikelihoodNGMLStage2", (DL_FUNC) &_svars_LikelihoodNGMLStage2, 6},
     {"_svars_LikelihoodNGMLStage3", (DL_FUNC) &_svars_LikelihoodNGMLStage3, 8},
     {"_svars_LikelihoodST", (DL_FUNC) &_svars_LikelihoodST, 7},
