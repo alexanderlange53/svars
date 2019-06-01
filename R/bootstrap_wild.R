@@ -139,7 +139,7 @@ wild.boot <- function(x, recursive = FALSE, rademacher = TRUE, n.ahead = 20, nbo
 
 
     if(recursive == TRUE){
-      star <- matrix(0, nrow(y), k)
+      Ystar <- matrix(0, nrow(y), k)
       # adding pre sample values
       Ystar[1:p,] <- y[1:p,]
 
