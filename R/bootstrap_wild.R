@@ -3,7 +3,8 @@
 #'Calculating confidence bands for impulse response functions via wild bootstrap techniques (Goncalves and Kilian, 2004).
 #'
 #'@param x SVAR object of class "svars"
-#'@param rademacher locigal. If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples
+#'@param rademacher logical. If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples
+#'@param recursive logical. If recursive="FALSE", a fixed design bootstrap is performed
 #'@param n.ahead Integer specifying the steps
 #'@param nboot Integer. Number of bootstrap iterations
 #'@param nc Integer. Number of processor cores (Not available on windows machines)

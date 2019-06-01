@@ -3,6 +3,7 @@
 #' Calculating confidence bands for impulse response via moving block bootstrap
 #'
 #' @param x SVAR object of class "svars"
+#' @param recursive logical. If recursive="FALSE", a fixed design bootstrap is performed
 #' @param b.length Integer. Length of each block
 #' @param n.ahead Integer specifying the steps
 #' @param nboot Integer. Number of bootstrap iterations
