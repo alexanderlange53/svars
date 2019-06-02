@@ -136,7 +136,22 @@ wild.boot <- function(x, recursive = FALSE, rademacher = TRUE, n.ahead = 20, nbo
                  p = p,
                  type = x$type)
     class(varb) <- 'var.boot'
+
+    if(x$method == "Non-Gaussian maximum likelihood"){
+      temp <- id.ngml_boot(varb, stage3 = x$stage3, Z = Z, restriction_matrix = x$restriction_matrix)
+    }else if(x$method == "Changes in Volatility"){
+      temp <- tryCatch(id.cv_boot(varb, SB = x$SB, Z = Z, restriction_matrix = x$restriction_matrix),
+                       error = function(e) NULL)
+    }else if(x$method == "Cramer-von Mises distance"){
+      temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
+    }else if(x$method == "Distance covariances"){
+      temp <- id.dc(varb, PIT=x$PIT)
+    }else{
+      temp <- tryCatch(id.st_boot(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,
+                                  gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01, Z = Z),
+                       error = function(e) NULL)
     }
+  }
 
 
     if(recursive == TRUE){
@@ -167,22 +182,23 @@ wild.boot <- function(x, recursive = FALSE, rademacher = TRUE, n.ahead = 20, nbo
       varb <- suppressWarnings(VAR(Ystar, p = x$p, type = x$type))
       Ustar <- residuals(varb)
       Sigma_u_star <- crossprod(Ustar)/(obs - 1 - k * p)
+
+      if(x$method == "Non-Gaussian maximum likelihood"){
+        temp <- id.ngml_boot(varb, stage3 = x$stage3, restriction_matrix = x$restriction_matrix)
+      }else if(x$method == "Changes in Volatility"){
+        temp <- tryCatch(id.cv_boot(varb, SB = x$SB, restriction_matrix = x$restriction_matrix),
+                         error = function(e) NULL)
+      }else if(x$method == "Cramer-von Mises distance"){
+        temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
+      }else if(x$method == "Distance covariances"){
+        temp <- id.dc(varb, PIT=x$PIT)
+      }else{
+        temp <- id.st(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,
+                      gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01)
+      }
     }
 
-    if(x$method == "Non-Gaussian maximum likelihood"){
-      temp <- id.ngml_boot(varb, stage3 = x$stage3, Z = Z, restriction_matrix = x$restriction_matrix)
-    }else if(x$method == "Changes in Volatility"){
-      temp <- tryCatch(id.cv_boot(varb, SB = x$SB, Z = Z, restriction_matrix = x$restriction_matrix),
-                       error = function(e) NULL)
-    }else if(x$method == "Cramer-von Mises distance"){
-      temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
-    }else if(x$method == "Distance covariances"){
-      temp <- id.dc(varb, PIT=x$PIT)
-    }else{
-      temp <- tryCatch(id.st_boot(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,
-                    gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01, Z = Z),
-                    error = function(e) NULL)
-    }
+
 
     if(!is.null(temp)){
     Pstar <- temp$B

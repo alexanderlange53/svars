@@ -168,21 +168,6 @@ mb.boot <- function(x, recursive =  TRUE, b.length = 15, n.ahead = 20, nboot = 5
     varb <- suppressWarnings(VAR(Ystar, p = x$p, type = x$type))
     Ustar <- residuals(varb)
     Sigma_u_star <- crossprod(Ustar)/(obs - 1 - k * p)
-    }
-
-    if(recursive == FALSE){
-      Ystar <- t(A %*% Z + Ustar1)
-      Bstar <- t(Ystar) %*% t(Z) %*% solve(Z %*% t(Z))
-      Ustar <- Ystar - t(Bstar %*% Z)
-      Sigma_u_star <- crossprod(Ustar)/(ncol(Ustar1) - 1 - k * p)
-
-      varb <- list(y = Ystar,
-                   coef_x = Bstar,
-                   residuals = Ustar,
-                   p = p,
-                   type = x$type)
-      class(varb) <- 'var.boot'
-    }
 
     if(x$method == "Non-Gaussian maximum likelihood"){
       temp <- id.ngml_boot(varb, stage3 = x$stage3, restriction_matrix = x$restriction_matrix)
@@ -196,6 +181,36 @@ mb.boot <- function(x, recursive =  TRUE, b.length = 15, n.ahead = 20, nboot = 5
     }else{
       temp <- id.st(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,
                     gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01)
+    }
+  }
+
+    if(recursive == FALSE){
+      Ystar <- t(A %*% Z + Ustar1)
+      Bstar <- t(Ystar) %*% t(Z) %*% solve(Z %*% t(Z))
+      Ustar <- Ystar - t(Bstar %*% Z)
+      Sigma_u_star <- crossprod(Ustar)/(ncol(Ustar1) - 1 - k * p)
+
+      varb <- list(y = Ystar,
+                   coef_x = Bstar,
+                   residuals = Ustar,
+                   p = p,
+                   type = x$type)
+      class(varb) <- 'var.boot'
+
+      if(x$method == "Non-Gaussian maximum likelihood"){
+        temp <- id.ngml_boot(varb, stage3 = x$stage3, Z = Z, restriction_matrix = x$restriction_matrix)
+      }else if(x$method == "Changes in Volatility"){
+        temp <- tryCatch(id.cv_boot(varb, SB = x$SB, Z = Z, restriction_matrix = x$restriction_matrix),
+                         error = function(e) NULL)
+      }else if(x$method == "Cramer-von Mises distance"){
+        temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
+      }else if(x$method == "Distance covariances"){
+        temp <- id.dc(varb, PIT=x$PIT)
+      }else{
+        temp <- tryCatch(id.st_boot(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,
+                                    gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01, Z = Z),
+                         error = function(e) NULL)
+      }
     }
 
 
