@@ -4,11 +4,13 @@ identifyNGML <- function(x, coef_x, Sigma_hat, u, k, p, Tob, yOut, type, y,
   B_l <- t(chol(Sigma_hat))
   # standardized choleski decomp
   B_l_st <- B_l%*%solve(diag(diag(B_l)))
+  restriction_matrix = get_restriction_matrix(restriction_matrix, k)
+  restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
 
   # Creating matrix with off diagonal elemts
   B_hat <- function(beta, k){
     B_hat <- diag(k)
-    if(!is.null(restriction_matrix)){
+    if(restrictions > 0){
       B_hat[naElements] <- beta
     }else{
       B_hat[row(B_hat)!=col(B_hat)] <- beta
@@ -17,7 +19,7 @@ identifyNGML <- function(x, coef_x, Sigma_hat, u, k, p, Tob, yOut, type, y,
   }
 
   # starting values
-  if(!is.null(restriction_matrix)){
+  if(restrictions > 0){
     naElements <- is.na(restriction_matrix)
     beta0 <- B_l_st[row(B_l)!=col(B_l)]
     beta0 <- beta0[-(which(!is.na(restriction_matrix))-floor(which(!is.na(restriction_matrix))/k))]
@@ -27,9 +29,9 @@ identifyNGML <- function(x, coef_x, Sigma_hat, u, k, p, Tob, yOut, type, y,
     restriction_matrix_optim <- restriction_matrix
   }else{
     beta0 <- B_l_st[row(B_l)!=col(B_l)]
-    restrictions <- 0
+    #restrictions <- 0
 
-    restriction_matrix_optim <- matrix(NA, k, k)
+    restriction_matrix_optim <- restriction_matrix
   }
 
   sigma0 <- rep(1,k)
@@ -54,7 +56,7 @@ identifyNGML <- function(x, coef_x, Sigma_hat, u, k, p, Tob, yOut, type, y,
       HESS[,i] <- -HESS[,i]
     }
   }
-  if(!is.null(restriction_matrix)){
+  if(restrictions > 0){
     unRestrictions = k*k-k - restrictions
     FishObs <- sqrt(diag(HESS))
     B.SE <- restriction_matrix

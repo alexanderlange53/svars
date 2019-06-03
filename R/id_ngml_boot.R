@@ -3,6 +3,8 @@ id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL, restriction_matrix = NULL)
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
   get_var_objects(x)
 
+  restriction_matrix = get_restriction_matrix(restriction_matrix, k)
+  restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
   # calculating the covariance matrix
   Sigma_hat <- crossprod(residY)/(Tob-1-k*p)
 
@@ -12,19 +14,19 @@ id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL, restriction_matrix = NULL)
   B_l_st <- B_l%*%solve(diag(diag(B_l)))
 
   # starting values
-  if(!is.null(restriction_matrix)){
+  if(restrictions > 0){
     naElements <- is.na(restriction_matrix)
     beta0 <- B_l_st[row(B_l)!=col(B_l)]
     beta0 <- beta0[-(which(!is.na(restriction_matrix))-floor(which(!is.na(restriction_matrix))/k))]
-    restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
+    #restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
     diag(naElements) <- FALSE
 
     restriction_matrix_optim <- restriction_matrix
   }else{
     beta0 <- B_l_st[row(B_l)!=col(B_l)]
-    restrictions <- 0
+    #restrictions <- 0
 
-    restriction_matrix_optim <- matrix(NA, k, k)
+    restriction_matrix_optim <- restriction_matrix
   }
 
   sigma0 <- rep(1,k)
@@ -34,7 +36,7 @@ id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL, restriction_matrix = NULL)
   # Creating matrix with off diagonal elemts
   B_hat <- function(beta, k){
     B_hat <- diag(k)
-    if(!is.null(restriction_matrix)){
+    if(restrictions > 0){
       B_hat[naElements] <- beta
     }else{
       B_hat[row(B_hat)!=col(B_hat)] <- beta

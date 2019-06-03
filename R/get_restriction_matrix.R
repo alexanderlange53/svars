@@ -28,7 +28,7 @@ get_restriction_matrix <- function(restriction_matrix, k){
       stop(paste0("Different restriction matrix dimension than B. Please use either of the two valid formats containing kxk (", k,"x",k, ") dimensions."))
     }
   }else{
-    restriction_matrix <- NULL
+    restriction_matrix <- matrix(NA, k, k)
   }
 
   return(restriction_matrix)

@@ -157,3 +157,4 @@ test_that("id.ngml 2-dim stage3 = TRUE works, with restriction", {
 
   expect_match(x1$method, "Non-Gaussian maximum likelihood")
 })
+

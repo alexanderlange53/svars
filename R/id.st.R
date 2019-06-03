@@ -96,8 +96,11 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
   # Gathering information from reduced form model
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
   get_var_objects(x)
+
+  # preparing restriction amtrix format and get no of restrictions
   rmOut = restriction_matrix
   restriction_matrix = get_restriction_matrix(restriction_matrix, k)
+  restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
 
   # Transition function
   transition_f <- function(gamma, cc, st){
@@ -185,7 +188,7 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     SB <- c_fix
     comb <- 1
 
-    if(lr_test == TRUE & !is.null(restriction_matrix)){
+    if(lr_test == TRUE & restrictions > 0){
 
       unrestricted_estimation <- IterativeSmoothTransition(transition = G_grid, u = u, Tob = Tob, k = k, p = p,
                                                            crit = crit, maxIter = max.iter, Z_t = Z_t, Yloop = y_loop,
@@ -202,12 +205,6 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     }
 
   }else{
-    if (!is.null(restriction_matrix)) {
-      restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
-    } else {
-      restrictions <- 0
-      restriction_matrix <- matrix(NA, k, k)
-    }
 
     G_grid <- apply(G_grid, 2, list)
 
@@ -252,11 +249,6 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     }
   }
 
-  if(!is.null(restriction_matrix)){
-    restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
-  }else{
-    restrictions <- 0
-  }
 
   # Testing the estimated SVAR for identification by means of wald statistic
   wald <- wald.test(best_estimation$Lambda, best_estimation$Fish, restrictions)

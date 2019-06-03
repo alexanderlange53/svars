@@ -7,7 +7,7 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
 
   rmOut = restriction_matrix
   restriction_matrix <- get_restriction_matrix(restriction_matrix, k)
-
+  restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
 
   # Transition function
   transition_f <- function(gamma, cc, st){
@@ -44,12 +44,7 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
     y_loop <- y
   }
 
-    if (!is.null(restriction_matrix)) {
-      restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
-    } else {
-      restrictions <- 0
-      restriction_matrix <- matrix(NA, k, k)
-    }
+
 
     best_estimation <- IterativeSmoothTransition(transition = G_grid, u = u, Tob = Tob, k = k, p = p,
                                                  crit = crit, maxIter = max.iter, Z_t = Z_t, Yloop = y_loop,
@@ -61,11 +56,6 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
     SB <- c_fix
     comb <- 1
 
-  if(!is.null(restriction_matrix)){
-    restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
-  }else{
-    restrictions <- 0
-  }
 
   result <- list(
     Lambda = best_estimation$Lambda,        # estimated Lambda matrix (unconditional heteroscedasticity)

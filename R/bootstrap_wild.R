@@ -84,7 +84,9 @@ wild.boot <- function(x, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1, d
   obs <- x$n
   k <- x$K
   B <- x$B
-
+  restriction_matrix = x$restriction_matrix
+  restriction_matrix <- get_restriction_matrix(restriction_matrix, k)
+  restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
   if(length(signrest) > k){
     stop('too many sign restrictions')
   }
@@ -157,7 +159,7 @@ wild.boot <- function(x, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1, d
     if(!is.null(temp)){
     Pstar <- temp$B
 
-    if(!is.null(x$restriction_matrix)){
+    if(restrictions > 0){
       Pstar1 <- Pstar
       frobP <- frobICA_mod(Pstar1, B, standardize=TRUE)
     }else{
@@ -209,7 +211,7 @@ wild.boot <- function(x, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1, d
   rownames(boot.mean) <- rownames(x$B)
 
   # Checking for signs
-  if(!is.null(x$restriction_matrix)){
+  if(restrictions > 0){
     if(!is.null(signrest)){
       cat('Testing signs only possible for unrestricted model \n')
     }

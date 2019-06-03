@@ -1,19 +1,21 @@
 identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, parameter_ini_univ, max.iter, crit, u, p, x, type, yOut, coef_x, start.iter){
   ## Stage 2: Multivariate optimization
+  restriction_matrix = get_restriction_matrix(restriction_matrix, k)
+  restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
 
-   if(!is.null(restriction_matrix)){
-     naElements <- is.na(restriction_matrix)
-     naElements_inv <- !is.na(restriction_matrix)
-     ini <- B0[naElements]
-     restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
+  if(restrictions > 0){
+    naElements <- is.na(restriction_matrix)
+    naElements_inv <- !is.na(restriction_matrix)
+    ini <- B0[naElements]
+    #restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
 
-     restriction_matrix_opt <- restriction_matrix
-   }else{
-     restrictions <- 0
-     ini <- c(B0)
+    restriction_matrix_opt <- restriction_matrix
+  }else{
+    #restrictions <- 0
+    ini <- c(B0)
+    restriction_matrix_opt <- restriction_matrix
+  }
 
-     restriction_matrix_opt <- matrix(NA, k, k)
-   }
 
   ItR <- GARCHiterativeP(parameter = ini, SigmaUniv = Sigma_e_univ, k = k, parameterIniu = parameter_ini_univ,
                   u = u, RestrictionMatrix = restriction_matrix_opt, restrictions = restrictions,
@@ -128,7 +130,7 @@ identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, paramete
   FishObs <- sqrt(diag(HESS))
   B_inv_SE <- matrix(NA, k, k)
 
-  if(!is.null(restriction_matrix)){
+  if(restrictions > 0){
     naElements <- is.na(restriction_matrix)
     B_inv_SE <- restriction_matrix
     B_inv_SE[naElements] <- FishObs[1:sum(naElements)]

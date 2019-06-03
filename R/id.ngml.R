@@ -67,11 +67,13 @@ id.ngml <- function(x, stage3 = FALSE, restriction_matrix = NULL){
   get_var_objects(x)
   rmOut = restriction_matrix
   restriction_matrix = get_restriction_matrix(restriction_matrix, k)
+  restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
+
 
   # calculating the covariance matrix
   Sigma_hat <- crossprod(residY)/(Tob-1-k*p)
 
-  if(!is.null(restriction_matrix)){
+  if(restrictions > 0){
     resultUnrestricted <- identifyNGML(x = x, coef_x = coef_x, Sigma_hat = Sigma_hat, u = u, k = k, p = p, Tob = Tob, yOut = yOut, type = type,
                                        stage3 = stage3, restriction_matrix = NULL, y = y)
     result <- identifyNGML(x = x, coef_x = coef_x, Sigma_hat = Sigma_hat, u = u, k = k, p = p, Tob = Tob, yOut = yOut, type = type,
@@ -85,7 +87,7 @@ id.ngml <- function(x, stage3 = FALSE, restriction_matrix = NULL){
     colnames(lRatioTest) <- c("Test statistic", "p-value")
     result$lRatioTest <- lRatioTest
   }else{
-    restriction_matrix <- NULL
+    #restriction_matrix <- NULL
     result <- identifyNGML(x = x, coef_x = coef_x, Sigma_hat = Sigma_hat, u = u, k = k, p = p, Tob = Tob, yOut = yOut, type = type,
                            stage3 = stage3, restriction_matrix = restriction_matrix, y = y)
   }

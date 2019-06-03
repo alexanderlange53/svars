@@ -76,11 +76,15 @@ mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NU
 
 
   # gathering informations from vars object
+
   y <- x$y
   p <- x$p
   obs <- x$n
   k <- x$K
   B <- x$B
+  restriction_matrix = x$restriction_matrix
+  restriction_matrix <- get_restriction_matrix(restriction_matrix, k)
+  restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
 
   if(length(signrest) > k){
     stop('too many sign restrictions')
@@ -241,7 +245,7 @@ mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NU
   rownames(boot.mean) <- rownames(x$B)
 
   # Checking for signs
-  if(!is.null(x$restriction_matrix)){
+  if(restrictions > 0){
     if(!is.null(signrest)){
       cat('Testing signs only possible for unrestricted model \n')
     }

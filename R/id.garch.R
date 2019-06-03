@@ -71,6 +71,9 @@ id.garch <- function(x, max.iter = 5, crit = 0.001, start.iter = 200, restrictio
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
   get_var_objects(x)
 
+
+  restriction_matrix = get_restriction_matrix(restriction_matrix, k)
+  restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
   sigg <- crossprod(u)/(Tob - 1 - k * p)
 
   # Polar decomposition as in Lanne Saikkonen
@@ -96,7 +99,7 @@ id.garch <- function(x, max.iter = 5, crit = 0.001, start.iter = 200, restrictio
 
   # Store estimtated GARCH parameter as initial values for multivariate optimization
 
-  if(!is.null(restriction_matrix)){
+  if(restrictions > 0){
     resultUnrestricted <- identifyGARCH(B0 = B0, k = k, Tob = Tob, restriction_matrix = NULL, Sigma_e_univ = Sigma_e_univ, coef_x = coef_x, x = x, start.iter,
                                         parameter_ini_univ = parameter_ini_univ, max.iter = max.iter, crit = crit, u = u, p = p, yOut = yOut, type = type)
     result <- identifyGARCH(B0 = B0, k = k, Tob = Tob, restriction_matrix = restriction_matrix, Sigma_e_univ = Sigma_e_univ, coef_x = coef_x, x = x, start.iter,

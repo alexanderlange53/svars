@@ -5,7 +5,7 @@ id.cv_boot <- function(x, SB, max.iter = 50, crit = 0.001, restriction_matrix = 
 
  rmOut = restriction_matrix
  restriction_matrix <- get_restriction_matrix(restriction_matrix, k)
-
+ restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
   if(is.numeric(SB)){
     SBcharacter <- NULL
   }
@@ -38,13 +38,6 @@ id.cv_boot <- function(x, SB, max.iter = 50, crit = 0.001, restriction_matrix = 
     Z_t <- Z
     yret <- y
   }
-
-if (!is.null(restriction_matrix)) {
-  restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
-} else {
-  restrictions <- 0
-  restriction_matrix <- matrix(NA, k, k)
-}
 
 
 

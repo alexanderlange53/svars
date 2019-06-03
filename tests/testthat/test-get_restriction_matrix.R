@@ -14,9 +14,10 @@ test_that("get_restriction_matrix works with k*k matrix", {
 })
 
 test_that("get_restriction_matrix works with NULL", {
-  R <- get_restriction_matrix(NULL, 3)
+  k = 3
+  R <- get_restriction_matrix(NULL, k)
 
-  expect_equal(R, NULL)
+  expect_equal(R, matrix(rep(NA, k*k), k,k))
 })
 
 test_that("get_restriction_matrix works with J*k^2 (J = 1) vector", {
