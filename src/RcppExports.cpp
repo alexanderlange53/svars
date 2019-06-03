@@ -280,6 +280,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// YLagCr
+arma::mat YLagCr(arma::mat y, int p);
+RcppExport SEXP _svars_YLagCr(SEXP ySEXP, SEXP pSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type y(ySEXP);
+    Rcpp::traits::input_parameter< int >::type p(pSEXP);
+    rcpp_result_gen = Rcpp::wrap(YLagCr(y, p));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_svars_LikelihoodCV", (DL_FUNC) &_svars_LikelihoodCV, 8},
@@ -298,6 +310,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_svars_nlmST", (DL_FUNC) &_svars_nlmST, 7},
     {"_svars_mGLSst", (DL_FUNC) &_svars_mGLSst, 6},
     {"_svars_IterativeSmoothTransition", (DL_FUNC) &_svars_IterativeSmoothTransition, 11},
+    {"_svars_YLagCr", (DL_FUNC) &_svars_YLagCr, 2},
     {NULL, NULL, 0}
 };
 

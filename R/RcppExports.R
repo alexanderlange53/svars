@@ -65,3 +65,7 @@ IterativeSmoothTransition <- function(transition, u, Tob, k, p, crit, maxIter, Z
     .Call('_svars_IterativeSmoothTransition', PACKAGE = 'svars', transition, u, Tob, k, p, crit, maxIter, Z_t, Yloop, RestrictionMatrix, restrictions)
 }
 
+YLagCr <- function(y, p) {
+    .Call('_svars_YLagCr', PACKAGE = 'svars', y, p)
+}
+

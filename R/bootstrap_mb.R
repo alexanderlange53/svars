@@ -88,7 +88,7 @@ mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NU
 
   # calculating covariance from actual VAR
   A <- x$A_hat
-  Z <- t(y_lag_cr(y, p)$lags)
+  Z <- t(YLagCr(y, p))
 
   if(x$type == 'const'){
     Z <- rbind(rep(1, ncol(Z)), Z)

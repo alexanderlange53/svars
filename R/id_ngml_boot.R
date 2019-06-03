@@ -65,7 +65,7 @@ id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL, restriction_matrix = NULL)
       for(i in 1:k){
         A[i,] <- coef_x[[i]][1:(k*p),1]
       }
-      yl <- t(y_lag_cr(t(y), p)$lags)
+      yl <- t(YLagCr(t(y), p))
       y <- y[,-c(1:p)]
 
       if(type == "const"){

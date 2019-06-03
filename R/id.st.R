@@ -153,7 +153,8 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     }
   }
 
-  yl <- t(y_lag_cr(t(y), p)$lags)
+  #ylold <- t(y_lag_cr(t(y), p)$lags)
+  yl <- t(YLagCr(t(y), p))
   #yret <- y
   y_loop <- y[,-c(1:p)]
 

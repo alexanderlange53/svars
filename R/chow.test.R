@@ -172,7 +172,7 @@ if(!is.null(nboot)){
   #coef_x <- coef(x)
 
   A <- matrix(0, nrow =k, ncol = k* p)
-  yl <- t(y_lag_cr(y, p)$lags)
+  yl <- t(YLagCr(t(y), p))
 
   for(i in 1:k){
     A[i,] <- coef_x[[i]][1:(k*p),1]

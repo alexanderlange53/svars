@@ -89,7 +89,7 @@ identifyNGML <- function(x, coef_x, Sigma_hat, u, k, p, Tob, yOut, type, y,
   # Estimating VAR parameter 3. stage
   if(stage3 == TRUE){
     #y <- t(x$y)
-    yl <- t(y_lag_cr(t(y), p)$lags)
+    yl <- t(YLagCr(t(y), p))
     y_return <- y
 
     y <- y[,-c(1:p)]

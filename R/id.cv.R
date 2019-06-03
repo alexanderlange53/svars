@@ -152,7 +152,8 @@ if(!is.numeric(SB)){
   Sigma_hat1 <- (crossprod(resid1)) / (TB-1)
   Sigma_hat2 <- (crossprod(resid2)) / (Tob-TB+1)
 
-  yl <- t(y_lag_cr(t(y), p)$lags)
+  #ylold <- t(y_lag_cr(t(y), p)$lags)
+  yl <- t(YLagCr(t(y), p))
   yret <- y
   y <- y[,-c(1:p)]
 

@@ -8,17 +8,6 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
   rmOut = restriction_matrix
   restriction_matrix <- get_restriction_matrix(restriction_matrix, k)
 
-  # Function for Z matrix
-  y_lag_cr <- function(y, lag_length){
-    # create matrix that stores the lags
-    y_lag <- matrix(NA, dim(y)[1], dim(y)[2]*lag_length)
-    for (i in 1:lag_length) {
-      y_lag[(1 + i):dim(y)[1], ((i*ncol(y) - ncol(y)) + 1):(i * ncol(y))] <- y[1:(dim(y)[1] - i), (1:ncol(y))]
-    }
-    # drop first observation
-    y_lag <- as.matrix(y_lag[-(1:lag_length),])
-    out <- list(lags = y_lag)
-  }
 
   # Transition function
   transition_f <- function(gamma, cc, st){
@@ -37,7 +26,7 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
     }
 
   if(is.null(Z)){
-    yl <- t(y_lag_cr(t(y), p)$lags)
+    yl <- t(YLagCr(t(y), p))
     #yret <- y
     y_loop <- y[,-c(1:p)]
 
