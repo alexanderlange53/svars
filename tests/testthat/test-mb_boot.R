@@ -93,7 +93,7 @@ test_that("mb.boot returns valid object for id.cv", {
   expect_length(bbcv4, 12)
   expect_equal(bbcv4$nboot, 20)
 
-  bbcv5 <- mb.boot(x1, recursive =FALSE b.length = 15, nboot = 20, n.ahead = 30, nc = 1, signrest = signrest)
+  bbcv5 <- mb.boot(x1, recursive =FALSE, b.length = 15, nboot = 20, n.ahead = 30, nc = 1, signrest = signrest)
   expect_length(bbcv5, 12)
   expect_equal(bbcv5$nboot, 20)
 })
