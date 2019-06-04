@@ -75,7 +75,7 @@ id.garch <- function(x, max.iter = 5, crit = 0.001, start.iter = 200, restrictio
 
   # Polar decomposition as in Lanne Saikkonen
   eigVectors <- eigen(sigg)$vectors
-  eigValues <- diag(eigen(sigg)$values)
+  #eigValues <- diag(eigen(sigg)$values)
   eigVectors <- eigVectors[,rev(1:ncol(eigVectors))]
   eigValues <- diag(rev(eigen(sigg)$values))
 
@@ -116,6 +116,8 @@ id.garch <- function(x, max.iter = 5, crit = 0.001, start.iter = 200, restrictio
     result <- identifyGARCH(B0 = B0, k = k, Tob = Tob, restriction_matrix = restriction_matrix, Sigma_e_univ = Sigma_e_univ, coef_x = coef_x, x = x, start.iter,
                             parameter_ini_univ = parameter_ini_univ, max.iter = max.iter, crit = crit, u = u, p = p, yOut = yOut, type = type)
   }
+
+
   class(result) <- "svars"
 
   return(result)
