@@ -3,7 +3,8 @@
 #'Calculating confidence bands for impulse response functions via wild bootstrap techniques (Goncalves and Kilian, 2004).
 #'
 #'@param x SVAR object of class "svars"
-#'@param rademacher locigal. If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples
+#'@param rademacher logical. If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples
+#'@param recursive logical. If recursive="FALSE", a fixed design bootstrap is performed
 #'@param n.ahead Integer specifying the steps
 #'@param nboot Integer. Number of bootstrap iterations
 #'@param nc Integer. Number of processor cores (Not available on windows machines)
@@ -61,7 +62,7 @@
 
 
 
-wild.boot <- function(x, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1, dd = NULL, signrest = NULL, itermax = 300, steptol = 200, iter2 = 50){
+wild.boot <- function(x, recursive = FALSE, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1, dd = NULL, signrest = NULL, itermax = 300, steptol = 200, iter2 = 50){
 
   # x: vars object
   # B: estimated covariance matrix from true data set
@@ -125,54 +126,104 @@ wild.boot <- function(x, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1, d
   # Bootstrapfunction
   bootf <- function(Ustar1){
 
-    Ystar <- t(A %*% Z + Ustar1)
-    Bstar <- t(Ystar) %*% t(Z) %*% solve(Z %*% t(Z))
-    Ustar <- Ystar - t(Bstar %*% Z)
-    Sigma_u_star <- crossprod(Ustar)/(ncol(Ustar1) - 1 - k * p)
+    if(recursive == FALSE){
+      Ystar <- t(A %*% Z + Ustar1)
+      Bstar <- t(Ystar) %*% t(Z) %*% solve(Z %*% t(Z))
+      Ustar <- Ystar - t(Bstar %*% Z)
+      Sigma_u_star <- crossprod(Ustar)/(ncol(Ustar1) - 1 - k * p)
 
-    varb <- list(y = Ystar,
-                 coef_x = Bstar,
-                 residuals = Ustar,
-                 p = p,
-                 type = x$type)
-    class(varb) <- 'var.boot'
+      varb <- list(y = Ystar,
+                   coef_x = Bstar,
+                   residuals = Ustar,
+                   p = p,
+                   type = x$type)
+      class(varb) <- 'var.boot'
 
-    if(x$method == "Non-Gaussian maximum likelihood"){
-      temp <- id.ngml_boot(varb, stage3 = x$stage3, Z = Z, restriction_matrix = x$restriction_matrix)
-    }else if(x$method == "Changes in Volatility"){
-      temp <- tryCatch(id.cv_boot(varb, SB = x$SB, Z = Z, restriction_matrix = x$restriction_matrix),
-                       error = function(e) NULL)
-    }else if(x$method == "Cramer-von Mises distance"){
-      temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
-    }else if(x$method == "Distance covariances"){
-      temp <- id.dc(varb, PIT=x$PIT)
-    }else if(x$method == "GARCH"){
-      temp <- tryCatch(id.garch(varb, restriction_matrix = x$restriction_matrix, max.iter = x$max.iter,
-                                crit = x$crit, start.iter = x$start.iter),
-                       error = function(e) NULL)
-    }else{
-      temp <- tryCatch(id.st_boot(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,
-                    gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01, Z = Z),
-                    error = function(e) NULL)
+      if(x$method == "Non-Gaussian maximum likelihood"){
+        temp <- id.ngml_boot(varb, stage3 = x$stage3, Z = Z, restriction_matrix = x$restriction_matrix)
+      }else if(x$method == "Changes in Volatility"){
+        temp <- tryCatch(id.cv_boot(varb, SB = x$SB, Z = Z, restriction_matrix = x$restriction_matrix),
+                         error = function(e) NULL)
+      }else if(x$method == "Cramer-von Mises distance"){
+        temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
+      }else if(x$method == "Distance covariances"){
+        temp <- id.dc(varb, PIT=x$PIT)
+      }else if(x$method == "GARCH"){
+        temp <- tryCatch(id.garch(varb, restriction_matrix = x$restriction_matrix, max.iter = x$max.iter,
+                                  crit = x$crit, start.iter = x$start.iter),
+                         error = function(e) NULL)
+      }else{
+        temp <- tryCatch(id.st_boot(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,
+                                    gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01, Z = Z),
+                         error = function(e) NULL)
+      }
+    }
+
+    if(recursive == TRUE){
+      Ystar <- matrix(0, nrow(y), k)
+      # adding pre sample values
+      Ystar[1:p,] <- y[1:p,]
+
+      if(x$type == 'const' | x$type == 'trend'){
+        for(i in (p+1):nrow(y)){
+          for(j in 1:k){
+            Ystar[i,j] <- A[j,1] + A[j,-1]%*%c(t(Ystar[(i-1):(i-p),])) + Ustar1[j, (i-p)]
+          }
+        }
+      }else if(x$type == 'both'){
+        for(i in (p+1):nrow(y)){
+          for(j in 1:k){
+            Ystar[i,j] <- A[j,c(1,2)] + A[j,-c(1,2)]%*%c(t(Ystar[(i-p):(i-1),])) + Ustar1[j, (i-p)]
+          }
+        }
+      }else if(x$type == 'none'){
+        for(i in (p+1):nrow(y)){
+          for(j in 1:k){
+            Ystar[i,j] <- A[j,]%*%c(t(Ystar[(i-p):(i-1),])) + Ustar1[j, (i-p)]
+          }
+        }
+      }
+
+      varb <- suppressWarnings(VAR(Ystar, p = x$p, type = x$type))
+      Ustar <- residuals(varb)
+      Sigma_u_star <- crossprod(Ustar)/(obs - 1 - k * p)
+
+      if(x$method == "Non-Gaussian maximum likelihood"){
+        temp <- id.ngml_boot(varb, stage3 = x$stage3, restriction_matrix = x$restriction_matrix)
+      }else if(x$method == "Changes in Volatility"){
+        temp <- tryCatch(id.cv_boot(varb, SB = x$SB, restriction_matrix = x$restriction_matrix),
+                         error = function(e) NULL)
+      }else if(x$method == "Cramer-von Mises distance"){
+        temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
+      }else if(x$method == "Distance covariances"){
+        temp <- id.dc(varb, PIT=x$PIT)
+      }else if(x$method == "Smooth transition"){
+        temp <- id.st(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,
+                      gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01)
+      }else if(x$method == "GARCH"){
+        temp <- tryCatch(id.garch(varb, restriction_matrix = x$restriction_matrix, max.iter = x$max.iter,
+                                  crit = x$crit, start.iter = x$start.iter),
+                         error = function(e) NULL)
+      }
     }
 
     if(!is.null(temp)){
-    Pstar <- temp$B
+      Pstar <- temp$B
 
-    if(restrictions > 0){
-      Pstar1 <- Pstar
-      frobP <- frobICA_mod(Pstar1, B, standardize=TRUE)
-    }else{
-      Pstar1 <- sqrt.f(Pstar, Sigma_u_star)
-      diag_sigma_root <- diag(diag(suppressMessages(sqrtm(Sigma_u_hat_old))))
+      if(restrictions > 0){
+        Pstar1 <- Pstar
+        frobP <- frobICA_mod(Pstar1, B, standardize=TRUE)
+      }else{
+        Pstar1 <- sqrt.f(Pstar, Sigma_u_star)
+        diag_sigma_root <- diag(diag(suppressMessages(sqrtm(Sigma_u_hat_old))))
 
-      frobP <- frobICA_mod(t(solve(diag_sigma_root)%*%Pstar1), t(solve(diag_sigma_root)%*%B), standardize=TRUE)
-    }
-     Pstar <- Pstar1%*%frobP$perm
-     temp$B <- Pstar
+        frobP <- frobICA_mod(t(solve(diag_sigma_root)%*%Pstar1), t(solve(diag_sigma_root)%*%B), standardize=TRUE)
+      }
+      Pstar <- Pstar1%*%frobP$perm
+      temp$B <- Pstar
 
-    ip <- irf(temp, n.ahead = n.ahead)
-    return(list(ip, Pstar))
+      ip <- irf(temp, n.ahead = n.ahead)
+      return(list(ip, Pstar))
     }else{
       return(NA)
     }
@@ -200,8 +251,8 @@ wild.boot <- function(x, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1, d
 
   # Calculating Standard errors for LDI methods
   #if(x$method == "Cramer-von Mises distance" | x$method == "Distance covariances"){
-    SE <- matrix(sqrt(diag(cov.bs)),k,k)
-    rownames(SE) <- rownames(x$B)
+  SE <- matrix(sqrt(diag(cov.bs)),k,k)
+  rownames(SE) <- rownames(x$B)
   #}else{
   #  SE <- NULL
   # }
@@ -285,5 +336,3 @@ wild.boot <- function(x, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1, d
   class(result) <- 'sboot'
   return(result)
 }
-
-
