@@ -224,6 +224,8 @@ wild.boot <- function(x, recursive = FALSE, rademacher = TRUE, n.ahead = 20, nbo
 
       ip <- irf(temp, n.ahead = n.ahead)
       return(list(ip, Pstar))
+    ip <- irf(temp, n.ahead = n.ahead)
+    return(list(ip, Pstar, temp$A_hat))
     }else{
       return(NA)
     }
@@ -240,13 +242,21 @@ wild.boot <- function(x, recursive = FALSE, rademacher = TRUE, n.ahead = 20, nbo
 
   Bs <- array(0, c(k,k,length(bootstraps)))
   ipb <- list()
+
+  ## Obtaining Bootstrap estimates of VAR parameter
+  Aboot <- array(0, c(nrow(A), ncol(A),length(bootstraps)))
+
   for(i in 1:length(bootstraps)){
     Bs[,,i] <- bootstraps[[i]][[2]]
     ipb[[i]] <- bootstraps[[i]][[1]]
+    Aboot[, , i] <- bootstraps[[i]][[3]]
   }
 
+  A_hat_boot <- matrix(Aboot, ncol = nrow(A)*ncol(A), byrow = TRUE)
+  A_hat_boot_mean <- matrix(colMeans(A_hat_boot), nrow(A), ncol(A))
+
   # calculating covariance matrix of vectorized bootstrap matrices
-  v.b <-  matrix(Bs, ncol = k^2, byrow = T)
+  v.b <-  matrix(Bs, ncol = k^2, byrow = TRUE)
   cov.bs <- cov(v.b)
 
   # Calculating Standard errors for LDI methods
@@ -321,7 +331,7 @@ wild.boot <- function(x, recursive = FALSE, rademacher = TRUE, n.ahead = 20, nbo
   ## Impulse response of actual model
   ip <- irf(x, n.ahead = n.ahead)
 
-  result <- list(true = ip,
+   result <- list(true = ip,
                  bootstrap = ipb,
                  SE = SE,
                  nboot = nboot,
@@ -332,6 +342,9 @@ wild.boot <- function(x, recursive = FALSE, rademacher = TRUE, n.ahead = 20, nbo
                  sign_complete = sign.complete,
                  sign_part = sign.part,
                  cov_bs = cov.bs,
+                 A_hat = x$A_hat,
+                 A_hat_boot_mean = A_hat_boot_mean,
+                 Omodel = x,
                  method = 'Wild bootstrap')
   class(result) <- 'sboot'
   return(result)
