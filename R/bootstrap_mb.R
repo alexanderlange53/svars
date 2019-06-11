@@ -359,6 +359,7 @@ mb.boot <- function(x, recursive = TRUE, b.length = 15, n.ahead = 20, nboot = 50
                  sign_part = sign.part,
                  cov_bs = cov.bs,
                  A_hat = x$A_hat,
+                 recursive = recursive,
                  A_hat_boot_mean = A_hat_boot_mean,
                  Omodel = x,
                  method = 'Moving block bootstrap')

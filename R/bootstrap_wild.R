@@ -157,9 +157,7 @@ wild.boot <- function(x, recursive = FALSE, rademacher = TRUE, n.ahead = 20, nbo
                                     gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01, Z = Z),
                          error = function(e) NULL)
       }
-    }
-
-    if(recursive == TRUE){
+    } else if(recursive == TRUE){
       Ystar <- matrix(0, nrow(y), k)
       # adding pre sample values
       Ystar[1:p,] <- y[1:p,]
@@ -222,8 +220,6 @@ wild.boot <- function(x, recursive = FALSE, rademacher = TRUE, n.ahead = 20, nbo
       Pstar <- Pstar1%*%frobP$perm
       temp$B <- Pstar
 
-      ip <- irf(temp, n.ahead = n.ahead)
-      return(list(ip, Pstar))
     ip <- irf(temp, n.ahead = n.ahead)
     return(list(ip, Pstar, temp$A_hat))
     }else{
@@ -343,6 +339,7 @@ wild.boot <- function(x, recursive = FALSE, rademacher = TRUE, n.ahead = 20, nbo
                  sign_part = sign.part,
                  cov_bs = cov.bs,
                  A_hat = x$A_hat,
+                 recursive = recursive,
                  A_hat_boot_mean = A_hat_boot_mean,
                  Omodel = x,
                  method = 'Wild bootstrap')

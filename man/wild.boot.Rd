@@ -4,14 +4,16 @@
 \alias{wild.boot}
 \title{Wild bootstrap for IRFs of identified SVARs}
 \usage{
-wild.boot(x, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1,
-  dd = NULL, signrest = NULL, itermax = 300, steptol = 200,
-  iter2 = 50)
+wild.boot(x, recursive = FALSE, rademacher = TRUE, n.ahead = 20,
+  nboot = 500, nc = 1, dd = NULL, signrest = NULL, itermax = 300,
+  steptol = 200, iter2 = 50)
 }
 \arguments{
 \item{x}{SVAR object of class "svars"}
 
-\item{rademacher}{locigal. If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples}
+\item{recursive}{logical. If recursive="FALSE", a fixed design bootstrap is performed}
+
+\item{rademacher}{logical. If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples}
 
 \item{n.ahead}{Integer specifying the steps}
 

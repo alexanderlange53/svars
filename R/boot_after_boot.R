@@ -1,19 +1,10 @@
-#' Moving block bootstrap for IRFs of identified SVARs
+#' Bootstrap after Bootstrap
 #'
-#' Calculating confidence bands for impulse response via moving block bootstrap
+#' Bootstrap intervals based on bias-adjusted estimators
 #'
-#' @param x SVAR object of class "svars"
-#' @param b.length Integer. Length of each block
-#' @param n.ahead Integer specifying the steps
-#' @param nboot Integer. Number of bootstrap iterations
+#' @param x SVAR object of class "sboot"
+#' @param Croot Numeric. Threshold of the modulus of the highest root of the companion Matrix associated with the VAR parameter of the original reduced form model.
 #' @param nc Integer. Number of processor cores (Not available on windows machines)
-#' @param dd Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.
-#' If not supplied, it will be calculated by the function
-#' @param signrest A list with vectors containing 1 and -1, e.g. c(1,-1,1), indicating a sign pattern of specific shocks to be tested
-#' with the help of the bootstrap samples.
-#' @param itermax Integer. Maximum number of iterations for DEoptim
-#' @param steptol Numeric. Tolerance for steps without improvement for DEoptim
-#' @param iter2 Integer. Number of iterations for the second optimization
 #' @return A list of class "sboot" with elements
 #' \item{true}{Point estimate of impulse response functions}
 #' \item{bootstrap}{List of length "nboot" holding bootstrap impulse response functions}
@@ -31,11 +22,9 @@
 #' \item{cov_bs}{Covariance matrix of bootstrapped parameter in impact relations matrix}
 #' \item{method}{Used bootstrap method}
 #'
-#' @references Brueggemann, R., Jentsch, C., and Trenkler, C. (2016). Inference in VARs with conditional heteroskedasticity of unknown form. Journal of Econometrics 191, 69-85.\cr
-#'   Herwartz, H., 2017. Hodges Lehmann detection of structural shocks -
-#'        An analysis of macroeconomic dynamics in the Euro Area, Oxford Bulletin of Economics and Statistics.
+#' @references Kilian, L. (1998). Small-sample confidence intervals for impulse response functions. Review of Economics and Statistics 80, 218-230.
 #'
-#' @seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}}, \code{\link{id.cv}} or \code{\link{id.st}}
+#' @seealso \code{\link{mb.boot}}, \code{\link{wild.boot}}
 #'
 #' @examples
 #' \donttest{
@@ -48,31 +37,74 @@
 #' x1 <- id.dc(v1)
 #' summary(x1)
 #'
-#' # impulse response analysis with confidence bands
-#' # Checking how often theory based impact relations appear
-#' signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
-#' bb <- mb.boot(x1, b.length = 15, nboot = 500, n.ahead = 30, nc = 1, signrest = signrest)
+#' # Bootstrap
+#' bb <- mb.boot(x1, b.length = 15, nboot = 300, n.ahead = 30, nc = 5, signrest = NULL)
 #' summary(bb)
 #' plot(bb, lowerq = 0.16, upperq = 0.84)
-#' }
 #'
-#' @importFrom expm expm
+#' # Bias-adjusted bootstrap
+#' bb2 <- boot_after_boot(bb, nc = 5)
+#' plot(bb2, lowerq = 0.16, upperq = 0.84)
+#'
 #' @export
 
 
-boot_after_boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NULL, signrest = NULL,  itermax = 300, steptol = 200, iter2 = 50){
+ba.boot <- function(x, Croot = 1,  nc = 1){
 
   # Calculating difference between sample estimate and bootstrap estimate
   Psi <- x$A_hat_boot_mean - x$A_hat
 
   # Checking largest root of companion matrix
-  if (vars::roots(VAR(x$Omodel$y, p = x$Omodel$p, type = x$Omodel$type))[1] >= 1) {
+  if (Oroots(x$A_hat, x$Omodel$K, x$Omodel$p)[1] >= Croot) {
     A <- x$A_hat
   } else {
     A <- x$A_hat - Psi
   }
 
-  if()
+
+  # Iterative bias correcting AR parameter if necessarry
+  count <- 0
+  delta_loop <- 1
+  Psi_loop <- Psi
+  while (Oroots(A, x$Omodel$K, x$Omodel$p)[1] >= Croot) {
+    A <- A - Psi_loop * delta_loop
+    delta_loop <- delta_loop - 0.01
+    count <- count + 1
+  }
+
+  # Replace original AR parameter with Bias corrected slope parameter
+  x$Omodel$A_hat <- A
+
+  # Resample again
+  if(x$method == "Wild bootstrap"){
+    result <- wild.boot(x$Omodel, recursive = x$recursive, rademacher = x$rademacher, n.ahead = NROW(x$true$irf), signrest = x$signrest,
+                        nboot = x$nboot, nc = nc)
+  }else{
+    result <- mb.boot(x$Omodel, recursive = x$recursive, b.length =  x$b_length, n.ahead = NROW(x$true$irf), signrest = x$signrest,
+                        nboot = x$nboot, nc = nc)
+  }
+
+  result$BC <- Psi # Bias correction Term
+  result$count <- count # Number of bias corrections needed
+  result$root <- Oroots(A, x$Omodel$K, x$Omodel$p)[1] # Modulus of highest root
+
+  result$true <- x$true # Using original point estimate
+
+  return(result)
+}
+
+Oroots <-  function(A, k, p){
+  companion <- matrix(0, nrow = k * p, ncol = k * p)
+  companion[1:k, 1:(k * p)] <- A[, (ncol(A) - k * p + 1) : ncol(A)]
+  if(p > 1){
+    j <- 0
+    for( i in (k + 1) : (k * p)){
+      j <- j + 1
+      companion[i, j] <- 1
+    }
+  }
+  roots <- eigen(companion)$values
+  return(Mod(roots))
 }
 
 
