@@ -34,6 +34,28 @@ A list of class "sboot" with elements
 \description{
 Bootstrap intervals based on bias-adjusted estimators
 }
+\examples{
+\donttest{
+# data contains quarterly observations from 1965Q1 to 2008Q3
+# x = output gap
+# pi = inflation
+# i = interest rates
+set.seed(23211)
+v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
+x1 <- id.dc(v1)
+summary(x1)
+
+# Bootstrap
+bb <- mb.boot(x1, b.length = 15, nboot = 300, n.ahead = 30, nc = 5, signrest = NULL)
+summary(bb)
+plot(bb, lowerq = 0.16, upperq = 0.84)
+
+# Bias-adjusted bootstrap
+bb2 <- boot_after_boot(bb, nc = 5)
+plot(bb2, lowerq = 0.16, upperq = 0.84)
+}
+
+}
 \references{
 Kilian, L. (1998). Small-sample confidence intervals for impulse response functions. Review of Economics and Statistics 80, 218-230.
 }
