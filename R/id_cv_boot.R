@@ -46,6 +46,9 @@ best_estimation = IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k,
                                      Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, Zt = Z_t, y = y,
                                      maxIter = max.iter)
 
+# Adding normalizing constant
+best_estimation$Lik <- Tob*(k/2)*log(2*pi) - best_estimation$Lik
+
 if(restrictions > 0 ){
 
 
@@ -53,6 +56,9 @@ if(restrictions > 0 ){
                                                 RestrictionMatrix = matrix(NA, k, k), restrictions = 0,
                                                 Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, Zt = Z_t, y = y,
                                                 maxIter = max.iter)
+
+  # Adding normalizing constant
+  unrestricted_estimation$Lik <- Tob*(k/2)*log(2*pi) - unrestricted_estimation$Lik
 
   lRatioTestStatistic = 2 * (unrestricted_estimation$Lik - best_estimation$Lik)
   restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])

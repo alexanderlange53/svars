@@ -7,7 +7,7 @@ test_that("unrestricted id.cv estimation with 3-dim works", {
   x1 <- id.cv(v1, SB = 59)
   x2 <- id.cv_boot(v1, SB = 59)
 
-  expect_equal(round(x1$Lik, 4), round(x2$Lik, 4), -98.3976)
+  expect_equal(round(x1$Lik, 4), round(x2$Lik, 4), 564.2994)
   expect_equal(round(sum(diag(x1$Lambda)),4), round(sum(diag(x2$Lambda)),4), 1.8272)
   expect_equal(round(sum(x1$B),4), round(sum(x2$B),4), 3.2471)
 
@@ -29,7 +29,7 @@ test_that("unrestricted id.cv and boot estimation with 2-dim works", {
   v1 <- vars::VAR(USA[,-3], p = 3, ic = "AIC" )
   x1 <- id.cv(v1, SB = 59)
   x2 <- id.cv_boot(v1, SB = 59)
-  expect_equal(round(x1$Lik, 4),round(x2$Lik, 4), -105.4419)
+  expect_equal(round(x1$Lik, 4),round(x2$Lik, 4), 421.5567)
   expect_equal(round(sum(diag(x1$Lambda)),4),round(sum(diag(x2$Lambda)),4), 0.7017)
   expect_equal(round(sum(x1$B),4),round(sum(x2$B),4), 2.4101)
 
@@ -54,7 +54,7 @@ test_that("restricted id.cv and boot estimation with 3-dim works", {
   restmat[2,3] <- 0
   x1 <- id.cv(v1, SB = 59, restriction_matrix = restmat)
   x2 <- id.cv_boot(v1, SB = 59, restriction_matrix = restmat)
-  expect_equal(round(x1$Lik, 4), round(x2$Lik, 4), -102.7646)
+  expect_equal(round(x1$Lik, 4), round(x2$Lik, 4), 568.6664)
   expect_equal(round(sum(diag(x1$Lambda)),4), round(sum(diag(x2$Lambda)),4), 1.5285)
   expect_equal(round(sum(x1$B),4),round(sum(x2$B),4), 3.8043)
 
@@ -79,7 +79,7 @@ test_that("restricted id.cv and boot estimation with 2-dim works", {
   x1 <- id.cv(v1, SB = 59, restriction_matrix = restmat)
   x2 <- id.cv_boot(v1, SB = 59, restriction_matrix = restmat)
 
-  expect_equal(round(x1$Lik, 4), round(x2$Lik, 4), -106.2008)
+  expect_equal(round(x1$Lik, 4), round(x2$Lik, 4), 422.3157)
   expect_equal(round(sum(diag(x1$Lambda)),4), round(sum(diag(x2$Lambda)),4), 0.6749)
   expect_equal(round(sum(x1$B),4), round(sum(x2$B),4), 2.5518)
 

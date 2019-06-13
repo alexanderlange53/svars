@@ -46,12 +46,12 @@ x1 <- id.dc(v1)
 summary(x1)
 
 # Bootstrap
-bb <- mb.boot(x1, b.length = 15, nboot = 300, n.ahead = 30, nc = 5, signrest = NULL)
+bb <- mb.boot(x1, b.length = 15, nboot = 300, n.ahead = 30, nc = 1, signrest = NULL)
 summary(bb)
 plot(bb, lowerq = 0.16, upperq = 0.84)
 
 # Bias-adjusted bootstrap
-bb2 <- boot_after_boot(bb, nc = 5)
+bb2 <- ba.boot(bb, nc = 1)
 plot(bb2, lowerq = 0.16, upperq = 0.84)
 }
 
