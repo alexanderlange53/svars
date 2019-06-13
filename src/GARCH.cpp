@@ -64,12 +64,14 @@ arma::vec SigmaGARCHuniv(const arma::vec& param, int Tob, double& SigmaE, const 
 
 // Finding start values -------------------------------------------------------------------------------------------
 // [[Rcpp::export]]
-Rcpp::List GarchStart(int& StartIter, int& k, arma::mat& ste, int& Tob){
+Rcpp::List GarchStart(int& k, arma::mat& ste, int& Tob){
 
   Rcpp::List PiterBlind = Rcpp::List::create(Rcpp::Named("ParameterE") = arma::zeros(k, 3),
                                               Rcpp::Named("Likelihoods") = 1e25,
                                               Rcpp::Named("ConVariance") = arma::zeros(Tob, k));
   Rcpp::List parameterConsider = Rcpp::List::create(PiterBlind);
+
+  int StartIter = 1000;
 
   for (int i = 0; i < StartIter; i++) {
     // Stage 1: Univariate optimization of GARCH(1, 1) parameter

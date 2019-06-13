@@ -10,7 +10,6 @@
 #' @param restriction_matrix Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)
 #' @param max.iter Integer. Number of maximum GLS iterations
 #' @param crit Integer. Critical value for the precision of the GLS estimation
-#' @param start.iter Integer. Number of random initial GARCH parameter for univariate optimization. The estimation proceeds with the GARCH parameter, which maximizes the univariate likelihood
 #' @return A list of class "svars" with elements
 #' \item{Lambda}{Estimated unconditional heteroscedasticity matrix \eqn{\Lambda}}
 #' \item{Lambda_SE}{Matrix of standard errors of Lambda}
@@ -66,7 +65,7 @@
 ## Identification via GARCH ##
 #----------------------------#
 
-id.garch <- function(x, max.iter = 5, crit = 0.001, start.iter = 200, restriction_matrix = NULL){
+id.garch <- function(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL){
 
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
   get_var_objects(x)
@@ -92,7 +91,7 @@ id.garch <- function(x, max.iter = 5, crit = 0.001, start.iter = 200, restrictio
   #### Finding optimal starting values ##
   ##***********************************##
 
-  parameter_consider <- GarchStart(start.iter, k, ste, Tob)
+  parameter_consider <- GarchStart(k, ste, Tob)
   parameter_ini_univ <- parameter_consider[[which.min(sapply(parameter_consider, '[[', 'Likelihoods'))]]$ParameterE
 
   Sigma_e_univ <- parameter_consider[[which.min(sapply(parameter_consider, '[[', 'Likelihoods'))]]$ConVariance
@@ -100,9 +99,9 @@ id.garch <- function(x, max.iter = 5, crit = 0.001, start.iter = 200, restrictio
   # Store estimtated GARCH parameter as initial values for multivariate optimization
 
   if(restrictions > 0){
-    resultUnrestricted <- identifyGARCH(B0 = B0, k = k, Tob = Tob, restriction_matrix = NULL, Sigma_e_univ = Sigma_e_univ, coef_x = coef_x, x = x, start.iter,
+    resultUnrestricted <- identifyGARCH(B0 = B0, k = k, Tob = Tob, restriction_matrix = NULL, Sigma_e_univ = Sigma_e_univ, coef_x = coef_x, x = x,
                                         parameter_ini_univ = parameter_ini_univ, max.iter = max.iter, crit = crit, u = u, p = p, yOut = yOut, type = type)
-    result <- identifyGARCH(B0 = B0, k = k, Tob = Tob, restriction_matrix = restriction_matrix, Sigma_e_univ = Sigma_e_univ, coef_x = coef_x, x = x, start.iter,
+    result <- identifyGARCH(B0 = B0, k = k, Tob = Tob, restriction_matrix = restriction_matrix, Sigma_e_univ = Sigma_e_univ, coef_x = coef_x, x = x,
                             parameter_ini_univ = parameter_ini_univ, max.iter = max.iter, crit = crit, u = u, p = p, yOut = yOut, type = type)
 
     lRatioTestStatistic = 2 * (resultUnrestricted$Lik - result$Lik)
@@ -116,7 +115,7 @@ id.garch <- function(x, max.iter = 5, crit = 0.001, start.iter = 200, restrictio
     result$lRatioTest <- lRatioTest
   }else{
     restriction_matrix <- NULL
-    result <- identifyGARCH(B0 = B0, k = k, Tob = Tob, restriction_matrix = restriction_matrix, Sigma_e_univ = Sigma_e_univ, coef_x = coef_x, x = x, start.iter,
+    result <- identifyGARCH(B0 = B0, k = k, Tob = Tob, restriction_matrix = restriction_matrix, Sigma_e_univ = Sigma_e_univ, coef_x = coef_x, x = x,
                             parameter_ini_univ = parameter_ini_univ, max.iter = max.iter, crit = crit, u = u, p = p, yOut = yOut, type = type)
   }
   class(result) <- "svars"

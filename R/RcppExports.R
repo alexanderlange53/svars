@@ -25,8 +25,8 @@ SigmaGARCHuniv <- function(param, Tob, SigmaE, est) {
     .Call('_svars_SigmaGARCHuniv', PACKAGE = 'svars', param, Tob, SigmaE, est)
 }
 
-GarchStart <- function(StartIter, k, ste, Tob) {
-    .Call('_svars_GarchStart', PACKAGE = 'svars', StartIter, k, ste, Tob)
+GarchStart <- function(k, ste, Tob) {
+    .Call('_svars_GarchStart', PACKAGE = 'svars', k, ste, Tob)
 }
 
 LikelihoodGARCHm <- function(parameter, SigmaE, Tob, k, u, RestrictionMatrix, restrictions) {

@@ -187,12 +187,10 @@ mb.boot <- function(x, recursive = TRUE, b.length = 15, n.ahead = 20, nboot = 50
                       gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01)
       }else if(x$method == "GARCH"){
         temp <- tryCatch(id.garch(varb, restriction_matrix = x$restriction_matrix, max.iter = x$max.iter,
-                                  crit = x$crit, start.iter = x$start.iter),
+                                  crit = x$crit),
                          error = function(e) NULL)
       }
-    }
-
-    if(recursive == FALSE){
+    } else if (recursive == FALSE) {
       Ystar <- t(A %*% Z + Ustar1)
       Bstar <- t(Ystar) %*% t(Z) %*% solve(Z %*% t(Z))
       Ustar <- Ystar - t(Bstar %*% Z)
@@ -216,7 +214,7 @@ mb.boot <- function(x, recursive = TRUE, b.length = 15, n.ahead = 20, nboot = 50
         temp <- id.dc(varb, PIT=x$PIT)
       }else if(x$method == "GARCH"){
         temp <- tryCatch(id.garch(varb, restriction_matrix = x$restriction_matrix, max.iter = x$max.iter,
-                                  crit = x$crit, start.iter = x$start.iter),
+                                  crit = x$crit),
                          error = function(e) NULL)
       }else{
         temp <- tryCatch(id.st_boot(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,

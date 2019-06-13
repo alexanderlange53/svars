@@ -77,7 +77,7 @@ test_that("restricted id.garch with 3-dim works", {
 
   x1 <- id.garch(v1, restriction_matrix = restmat)
   expect_equal(round(x1$Lik, 4),  -551.7518)
-  expect_equal(round(sum(x1$B), 4), 1.463)
+  expect_equal(round(sum(x1$B), 4), 2.964)
 
   expect_equal(x1$K, 3)
   expect_equal(x1$n, 169)
@@ -98,8 +98,8 @@ test_that("Restricted id.garch Luetkepohl Netsunajev example works with R3 model
   restmat[3, 4:5] <- 0
 
   x1 <- id.garch(v1, max.iter = 10, restriction_matrix = restmat)
-  expect_equal(round(x1$Lik), -3004)
-  expect_equal(round(sum(x1$B), 4), -2.6578)
+  expect_equal(round(x1$Lik), -3035)
+  expect_equal(round(sum(x1$B), 4), -0.9214)
 
   expect_equal(x1$K, 5)
   expect_equal(x1$n, 447)

@@ -227,14 +227,14 @@ test_that("mb.boot returns valid object for id.ngml", {
   expect_equal(bbngml11$nboot, 5)
 })
 
-test_that("mb.boot returns valid object for id.st", {
+test_that("mb.boot returns valid object for id.garch", {
   skip_on_cran()
   set.seed(231)
   v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
   x1 <- id.garch(v1)
 
   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
-  bbgarch <- mb.boot(x1, b.length = 20, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+  bbgarch <- mb.boot(x1, b.length = 15, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
 
   expect_length(bbgarch, 16)
   expect_equal(bbgarch$nboot, 10)

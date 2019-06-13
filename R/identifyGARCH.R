@@ -1,4 +1,4 @@
-identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, parameter_ini_univ, max.iter, crit, u, p, x, type, yOut, coef_x, start.iter){
+identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, parameter_ini_univ, max.iter, crit, u, p, x, type, yOut, coef_x){
   ## Stage 2: Multivariate optimization
   restriction_matrix = get_restriction_matrix(restriction_matrix, k)
   restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
@@ -206,7 +206,6 @@ identifyGARCH <- function(B0, k, Tob, restriction_matrix, Sigma_e_univ, paramete
     type = type,          # type of the VAR model e.g 'const'
     max.iter = max.iter,
     crit = crit,
-    start.iter = start.iter,
     y = yOut,                # Data
     p = unname(p),                # number of lags
     K = k                 # number of time series

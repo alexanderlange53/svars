@@ -150,14 +150,14 @@ wild.boot <- function(x, recursive = FALSE, rademacher = TRUE, n.ahead = 20, nbo
         temp <- id.dc(varb, PIT=x$PIT)
       }else if(x$method == "GARCH"){
         temp <- tryCatch(id.garch(varb, restriction_matrix = x$restriction_matrix, max.iter = x$max.iter,
-                                  crit = x$crit, start.iter = x$start.iter),
+                                  crit = x$crit),
                          error = function(e) NULL)
       }else{
         temp <- tryCatch(id.st_boot(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,
                                     gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01, Z = Z),
                          error = function(e) NULL)
       }
-    } else if(recursive == TRUE){
+    } else if (recursive == TRUE) {
       Ystar <- matrix(0, nrow(y), k)
       # adding pre sample values
       Ystar[1:p,] <- y[1:p,]
@@ -200,7 +200,7 @@ wild.boot <- function(x, recursive = FALSE, rademacher = TRUE, n.ahead = 20, nbo
                       gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01)
       }else if(x$method == "GARCH"){
         temp <- tryCatch(id.garch(varb, restriction_matrix = x$restriction_matrix, max.iter = x$max.iter,
-                                  crit = x$crit, start.iter = x$start.iter),
+                                  crit = x$crit),
                          error = function(e) NULL)
       }
     }
