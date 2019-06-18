@@ -3,7 +3,6 @@
 #' Bootstrap intervals based on bias-adjusted estimators
 #'
 #' @param x SVAR object of class "sboot"
-#' @param Croot Numeric. Threshold of the modulus of the highest root of the companion Matrix associated with the VAR parameter of the original reduced form model.
 #' @param nc Integer. Number of processor cores (Not available on windows machines)
 #' @return A list of class "sboot" with elements
 #' \item{true}{Point estimate of impulse response functions}
@@ -50,7 +49,7 @@
 #' @export
 
 
-ba.boot <- function(x, Croot = 1,  nc = 1){
+ba.boot <- function(x, nc = 1){
 
   if(class(x) != "sboot"){
     stop("THe bootstrap-after-bootstrap can only be applied to already bootstrapped objects.")
@@ -59,7 +58,7 @@ ba.boot <- function(x, Croot = 1,  nc = 1){
   Psi <- x$A_hat_boot_mean - x$A_hat
 
   # Checking largest root of companion matrix
-  if (Oroots(x$A_hat, x$Omodel$K, x$Omodel$p)[1] >= Croot) {
+  if (Oroots(x$A_hat, x$Omodel$K, x$Omodel$p)[1] >= 1) {
     A <- x$A_hat
   } else {
     A <- x$A_hat - Psi
@@ -71,7 +70,7 @@ ba.boot <- function(x, Croot = 1,  nc = 1){
   delta_loop <- 1
   Psi_loop <- Psi
   A_loop <- A
-  while (Oroots(A, x$Omodel$K, x$Omodel$p)[1] >= Croot) {
+  while (Oroots(A, x$Omodel$K, x$Omodel$p)[1] >= 1) {
     A <- A_loop - Psi_loop * delta_loop
     delta_loop <- delta_loop - 0.01
     count <- count + 1

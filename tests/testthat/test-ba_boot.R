@@ -20,7 +20,7 @@ test_that("Bootstrap-after-bootstrap with id.dc works with mb.boot and modulus >
 
   bb <- mb.boot(x1, b.length = 15, nboot = 20, n.ahead = 30, nc = 1, signrest = NULL)
 
-  bb2 <- ba.boot(bb, Croot = 0.99, nc = 1)
+  bb2 <- ba.boot(bb, nc = 1)
 
   expect_equal(bb2$count, 0)
   expect_equal(round(bb2$root, 2), 0.99)
