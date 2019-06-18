@@ -4,12 +4,10 @@
 \alias{ba.boot}
 \title{Bootstrap after Bootstrap}
 \usage{
-ba.boot(x, Croot = 1, nc = 1)
+ba.boot(x, nc = 1)
 }
 \arguments{
 \item{x}{SVAR object of class "sboot"}
-
-\item{Croot}{Numeric. Threshold of the modulus of the highest root of the companion Matrix associated with the VAR parameter of the original reduced form model.}
 
 \item{nc}{Integer. Number of processor cores (Not available on windows machines)}
 }

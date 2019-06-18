@@ -11,7 +11,7 @@ id.garch(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL)
 
 \item{max.iter}{Integer. Number of maximum GLS iterations}
 
-\item{crit}{Integer. Critical value for the precision of the GLS estimation}
+\item{crit}{Numeric. Critical value for the precision of the GLS estimation}
 
 \item{restriction_matrix}{Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)}
 }

@@ -181,7 +181,7 @@ double Exit = 1;
                             Rcpp::Named("B") = BOpt,
                             Rcpp::Named("B_SE") = BSE,
                             Rcpp::Named("Fish") = HESS,
-                            Rcpp::Named("Lik") = llbest * (-1),
+                            Rcpp::Named("Lik") = llbest,
                             Rcpp::Named("iteration") = count,
                             Rcpp::Named("A_hat") = GLSEOpt);
 
