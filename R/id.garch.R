@@ -9,7 +9,7 @@
 #' @param x An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object
 #' @param restriction_matrix Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)
 #' @param max.iter Integer. Number of maximum GLS iterations
-#' @param crit Integer. Critical value for the precision of the GLS estimation
+#' @param crit Numeric. Critical value for the precision of the GLS estimation
 #' @return A list of class "svars" with elements
 #' \item{Lambda}{Estimated unconditional heteroscedasticity matrix \eqn{\Lambda}}
 #' \item{Lambda_SE}{Matrix of standard errors of Lambda}

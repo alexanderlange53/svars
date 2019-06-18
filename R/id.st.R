@@ -7,24 +7,24 @@
 #' The post-break covariance corresponds to \eqn{\Sigma_2=B\Lambda B'} where \eqn{\Lambda} is the estimated heteroskedasticity matrix.
 #'
 #' @param x An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object
-#' @param c_lower Integer. Starting point for the algorithm to start searching for the volatility shift.
+#' @param c_lower Numeric. Starting point for the algorithm to start searching for the volatility shift.
 #'                Default is 0.3*(Total number of observations)
-#' @param c_upper Integer. Ending point for the algorithm to stop searching for the volatility shift.
+#' @param c_upper Numeric. Ending point for the algorithm to stop searching for the volatility shift.
 #'                Default is 0.7*(Total number of observations). Note that in case of a stochastic transition variable, the input requires an absolute value
 #' @param c_step Integer. Step width of c. Default is 5. Note that in case of a stochastic transition variable, the input requires an absolute value
-#' @param c_fix Integer. If the transition point is known, it can be passed as an argument
+#' @param c_fix Numeric. If the transition point is known, it can be passed as an argument
 #'              where transition point = Number of observations - c_fix
 #' @param transition_variable A numeric vector that represents the transition variable. By default (NULL), the time is used
 #'                           as transition variable. Note that c_lower,c_upper, c_step and/or c_fix have to be adjusted
 #'                           to the specified transition variable
-#' @param gamma_lower Integer. Lower bound for gamma. Small values indicate a flat transition function. Default is -3
-#' @param gamma_upper Integer. Upper bound for gamma. Large values indicate a steep transition function. Default is 2
-#' @param gamma_step Integer. Step width of gamma. Default is 0.5
-#' @param gamma_fix Integer. A fixed value for gamma, alternative to gamma found by the function
+#' @param gamma_lower Numeric. Lower bound for gamma. Small values indicate a flat transition function. Default is -3
+#' @param gamma_upper Numeric. Upper bound for gamma. Large values indicate a steep transition function. Default is 2
+#' @param gamma_step Numeric. Step width of gamma. Default is 0.5
+#' @param gamma_fix Numeric. A fixed value for gamma, alternative to gamma found by the function
 #' @param nc Integer. Number of processor cores
 #'           Note that the smooth transition model is computationally extremely demanding.
 #' @param max.iter Integer. Number of maximum GLS iterations
-#' @param crit Integer. Critical value for the precision of the GLS estimation
+#' @param crit Numeric. Critical value for the precision of the GLS estimation
 #' @param restriction_matrix Matrix or vector. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*J (or J*K^2) matrix can be passed, where J is the number of restrictions and K the number of time series. (as suggested in Luetkepohl, 2017, section 5.2.1).
 #' @param lr_test Logical. Indicates whether the restricted model should be tested against the unrestricted model via a likelihood ratio test
 #' @return A list of class "svars" with elements
@@ -91,7 +91,7 @@
 
 id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, transition_variable = NULL,
                   gamma_lower = -3, gamma_upper = 2, gamma_step = 0.5, gamma_fix = NULL, nc = 1,
-                  max.iter = 5, crit = 0.01, restriction_matrix = NULL, lr_test = FALSE){
+                  max.iter = 5, crit = 0.001, restriction_matrix = NULL, lr_test = FALSE){
 
   # Gathering information from reduced form model
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
