@@ -100,7 +100,7 @@ hd <- function(x, series = 1){
 
   # calculating covariance from actual VAR
   A <- x$A_hat
-  Z <- t(YLagCr(t(y), p))
+  Z <- t(YLagCr(y, p))
 
   if(x$type == "const"){
     Z <- rbind(rep(1, ncol(Z)), Z)
