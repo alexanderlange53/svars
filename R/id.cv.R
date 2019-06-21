@@ -175,7 +175,7 @@ if(!is.numeric(SB)){
   #   restriction_matrix <- matrix(NA, k, k)
   # }
 
-  best_estimation = IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k,
+  best_estimation <- IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k, type = x$type,
                                        RestrictionMatrix = restriction_matrix, restrictions = restrictions,
                                        Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, Zt = Z_t, y = y,
                                        maxIter = max.iter)
@@ -185,7 +185,7 @@ if(!is.numeric(SB)){
   if(restrictions > 0 ){
 
 
-    unrestricted_estimation <- IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k,
+    unrestricted_estimation <- IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k, type = x$type,
                                                   RestrictionMatrix = matrix(NA, k, k), restrictions = 0,
                                                   Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, Zt = Z_t, y = y,
                                                   maxIter = max.iter)

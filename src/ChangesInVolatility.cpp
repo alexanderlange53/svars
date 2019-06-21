@@ -55,7 +55,7 @@ Rcpp::List nlmCV(const arma::vec& S, double Tob, double TB, const arma::mat Sigm
 
 // [[Rcpp::export]]
 Rcpp::List IdentifyVolatility(int crit, const arma::mat& u, double TB,
-                     int p, int k, arma::mat RestrictionMatrix,
+                     int p, int k, arma::mat RestrictionMatrix, std::string type,
                     int restrictions, double Tob, arma::mat SigmaHat1, arma::mat SigmaHat2, arma::mat Zt, arma::mat y, int maxIter){
 
   arma::mat SigmaHat = u.t() * u / (Tob);
@@ -79,6 +79,7 @@ Rcpp::List IdentifyVolatility(int crit, const arma::mat& u, double TB,
    arma::vec Lestimates = MLE[1];
 
 
+
   arma::mat BLoop = arma::zeros(k, k);
   BLoop.elem(find_nonfinite(RestrictionMatrix)) = Lestimates.subvec(0, k * k - 1 - restrictions);
   Rcpp::List BHat = Rcpp::List::create(BLoop);
@@ -87,31 +88,37 @@ Rcpp::List IdentifyVolatility(int crit, const arma::mat& u, double TB,
   Rcpp::List LambdaHat = Rcpp::List::create(LambdaFirst);
 
   int count = 0;
-double Exit = 1;
+  double Exit = 1;
 
-     while (Exit > crit && count < maxIter) {
+  while (Exit > crit && count < maxIter) {
      arma::mat BhatInd = BHat[count];
      arma::mat LambdaInd = LambdaHat[count];
 
      arma::mat Sig1 = arma::inv(BhatInd * arma::trans(BhatInd));
      arma::mat Sig2 = arma::inv(BhatInd * (LambdaInd * arma::trans(BhatInd)));
-     arma::mat GLS11 = arma::kron((Zt.cols(0, TB-2) * arma::trans(Zt.cols(0, TB-2))), Sig1);
+     arma::mat GLS11 = arma::kron((Zt.cols(0, TB - 2) * arma::trans(Zt.cols(0, TB - 2))), Sig1);
      arma::mat GLS12 = arma::kron(Zt.cols(TB-1, Zt.n_cols-1) * arma::trans(Zt.cols(TB-1, Zt.n_cols-1)), Sig2);
      arma::mat GLS1 = arma::inv(GLS11 + GLS12);
 
-     arma::mat GLS21(k*k*p+k, TB-1);
-     arma::mat GLS22(k*k*p+k, y.n_cols);
-     GLS21.zeros();
-     GLS22.zeros();
+    // Differentiating between different cases of constant/trend/none
+    arma::mat GLS21 = arma::zeros(k * k * p, TB - 1);
+    arma::mat GLS22= arma::zeros(k * k * p, y.n_cols);
+    if (type == "const" | type == "trend") {
+      GLS21 = arma::zeros(k * k * p + k, TB - 1);
+      GLS22= arma::zeros(k * k * p + k, y.n_cols);
+    } else if (type == "both") {
+      GLS21 = arma::zeros(k * k * p + 2 * k, TB - 1);
+      GLS22= arma::zeros(k * k * p + 2 * k, y.n_cols);
+    }
 
 
     for(int i = 0; i < TB-1; ++i){
       GLS21.col(i) = arma::kron(Zt.col(i), Sig1) * y.col(i);
     }
+
     for(int i = TB-1; i < Zt.n_cols; ++i){
       GLS22.col(i) = arma::kron(Zt.col(i), Sig2) * y.col(i);
     }
-
 
     arma::mat GLS21sums = arma::sum(GLS21, 1);
     arma::mat GLS22sums = arma::sum(GLS22, 1);
@@ -147,7 +154,7 @@ double Exit = 1;
      count += 1;
      Exit = likelihoods(count - 1) - likelihoods(count);
 
-    }
+  }
 
    arma::vec ll = likelihoods;
 

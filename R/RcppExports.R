@@ -9,8 +9,8 @@ nlmCV <- function(S, Tob, TB, SigmaHat1, k, SigmaHat2, RestrictionMatrix, restri
     .Call('_svars_nlmCV', PACKAGE = 'svars', S, Tob, TB, SigmaHat1, k, SigmaHat2, RestrictionMatrix, restrictions)
 }
 
-IdentifyVolatility <- function(crit, u, TB, p, k, RestrictionMatrix, restrictions, Tob, SigmaHat1, SigmaHat2, Zt, y, maxIter) {
-    .Call('_svars_IdentifyVolatility', PACKAGE = 'svars', crit, u, TB, p, k, RestrictionMatrix, restrictions, Tob, SigmaHat1, SigmaHat2, Zt, y, maxIter)
+IdentifyVolatility <- function(crit, u, TB, p, k, RestrictionMatrix, type, restrictions, Tob, SigmaHat1, SigmaHat2, Zt, y, maxIter) {
+    .Call('_svars_IdentifyVolatility', PACKAGE = 'svars', crit, u, TB, p, k, RestrictionMatrix, type, restrictions, Tob, SigmaHat1, SigmaHat2, Zt, y, maxIter)
 }
 
 LikelihoodGARCHu <- function(parameter, est, Sigma1, Tob) {

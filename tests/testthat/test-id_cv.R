@@ -23,6 +23,52 @@ test_that("unrestricted id.cv estimation with 3-dim works", {
   expect_match(x1$method, x2$method, "Changes in Volatility")
 })
 
+test_that("unrestricted id.cv estimation with 3-dim works with constant +  trend", {
+  skip_on_cran()
+  set.seed(23211)
+  v1 <- vars::VAR(USA, p = 6, ic = "AIC", type = 'both' )
+  x1 <- id.cv(v1, SB = 59)
+  x2 <- id.cv_boot(v1, SB = 59)
+
+  expect_equal(round(x1$Lik, 4), round(x2$Lik, 4), 372.7558)
+  expect_equal(round(sum(diag(x1$Lambda)),4),  round(sum(diag(x2$Lambda)),4), 1.8512)
+  expect_equal(round(sum(x1$B),4), round(sum(x2$B),4), 3.216)
+
+  expect_equal(round(sum(x1$Lambda_SE), 4), 0.4368, tolerance = 0.002)
+
+  expect_equal(x1$K, x2$K, 3)
+  expect_equal(x1$n, x2$n, 169)
+  expect_equal(x1$restrictions,x2$restrictions, 0)
+  expect_equal(x1$SB,x2$SB, 59)
+  expect_equal(x1$p,x2$p, 6)
+  expect_equal(x1$iteration,x2$iteration, 6)
+
+  expect_match(x1$method, x2$method, "Changes in Volatility")
+})
+
+test_that("unrestricted id.cv estimation with 3-dim works without any detrmininstic term", {
+  skip_on_cran()
+  set.seed(23211)
+  v1 <- vars::VAR(USA, p = 6, ic = "AIC", type = 'none')
+  x1 <- id.cv(v1, SB = 59)
+  x2 <- id.cv_boot(v1, SB = 59)
+
+  expect_equal(round(x1$Lik, 4), round(x2$Lik, 4), 364.5723)
+  expect_equal(round(sum(diag(x1$Lambda)),4),  round(sum(diag(x2$Lambda)),4), 1.8234)
+  expect_equal(round(sum(x1$B),4), round(sum(x2$B),4), 3.3)
+
+  expect_equal(round(sum(x1$Lambda_SE), 4), 0.4303, tolerance = 0.002)
+
+  expect_equal(x1$K, x2$K, 3)
+  expect_equal(x1$n, x2$n, 169)
+  expect_equal(x1$restrictions,x2$restrictions, 0)
+  expect_equal(x1$SB,x2$SB, 59)
+  expect_equal(x1$p,x2$p, 6)
+  expect_equal(x1$iteration,x2$iteration, 6)
+
+  expect_match(x1$method, x2$method, "Changes in Volatility")
+})
+
 test_that("unrestricted id.cv and boot estimation with 2-dim works", {
   skip_on_cran()
   set.seed(23211)
