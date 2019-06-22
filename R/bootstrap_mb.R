@@ -114,29 +114,29 @@ mb.boot <- function(x, recursive = TRUE, b.length = 15, n.ahead = 20, nboot = 50
   N <- obs/b.length
   blocks <- array(NA, c(b.length, k, obs - b.length + 1))
   u <- t(u)
-  for(i in 0:(obs-b.length)){
-    blocks[,,(i+1)] <- u[(i+1):(i+b.length),]
+  for (i in 0:(obs - b.length)) {
+    blocks[, , (i + 1)] <- u[(i + 1):(i + b.length),]
   }
 
-  for(i in 1:nboot){
-    epsilon.star <- matrix(0, b.length*(ceiling(N)+1), ncol(u))
+  for (i in 1:nboot) {
+    epsilon.star <- matrix(0, b.length*(ceiling(N) + 1), ncol(u))
     epsilon.star <- list()
     # stacking randomly selected blocks at each other
-    for(kk in 1:(ceiling(N)+1)){
-      epsilon.star[[kk]] <- blocks[,,floor(runif(1, 1, obs - b.length+2))]
+    for (kk in 1:(ceiling(N) + 1)) {
+      epsilon.star[[kk]] <- blocks[, , floor(runif(1, 1, obs - b.length + 2))]
     }
     epsilon.star <- do.call('rbind', epsilon.star)
 
     # centering new errors
     for(s in 1:b.length){
-      b.mean <- colSums(epsilon.star[1 : (s+(obs - b.length)),])/(obs - b.length +1)
+      b.mean <- colSums(epsilon.star[1 : (s + (obs - b.length)),])/(obs - b.length + 1)
       for(j in 0:floor(N)){
-        epsilon.star[j*b.length + s,] <- epsilon.star[j*b.length + s,] - b.mean
+        epsilon.star[j * b.length + s,] <- epsilon.star[j * b.length + s,] - b.mean
       }
     }
 
     # cutting of unnecessary observations
-    epsilon.star <- epsilon.star[1:obs,]
+    epsilon.star <- epsilon.star[1:obs, ]
 
     errors[[i]] <- t(epsilon.star)
   }

@@ -3,7 +3,7 @@ context("test-wild_boot.R")
 test_that("wild.boot returns valid object for id.dc", {
   skip_on_cran()
   set.seed(23211)
-  v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
+  v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC")
   x1 <- id.dc(v1)
 
   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
@@ -97,6 +97,23 @@ test_that("wild.boot returns valid object for id.cv", {
   expect_equal(bbcv4$nboot, 10)
 
   bbcv5 <- wild.boot(x1, recursive = TRUE, rademacher = TRUE, nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
+  expect_length(bbcv5, 16)
+  expect_equal(bbcv5$nboot, 10)
+
+  # With vector as input
+  SB <- rep(0, v1$obs)
+  SB[50:80] <- 1
+  SB[100:110] <- 1
+
+  x1 <- id.cv(v1, SB = SB)
+
+  signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+  bbcv4 <- wild.boot(x1, rademacher = TRUE, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+
+  expect_length(bbcv4, 16)
+  expect_equal(bbcv4$nboot, 10)
+
+  bbcv5 <- wild.boot(x1, recursive = TRUE, rademacher = TRUE, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
   expect_length(bbcv5, 16)
   expect_equal(bbcv5$nboot, 10)
 

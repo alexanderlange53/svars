@@ -118,45 +118,56 @@ restriction_matrix <- get_restriction_matrix(restriction_matrix, k)
 
 restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
 
-  if(is.numeric(SB)){
+  if (is.numeric(SB)) {
     SBcharacter <- NULL
   }
 
-if(!is.numeric(SB)){
+if (!is.numeric(SB)) {
     SBcharacter <- SB
     SB <- getStructuralBreak(SB = SB, start = start, end = end,
                              frequency = frequency, format = format, dateVector = dateVector, Tob = Tob, p = p)
-  }
+}
 
-    if(length(SB) != 1 & inherits(x$y, "ts")){
-      SBts = SB
-      SB = dim(window(x$y, end = SB))[1]
+else if(length(SB) != 1 & inherits(x$y, "ts") & length(SB) < 4){
+        SBts = SB
+        SB = dim(window(x$y, end = SB))[1]
       if(frequency(x$y == 4)){
         SBcharacter = paste(SBts[1], " Q", SBts[2], sep = "")
-      }else if(frequency(x$y == 12)){
+     }else if(frequency(x$y == 12)){
         SBcharacter = paste(SBts[1], " M", SBts[2], sep = "")
-      }else if(frequency(x$y == 52)){
+     }else if(frequency(x$y == 52)){
         SBcharacter = paste(SBts[1], " W", SBts[2], sep = "")
-      }else if(frequency(x$y == 365.25)){
+     }else if(frequency(x$y == 365.25)){
         SBcharacter = paste(SBts[1], "-", SBts[2], "-", SBts[3], sep = "")
-      }else{
+     }else{
         SBcharacter = NULL
-      }
+  }
+}
 
-    }
+if (length(SB) > 4 & length(SB) != Tob) {
+  stop('Wrong length of SB')
+}
 
-
+if (length(SB) == Tob) {
+  SB_out <- SB
+  TB <- Tob - sum(SB) + 1
+  resid1 <- u[SB == 0,]
+  resid2 <- u[SB,]
+} else {
+  SB_out <- SB
   TB <- SB - p
+  SB <- rep(0, Tob)
+  SB[TB:Tob] <- 1
+  resid1 <- u[1:TB - 1, ]
+  resid2 <- u[TB:Tob, ]
+}
 
-  resid1 <- u[1:TB-1,]
-  resid2 <- u[TB:Tob,]
-  Sigma_hat1 <- (crossprod(resid1)) / (TB-1)
-  Sigma_hat2 <- (crossprod(resid2)) / (Tob-TB+1)
+Sigma_hat1 <- (crossprod(resid1)) / (TB - 1)
+Sigma_hat2 <- (crossprod(resid2)) / (Tob - TB + 1)
 
-  #ylold <- t(y_lag_cr(t(y), p)$lags)
-  yl <- t(YLagCr(t(y), p))
-  yret <- y
-  y <- y[,-c(1:p)]
+yl <- t(YLagCr(t(y), p))
+yret <- y
+y <- y[, -c(1:p)]
 
   if(x$type == 'const'){
     Z_t <- rbind(rep(1, ncol(yl)), yl)
@@ -175,22 +186,27 @@ if(!is.numeric(SB)){
   #   restriction_matrix <- matrix(NA, k, k)
   # }
 
+  Regime1 <- which(SB == 0) - 1
+  Regime2 <- which(SB == 1) - 1
+
   best_estimation <- IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k, type = x$type,
+                                       Regime1 = Regime1, Regime2 = Regime2,
                                        RestrictionMatrix = restriction_matrix, restrictions = restrictions,
                                        Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, Zt = Z_t, y = y,
                                        maxIter = max.iter)
   # Adding normalizing constant
-  best_estimation$Lik <- Tob*(k/2)*log(2*pi) - best_estimation$Lik
+  best_estimation$Lik <- -(Tob * (k / 2) * log(2 * pi) + best_estimation$Lik)
 
   if(restrictions > 0 ){
 
 
     unrestricted_estimation <- IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k, type = x$type,
+                                                  Regime1 = Regime1, Regime2 = Regime2,
                                                   RestrictionMatrix = matrix(NA, k, k), restrictions = 0,
                                                   Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, Zt = Z_t, y = y,
                                                   maxIter = max.iter)
     # Adding normalizing constant
-    unrestricted_estimation$Lik <- Tob*(k/2)*log(2*pi) - unrestricted_estimation$Lik
+    unrestricted_estimation$Lik <- -(Tob*(k/2)*log(2*pi) + unrestricted_estimation$Lik)
 
     lRatioTestStatistic = 2 * (unrestricted_estimation$Lik - best_estimation$Lik)
     restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
@@ -303,7 +319,7 @@ if(!is.numeric(SB)){
     wald_statistic = wald,  # results of wald test
     iteration = best_estimation$iteration,     # number of gls estimations
     method = "Changes in Volatility",
-    SB = SB,                # Structural Break in number format
+    SB = SB_out,                # Structural Break in number format
     A_hat = best_estimation$A_hat,            # VAR parameter estimated with gls
     type = type,          # type of the VAR model e.g 'const'
     SBcharacter = SBcharacter,             # Structural Break in input character format

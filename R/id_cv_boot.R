@@ -10,12 +10,22 @@ id.cv_boot <- function(x, SB, max.iter = 50, crit = 0.001, restriction_matrix = 
     SBcharacter <- NULL
   }
 
-  TB <- SB - p
+ if (length(SB) == Tob) {
+   SB_out <- SB
+   TB <- Tob - sum(SB) + 1
+   resid1 <- u[SB == 0,]
+   resid2 <- u[SB,]
+ } else {
+   SB_out <- SB
+   TB <- SB - p
+   SB <- rep(0, Tob)
+   SB[TB:Tob] <- 1
+   resid1 <- u[1:TB - 1, ]
+   resid2 <- u[TB:Tob, ]
+ }
 
-  resid1 <- u[1:TB-1,]
-  resid2 <- u[TB:Tob,]
-  Sigma_hat1 <- (crossprod(resid1)) / (TB-1)
-  Sigma_hat2 <- (crossprod(resid2)) / (Tob-TB+1)
+  Sigma_hat1 <- (crossprod(resid1)) / (TB - 1)
+  Sigma_hat2 <- (crossprod(resid2)) / (Tob - TB + 1)
 
 
 
@@ -39,26 +49,29 @@ id.cv_boot <- function(x, SB, max.iter = 50, crit = 0.001, restriction_matrix = 
     yret <- y
   }
 
-
+  Regime1 <- which(SB == 0) - 1
+  Regime2 <- which(SB == 1) - 1
 
 best_estimation = IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k, type = x$type,
+                                     Regime1 = Regime1, Regime2 = Regime2,
                                      RestrictionMatrix = restriction_matrix, restrictions = restrictions,
                                      Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, Zt = Z_t, y = y,
                                      maxIter = max.iter)
 
 # Adding normalizing constant
-best_estimation$Lik <- Tob*(k/2)*log(2*pi) - best_estimation$Lik
+best_estimation$Lik <- -(Tob * (k / 2) * log(2 * pi) + best_estimation$Lik)
 
 if(restrictions > 0 ){
 
 
   unrestricted_estimation <- IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k, type = x$type,
+                                                Regime1 = Regime1, Regime2 = Regime2,
                                                 RestrictionMatrix = matrix(NA, k, k), restrictions = 0,
                                                 Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, Zt = Z_t, y = y,
                                                 maxIter = max.iter)
 
   # Adding normalizing constant
-  unrestricted_estimation$Lik <- Tob*(k/2)*log(2*pi) - unrestricted_estimation$Lik
+  unrestricted_estimation$Lik <- -(Tob * (k / 2) * log(2 * pi) + unrestricted_estimation$Lik)
 
   lRatioTestStatistic = 2 * (unrestricted_estimation$Lik - best_estimation$Lik)
   restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
@@ -169,7 +182,7 @@ result <- list(
   wald_statistic = wald,  # results of wald test
   iteration = best_estimation$iteration,     # number of gls estimations
   method = "Changes in Volatility",
-  SB = SB,                # Structural Break in number format
+  SB = SB_out,                # Structural Break in number format
   A_hat = best_estimation$A_hat,            # VAR parameter estimated with gls
   type = type,          # type of the VAR model e.g 'const'
   SBcharacter = SBcharacter,             # Structural Break in input character format
