@@ -7,7 +7,7 @@
 #' @param b.length Integer. Length of each block
 #' @param n.ahead Integer specifying the steps
 #' @param nboot Integer. Number of bootstrap iterations
-#' @param nc Integer. Number of processor cores (Not available on windows machines)
+#' @param nc Integer. Number of processor cores
 #' @param dd Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.
 #' If not supplied, it will be calculated by the function
 #' @param signrest A list with vectors containing 1 and -1, e.g. c(1,-1,1), indicating a sign pattern of specific shocks to be tested

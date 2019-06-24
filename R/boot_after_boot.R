@@ -3,7 +3,7 @@
 #' Bootstrap intervals based on bias-adjusted estimators
 #'
 #' @param x SVAR object of class "sboot"
-#' @param nc Integer. Number of processor cores (Not available on windows machines)
+#' @param nc Integer. Number of processor cores
 #' @return A list of class "sboot" with elements
 #' \item{true}{Point estimate of impulse response functions}
 #' \item{bootstrap}{List of length "nboot" holding bootstrap impulse response functions}
