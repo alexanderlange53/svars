@@ -4,8 +4,8 @@
 \alias{chow.test}
 \title{Chow Test for Structural Break}
 \usage{
-chow.test(x, SB, nboot = 500, rademacher = TRUE, start = NULL,
-  end = NULL, frequency = NULL, format = NULL, dateVector = NULL)
+chow.test(x, SB, nboot = 500, start = NULL, end = NULL,
+  frequency = NULL, format = NULL, dateVector = NULL)
 }
 \arguments{
 \item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object. Or an object of class 'chowpretest' from stability()}
@@ -15,8 +15,6 @@ a vector of ts() frequencies if a ts object is used in the VAR or a date charact
 in the corresponding format or common time parameters need to be provided}
 
 \item{nboot}{Integer. Number of bootstrap iterations to calculate quantiles and p-values}
-
-\item{rademacher}{Logical. If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples}
 
 \item{start}{Character. Start of the time series (only if dateVector is empty)}
 

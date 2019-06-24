@@ -9,7 +9,7 @@ ba.boot(x, nc = 1)
 \arguments{
 \item{x}{SVAR object of class "sboot"}
 
-\item{nc}{Integer. Number of processor cores (Not available on windows machines)}
+\item{nc}{Integer. Number of processor cores}
 }
 \value{
 A list of class "sboot" with elements

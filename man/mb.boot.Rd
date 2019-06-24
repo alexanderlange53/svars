@@ -19,7 +19,7 @@ mb.boot(x, design = "recursive", b.length = 15, n.ahead = 20,
 
 \item{nboot}{Integer. Number of bootstrap iterations}
 
-\item{nc}{Integer. Number of processor cores (Not available on windows machines)}
+\item{nc}{Integer. Number of processor cores}
 
 \item{dd}{Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.
 If not supplied, it will be calculated by the function}

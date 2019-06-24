@@ -20,7 +20,7 @@ distr="mammen", the Mammen distribution is used. If distr = "gaussian", the gaus
 
 \item{nboot}{Integer. Number of bootstrap iterations}
 
-\item{nc}{Integer. Number of processor cores (Not available on windows machines)}
+\item{nc}{Integer. Number of processor cores}
 
 \item{dd}{Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.
 roxIf not supplied, it will be calculated by the function}
