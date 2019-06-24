@@ -3,7 +3,7 @@
 #' Calculating confidence bands for impulse response via moving block bootstrap
 #'
 #' @param x SVAR object of class "svars"
-#' @param recursive logical. If recursive="FALSE", a fixed design bootstrap is performed
+#' @param design character. If design="fixed", a fixed design bootstrap is performed. If design="recursive", a recusrive design bootstrap is performed.
 #' @param b.length Integer. Length of each block
 #' @param n.ahead Integer specifying the steps
 #' @param nboot Integer. Number of bootstrap iterations
@@ -21,6 +21,7 @@
 #' \item{SE}{Bootstraped standard errors of estimated covariance decomposition
 #' (only if "x" has method "Cramer von-Mises", or "Distance covariances")}
 #' \item{nboot}{Number of bootstrap iterations}
+#' \item{design}{character. Whether a fixed design or recursive design bootstrap is performed}
 #' \item{b_length}{Length of each block}
 #' \item{point_estimate}{Point estimate of covariance decomposition}
 #' \item{boot_mean}{Mean of bootstrapped covariance decompositions}
@@ -61,7 +62,7 @@
 #' @export
 
 
-mb.boot <- function(x, recursive = TRUE, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NULL, signrest = NULL,  itermax = 300, steptol = 200, iter2 = 50){
+mb.boot <- function(x, design = "recursive", b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NULL, signrest = NULL,  itermax = 300, steptol = 200, iter2 = 50){
   # x: vars object
   # B: estimated covariance matrix from true data set
   # n.ahead: Time steps for Irf
@@ -144,7 +145,7 @@ mb.boot <- function(x, recursive = TRUE, b.length = 15, n.ahead = 20, nboot = 50
   # Bootstrapfunction
   bootf <- function(Ustar1){
 
-    if(recursive == TRUE){
+    if(design == "recursive"){
       Ystar <- matrix(0, nrow(y), k)
       # adding pre sample values
       Ystar[1:p,] <- y[1:p,]
@@ -190,7 +191,7 @@ mb.boot <- function(x, recursive = TRUE, b.length = 15, n.ahead = 20, nboot = 50
                                   crit = x$crit),
                          error = function(e) NULL)
       }
-    } else if (recursive == FALSE) {
+    } else if (design == "fixed") {
       Ystar <- t(A %*% Z + Ustar1)
       Bstar <- t(Ystar) %*% t(Z) %*% solve(Z %*% t(Z))
       Ustar <- Ystar - t(Bstar %*% Z)
