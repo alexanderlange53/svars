@@ -16,11 +16,11 @@ test_that("mb.boot returns valid object for id.dc", {
   expect_length(bbdc1, 16)
   expect_equal(bbdc1$nboot, 10)
 
-  bbdc2 <- mb.boot(x1, recursive = FALSE, b.length = 20, nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
+  bbdc2 <- mb.boot(x1, design = "fixed", b.length = 20, nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
   expect_length(bbdc2, 16)
   expect_equal(bbdc2$nboot, 10)
 
-  bbdc3 <- mb.boot(x1, recursive = FALSE, b.length = 20, nboot = 10, n.ahead = 30, nc = 1, signrest = NULL)
+  bbdc3 <- mb.boot(x1, design = "fixed", b.length = 20, nboot = 10, n.ahead = 30, nc = 1, signrest = NULL)
   expect_length(bbdc3, 16)
   expect_equal(bbdc3$nboot, 10)
 
@@ -40,11 +40,11 @@ test_that("mb.boot returns valid object for id.dc", {
   expect_length(bbdc5, 16)
   expect_equal(bbdc5$nboot, 10)
 
-  bbdc6 <- mb.boot(x1, recursive = FALSE, b.length = 20, nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
+  bbdc6 <- mb.boot(x1, design = "fixed", b.length = 20, nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
   expect_length(bbdc6, 16)
   expect_equal(bbdc6$nboot, 10)
 
-  bbdc7 <- mb.boot(x1, recursive = FALSE, b.length = 20, nboot = 10, n.ahead = 30, nc = 1, signrest = NULL)
+  bbdc7 <- mb.boot(x1, design = "fixed", b.length = 20, nboot = 10, n.ahead = 30, nc = 1, signrest = NULL)
   expect_length(bbdc7, 16)
   expect_equal(bbdc7$nboot, 10)
 })
@@ -78,11 +78,11 @@ test_that("mb.boot returns valid object for id.cv", {
   expect_length(bbcv1, 16)
   expect_equal(bbcv1$nboot, 10)
 
-  bbcv2 <- mb.boot(x1, recursive = FALSE, b.length = 10, nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
+  bbcv2 <- mb.boot(x1, design = "fixed", b.length = 10, nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
   expect_length(bbcv2, 16)
   expect_equal(bbcv2$nboot, 10)
 
-  bbcv3 <- mb.boot(x1, recursive = FALSE, b.length = 10, nboot = 10, n.ahead = 30, nc = 1, signrest = NULL)
+  bbcv3 <- mb.boot(x1, design = "fixed", b.length = 10, nboot = 10, n.ahead = 30, nc = 1, signrest = NULL)
   expect_length(bbcv3, 16)
   expect_equal(bbcv3$nboot, 10)
 
@@ -97,7 +97,7 @@ test_that("mb.boot returns valid object for id.cv", {
   expect_length(bbcv4, 16)
   expect_equal(bbcv4$nboot, 10)
 
-  bbcv5 <- mb.boot(x1, recursive =FALSE, b.length = 16, nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
+  bbcv5 <- mb.boot(x1, design ="fixed", b.length = 16, nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
   expect_length(bbcv5, 16)
   expect_equal(bbcv5$nboot, 10)
 
@@ -114,7 +114,7 @@ test_that("mb.boot returns valid object for id.cv", {
   expect_length(bbcv4, 16)
   expect_equal(bbcv4$nboot, 10)
 
-  bbcv5 <- mb.boot(x1, recursive =FALSE, b.length = 16, nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
+  bbcv5 <- mb.boot(x1, design = "fixed", b.length = 16, nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
   expect_length(bbcv5, 16)
   expect_equal(bbcv5$nboot, 10)
 })
@@ -135,11 +135,11 @@ test_that("mb.boot returns valid object for id.st", {
   expect_length(bbst1, 16)
   expect_equal(bbst1$nboot, 10)
 
-  bbst2 <- mb.boot(x1, recursive = FALSE, b.length = 10, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+  bbst2 <- mb.boot(x1, design = "fixed", b.length = 10, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
   expect_length(bbst2, 16)
   expect_equal(bbst2$nboot, 10)
 
-  bbst3 <- mb.boot(x1, recursive = FALSE, b.length = 10, nboot = 10, n.ahead = 30, nc = 2, signrest = NULL)
+  bbst3 <- mb.boot(x1, design = "fixed", b.length = 10, nboot = 10, n.ahead = 30, nc = 2, signrest = NULL)
   expect_length(bbst3, 16)
   expect_equal(bbst3$nboot, 10)
 
@@ -154,7 +154,7 @@ test_that("mb.boot returns valid object for id.st", {
   expect_length(bbst4, 16)
   expect_equal(bbst4$nboot, 10)
 
-  bbst5 <- mb.boot(x1, recursive = FALSE, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+  bbst5 <- mb.boot(x1, design = "fixed", b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
   expect_length(bbst5, 16)
   expect_equal(bbst5$nboot, 10)
 })
@@ -175,11 +175,11 @@ test_that("mb.boot returns valid object for id.ngml", {
   expect_length(bbngml1, 16)
   expect_equal(bbngml1$nboot, 10)
 
-  bbngml2 <- mb.boot(x1, recursive = FALSE, b.length = 16, nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
+  bbngml2 <- mb.boot(x1, design = "fixed", b.length = 16, nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
   expect_length(bbngml2, 16)
   expect_equal(bbngml2$nboot, 10)
 
-  bbngml3 <- mb.boot(x1, recursive = FALSE, b.length = 16, nboot = 10, n.ahead = 30, nc = 1, signrest = NULL)
+  bbngml3 <- mb.boot(x1, design = "fixed", b.length = 16, nboot = 10, n.ahead = 30, nc = 1, signrest = NULL)
   expect_length(bbngml3, 16)
   expect_equal(bbngml3$nboot, 10)
 
@@ -199,11 +199,11 @@ test_that("mb.boot returns valid object for id.ngml", {
   expect_length(bbngml5, 16)
   expect_equal(bbngml5$nboot, 5)
 
-  bbngml6 <- mb.boot(x1, recursive = FALSE, b.length = 16, nboot = 5, n.ahead = 30, nc = 2, signrest = signrest)
+  bbngml6 <- mb.boot(x1, design = "fixed", b.length = 16, nboot = 5, n.ahead = 30, nc = 2, signrest = signrest)
   expect_length(bbngml6, 16)
   expect_equal(bbngml6$nboot, 5)
 
-  bbngml7 <- mb.boot(x1, recursive = FALSE, b.length = 16, nboot = 5, n.ahead = 30, nc = 2, signrest = NULL)
+  bbngml7 <- mb.boot(x1, design = "fixed", b.length = 16, nboot = 5, n.ahead = 30, nc = 2, signrest = NULL)
   expect_length(bbngml7, 16)
   expect_equal(bbngml7$nboot, 5)
 
@@ -221,7 +221,7 @@ test_that("mb.boot returns valid object for id.ngml", {
   expect_length(bbngml8, 16)
   expect_equal(bbngml8$nboot, 5)
 
-  bbngml9 <- mb.boot(x1, recursive = FALSE, b.length = 16, nboot = 5, n.ahead = 30, nc = 2, signrest = NULL)
+  bbngml9 <- mb.boot(x1, design = "fixed", b.length = 16, nboot = 5, n.ahead = 30, nc = 2, signrest = NULL)
   expect_length(bbngml9, 16)
   expect_equal(bbngml9$nboot, 5)
 
@@ -239,7 +239,7 @@ test_that("mb.boot returns valid object for id.ngml", {
   expect_length(bbngml10, 16)
   expect_equal(bbngml10$nboot, 5)
 
-  bbngml11 <- mb.boot(x1, recursive = FALSE, b.length = 16, nboot = 5, n.ahead = 30, nc = 2, signrest = NULL)
+  bbngml11 <- mb.boot(x1, design = "fixed", b.length = 16, nboot = 5, n.ahead = 30, nc = 2, signrest = NULL)
   expect_length(bbngml11, 16)
   expect_equal(bbngml11$nboot, 5)
 })
@@ -260,11 +260,11 @@ test_that("mb.boot returns valid object for id.garch", {
   expect_length(bbgarch1, 16)
   expect_equal(bbgarch1$nboot, 10)
 
-  bbgarch2 <- mb.boot(x1, recursive = FALSE, b.length = 10, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+  bbgarch2 <- mb.boot(x1, design = "fixed", b.length = 10, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
   expect_length(bbgarch2, 16)
   expect_equal(bbgarch2$nboot, 10)
 
-  bbgarch3 <- mb.boot(x1, recursive = FALSE, b.length = 10, nboot = 10, n.ahead = 30, nc = 2, signrest = NULL)
+  bbgarch3 <- mb.boot(x1, design = "fixed", b.length = 10, nboot = 10, n.ahead = 30, nc = 2, signrest = NULL)
   expect_length(bbgarch3, 16)
   expect_equal(bbgarch3$nboot, 10)
 
@@ -281,7 +281,7 @@ test_that("mb.boot returns valid object for id.garch", {
   expect_length(bbgarch4, 16)
   expect_equal(bbgarch4$nboot, 10)
 
-  bbgarch5 <- mb.boot(x1, recursive = FALSE, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+  bbgarch5 <- mb.boot(x1, design = fixeed, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
   expect_length(bbgarch5, 16)
   expect_equal(bbgarch5$nboot, 10)
 })
