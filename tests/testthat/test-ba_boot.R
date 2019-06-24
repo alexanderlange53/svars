@@ -4,7 +4,7 @@ test_that("Bootstrap-after-bootstrap with id.dc works with wild.boot and modulus
   x1 <- id.dc(v1)
 
   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
-  bb <- wild.boot(x1, rademacher = TRUE, nboot = 20, n.ahead = 30, nc = 1, signrest = signrest)
+  bb <- wild.boot(x1, distr = 'mammen', nboot = 20, n.ahead = 30, nc = 1, signrest = signrest)
 
 
   bb2 <- ba.boot(bb, nc = 1)

@@ -44,7 +44,7 @@ test_that("wild.boot returns valid object for id.dc", {
   expect_length(bbdc6, 16)
   expect_equal(bbdc6$nboot, 10)
 
-  bbdc7 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 1, signrest = NULL)
+  bbdc7 <- wild.boot(x1, design = "recursive", distr = "mammen", nboot = 10, n.ahead = 30, nc = 1, signrest = NULL)
   expect_length(bbdc7, 16)
   expect_equal(bbdc7$nboot, 10)
 })
@@ -96,7 +96,7 @@ test_that("wild.boot returns valid object for id.cv", {
   expect_length(bbcv4, 16)
   expect_equal(bbcv4$nboot, 10)
 
-  bbcv5 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
+  bbcv5 <- wild.boot(x1, design = "recursive", distr = "mammen", nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
   expect_length(bbcv5, 16)
   expect_equal(bbcv5$nboot, 10)
 
@@ -113,7 +113,7 @@ test_that("wild.boot returns valid object for id.cv", {
   expect_length(bbcv4, 16)
   expect_equal(bbcv4$nboot, 10)
 
-  bbcv5 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+  bbcv5 <- wild.boot(x1, design = "recursive", distr = "gaussian", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
   expect_length(bbcv5, 16)
   expect_equal(bbcv5$nboot, 10)
 

@@ -4,14 +4,14 @@
 \alias{mb.boot}
 \title{Moving block bootstrap for IRFs of identified SVARs}
 \usage{
-mb.boot(x, recursive = TRUE, b.length = 15, n.ahead = 20,
+mb.boot(x, design = "recursive", b.length = 15, n.ahead = 20,
   nboot = 500, nc = 1, dd = NULL, signrest = NULL, itermax = 300,
   steptol = 200, iter2 = 50)
 }
 \arguments{
 \item{x}{SVAR object of class "svars"}
 
-\item{recursive}{logical. If recursive="FALSE", a fixed design bootstrap is performed}
+\item{design}{character. If design="fixed", a fixed design bootstrap is performed. If design="recursive", a recusrive design bootstrap is performed.}
 
 \item{b.length}{Integer. Length of each block}
 
@@ -40,6 +40,7 @@ A list of class "sboot" with elements
 \item{SE}{Bootstraped standard errors of estimated covariance decomposition
 (only if "x" has method "Cramer von-Mises", or "Distance covariances")}
 \item{nboot}{Number of bootstrap iterations}
+\item{design}{character. Whether a fixed design or recursive design bootstrap is performed}
 \item{b_length}{Length of each block}
 \item{point_estimate}{Point estimate of covariance decomposition}
 \item{boot_mean}{Mean of bootstrapped covariance decompositions}

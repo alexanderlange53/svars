@@ -281,7 +281,7 @@ test_that("mb.boot returns valid object for id.garch", {
   expect_length(bbgarch4, 16)
   expect_equal(bbgarch4$nboot, 10)
 
-  bbgarch5 <- mb.boot(x1, design = fixeed, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+  bbgarch5 <- mb.boot(x1, design = 'fixed', b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
   expect_length(bbgarch5, 16)
   expect_equal(bbgarch5$nboot, 10)
 })

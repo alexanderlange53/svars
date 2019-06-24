@@ -54,7 +54,7 @@
 #' # impulse response analysis with confidence bands
 #' # Checking how often theory based impact relations appear
 #' signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
-#' bb <- wild.boot(x1, rademacher = TRUE, nboot = 500, n.ahead = 30, nc = 1, signrest = signrest)
+#' bb <- wild.boot(x1, nboot = 500, n.ahead = 30, nc = 1, signrest = signrest)
 #' summary(bb)
 #' plot(bb, lowerq = 0.16, upperq = 0.84)
 #' }
@@ -356,7 +356,7 @@ wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20, n
                  bootstrap = ipb,
                  SE = SE,
                  nboot = nboot,
-                 rademacher = rademacher,
+                 distr = distr,
                  point_estimate = x$B,
                  boot_mean = boot.mean,
                  signrest = signrest,
@@ -364,7 +364,7 @@ wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20, n
                  sign_part = sign.part,
                  cov_bs = cov.bs,
                  A_hat = x$A_hat,
-                 recursive = recursive,
+                 design = design,
                  A_hat_boot_mean = A_hat_boot_mean,
                  Omodel = x,
                  method = 'Wild bootstrap')
@@ -372,7 +372,7 @@ wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20, n
   return(result)
 }
 testdep <- function(x = FALSE){
-  .Deprecated("testfunc", package = "svars", msg = "Function 'testdep' is deprecated; use 'testfunc' instead."
+  .Deprecated("testfunc", package = "svars", msg = "Function 'testdep' is deprecated; use 'testfunc' instead.")
               if (x == TRUE){
                 x <- "rademacher"
               }
