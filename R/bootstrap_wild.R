@@ -371,10 +371,3 @@ wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20, n
   class(result) <- 'sboot'
   return(result)
 }
-testdep <- function(x = FALSE){
-  .Deprecated("testfunc", package = "svars", msg = "Function 'testdep' is deprecated; use 'testfunc' instead.")
-              if (x == TRUE){
-                x <- "rademacher"
-              }
-              testfunc(distr = x)
-}
