@@ -3,8 +3,9 @@
 #'Calculating confidence bands for impulse response functions via wild bootstrap techniques (Goncalves and Kilian, 2004).
 #'
 #'@param x SVAR object of class "svars"
-#'@param rademacher logical. If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples
-#'@param recursive logical. If recursive="FALSE", a fixed design bootstrap is performed
+#'@param distr character. If distr="rademacher", the Rademacher distribution is used to generate the bootstrap samples. If
+#'       distr="mammen", the Mammen distribution is used. If distr = "gaussian", the gaussian distribution is used.
+#'@param design character. If design="fixed", a fixed design bootstrap is performed. If design="recursive", a recusrive design bootstrap is performed.
 #'@param n.ahead Integer specifying the steps
 #'@param nboot Integer. Number of bootstrap iterations
 #'@param nc Integer. Number of processor cores (Not available on windows machines)
@@ -21,7 +22,8 @@
 #' \item{SE}{Bootstraped standard errors of estimated covariance decomposition
 #' (only if "x" has method "Cramer von-Mises", or "Distance covariances")}
 #' \item{nboot}{Number of bootstrap iterations}
-#' \item{rademacher}{Logical, whether the Rademacher distribution is used in the bootstrap}
+#' \item{distr}{Character, whether the Gaussian, Rademacher or Mammen distribution is used in the bootstrap}
+#' \item{design}{character. Whether a fixed design or recursive design bootstrap is performed}
 #' \item{point_estimate}{Point estimate of covariance decomposition}
 #' \item{boot_mean}{Mean of bootstrapped covariance decompositions}
 #' \item{signrest}{Evaluated sign pattern}
@@ -62,11 +64,12 @@
 
 
 
-wild.boot <- function(x, recursive = FALSE, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1, dd = NULL, signrest = NULL, itermax = 300, steptol = 200, iter2 = 50){
+wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20, nboot = 500, nc = 1, dd = NULL, signrest = NULL, itermax = 300, steptol = 200, iter2 = 50, rademacher = "deprecated"){
 
   # x: vars object
   # B: estimated covariance matrix from true data set
-  # rademacher: wether the bootstraop work with rademacher distance
+  # distr: whether the bootstraop works with gaussian, rademacher or mammen distribution
+  # design: choice of recursive or fixed design for bootstrap
   # n.ahead: Time n.ahead for Irf
   # nboot: number of bootstrap replications
   if(x$method == "Cramer-von Mises distance" & is.null(dd)){
@@ -113,12 +116,34 @@ wild.boot <- function(x, recursive = FALSE, rademacher = TRUE, n.ahead = 20, nbo
 
   # creating new error terms
   errors <- list()
+
+  if(rademacher != "deprecated"){
+    if(rademacher == "TRUE"){
+      warning("The argument 'rademacher' is deprecated and may not be supported in the future. Please use the argument 'distr' to decide upon a distribution.",
+              call. = TRUE, immediate. = FALSE, noBreaks. = FALSE, domain = NULL)
+    } else if(rademacher == "FALSE"){
+      distr <- "gaussian"
+      warning("The argument 'rademacher' is deprecated and may not be supported in the future. Please use the argument 'distr' to decide upon a distribution.",
+              call. = TRUE, immediate. = FALSE, noBreaks. = FALSE, domain = NULL)
+    } else{
+      warning("Invalid use of deprecated argument 'rademacher'. Please use the argument 'distr' to decide upon a distribution!",
+              call. = TRUE, immediate. = FALSE, noBreaks. = FALSE, domain = NULL)
+    }
+  }
+
   for(i in 1:nboot){
     ub <- u
-    my <- rnorm(n = ncol(u))
     #my <- rnorm(1)
-    if (rademacher == TRUE) {
+    if (distr == "rademacher") {
+      my <- rnorm(n = ncol(u))
       my <- (my > 0) - (my < 0)
+    } else if (distr == "mammen") {
+      cu <- (sqrt(5)+1)/(2*sqrt(5))
+      my <- rep(1,ncol(u))*(-(sqrt(5)-1)/2)
+      uni <- runif(n = ncol(u), min = 0, max = 1)
+      my[uni > cu] <- (sqrt(5)+1)/2
+    } else if (distr == "gaussian") {
+      my <- rnorm(n = ncol(u))
     }
     errors[[i]] <- ub* my
   }
@@ -126,7 +151,7 @@ wild.boot <- function(x, recursive = FALSE, rademacher = TRUE, n.ahead = 20, nbo
   # Bootstrapfunction
   bootf <- function(Ustar1){
 
-    if(recursive == FALSE){
+    if(design == "fixed"){
       Ystar <- t(A %*% Z + Ustar1)
       Bstar <- t(Ystar) %*% t(Z) %*% solve(Z %*% t(Z))
       Ustar <- Ystar - t(Bstar %*% Z)
@@ -157,7 +182,7 @@ wild.boot <- function(x, recursive = FALSE, rademacher = TRUE, n.ahead = 20, nbo
                                     gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01, Z = Z),
                          error = function(e) NULL)
       }
-    } else if (recursive == TRUE) {
+    } else if (design == "recursive") {
       Ystar <- matrix(0, nrow(y), k)
       # adding pre sample values
       Ystar[1:p,] <- y[1:p,]
@@ -345,4 +370,11 @@ wild.boot <- function(x, recursive = FALSE, rademacher = TRUE, n.ahead = 20, nbo
                  method = 'Wild bootstrap')
   class(result) <- 'sboot'
   return(result)
+}
+testdep <- function(x = FALSE){
+  .Deprecated("testfunc", package = "svars", msg = "Function 'testdep' is deprecated; use 'testfunc' instead."
+              if (x == TRUE){
+                x <- "rademacher"
+              }
+              testfunc(distr = x)
 }
