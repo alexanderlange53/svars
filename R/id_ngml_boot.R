@@ -94,7 +94,7 @@ id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL, restriction_matrix = NULL)
         }
 
         trend <- rep(1, k)
-        Z_t <- rbind(rep(1, ncol(yl)), seq(p + 1, Tob), yl)
+        Z_t <- rbind(rep(1, ncol(yl)), seq(p + 1, Tob + p), yl)
         for(i in 1:k){
           trend[i] <- coef_x[[i]][(k*p+2), 1]
         }

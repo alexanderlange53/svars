@@ -243,7 +243,7 @@ test_that("wild.boot returns valid object for id.ngml", {
 test_that("wild.boot returns valid object for id.garch", {
   skip_on_cran()
   set.seed(23211)
-  v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
+  v1 <- vars::VAR(USA, p = 3)
   x1 <- id.garch(v1)
 
   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
@@ -274,4 +274,77 @@ test_that("wild.boot returns valid object for id.garch", {
 
   expect_length(bbgarch4, 16)
   expect_equal(bbgarch4$nboot, 10)
+})
+
+test_that("wild.boot returns valid object with different deterministic terms", {
+  skip_on_cran()
+  set.seed(23211)
+
+  # With constant + trend ---------
+  # DC
+  v1 <- vars::VAR(USA[, -3], p = 2, type = 'both')
+  x1 <- id.dc(v1)
+
+  bbdc <- wild.boot(x1, design = 'fixed', distr = "mammen", nboot = 10,
+                    n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbdc, 16)
+  expect_equal(bbdc$nboot, 10)
+
+  bbdc2 <- wild.boot(x1, design = 'recursive', distr = "mammen", nboot = 10,
+                    n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbdc2, 16)
+  expect_equal(bbdc2$nboot, 10)
+
+  # Without constant or trend ---------
+  # DC
+  v1 <- vars::VAR(USA[, -3], p = 2, type = 'none')
+  x1 <- id.dc(v1)
+
+  bbdc3 <- wild.boot(x1, design = 'fixed', distr = "mammen", nboot = 10,
+                    n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbdc3, 16)
+  expect_equal(bbdc3$nboot, 10)
+
+  bbdc4 <- wild.boot(x1, design = 'recursive', distr = "mammen", nboot = 10,
+                     n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbdc4, 16)
+  expect_equal(bbdc4$nboot, 10)
+
+  # CV
+  # With constant + trend ---------
+  v1 <- vars::VAR(USA[, -3], p = 2, type = 'both')
+  x1 <- id.cv(v1, SB = 70)
+
+  bbcv <- wild.boot(x1, design = 'fixed', distr = "mammen", nboot = 10,
+                     n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbcv, 16)
+  expect_equal(bbcv$nboot, 10)
+
+  bbcv2 <- wild.boot(x1, design = 'recursive', distr = "mammen", nboot = 10,
+                     n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbcv2, 16)
+  expect_equal(bbcv2$nboot, 10)
+
+  # CV
+  # Without constant + trend ---------
+  v1 <- vars::VAR(USA[, -3], p = 2, type = 'none')
+  x1 <- id.cv(v1, SB = 70)
+
+  bbcv3 <- wild.boot(x1, design = 'fixed', distr = "mammen", nboot = 10,
+                    n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbcv3, 16)
+  expect_equal(bbcv3$nboot, 10)
+
+  bbcv4 <- wild.boot(x1, design = 'recursive', distr = "mammen", nboot = 10,
+                     n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbcv4, 16)
+  expect_equal(bbcv4$nboot, 10)
 })

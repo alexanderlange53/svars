@@ -91,13 +91,12 @@ test_that("mb.boot returns valid object for id.cv", {
   restmat[2,3] <- 0
   x1 <- id.cv(v1, SB = 59, restriction_matrix = restmat)
 
-  signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
-  bbcv4 <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
+  bbcv4 <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 1, signrest = NULL)
 
   expect_length(bbcv4, 16)
   expect_equal(bbcv4$nboot, 10)
 
-  bbcv5 <- mb.boot(x1, design ="fixed", b.length = 16, nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
+  bbcv5 <- mb.boot(x1, design ="fixed", b.length = 16, nboot = 10, n.ahead = 30, nc = 1, signrest = NULL)
   expect_length(bbcv5, 16)
   expect_equal(bbcv5$nboot, 10)
 
@@ -109,14 +108,14 @@ test_that("mb.boot returns valid object for id.cv", {
   x1 <- id.cv(v1, SB = SB)
 
   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
-  bbcv4 <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
+  bbcv6 <- mb.boot(x1, design = "recursive", b.length = 16, nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
 
-  expect_length(bbcv4, 16)
-  expect_equal(bbcv4$nboot, 10)
+  expect_length(bbcv6, 16)
+  expect_equal(bbcv6$nboot, 10)
 
-  bbcv5 <- mb.boot(x1, design = "fixed", b.length = 16, nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
-  expect_length(bbcv5, 16)
-  expect_equal(bbcv5$nboot, 10)
+  bbcv7 <- mb.boot(x1, design = "fixed", b.length = 16, nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
+  expect_length(bbcv7, 16)
+  expect_equal(bbcv7$nboot, 10)
 })
 
 test_that("mb.boot returns valid object for id.st", {
@@ -285,3 +284,77 @@ test_that("mb.boot returns valid object for id.garch", {
   expect_length(bbgarch5, 16)
   expect_equal(bbgarch5$nboot, 10)
 })
+
+test_that("mb.boot returns valid object with different deterministic terms", {
+  skip_on_cran()
+  set.seed(23211)
+
+  # With constant + trend ---------
+  # DC
+  v1 <- vars::VAR(USA[, -3], p = 2, type = 'both')
+  x1 <- id.dc(v1)
+
+  bbdc <- mb.boot(x1, design = 'fixed', nboot = 10,
+                    n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbdc, 16)
+  expect_equal(bbdc$nboot, 10)
+
+  bbdc2 <- mb.boot(x1, design = 'recursive', nboot = 10,
+                     n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbdc2, 16)
+  expect_equal(bbdc2$nboot, 10)
+
+  # Without constant or trend ---------
+  # DC
+  v1 <- vars::VAR(USA[, -3], p = 2, type = 'none')
+  x1 <- id.dc(v1)
+
+  bbdc3 <- mb.boot(x1, design = 'fixed', nboot = 10,
+                     n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbdc3, 16)
+  expect_equal(bbdc3$nboot, 10)
+
+  bbdc4 <- mb.boot(x1, design = 'recursive', nboot = 10,
+                     n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbdc4, 16)
+  expect_equal(bbdc4$nboot, 10)
+
+  # CV
+  # With constant + trend ---------
+  v1 <- vars::VAR(USA[, -3], p = 2, type = 'both')
+  x1 <- id.cv(v1, SB = 70)
+
+  bbcv <- mb.boot(x1, design = 'fixed', nboot = 10,
+                    n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbcv, 16)
+  expect_equal(bbcv$nboot, 10)
+
+  bbcv2 <- mb.boot(x1, design = 'recursive', nboot = 10,
+                     n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbcv2, 16)
+  expect_equal(bbcv2$nboot, 10)
+
+  # CV
+  # Without constant + trend ---------
+  v1 <- vars::VAR(USA[, -3], p = 2, type = 'none')
+  x1 <- id.cv(v1, SB = 70)
+
+  bbcv3 <- mb.boot(x1, design = 'fixed', nboot = 10,
+                     n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbcv3, 16)
+  expect_equal(bbcv3$nboot, 10)
+
+  bbcv4 <- mb.boot(x1, design = 'recursive', nboot = 10,
+                     n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbcv4, 16)
+  expect_equal(bbcv4$nboot, 10)
+})
+
