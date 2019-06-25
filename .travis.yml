@@ -10,12 +10,8 @@ addons:
   apt:
     packages:
       - libgsl-dev
-os:
-  - windows
-  - linux
-  - osx
 
 script:
   - |
     R CMD build .
-    travis_wait 100 R CMD check svars_1.2.2.tar.gz
+    travis_wait 100 R CMD check *tar.gz

@@ -106,7 +106,7 @@ Rcpp::List IdentifyVolatility(int crit, const arma::mat& u, double TB, arma::uve
     // Differentiating between different cases of constant/trend/none
     arma::mat GLS21 = arma::zeros(k * k * p, Regime1.n_elem);
     arma::mat GLS22= arma::zeros(k * k * p, Regime2.n_elem);
-    if (type == "const" | type == "trend") {
+    if (type == "const" || type == "trend") {
       GLS21 = arma::zeros(k * k * p + k, Regime1.n_elem);
       GLS22= arma::zeros(k * k * p + k, Regime2.n_elem);
     } else if (type == "both") {

@@ -15,6 +15,7 @@ The cornerstone functions identify the structural errors
 -   `id.cv()` by means of changes in volatility with exogenous break.
 -   `id.cvm()` via least dependent innovations based on Cramer-von Mises statistic.
 -   `id.dc()` via least dependent innovations based on distance covariance matrix.
+-   `id.garch()` through GARCH patterns.
 -   `id.ngml()` by means of non-Gaussian maximum likelihood.
 -   `id.st()` by means of smooth transition in covariance.
 
@@ -102,12 +103,9 @@ plot(impulse.response, scales = 'free_y')
 It is common practice in the SVAR literature to calculate confidence bands via bootstrap procedures. The svars package contains the fixed design wild bootstrap (`wild.boot()`) and the moving block bootstrap method (`mb.boot()`). The functions allow for parallel computation on non-Windows systems. Nevertheless, bootstrapping the SVAR model is computationally demanding and - depending on the identification technique - time-consuming. Several input arguments enable to adjust the bootstrap methods to the data set (see e.g. `?wild.boot()`) and to test various hypotheses. To illustrate a simple case we use the bootstrap to calculate confidence bands only.
 
 ```r
-if(.Platform$OS.type == "windows") {
-    boot.svar <- wild.boot(structural.form, n.ahead = 30, nboot = 500, nc = 1)
-}else{
-    cores <- parallel::detectCores() - 1
-    boot.svar <- wild.boot(structural.form, n.ahead = 30, nboot = 500, nc = cores)
-}
+cores <- parallel::detectCores() - 1
+boot.svar <- wild.boot(structural.form, n.ahead = 30, nboot = 500, nc = cores)
+
 
 plot(boot.svar)
 ```
