@@ -2,10 +2,19 @@ language: R
 sudo: false
 cache: packages
 
+notifications:
+  email:
+    - alexadner.lange@uni-goettingen.de
+
 addons:
   apt:
     packages:
       - libgsl-dev
+os:
+  - windows
+  - linux
+  - osx
+
 script:
   - |
     R CMD build .
