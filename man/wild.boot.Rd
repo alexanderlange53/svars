@@ -33,6 +33,8 @@ with the help of the bootstrap samples.}
 \item{steptol}{Integer. Tolerance for steps without improvement for DEoptim}
 
 \item{iter2}{Integer. Number of iterations for the second optimization}
+
+\item{rademacher}{depricated, use "design" instead.}
 }
 \value{
 A list of class "sboot" with elements

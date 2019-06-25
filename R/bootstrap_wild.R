@@ -16,6 +16,7 @@
 #'@param itermax Integer. Maximum number of iterations for DEoptim
 #'@param steptol Integer. Tolerance for steps without improvement for DEoptim
 #'@param iter2 Integer. Number of iterations for the second optimization
+#'@param rademacher depricated, use "design" instead.
 #' @return A list of class "sboot" with elements
 #' \item{true}{Point estimate of impulse response functions}
 #' \item{bootstrap}{List of length "nboot" holding bootstrap impulse response functions}
@@ -64,7 +65,9 @@
 
 
 
-wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20, nboot = 500, nc = 1, dd = NULL, signrest = NULL, itermax = 300, steptol = 200, iter2 = 50, rademacher = "deprecated"){
+wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20,
+                      nboot = 500, nc = 1, dd = NULL, signrest = NULL, itermax = 300,
+                      steptol = 200, iter2 = 50, rademacher = "deprecated"){
 
   # x: vars object
   # B: estimated covariance matrix from true data set

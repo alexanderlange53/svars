@@ -9,4 +9,4 @@ addons:
 script:
   - |
     R CMD build .
-    travis_wait 100 R CMD check svars_1.1.1.tar.gz
+    travis_wait 100 R CMD check svars_1.2.2.tar.gz
