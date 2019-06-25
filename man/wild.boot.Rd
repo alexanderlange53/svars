@@ -4,20 +4,23 @@
 \alias{wild.boot}
 \title{Wild bootstrap for IRFs of identified SVARs}
 \usage{
-wild.boot(x, rademacher = TRUE, n.ahead = 20, nboot = 500, nc = 1,
-  dd = NULL, signrest = NULL, itermax = 300, steptol = 200,
-  iter2 = 50)
+wild.boot(x, design = "fixed", distr = "rademacher", n.ahead = 20,
+  nboot = 500, nc = 1, dd = NULL, signrest = NULL, itermax = 300,
+  steptol = 200, iter2 = 50, rademacher = "deprecated")
 }
 \arguments{
 \item{x}{SVAR object of class "svars"}
 
-\item{rademacher}{locigal. If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples}
+\item{design}{character. If design="fixed", a fixed design bootstrap is performed. If design="recursive", a recusrive design bootstrap is performed.}
+
+\item{distr}{character. If distr="rademacher", the Rademacher distribution is used to generate the bootstrap samples. If
+distr="mammen", the Mammen distribution is used. If distr = "gaussian", the gaussian distribution is used.}
 
 \item{n.ahead}{Integer specifying the steps}
 
 \item{nboot}{Integer. Number of bootstrap iterations}
 
-\item{nc}{Integer. Number of processor cores (Not available on windows machines)}
+\item{nc}{Integer. Number of processor cores}
 
 \item{dd}{Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.
 roxIf not supplied, it will be calculated by the function}
@@ -30,6 +33,8 @@ with the help of the bootstrap samples.}
 \item{steptol}{Integer. Tolerance for steps without improvement for DEoptim}
 
 \item{iter2}{Integer. Number of iterations for the second optimization}
+
+\item{rademacher}{depricated, use "design" instead.}
 }
 \value{
 A list of class "sboot" with elements
@@ -38,7 +43,8 @@ A list of class "sboot" with elements
 \item{SE}{Bootstraped standard errors of estimated covariance decomposition
 (only if "x" has method "Cramer von-Mises", or "Distance covariances")}
 \item{nboot}{Number of bootstrap iterations}
-\item{rademacher}{Logical, whether the Rademacher distribution is used in the bootstrap}
+\item{distr}{Character, whether the Gaussian, Rademacher or Mammen distribution is used in the bootstrap}
+\item{design}{character. Whether a fixed design or recursive design bootstrap is performed}
 \item{point_estimate}{Point estimate of covariance decomposition}
 \item{boot_mean}{Mean of bootstrapped covariance decompositions}
 \item{signrest}{Evaluated sign pattern}
@@ -66,7 +72,7 @@ summary(x1)
 # impulse response analysis with confidence bands
 # Checking how often theory based impact relations appear
 signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
-bb <- wild.boot(x1, rademacher = TRUE, nboot = 500, n.ahead = 30, nc = 1, signrest = signrest)
+bb <- wild.boot(x1, nboot = 500, n.ahead = 30, nc = 1, signrest = signrest)
 summary(bb)
 plot(bb, lowerq = 0.16, upperq = 0.84)
 }

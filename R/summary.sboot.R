@@ -11,12 +11,14 @@ summary.sboot <- function(object, ...){
   cat("\nBootstrap iterations: ")
   cat(sbootObject$nboot)
   if(sbootObject$method == "Wild bootstrap"){
-    cat("\nUsage of Rademacher distribution: ")
-    cat(sbootObject$rademacher)
+    cat("\nDistribution used: ")
+    cat(sbootObject$distr)
   }else{
     cat("\nChosen block length: ")
     cat(sbootObject$b_length)
   }
+  cat("\nDesign: ")
+  cat(sbootObject$design)
   cat("\n")
   cat("\nPoint estimates: \n")
   print(sbootObject$point_estimate)

@@ -2,11 +2,16 @@ language: R
 sudo: false
 cache: packages
 
+notifications:
+  email:
+    - alexadner.lange@uni-goettingen.de
+
 addons:
   apt:
     packages:
-      - libgsl0-dev
+      - libgsl-dev
+
 script:
   - |
     R CMD build .
-    travis_wait 100 R CMD check svars_1.1.1.tar.gz
+    travis_wait 100 R CMD check *tar.gz

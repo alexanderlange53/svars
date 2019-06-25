@@ -5,17 +5,9 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
   get_var_objects(x)
 
-  # Function for Z matrix
-  y_lag_cr <- function(y, lag_length){
-    # create matrix that stores the lags
-    y_lag <- matrix(NA, dim(y)[1], dim(y)[2]*lag_length)
-    for (i in 1:lag_length) {
-      y_lag[(1 + i):dim(y)[1], ((i*ncol(y) - ncol(y)) + 1):(i * ncol(y))] <- y[1:(dim(y)[1] - i), (1:ncol(y))]
-    }
-    # drop first observation
-    y_lag <- as.matrix(y_lag[-(1:lag_length),])
-    out <- list(lags = y_lag)
-  }
+  rmOut = restriction_matrix
+  restriction_matrix <- get_restriction_matrix(restriction_matrix, k)
+  restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
 
   # Transition function
   transition_f <- function(gamma, cc, st){
@@ -34,7 +26,7 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
     }
 
   if(is.null(Z)){
-    yl <- t(y_lag_cr(t(y), p)$lags)
+    yl <- t(YLagCr(t(y), p))
     #yret <- y
     y_loop <- y[,-c(1:p)]
 
@@ -52,20 +44,18 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
     y_loop <- y
   }
 
-    best_estimation <- iterative_smooth_transition(transition = G_grid, u = u, y = y, Tob = Tob, k = k,
-                                                   p = p, crit = crit, max.iter = max.iter, Z_t = Z_t, y_loop = y_loop,
-                                                   restriction_matrix = restriction_matrix)
+
+
+    best_estimation <- IterativeSmoothTransition(transition = G_grid, u = u, Tob = Tob, k = k, p = p,
+                                                 crit = crit, maxIter = max.iter, Z_t = Z_t, Yloop = y_loop,
+                                                 RestrictionMatrix = restriction_matrix, restrictions = restrictions)
+
     transition_function <- G_grid
 
     transition_coefficient <- gamma_fix
     SB <- c_fix
     comb <- 1
 
-  if(!is.null(restriction_matrix)){
-    restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
-  }else{
-    restrictions <- 0
-  }
 
   result <- list(
     Lambda = best_estimation$Lambda,        # estimated Lambda matrix (unconditional heteroscedasticity)
@@ -88,7 +78,7 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
     p = p,                # number of lags
     K = k,                 # number of time series
     restrictions = restrictions,
-    restriction_matrix = restriction_matrix
+    restriction_matrix = rmOut
   )
 
   class(result) <- 'svars'

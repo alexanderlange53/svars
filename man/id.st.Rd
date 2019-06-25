@@ -7,42 +7,42 @@
 id.st(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL,
   transition_variable = NULL, gamma_lower = -3, gamma_upper = 2,
   gamma_step = 0.5, gamma_fix = NULL, nc = 1, max.iter = 5,
-  crit = 0.01, restriction_matrix = NULL, lr_test = FALSE)
+  crit = 0.001, restriction_matrix = NULL, lr_test = FALSE)
 }
 \arguments{
 \item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object}
 
-\item{c_lower}{Integer. Starting point for the algorithm to start searching for the volatility shift.
+\item{c_lower}{Numeric. Starting point for the algorithm to start searching for the volatility shift.
 Default is 0.3*(Total number of observations)}
 
-\item{c_upper}{Integer. Ending point for the algorithm to stop searching for the volatility shift.
+\item{c_upper}{Numeric. Ending point for the algorithm to stop searching for the volatility shift.
 Default is 0.7*(Total number of observations). Note that in case of a stochastic transition variable, the input requires an absolute value}
 
 \item{c_step}{Integer. Step width of c. Default is 5. Note that in case of a stochastic transition variable, the input requires an absolute value}
 
-\item{c_fix}{Integer. If the transition point is known, it can be passed as an argument
+\item{c_fix}{Numeric. If the transition point is known, it can be passed as an argument
 where transition point = Number of observations - c_fix}
 
 \item{transition_variable}{A numeric vector that represents the transition variable. By default (NULL), the time is used
 as transition variable. Note that c_lower,c_upper, c_step and/or c_fix have to be adjusted
 to the specified transition variable}
 
-\item{gamma_lower}{Integer. Lower bound for gamma. Small values indicate a flat transition function. Default is -3}
+\item{gamma_lower}{Numeric. Lower bound for gamma. Small values indicate a flat transition function. Default is -3}
 
-\item{gamma_upper}{Integer. Upper bound for gamma. Large values indicate a steep transition function. Default is 2}
+\item{gamma_upper}{Numeric. Upper bound for gamma. Large values indicate a steep transition function. Default is 2}
 
-\item{gamma_step}{Integer. Step width of gamma. Default is 0.5}
+\item{gamma_step}{Numeric. Step width of gamma. Default is 0.5}
 
-\item{gamma_fix}{Integer. A fixed value for gamma, alternative to gamma found by the function}
+\item{gamma_fix}{Numeric. A fixed value for gamma, alternative to gamma found by the function}
 
 \item{nc}{Integer. Number of processor cores
 Note that the smooth transition model is computationally extremely demanding.}
 
 \item{max.iter}{Integer. Number of maximum GLS iterations}
 
-\item{crit}{Integer. Critical value for the precision of the GLS estimation}
+\item{crit}{Numeric. Critical value for the precision of the GLS estimation}
 
-\item{restriction_matrix}{Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)}
+\item{restriction_matrix}{Matrix or vector. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*J (or J*K^2) matrix can be passed, where J is the number of restrictions and K the number of time series. (as suggested in Luetkepohl, 2017, section 5.2.1).}
 
 \item{lr_test}{Logical. Indicates whether the restricted model should be tested against the unrestricted model via a likelihood ratio test}
 }

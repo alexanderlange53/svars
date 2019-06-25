@@ -3,10 +3,11 @@
 #' Calculating confidence bands for impulse response via moving block bootstrap
 #'
 #' @param x SVAR object of class "svars"
+#' @param design character. If design="fixed", a fixed design bootstrap is performed. If design="recursive", a recusrive design bootstrap is performed.
 #' @param b.length Integer. Length of each block
 #' @param n.ahead Integer specifying the steps
 #' @param nboot Integer. Number of bootstrap iterations
-#' @param nc Integer. Number of processor cores (Not available on windows machines)
+#' @param nc Integer. Number of processor cores
 #' @param dd Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.
 #' If not supplied, it will be calculated by the function
 #' @param signrest A list with vectors containing 1 and -1, e.g. c(1,-1,1), indicating a sign pattern of specific shocks to be tested
@@ -20,6 +21,7 @@
 #' \item{SE}{Bootstraped standard errors of estimated covariance decomposition
 #' (only if "x" has method "Cramer von-Mises", or "Distance covariances")}
 #' \item{nboot}{Number of bootstrap iterations}
+#' \item{design}{character. Whether a fixed design or recursive design bootstrap is performed}
 #' \item{b_length}{Length of each block}
 #' \item{point_estimate}{Point estimate of covariance decomposition}
 #' \item{boot_mean}{Mean of bootstrapped covariance decompositions}
@@ -60,7 +62,7 @@
 #' @export
 
 
-mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NULL, signrest = NULL,  itermax = 300, steptol = 200, iter2 = 50){
+mb.boot <- function(x, design = "recursive", b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NULL, signrest = NULL,  itermax = 300, steptol = 200, iter2 = 50){
   # x: vars object
   # B: estimated covariance matrix from true data set
   # n.ahead: Time steps for Irf
@@ -76,11 +78,15 @@ mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NU
 
 
   # gathering informations from vars object
+
   y <- x$y
   p <- x$p
   obs <- x$n
   k <- x$K
   B <- x$B
+  restriction_matrix = x$restriction_matrix
+  restriction_matrix <- get_restriction_matrix(restriction_matrix, k)
+  restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
 
   if(length(signrest) > k){
     stop('too many sign restrictions')
@@ -88,7 +94,7 @@ mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NU
 
   # calculating covariance from actual VAR
   A <- x$A_hat
-  Z <- t(y_lag_cr(y, p)$lags)
+  Z <- t(YLagCr(y, p))
 
   if(x$type == 'const'){
     Z <- rbind(rep(1, ncol(Z)), Z)
@@ -109,29 +115,29 @@ mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NU
   N <- obs/b.length
   blocks <- array(NA, c(b.length, k, obs - b.length + 1))
   u <- t(u)
-  for(i in 0:(obs-b.length)){
-    blocks[,,(i+1)] <- u[(i+1):(i+b.length),]
+  for (i in 0:(obs - b.length)) {
+    blocks[, , (i + 1)] <- u[(i + 1):(i + b.length),]
   }
 
-  for(i in 1:nboot){
-    epsilon.star <- matrix(0, b.length*(ceiling(N)+1), ncol(u))
+  for (i in 1:nboot) {
+    epsilon.star <- matrix(0, b.length*(ceiling(N) + 1), ncol(u))
     epsilon.star <- list()
     # stacking randomly selected blocks at each other
-    for(kk in 1:(ceiling(N)+1)){
-      epsilon.star[[kk]] <- blocks[,,floor(runif(1, 1, obs - b.length+2))]
+    for (kk in 1:(ceiling(N) + 1)) {
+      epsilon.star[[kk]] <- blocks[, , floor(runif(1, 1, obs - b.length + 2))]
     }
     epsilon.star <- do.call('rbind', epsilon.star)
 
     # centering new errors
     for(s in 1:b.length){
-      b.mean <- colSums(epsilon.star[1 : (s+(obs - b.length)),])/(obs - b.length +1)
+      b.mean <- colSums(epsilon.star[1 : (s + (obs - b.length)),])/(obs - b.length + 1)
       for(j in 0:floor(N)){
-        epsilon.star[j*b.length + s,] <- epsilon.star[j*b.length + s,] - b.mean
+        epsilon.star[j * b.length + s,] <- epsilon.star[j * b.length + s,] - b.mean
       }
     }
 
     # cutting of unnecessary observations
-    epsilon.star <- epsilon.star[1:obs,]
+    epsilon.star <- epsilon.star[1:obs, ]
 
     errors[[i]] <- t(epsilon.star)
   }
@@ -139,48 +145,84 @@ mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NU
   # Bootstrapfunction
   bootf <- function(Ustar1){
 
-    Ystar <- matrix(0, nrow(y), k)
-    # adding pre sample values
-    Ystar[1:p,] <- y[1:p,]
+    if(design == "recursive"){
+      Ystar <- matrix(0, nrow(y), k)
+      # adding pre sample values
+      Ystar[1:p,] <- y[1:p,]
 
-    if(x$type == 'const' | x$type == 'trend'){
-      for(i in (p+1):nrow(y)){
-        for(j in 1:k){
-          Ystar[i,j] <- A[j,1] + A[j,-1]%*%c(t(Ystar[(i-1):(i-p),])) + Ustar1[j, (i-p)]
+      if(x$type == 'const' | x$type == 'trend'){
+        for(i in (p+1):nrow(y)){
+          for(j in 1:k){
+            Ystar[i,j] <- A[j,1] + A[j,-1]%*%c(t(Ystar[(i-1):(i-p),])) + Ustar1[j, (i-p)]
+          }
+        }
+      }else if(x$type == 'both'){
+        for(i in (p+1):nrow(y)){
+          for(j in 1:k){
+            Ystar[i,j] <- A[j,c(1,2)] + A[j,-c(1,2)]%*%c(t(Ystar[(i-p):(i-1),])) + Ustar1[j, (i-p)]
+          }
+        }
+      }else if(x$type == 'none'){
+        for(i in (p+1):nrow(y)){
+          for(j in 1:k){
+            Ystar[i,j] <- A[j,]%*%c(t(Ystar[(i-p):(i-1),])) + Ustar1[j, (i-p)]
+          }
         }
       }
-    }else if(x$type == 'both'){
-      for(i in (p+1):nrow(y)){
-        for(j in 1:k){
-          Ystar[i,j] <- A[j,c(1,2)] + A[j,-c(1,2)]%*%c(t(Ystar[(i-p):(i-1),])) + Ustar1[j, (i-p)]
-        }
+
+      varb <- suppressWarnings(VAR(Ystar, p = x$p, type = x$type))
+      Ustar <- residuals(varb)
+      Sigma_u_star <- crossprod(Ustar)/(obs - 1 - k * p)
+
+      if(x$method == "Non-Gaussian maximum likelihood"){
+        temp <- id.ngml_boot(varb, stage3 = x$stage3, restriction_matrix = x$restriction_matrix)
+      }else if(x$method == "Changes in Volatility"){
+        temp <- tryCatch(id.cv_boot(varb, SB = x$SB, restriction_matrix = x$restriction_matrix),
+                         error = function(e) NULL)
+      }else if(x$method == "Cramer-von Mises distance"){
+        temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
+      }else if(x$method == "Distance covariances"){
+        temp <- id.dc(varb, PIT=x$PIT)
+      }else if(x$method == "Smooth transition"){
+        temp <- id.st(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,
+                      gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01)
+      }else if(x$method == "GARCH"){
+        temp <- tryCatch(id.garch(varb, restriction_matrix = x$restriction_matrix, max.iter = x$max.iter,
+                                  crit = x$crit),
+                         error = function(e) NULL)
       }
-    }else if(x$type == 'none'){
-      for(i in (p+1):nrow(y)){
-        for(j in 1:k){
-          Ystar[i,j] <- A[j,]%*%c(t(Ystar[(i-p):(i-1),])) + Ustar1[j, (i-p)]
-        }
+    } else if (design == "fixed") {
+      Ystar <- t(A %*% Z + Ustar1)
+      Bstar <- t(Ystar) %*% t(Z) %*% solve(Z %*% t(Z))
+      Ustar <- Ystar - t(Bstar %*% Z)
+      Sigma_u_star <- crossprod(Ustar)/(ncol(Ustar1) - 1 - k * p)
+
+      varb <- list(y = Ystar,
+                   coef_x = Bstar,
+                   residuals = Ustar,
+                   p = p,
+                   type = x$type)
+      class(varb) <- 'var.boot'
+
+      if(x$method == "Non-Gaussian maximum likelihood"){
+        temp <- id.ngml_boot(varb, stage3 = x$stage3, Z = Z, restriction_matrix = x$restriction_matrix)
+      }else if(x$method == "Changes in Volatility"){
+        temp <- tryCatch(id.cv_boot(varb, SB = x$SB, Z = Z, restriction_matrix = x$restriction_matrix),
+                         error = function(e) NULL)
+      }else if(x$method == "Cramer-von Mises distance"){
+        temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
+      }else if(x$method == "Distance covariances"){
+        temp <- id.dc(varb, PIT=x$PIT)
+      }else if(x$method == "GARCH"){
+        temp <- tryCatch(id.garch(varb, restriction_matrix = x$restriction_matrix, max.iter = x$max.iter,
+                                  crit = x$crit),
+                         error = function(e) NULL)
+      }else{
+        temp <- tryCatch(id.st_boot(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,
+                                    gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01, Z = Z),
+                         error = function(e) NULL)
       }
     }
-
-    varb <- suppressWarnings(VAR(Ystar, p = x$p, type = x$type))
-    Ustar <- residuals(varb)
-    Sigma_u_star <- crossprod(Ustar)/(obs - 1 - k * p)
-
-    if(x$method == "Non-Gaussian maximum likelihood"){
-      temp <- id.ngml_boot(varb, stage3 = x$stage3, restriction_matrix = x$restriction_matrix)
-    }else if(x$method == "Changes in Volatility"){
-      temp <- tryCatch(id.cv_boot(varb, SB = x$SB, restriction_matrix = x$restriction_matrix),
-                       error = function(e) NULL)
-    }else if(x$method == "Cramer-von Mises distance"){
-      temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
-    }else if(x$method == "Distance covariances"){
-      temp <- id.dc(varb, PIT=x$PIT)
-    }else{
-      temp <- id.st(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,
-                    gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01)
-    }
-
 
     if(!is.null(temp)){
       Pstar <- temp$B
@@ -198,7 +240,7 @@ mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NU
       temp$B <- Pstar
 
       ip <- irf(temp, n.ahead = n.ahead)
-      return(list(ip, Pstar))
+      return(list(ip, Pstar, temp$A_hat))
     }else{
       return(NA)
     }
@@ -215,29 +257,37 @@ mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NU
 
   Bs <- array(0, c(k,k,length(bootstraps)))
   ipb <- list()
+
+  ## Obtaining Bootstrap estimates of VAR parameter
+  Aboot <- array(0, c(nrow(A), ncol(A),length(bootstraps)))
+
   for(i in 1:length(bootstraps)){
     Bs[,,i] <- bootstraps[[i]][[2]]
     ipb[[i]] <- bootstraps[[i]][[1]]
+    Aboot[, , i] <- bootstraps[[i]][[3]]
   }
+
+  A_hat_boot <- matrix(Aboot, ncol = nrow(A)*ncol(A), byrow = TRUE)
+  A_hat_boot_mean <- matrix(colMeans(A_hat_boot), nrow(A), ncol(A))
 
   # calculating covariance matrix of vectorized bootstrap matrices
   v.b <-  matrix(Bs, ncol = k^2, byrow = T)
   cov.bs <- cov(v.b)
 
   # Calculating Standard errors for LDI methods
-  if(x$method == "Cramer-von Mises distance" | x$method == "Distance covariances"){
-    SE <- matrix(sqrt(diag(cov.bs)),k,k)
-    rownames(SE) <- rownames(x$B)
-  }else{
-    SE <- NULL
-  }
+  #if(x$method == "Cramer-von Mises distance" | x$method == "Distance covariances" | x$method == "GARCH"){
+  SE <- matrix(sqrt(diag(cov.bs)),k,k)
+  rownames(SE) <- rownames(x$B)
+  #}else{
+  #  SE <- NULL
+  #}
 
   # Calculating Bootstrap means
   boot.mean <- matrix(colMeans(v.b),k,k)
   rownames(boot.mean) <- rownames(x$B)
 
   # Checking for signs
-  if(!is.null(x$restriction_matrix)){
+  if(restrictions > 0){
     if(!is.null(signrest)){
       cat('Testing signs only possible for unrestricted model \n')
     }
@@ -307,9 +357,11 @@ mb.boot <- function(x, b.length = 15, n.ahead = 20, nboot = 500, nc = 1, dd = NU
                  sign_complete = sign.complete,
                  sign_part = sign.part,
                  cov_bs = cov.bs,
+                 A_hat = x$A_hat,
+                 design = design,
+                 A_hat_boot_mean = A_hat_boot_mean,
+                 Omodel = x,
                  method = 'Moving block bootstrap')
   class(result) <- 'sboot'
   return(result)
 }
-
-

@@ -7,14 +7,15 @@ test_that("Likelihood function within cv works for 3x3, no restriction", {
   Tob1 = 169
   Sigma_hat1_1 = matrix(c(rnorm(9, mean = 0, sd = .6)), ncol = 3)
   Sigma_hat2_1 = matrix(c(rnorm(9, mean = 0, sd = .6)), ncol = 3)
-  restriction_matrix_1 = NULL
-  likelihood_result = likelihood_cv(S = S1,
+  restriction_matrix_1 = matrix(rep(NA,9), 3, 3)
+  likelihood_result = LikelihoodCV(S = S1,
                Tob = Tob1,
                TB = 54,
-               Sigma_hat1 = Sigma_hat1_1,
+               SigmaHat1 = Sigma_hat1_1,
                k = 3,
-               Sigma_hat2 = Sigma_hat2_1,
-               restriction_matrix = restriction_matrix_1)
+               SigmaHat2 = Sigma_hat2_1,
+               RestrictionMatrix = restriction_matrix_1,
+               restrictions =0)
   expect_equal(round(likelihood_result, 4), -864.1661)
 })
 
@@ -24,14 +25,16 @@ test_that("Likelihood function within cv works for 2x2, no restriction", {
   Tob2 = 172
   Sigma_hat1_2 = matrix(c(rnorm(4, mean = 0, sd = .6)), ncol = 2)
   Sigma_hat2_2 = matrix(c(rnorm(4, mean = 0, sd = .6)), ncol = 2)
-  restriction_matrix_2 = NULL
-  likelihood_result = likelihood_cv(S = S2,
+  restriction_matrix_2 = matrix(rep(NA,4), 2, 2)
+  likelihood_result = LikelihoodCV(S = S2,
                                    Tob = Tob2,
                                    TB = 54,
-                                   Sigma_hat1 = Sigma_hat1_2,
+                                   SigmaHat1 = Sigma_hat1_2,
                                    k = 2,
-                                   Sigma_hat2 = Sigma_hat2_2,
-                                   restriction_matrix = restriction_matrix_2)
+                                   SigmaHat2 = Sigma_hat2_2,
+                                   RestrictionMatrix = restriction_matrix_2,
+                                   restrictions =0)
+
   expect_equal(round(likelihood_result, 4), -319.2551)
 })
 
@@ -42,14 +45,15 @@ test_that("Likelihood function within cv works for 2x2, no restriction", {
     Tob3 = 172
     Sigma_hat1_3 = matrix(c(rnorm(25, mean = 0, sd = .6)), ncol = 5)
     Sigma_hat2_3 = matrix(c(rnorm(25, mean = 0, sd = .6)), ncol = 5)
-    restriction_matrix_3 = NULL
-    likelihood_result = likelihood_cv(S = S3,
+    restriction_matrix_3 = matrix(rep(NA,25), 5, 5)
+    likelihood_result = LikelihoodCV(S = S3,
                                      Tob = Tob3,
                                      TB = 54,
-                                     Sigma_hat1 = Sigma_hat1_3,
+                                     SigmaHat1 = Sigma_hat1_3,
                                      k = 5,
-                                     Sigma_hat2 = Sigma_hat2_3,
-                                     restriction_matrix = restriction_matrix_3)
+                                     SigmaHat2 = Sigma_hat2_3,
+                                     RestrictionMatrix = restriction_matrix_3,
+                                     restrictions = 0)
     expect_equal(round(likelihood_result, 3), -1262.304)
 
   })
@@ -64,14 +68,14 @@ test_that("Likelihood function within cv works for 2x2, no restriction", {
     restMat[1,3] <- 0
     restriction_matrix_4 = restMat
     restrictions_4 <- length(restriction_matrix_4[!is.na(restriction_matrix_4)])
-    likelihood_result = likelihood_cv(S = S4,
+    likelihood_result = LikelihoodCV(S = S4,
                                      Tob = Tob4,
                                      TB = 54,
-                                     Sigma_hat1 = Sigma_hat1_4,
+                                     SigmaHat1 = Sigma_hat1_4,
                                      k = 3,
-                                     Sigma_hat2 = Sigma_hat2_4,
-                                     restriction_matrix = restriction_matrix_4,
-                                     restrictions = restrictions_4)
+                                     SigmaHat2 = Sigma_hat2_4,
+                                     RestrictionMatrix = restriction_matrix_4,
+                                     restrictions =1)
     expect_equal(round(likelihood_result, 3), -2211.323)
   })
 
@@ -86,13 +90,13 @@ test_that("Likelihood function within cv works for 2x2, no restriction", {
     restMat[1,2] <- 0
     restriction_matrix_5 = restMat
     restrictions_5 <- length(restriction_matrix_5[!is.na(restriction_matrix_5)])
-    likelihood_result = likelihood_cv(S = S5,
+    likelihood_result = LikelihoodCV(S = S5,
                                      Tob = Tob5,
                                      TB = 54,
-                                     Sigma_hat1 = Sigma_hat1_5,
+                                     SigmaHat1 = Sigma_hat1_5,
                                      k = 2,
-                                     Sigma_hat2 = Sigma_hat2_5,
-                                     restriction_matrix = restriction_matrix_5,
+                                     SigmaHat2 = Sigma_hat2_5,
+                                     RestrictionMatrix = restriction_matrix_5,
                                      restrictions = restrictions_5)
     expect_equal(round(likelihood_result, 4), 15.2476)
   })
@@ -107,13 +111,13 @@ test_that("Likelihood function within cv works for 2x2, no restriction", {
       restMat[1,5] <- 0
       restriction_matrix_6 = restMat
       restrictions_6 <- length(restriction_matrix_6[!is.na(restriction_matrix_6)])
-      likelihood_result = likelihood_cv(S = S6,
+      likelihood_result = LikelihoodCV(S = S6,
                                        Tob = Tob6,
                                        TB = 54,
-                                       Sigma_hat1 = Sigma_hat1_6,
+                                       SigmaHat1 = Sigma_hat1_6,
                                        k = 5,
-                                       Sigma_hat2 = Sigma_hat2_6,
-                                       restriction_matrix = restriction_matrix_6,
+                                       SigmaHat2 = Sigma_hat2_6,
+                                       RestrictionMatrix = restriction_matrix_6,
                                        restrictions = restrictions_6)
       expect_equal(round(likelihood_result, 2), 265.72)
 
@@ -126,13 +130,14 @@ test_that("Likelihood function within cv works for 2x2, no restriction", {
       Tob1 = 169
       Sigma_hat1_1 = matrix(c(rnorm(9, mean = 0, sd = .6)), ncol = 3)
       Sigma_hat2_1 = matrix(c(rnorm(9, mean = 0, sd = .6)), ncol = 3)
-      restriction_matrix_1 = NULL
-      likelihood_result = likelihood_cv(S = S1,
+      restriction_matrix_1 = matrix(rep(NA,9), 3, 3)
+      likelihood_result = LikelihoodCV(S = S1,
                                         Tob = Tob1,
                                         TB = 54,
-                                        Sigma_hat1 = Sigma_hat1_1,
+                                        SigmaHat1 = Sigma_hat1_1,
                                         k = 3,
-                                        Sigma_hat2 = Sigma_hat2_1,
-                                        restriction_matrix = restriction_matrix_1)
+                                        SigmaHat2 = Sigma_hat2_1,
+                                        RestrictionMatrix = restriction_matrix_1,
+                                       restrictions = 0)
       expect_equal(round(likelihood_result, 4), 1e25)
     })

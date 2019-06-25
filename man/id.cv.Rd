@@ -27,9 +27,9 @@ in the corresponding format (see examples) or common time parameters need to be 
 
 \item{max.iter}{Integer. Number of maximum GLS iterations}
 
-\item{crit}{Integer. Critical value for the precision of the GLS estimation}
+\item{crit}{Numeric. Critical value for the precision of the GLS estimation}
 
-\item{restriction_matrix}{Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)}
+\item{restriction_matrix}{Matrix or vector. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*J (or J*K^2) matrix can be passed, where J is the number of restrictions and K the number of time series. (as suggested in Luetkepohl, 2017, section 5.2.1).}
 }
 \value{
 A list of class "svars" with elements
@@ -84,6 +84,11 @@ plot(i1, scales = 'free_y')
 # Assuming that the interest rate doesn't influence the output gap on impact
 restMat <- matrix(rep(NA, 9), ncol = 3)
 restMat[1,3] <- 0
+x2 <- id.cv(v1, SB = 59, restriction_matrix = restMat)
+summary(x2)
+
+# In alternative Form
+restMat <- c(rep(0,6), 1, 0,0)
 x2 <- id.cv(v1, SB = 59, restriction_matrix = restMat)
 summary(x2)
 

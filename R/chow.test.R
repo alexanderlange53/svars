@@ -7,7 +7,6 @@
 #'                    a vector of ts() frequencies if a ts object is used in the VAR or a date character. If a date character is provided, either a date vector containing the whole time line
 #'                    in the corresponding format or common time parameters need to be provided
 #' @param nboot Integer. Number of bootstrap iterations to calculate quantiles and p-values
-#' @param rademacher Logical. If rademacher="TRUE", the Rademacher distribution is used to generate the bootstrap samples
 #' @param start Character. Start of the time series (only if dateVector is empty)
 #' @param end Character. End of the time series (only if dateVector is empty)
 #' @param frequency Character. Frequency of the time series (only if dateVector is empty)
@@ -85,7 +84,7 @@
 # nboot : number of bootstrap iterations
 # lags  : maximum lag order
 
-chow.test <- function(x, SB, nboot = 500, rademacher = TRUE ,start = NULL, end = NULL,
+chow.test <- function(x, SB, nboot = 500, start = NULL, end = NULL,
                       frequency = NULL, format = NULL, dateVector = NULL){
 
   if(class(x) == 'chowpretest'){
@@ -172,7 +171,8 @@ if(!is.null(nboot)){
   #coef_x <- coef(x)
 
   A <- matrix(0, nrow =k, ncol = k* p)
-  yl <- t(y_lag_cr(y, p)$lags)
+  #yl <- t(YLagCr(t(y), p))
+  yl <- t(YLagCr(y, p))
 
   for(i in 1:k){
     A[i,] <- coef_x[[i]][1:(k*p),1]
@@ -222,9 +222,7 @@ if(!is.null(nboot)){
   for(i in 1:nboot){
     u <- residF
     my <- rnorm(n = k)
-    if (rademacher == TRUE) {
-      my <- (my > 0) - (my < 0)
-    }
+    my <- (my > 0) - (my < 0)
     et <- u * my
     Ystar <- t(A %*% Z_t + t(et))
     datFull[[i]] <- Ystar
