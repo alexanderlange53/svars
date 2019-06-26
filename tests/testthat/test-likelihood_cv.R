@@ -123,21 +123,21 @@ test_that("Likelihood function within cv works for 2x2, no restriction", {
 
 })
 
-    test_that("Likelihood function returns 1e25, 3x3 dim, no restrictions", {
-      skip_on_cran()
-      set.seed(23213)
-      S1 = c(rnorm(9, mean = 0, sd = .6), rep(1,3))
-      Tob1 = 169
-      Sigma_hat1_1 = matrix(c(rnorm(9, mean = 0, sd = .6)), ncol = 3)
-      Sigma_hat2_1 = matrix(c(rnorm(9, mean = 0, sd = .6)), ncol = 3)
-      restriction_matrix_1 = matrix(rep(NA,9), 3, 3)
-      likelihood_result = LikelihoodCV(S = S1,
-                                        Tob = Tob1,
-                                        TB = 54,
-                                        SigmaHat1 = Sigma_hat1_1,
-                                        k = 3,
-                                        SigmaHat2 = Sigma_hat2_1,
-                                        RestrictionMatrix = restriction_matrix_1,
-                                       restrictions = 0)
-      expect_equal(round(likelihood_result, 4), 1e25)
-    })
+    # test_that("Likelihood function returns 1e25, 3x3 dim, no restrictions", {
+    #   skip_on_cran()
+    #   set.seed(23213)
+    #   S1 = c(rnorm(9, mean = 0, sd = .6), rep(1,3))
+    #   Tob1 = 169
+    #   Sigma_hat1_1 = matrix(c(rnorm(9, mean = 0, sd = .6)), ncol = 3)
+    #   Sigma_hat2_1 = matrix(c(rnorm(9, mean = 0, sd = .6)), ncol = 3)
+    #   restriction_matrix_1 = matrix(rep(NA,9), 3, 3)
+    #   likelihood_result = LikelihoodCV(S = S1,
+    #                                     Tob = Tob1,
+    #                                     TB = 54,
+    #                                     SigmaHat1 = Sigma_hat1_1,
+    #                                     k = 3,
+    #                                     SigmaHat2 = Sigma_hat2_1,
+    #                                     RestrictionMatrix = restriction_matrix_1,
+    #                                    restrictions = 0)
+    #   expect_equal(round(likelihood_result, 4), 1e25)
+    # })

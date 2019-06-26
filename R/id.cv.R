@@ -126,9 +126,7 @@ if (!is.numeric(SB)) {
     SBcharacter <- SB
     SB <- getStructuralBreak(SB = SB, start = start, end = end,
                              frequency = frequency, format = format, dateVector = dateVector, Tob = Tob, p = p)
-}
-
-else if(length(SB) != 1 & inherits(x$y, "ts") & length(SB) < 4){
+} else if(length(SB) != 1 & inherits(x$y, "ts") & length(SB) < 4){
         SBts = SB
         SB = dim(window(x$y, end = SB))[1]
       if(frequency(x$y == 4)){
