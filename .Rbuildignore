@@ -3,3 +3,7 @@
 ^\.travis\.yml$
 ^LICENSE\.md$
 ^README\.md$
+^CRAN-RELEASE$
+^FEV_cv\.pdf$
+^IRF_cv\.pdf$
+^USA_data\.pdf$
