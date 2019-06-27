@@ -7,7 +7,7 @@
 #' @return A list of class "sboot" with elements
 #' \item{true}{Point estimate of impulse response functions}
 #' \item{bootstrap}{List of length "nboot" holding bootstrap impulse response functions}
-#' \item{SE}{Bootstraped standard errors of estimated covariance decomposition
+#' \item{SE}{Bootstrapped standard errors of estimated covariance decomposition
 #' (only if "x" has method "Cramer von-Mises", or "Distance covariances")}
 #' \item{nboot}{Number of bootstrap iterations}
 #' \item{b_length}{Length of each block}

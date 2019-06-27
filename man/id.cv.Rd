@@ -44,7 +44,7 @@ A list of class "svars" with elements
 \item{iteration}{Number of GLS estimations}
 \item{method}{Method applied for identification}
 \item{SB}{Structural break (number of observations)}
-\item{A_hat}{Estimated VAR paramter via GLS}
+\item{A_hat}{Estimated VAR parameter via GLS}
 \item{type}{Type of the VAR model, e.g. 'const'}
 \item{SBcharacter}{Structural break (date; if provided in function arguments)}
 \item{restrictions}{Number of specified restrictions}

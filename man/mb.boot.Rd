@@ -11,7 +11,7 @@ mb.boot(x, design = "recursive", b.length = 15, n.ahead = 20,
 \arguments{
 \item{x}{SVAR object of class "svars"}
 
-\item{design}{character. If design="fixed", a fixed design bootstrap is performed. If design="recursive", a recusrive design bootstrap is performed.}
+\item{design}{character. If design="fixed", a fixed design bootstrap is performed. If design="recursive", a recursive design bootstrap is performed.}
 
 \item{b.length}{Integer. Length of each block}
 
@@ -37,7 +37,7 @@ with the help of the bootstrap samples.}
 A list of class "sboot" with elements
 \item{true}{Point estimate of impulse response functions}
 \item{bootstrap}{List of length "nboot" holding bootstrap impulse response functions}
-\item{SE}{Bootstraped standard errors of estimated covariance decomposition
+\item{SE}{Bootstrapped standard errors of estimated covariance decomposition
 (only if "x" has method "Cramer von-Mises", or "Distance covariances")}
 \item{nboot}{Number of bootstrap iterations}
 \item{design}{character. Whether a fixed design or recursive design bootstrap is performed}

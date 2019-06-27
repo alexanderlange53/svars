@@ -43,7 +43,7 @@
 #' \item{transition_variable}{Vector of transition variable}
 #' \item{comb}{Number of all grid combinations of gamma and c}
 #' \item{transition_function}{Vector of transition function}
-#' \item{A_hat}{Estimated VAR paramter via GLS}
+#' \item{A_hat}{Estimated VAR parameter via GLS}
 #' \item{type}{Type of the VAR model e.g., 'const'}
 #' \item{y}{Data matrix}
 #' \item{p}{Number of lags}

@@ -5,7 +5,7 @@
 #'@param x SVAR object of class "svars"
 #'@param distr character. If distr="rademacher", the Rademacher distribution is used to generate the bootstrap samples. If
 #'       distr="mammen", the Mammen distribution is used. If distr = "gaussian", the gaussian distribution is used.
-#'@param design character. If design="fixed", a fixed design bootstrap is performed. If design="recursive", a recusrive design bootstrap is performed.
+#'@param design character. If design="fixed", a fixed design bootstrap is performed. If design="recursive", a recursive design bootstrap is performed.
 #'@param n.ahead Integer specifying the steps
 #'@param nboot Integer. Number of bootstrap iterations
 #'@param nc Integer. Number of processor cores
@@ -16,11 +16,11 @@
 #'@param itermax Integer. Maximum number of iterations for DEoptim
 #'@param steptol Integer. Tolerance for steps without improvement for DEoptim
 #'@param iter2 Integer. Number of iterations for the second optimization
-#'@param rademacher depricated, use "design" instead.
+#'@param rademacher deprecated, use "design" instead.
 #' @return A list of class "sboot" with elements
 #' \item{true}{Point estimate of impulse response functions}
 #' \item{bootstrap}{List of length "nboot" holding bootstrap impulse response functions}
-#' \item{SE}{Bootstraped standard errors of estimated covariance decomposition
+#' \item{SE}{Bootstrapped standard errors of estimated covariance decomposition
 #' (only if "x" has method "Cramer von-Mises", or "Distance covariances")}
 #' \item{nboot}{Number of bootstrap iterations}
 #' \item{distr}{Character, whether the Gaussian, Rademacher or Mammen distribution is used in the bootstrap}

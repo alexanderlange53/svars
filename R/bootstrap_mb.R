@@ -3,7 +3,7 @@
 #' Calculating confidence bands for impulse response via moving block bootstrap
 #'
 #' @param x SVAR object of class "svars"
-#' @param design character. If design="fixed", a fixed design bootstrap is performed. If design="recursive", a recusrive design bootstrap is performed.
+#' @param design character. If design="fixed", a fixed design bootstrap is performed. If design="recursive", a recursive design bootstrap is performed.
 #' @param b.length Integer. Length of each block
 #' @param n.ahead Integer specifying the steps
 #' @param nboot Integer. Number of bootstrap iterations
@@ -18,7 +18,7 @@
 #' @return A list of class "sboot" with elements
 #' \item{true}{Point estimate of impulse response functions}
 #' \item{bootstrap}{List of length "nboot" holding bootstrap impulse response functions}
-#' \item{SE}{Bootstraped standard errors of estimated covariance decomposition
+#' \item{SE}{Bootstrapped standard errors of estimated covariance decomposition
 #' (only if "x" has method "Cramer von-Mises", or "Distance covariances")}
 #' \item{nboot}{Number of bootstrap iterations}
 #' \item{design}{character. Whether a fixed design or recursive design bootstrap is performed}
