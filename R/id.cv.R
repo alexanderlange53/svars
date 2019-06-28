@@ -45,8 +45,7 @@
 #' @seealso For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
 #'
 #' @examples
-#' \donttest{
-#' # data contains quartlery observations from 1965Q1 to 2008Q2
+#' #' # data contains quartlery observations from 1965Q1 to 2008Q2
 #' # assumed structural break in 1979Q3
 #' # x = output gap
 #' # pi = inflation
@@ -91,7 +90,6 @@
 #' x5 <- id.cv(v1, SB = c(1979, 3))
 #' summary(x5)
 #'
-#' }
 #' @importFrom steadyICA steadyICA
 #' @export
 

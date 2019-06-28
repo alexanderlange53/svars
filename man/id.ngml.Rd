@@ -42,7 +42,6 @@ Matrix B corresponds to the unique decomposition of the least squares covariance
 A likelihood function of independent t-distributed structural shocks \eqn{\epsilon_t=B^{-1}u_t} is maximized with respect to the entries of B and the degrees of freedom of the t-distribution (Lanne et al., 2017).
 }
 \examples{
-\donttest{
 # data contains quarterly observations from 1965Q1 to 2008Q3
 # x = output gap
 # pi = inflation
@@ -59,7 +58,7 @@ x1$B[,3] <- x1$B[,3]*(-1)
 # impulse response analysis
 i1 <- irf(x1, n.ahead = 30)
 plot(i1, scales = 'free_y')
-}
+
 }
 \references{
 Lanne, M., Meitz, M., Saikkonen, P., 2017. Identification and estimation of non-Gaussian structural vector autoregressions. J. Econometrics 196 (2), 288-304.\cr

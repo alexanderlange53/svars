@@ -114,7 +114,7 @@ Rcpp::List IdentifyVolatility(int crit, const arma::mat& u, double TB, arma::uve
 
     int j1 = 0;
     int j2 = 0;
-    for (int i = 0; i < Zt.n_cols; ++i) {
+    for (auto i = 0u; i < Zt.n_cols; ++i) {
       if (any(i == Regime1)) {
         GLS21.col(j1) = arma::kron(Zt.col(i), Sig1) * y.col(i);
         j1 += 1;
@@ -173,7 +173,7 @@ Rcpp::List IdentifyVolatility(int crit, const arma::mat& u, double TB, arma::uve
   arma::mat HESS = hessian[cc];
   HESS = HESS.i();
 
-  for(int i = 0; i < HESS.n_rows; ++i){
+  for(auto i = 0u; i < HESS.n_rows; ++i){
     if (HESS(i, i) < 0.0) {
       HESS.col(i) = HESS.col(i) * (-1);
     }

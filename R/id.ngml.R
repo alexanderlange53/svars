@@ -35,7 +35,6 @@
 #' @seealso For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.cv}}
 #'
 #' @examples
-#' \donttest{
 #' # data contains quarterly observations from 1965Q1 to 2008Q3
 #' # x = output gap
 #' # pi = inflation
@@ -52,7 +51,7 @@
 #' # impulse response analysis
 #' i1 <- irf(x1, n.ahead = 30)
 #' plot(i1, scales = 'free_y')
-#' }
+#'
 #' @importFrom tsDyn VARrep
 #' @export
 

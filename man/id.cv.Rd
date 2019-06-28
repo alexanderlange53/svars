@@ -61,8 +61,7 @@ Matrix B corresponds to the decomposition of the pre-break covariance matrix \eq
 The post-break covariance corresponds to \eqn{\Sigma_2=B\Lambda B'} where \eqn{\Lambda} is the estimated unconditional heteroskedasticity matrix.
 }
 \examples{
-\donttest{
-# data contains quartlery observations from 1965Q1 to 2008Q2
+#' # data contains quartlery observations from 1965Q1 to 2008Q2
 # assumed structural break in 1979Q3
 # x = output gap
 # pi = inflation
@@ -107,7 +106,6 @@ summary(x4)
 x5 <- id.cv(v1, SB = c(1979, 3))
 summary(x5)
 
-}
 }
 \references{
 Rigobon, R., 2003. Identification through Heteroskedasticity. The Review of Economics and Statistics, 85, 777-792.\cr

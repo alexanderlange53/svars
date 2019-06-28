@@ -23,7 +23,7 @@ double LikelihoodST(arma::vec& parameter, double& Tob, arma::mat& u, int& k,
   arma::vec ll(G.n_elem);
   ll.fill(0.0);
 
-  for (int i = 0; i < G.n_elem; ++i) {
+  for (auto i = 0u; i < G.n_elem; ++i) {
     arma::mat Omega = (1 - G(i)) * Sigma1 + G(i) * Sigma2;
     ll(i) = log(arma::det(Omega)) +  arma::as_scalar(u.row(i) * arma::inv(Omega) * u.row(i).t());
   }
@@ -62,7 +62,7 @@ arma::vec mGLSst(const arma::vec transition, const arma::mat& B, const arma::mat
   arma::mat W = arma::zeros(k * transition.n_elem, k * transition.n_elem);
   arma::mat I = arma::eye(k, k);
 
-  for (int i = 0; i < transition.n_elem; ++i) {
+  for (auto i = 0u; i < transition.n_elem; ++i) {
     W(arma::span(i*k, (i + 1) * k - 1), arma::span(i*k, (i + 1) * k - 1)) = arma::inv((1 - transition(i)) * B * B.t() + transition(i) * B * Lambda * B.t());
   }
 
@@ -159,7 +159,7 @@ Rcpp::List IterativeSmoothTransition(const arma::vec& transition, const arma::ma
  arma::mat HESS = hessian[cc];
  HESS = HESS.i();
 
- for(int i = 0; i < HESS.n_rows; ++i){
+ for(auto i = 0u; i < HESS.n_rows; ++i){
    if (HESS(i, i) < 0.0) {
      HESS.col(i) = HESS.col(i) * (-1);
    }
