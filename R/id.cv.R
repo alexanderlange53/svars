@@ -30,7 +30,7 @@
 #' \item{iteration}{Number of GLS estimations}
 #' \item{method}{Method applied for identification}
 #' \item{SB}{Structural break (number of observations)}
-#' \item{A_hat}{Estimated VAR paramter via GLS}
+#' \item{A_hat}{Estimated VAR parameter via GLS}
 #' \item{type}{Type of the VAR model, e.g. 'const'}
 #' \item{SBcharacter}{Structural break (date; if provided in function arguments)}
 #' \item{restrictions}{Number of specified restrictions}
@@ -45,8 +45,7 @@
 #' @seealso For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
 #'
 #' @examples
-#' \donttest{
-#' # data contains quartlery observations from 1965Q1 to 2008Q2
+#' #' # data contains quartlery observations from 1965Q1 to 2008Q2
 #' # assumed structural break in 1979Q3
 #' # x = output gap
 #' # pi = inflation
@@ -91,7 +90,6 @@
 #' x5 <- id.cv(v1, SB = c(1979, 3))
 #' summary(x5)
 #'
-#' }
 #' @importFrom steadyICA steadyICA
 #' @export
 
@@ -126,9 +124,7 @@ if (!is.numeric(SB)) {
     SBcharacter <- SB
     SB <- getStructuralBreak(SB = SB, start = start, end = end,
                              frequency = frequency, format = format, dateVector = dateVector, Tob = Tob, p = p)
-}
-
-else if(length(SB) != 1 & inherits(x$y, "ts") & length(SB) < 4){
+} else if(length(SB) != 1 & inherits(x$y, "ts") & length(SB) < 4){
         SBts = SB
         SB = dim(window(x$y, end = SB))[1]
       if(frequency(x$y == 4)){

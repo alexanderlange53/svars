@@ -59,7 +59,7 @@ id.dc <- function(x, PIT = FALSE){
   get_var_objects(x)
   ########### starting the computations ------------------------------------------------------------------------
 
-  sigg <- crossprod(u)/(Tob-1-k*p)
+  sigg <- crossprod(u) / (Tob- 1 - k * p)
 
   # Choleski decomposition
   P_chol <- t(chol(sigg))
@@ -75,9 +75,9 @@ id.dc <- function(x, PIT = FALSE){
   if(inherits(x, "var.boot")){
     A_hat <- coef_x
   }else{
-    A <- matrix(0, nrow = k, ncol = k*p)
+    A <- matrix(0, nrow = k, ncol = k * p)
     for(i in 1:k){
-      A[i,] <- coef_x[[i]][1:(k*p),1]
+      A[i,] <- coef_x[[i]][1:(k * p),1]
     }
 
     A_hat <- A

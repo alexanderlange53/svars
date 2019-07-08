@@ -57,7 +57,7 @@ double LikelihoodNGMLStage3(arma::vec& A, arma::mat& Z_t, const arma::mat& Y, co
 
   arma::mat term1(Y.n_rows, Y.n_cols, arma::fill::zeros);
 
-  for (int i = 0; i < Z_t.n_cols; i++) {
+  for (auto i = 0u; i < Z_t.n_cols; i++) {
     term1.col(i) = arma::kron(Z_t.col(i).t(), I) * A;
   }
 
@@ -65,7 +65,7 @@ double LikelihoodNGMLStage3(arma::vec& A, arma::mat& Z_t, const arma::mat& Y, co
   arma::vec tdist(k);
   arma::vec tx(k);
 
-  for (int i = 0; i < ResidualsLS.n_rows; i++) {
+  for (auto i = 0u; i < ResidualsLS.n_rows; i++) {
 
     tx = (1 / sigma_est) % sqrt(d_freedom / (d_freedom - 2)) % ResidualsLS.row(i).t();
 

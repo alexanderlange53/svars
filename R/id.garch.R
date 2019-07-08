@@ -20,7 +20,7 @@
 #' \item{Lik}{Function value of likelihood}
 #' \item{iteration}{Number of GLS estimations}
 #' \item{method}{Method applied for identification}
-#' \item{A_hat}{Estimated VAR paramter via GLS}
+#' \item{A_hat}{Estimated VAR parameter via GLS}
 #' \item{type}{Type of the VAR model, e.g. 'const'}
 #' \item{restrictions}{Number of specified restrictions}
 #' \item{restriction_matrix}{Specified restriction matrix}

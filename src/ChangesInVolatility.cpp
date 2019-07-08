@@ -16,7 +16,7 @@ double LikelihoodCV(arma::vec& S, double& Tob, double& TB,  arma::mat& SigmaHat1
   double MW2 = arma::det(MMM2);
 
 
-  if (any(vectorise(Psi) < 0.0) || MW < 0.001 ||  MW2 < 0.001) {
+  if (any(vectorise(Psi) < 0.0)) {
     return 1e25;
   }
 
@@ -79,8 +79,6 @@ Rcpp::List IdentifyVolatility(int crit, const arma::mat& u, double TB, arma::uve
    Rcpp::List MLE = nlmCV(S, Tob, TB, SigmaHat1, k,  SigmaHat2, RestrictionMatrix, restrictions);
    arma::vec Lestimates = MLE[1];
 
-
-
   arma::mat BLoop = arma::zeros(k, k);
   BLoop.elem(find_nonfinite(RestrictionMatrix)) = Lestimates.subvec(0, k * k - 1 - restrictions);
   Rcpp::List BHat = Rcpp::List::create(BLoop);
@@ -114,11 +112,9 @@ Rcpp::List IdentifyVolatility(int crit, const arma::mat& u, double TB, arma::uve
       GLS22= arma::zeros(k * k * p + 2 * k, Regime2.n_elem);
     }
 
-    //return Rcpp::List::create(Rcpp::Named("GLS21") = any(2 == Regime1));
-
     int j1 = 0;
     int j2 = 0;
-    for (int i = 0; i < Zt.n_cols; ++i) {
+    for (auto i = 0u; i < Zt.n_cols; ++i) {
       if (any(i == Regime1)) {
         GLS21.col(j1) = arma::kron(Zt.col(i), Sig1) * y.col(i);
         j1 += 1;
@@ -149,7 +145,6 @@ Rcpp::List IdentifyVolatility(int crit, const arma::mat& u, double TB, arma::uve
     arma::mat GLSBLoop = arma::zeros(k, k);
     arma::vec GLSestimates = MLEgls[1];
 
-
     GLSBLoop.elem(find_nonfinite(RestrictionMatrix)) = GLSestimates.subvec(0, k * k - 1 - restrictions);
     arma::mat GLSLambdaLoop = arma::diagmat(GLSestimates.subvec(k * k - restrictions, k * k + k - 1 - restrictions));
     BHat.push_back(GLSBLoop);
@@ -178,7 +173,7 @@ Rcpp::List IdentifyVolatility(int crit, const arma::mat& u, double TB, arma::uve
   arma::mat HESS = hessian[cc];
   HESS = HESS.i();
 
-  for(int i = 0; i < HESS.n_rows; ++i){
+  for(auto i = 0u; i < HESS.n_rows; ++i){
     if (HESS(i, i) < 0.0) {
       HESS.col(i) = HESS.col(i) * (-1);
     }

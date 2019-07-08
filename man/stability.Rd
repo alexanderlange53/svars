@@ -16,7 +16,7 @@
 \item{type}{Specifies which type of fluctuation process will be computed, the default is \sQuote{\code{OLS-CUSUM}}.
 For details see:\code{\link[strucchange]{efp}} and \code{\link[svars]{chow.test}}.}
 
-\item{h}{A numeric from interval (0,1) sepcifying the bandwidth. Determins the size of the data window
+\item{h}{A numeric from interval (0,1) specifying the bandwidth. Determines the size of the data window
 relative to sample size (for \sQuote{\code{MOSUM}}, \sQuote{\code{ME}} and \sQuote{\code{mv-chow-test}} only).}
 
 \item{dynamic}{Logical. If \sQuote{\code{TRUE}} the lagged observations are included as a regressor
@@ -45,7 +45,7 @@ In case of class \sQuote{\code{chowpretest}} the list consists of the following 
 }
 \description{
 Computes an empirical fluctuation process according to a specified
- method from the generalised fluctuation test framework. The test
+ method from the generalized fluctuation test framework. The test
  utilises the function \command{efp()} and its methods from
  package \sQuote{\code{strucchange}}. Additionally, the function provides the option to
  compute a multivariate chow test.

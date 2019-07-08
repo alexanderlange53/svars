@@ -11,7 +11,7 @@ wild.boot(x, design = "fixed", distr = "rademacher", n.ahead = 20,
 \arguments{
 \item{x}{SVAR object of class "svars"}
 
-\item{design}{character. If design="fixed", a fixed design bootstrap is performed. If design="recursive", a recusrive design bootstrap is performed.}
+\item{design}{character. If design="fixed", a fixed design bootstrap is performed. If design="recursive", a recursive design bootstrap is performed.}
 
 \item{distr}{character. If distr="rademacher", the Rademacher distribution is used to generate the bootstrap samples. If
 distr="mammen", the Mammen distribution is used. If distr = "gaussian", the gaussian distribution is used.}
@@ -34,13 +34,13 @@ with the help of the bootstrap samples.}
 
 \item{iter2}{Integer. Number of iterations for the second optimization}
 
-\item{rademacher}{depricated, use "design" instead.}
+\item{rademacher}{deprecated, use "design" instead.}
 }
 \value{
 A list of class "sboot" with elements
 \item{true}{Point estimate of impulse response functions}
 \item{bootstrap}{List of length "nboot" holding bootstrap impulse response functions}
-\item{SE}{Bootstraped standard errors of estimated covariance decomposition
+\item{SE}{Bootstrapped standard errors of estimated covariance decomposition
 (only if "x" has method "Cramer von-Mises", or "Distance covariances")}
 \item{nboot}{Number of bootstrap iterations}
 \item{distr}{Character, whether the Gaussian, Rademacher or Mammen distribution is used in the bootstrap}

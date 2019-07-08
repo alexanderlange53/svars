@@ -36,6 +36,40 @@ test_that("unrestricted id.garch with 2-dim works", {
   expect_match(x1$method, "GARCH")
 })
 
+test_that("unrestricted id.garch with 2-dim works with constant + trend", {
+  skip_on_cran()
+  set.seed(23211)
+  v1 <- vars::VAR(USA[,-3], p = 3, type = 'both')
+  x1 <- id.garch(v1)
+  expect_equal(round(x1$Lik, 4), -406.7338)
+  expect_equal(round(sum(x1$B), 4), 0.9838)
+
+  expect_equal(x1$K, 2)
+  expect_equal(x1$n, 172)
+  #expect_equal(x1$restrictions, 0)
+  expect_equal(x1$p, 3)
+  expect_equal(x1$iteration, 5)
+
+  expect_match(x1$method, "GARCH")
+})
+
+test_that("unrestricted id.garch with 2-dim works without deterministic term", {
+  skip_on_cran()
+  set.seed(23211)
+  v1 <- vars::VAR(USA[,-3], p = 3, type = 'none')
+  x1 <- id.garch(v1)
+  expect_equal(round(x1$Lik, 4), -411.8076)
+  expect_equal(round(sum(x1$B), 4), -0.2762)
+
+  expect_equal(x1$K, 2)
+  expect_equal(x1$n, 172)
+  #expect_equal(x1$restrictions, 0)
+  expect_equal(x1$p, 3)
+  expect_equal(x1$iteration, 5)
+
+  expect_match(x1$method, "GARCH")
+})
+
 test_that("unrestricted id.garch Luetkepohl Netsunajev example works", {
   skip_on_cran()
   set.seed(23211)
@@ -113,23 +147,3 @@ test_that("Restricted id.garch Luetkepohl Netsunajev example works with R3 model
 
   expect_match(x1$method, "GARCH")
 })
-#
-# test_that("restricted id.cv and boot estimation with 2-dim works", {
-#   skip_on_cran()
-#   set.seed(23211)
-#   v1 <- vars::VAR(USA[,-3], p = 3, ic = "AIC" )
-#   restmat <- matrix(NA,2,2)
-#   restmat[1,2] <- 0
-#   x1 <- id.garch(v1, restriction_matrix = restmat)
-#
-#   expect_equal(round(x1$Lik, 4), -106.2008)
-#   expect_equal(round(sum(x1$B),4), 2.5518)
-#
-#   expect_equal(x1$K, 2)
-#   expect_equal(x1$n, 172)
-#   expect_equal(x1$restrictions, 1)
-#   expect_equal(x1$p,x2$p, 3)
-#   expect_equal(x1$iteration, 4)
-#
-#   expect_match(x1$method, x2$method, "GARCH")
-# })

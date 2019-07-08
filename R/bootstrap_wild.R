@@ -5,7 +5,7 @@
 #'@param x SVAR object of class "svars"
 #'@param distr character. If distr="rademacher", the Rademacher distribution is used to generate the bootstrap samples. If
 #'       distr="mammen", the Mammen distribution is used. If distr = "gaussian", the gaussian distribution is used.
-#'@param design character. If design="fixed", a fixed design bootstrap is performed. If design="recursive", a recusrive design bootstrap is performed.
+#'@param design character. If design="fixed", a fixed design bootstrap is performed. If design="recursive", a recursive design bootstrap is performed.
 #'@param n.ahead Integer specifying the steps
 #'@param nboot Integer. Number of bootstrap iterations
 #'@param nc Integer. Number of processor cores
@@ -16,11 +16,11 @@
 #'@param itermax Integer. Maximum number of iterations for DEoptim
 #'@param steptol Integer. Tolerance for steps without improvement for DEoptim
 #'@param iter2 Integer. Number of iterations for the second optimization
-#'@param rademacher depricated, use "design" instead.
+#'@param rademacher deprecated, use "design" instead.
 #' @return A list of class "sboot" with elements
 #' \item{true}{Point estimate of impulse response functions}
 #' \item{bootstrap}{List of length "nboot" holding bootstrap impulse response functions}
-#' \item{SE}{Bootstraped standard errors of estimated covariance decomposition
+#' \item{SE}{Bootstrapped standard errors of estimated covariance decomposition
 #' (only if "x" has method "Cramer von-Mises", or "Distance covariances")}
 #' \item{nboot}{Number of bootstrap iterations}
 #' \item{distr}{Character, whether the Gaussian, Rademacher or Mammen distribution is used in the bootstrap}
@@ -190,25 +190,28 @@ wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20,
       # adding pre sample values
       Ystar[1:p,] <- y[1:p,]
 
-      if(x$type == 'const' | x$type == 'trend'){
-        for(i in (p+1):nrow(y)){
-          for(j in 1:k){
-            Ystar[i,j] <- A[j,1] + A[j,-1]%*%c(t(Ystar[(i-1):(i-p),])) + Ustar1[j, (i-p)]
+      if (x$type == 'const' | x$type == 'trend') {
+        for (i in (p + 1):nrow(y)) {
+          for (j in 1:k) {
+            Ystar[i, j] <- A[j, 1] + A[j, -1] %*% c(t(Ystar[(i - 1):(i - p), ])) + Ustar1[j, (i - p)]
           }
         }
-      }else if(x$type == 'both'){
-        for(i in (p+1):nrow(y)){
-          for(j in 1:k){
-            Ystar[i,j] <- A[j,c(1,2)] + A[j,-c(1,2)]%*%c(t(Ystar[(i-p):(i-1),])) + Ustar1[j, (i-p)]
+      } else if (x$type == 'both') {
+        for (i in (p + 1):nrow(y)) {
+          for (j in 1:k) {
+            Ystar[i, j] <- A[j, 1] + A[j, 2] + A[j, -c(1, 2)] %*% c(t(Ystar[(i - 1):(i - p),])) + Ustar1[j, (i - p)]
           }
         }
-      }else if(x$type == 'none'){
-        for(i in (p+1):nrow(y)){
-          for(j in 1:k){
-            Ystar[i,j] <- A[j,]%*%c(t(Ystar[(i-p):(i-1),])) + Ustar1[j, (i-p)]
+      }else if (x$type == 'none') {
+        for (i in (p + 1):nrow(y)) {
+          for (j in 1:k) {
+            Ystar[i, j] <- A[j, ] %*% c(t(Ystar[(i - 1):(i - p), ])) + Ustar1[j, (i - p)]
           }
         }
       }
+
+      # Delete pre sample values
+      Ystar <- Ystar[-c(1:p), ]
 
       varb <- suppressWarnings(VAR(Ystar, p = x$p, type = x$type))
       Ustar <- residuals(varb)
@@ -217,7 +220,12 @@ wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20,
       if(x$method == "Non-Gaussian maximum likelihood"){
         temp <- id.ngml_boot(varb, stage3 = x$stage3, restriction_matrix = x$restriction_matrix)
       }else if(x$method == "Changes in Volatility"){
-        temp <- tryCatch(id.cv_boot(varb, SB = x$SB, restriction_matrix = x$restriction_matrix),
+        if (length(x$SB) > 3) {
+          SB <- x$SB[-c(1:p)]
+        } else {
+          SB <- x$SB
+        }
+        temp <- tryCatch(id.cv_boot(varb, SB = SB, restriction_matrix = x$restriction_matrix),
                          error = function(e) NULL)
       }else if(x$method == "Cramer-von Mises distance"){
         temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
@@ -370,6 +378,7 @@ wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20,
                  design = design,
                  A_hat_boot_mean = A_hat_boot_mean,
                  Omodel = x,
+                 boot_B = Bs,
                  method = 'Wild bootstrap')
   class(result) <- 'sboot'
   return(result)

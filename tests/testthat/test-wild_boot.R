@@ -28,6 +28,7 @@ test_that("wild.boot returns valid object for id.dc", {
   x2 <- id.dc(v2)
 
   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+<<<<<<< HEAD
   bbdc4 <- wild.boot(x2, distr = "rademacher", nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
 
   expect_length(bbdc4, 17)
@@ -42,6 +43,26 @@ test_that("wild.boot returns valid object for id.dc", {
   expect_equal(bbdc6$nboot, 10)
 
   bbdc7 <- wild.boot(x2, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 1, signrest = NULL)
+=======
+  bbdc4 <- wild.boot(x1, distr = "rademacher", nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
+
+  expect_length(bbdc3, 17)
+  expect_equal(bbdc3$nboot, 10)
+
+  bbdc4 <- wild.boot(x1, distr = "rademacher", nboot = 10, n.ahead = 30, nc = 1, signrest = NULL)
+  expect_length(bbdc4, 17)
+  expect_equal(bbdc4$nboot, 10)
+
+  bbdc5 <- wild.boot(x1, distr = "rademacher", nboot = 10, n.ahead = 30, nc = 1, signrest = NULL)
+  expect_length(bbdc5, 17)
+  expect_equal(bbdc5$nboot, 10)
+
+  bbdc6 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
+  expect_length(bbdc6, 17)
+  expect_equal(bbdc6$nboot, 10)
+
+  bbdc7 <- wild.boot(x1, design = "recursive", distr = "mammen", nboot = 10, n.ahead = 30, nc = 1, signrest = NULL)
+>>>>>>> cppImplementation
   expect_length(bbdc7, 17)
   expect_equal(bbdc7$nboot, 10)
 
@@ -291,6 +312,7 @@ test_that("wild.boot returns valid object for id.cv", {
   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
   bbcv17 <- wild.boot(x1, distr = "rademacher", nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
 
+<<<<<<< HEAD
   expect_length(bbcv17, 17)
   expect_equal(bbcv17$nboot, 10)
 
@@ -333,6 +355,14 @@ test_that("wild.boot returns valid object for id.cv", {
   bbcv23 <- wild.boot(x4, design = "recursive", distr = "mammen", nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
   expect_length(bbcv23, 17)
   expect_equal(bbcv23$nboot, 10)
+=======
+  expect_length(bbcv4, 17)
+  expect_equal(bbcv4$nboot, 10)
+
+  bbcv5 <- wild.boot(x1, design = "recursive", distr = "mammen", nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
+  expect_length(bbcv5, 17)
+  expect_equal(bbcv5$nboot, 10)
+>>>>>>> cppImplementation
 
   # With vector as input
   SB <- rep(0, v1$obs)
@@ -344,6 +374,7 @@ test_that("wild.boot returns valid object for id.cv", {
   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
   bbcv24 <- wild.boot(x1, distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
 
+<<<<<<< HEAD
   expect_length(bbcv24, 17)
   expect_equal(bbcv24$nboot, 10)
 
@@ -386,6 +417,14 @@ test_that("wild.boot returns valid object for id.cv", {
   bbcv30 <- wild.boot(x4, design = "recursive", distr = "gaussian", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
   expect_length(bbcv30, 17)
   expect_equal(bbcv30$nboot, 10)
+=======
+  expect_length(bbcv4, 17)
+  expect_equal(bbcv4$nboot, 10)
+
+  bbcv5 <- wild.boot(x1, design = "recursive", distr = "gaussian", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+  expect_length(bbcv5, 17)
+  expect_equal(bbcv5$nboot, 10)
+>>>>>>> cppImplementation
 
 })
 
@@ -484,6 +523,7 @@ test_that("wild.boot returns valid object for id.st", {
   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
   bbst17 <- wild.boot(x1, distr = "rademacher", nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
 
+<<<<<<< HEAD
   expect_length(bbst17, 17)
   expect_equal(bbst17$nboot, 10)
 
@@ -526,6 +566,14 @@ test_that("wild.boot returns valid object for id.st", {
   bbst23 <- wild.boot(x4, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
   expect_length(bbst23, 17)
   expect_equal(bbst23$nboot, 10)
+=======
+  expect_length(bbst4, 17)
+  expect_equal(bbst4$nboot, 10)
+
+  bbst5 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 1, signrest = signrest)
+  expect_length(bbst5, 17)
+  expect_equal(bbst5$nboot, 10)
+>>>>>>> cppImplementation
 })
 
 test_that("wild.boot returns valid object for id.ngml", {
@@ -631,6 +679,7 @@ test_that("wild.boot returns valid object for id.ngml", {
   expect_length(bbngml18, 17)
   expect_equal(bbngml18$nboot, 5)
 
+<<<<<<< HEAD
   bbngml19 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 5, n.ahead = 30, nc = 2, signrest = signrest)
   expect_length(bbngml19, 17)
   expect_equal(bbngml19$nboot, 5)
@@ -686,6 +735,26 @@ test_that("wild.boot returns valid object for id.ngml", {
   bbngml30 <- wild.boot(x3, design = "recursive", distr = "rademacher", nboot = 5, n.ahead = 30, nc = 2, signrest = NULL)
   expect_length(bbngml30, 17)
   expect_equal(bbngml30$nboot, 5)
+=======
+  expect_length(bbngml4, 17)
+  expect_equal(bbngml4$nboot, 5)
+
+  bbngml4 <- wild.boot(x1, distr = "rademacher", nboot = 5, n.ahead = 30, nc = 2, signrest = NULL)
+  expect_length(bbngml4, 17)
+  expect_equal(bbngml4$nboot, 5)
+
+  bbngml5 <- wild.boot(x1, distr = "rademacher", nboot = 5, n.ahead = 30, nc = 2, signrest = NULL)
+  expect_length(bbngml5, 17)
+  expect_equal(bbngml5$nboot, 5)
+
+  bbngml6 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 5, n.ahead = 30, nc = 2, signrest = signrest)
+  expect_length(bbngml6, 17)
+  expect_equal(bbngml6$nboot, 5)
+
+  bbngml7 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 5, n.ahead = 30, nc = 2, signrest = NULL)
+  expect_length(bbngml7, 17)
+  expect_equal(bbngml7$nboot, 5)
+>>>>>>> cppImplementation
 
   restmat <- matrix(NA, 3,3)
   restmat[1, c(2, 3)] <- 0
@@ -693,6 +762,7 @@ test_that("wild.boot returns valid object for id.ngml", {
 
   x1 <- id.ngml(v1, stage3 = F, restriction_matrix = restmat)
 
+<<<<<<< HEAD
   bbngml31 <- wild.boot(x1, distr = "rademacher", nboot = 5, n.ahead = 30, nc = 2, signrest = NULL)
   expect_length(bbngml31, 17)
   expect_equal(bbngml31$nboot, 5)
@@ -802,12 +872,39 @@ test_that("wild.boot returns valid object for id.ngml", {
   bbngml54 <- wild.boot(x4, design = "recursive", distr = "rademacher", nboot = 5, n.ahead = 30, nc = 2, signrest = NULL)
   expect_length(bbngml54, 17)
   expect_equal(bbngml54$nboot, 5)
+=======
+  bbngml5 <- wild.boot(x1, distr = "rademacher", nboot = 5, n.ahead = 30, nc = 2, signrest = NULL)
+  expect_length(bbngml5, 17)
+  expect_equal(bbngml5$nboot, 5)
+
+  bbngml8 <- wild.boot(x1, distr = "rademacher", nboot = 5, n.ahead = 30, nc = 2, signrest = NULL)
+  expect_length(bbngml8, 17)
+  expect_equal(bbngml8$nboot, 5)
+
+  bbngml9 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 5, n.ahead = 30, nc = 2, signrest = NULL)
+  expect_length(bbngml9, 17)
+  expect_equal(bbngml9$nboot, 5)
+
+  x1 <- id.ngml(v1, stage3 = T, restriction_matrix = restmat)
+
+  bbngml6 <- wild.boot(x1, distr = "rademacher", nboot = 5, n.ahead = 30, nc = 2, signrest = NULL)
+  expect_length(bbngml6, 17)
+  expect_equal(bbngml6$nboot, 5)
+
+  bbngml10 <- wild.boot(x1, distr = "rademacher", nboot = 5, n.ahead = 30, nc = 2, signrest = NULL)
+  expect_length(bbngml10, 17)
+  expect_equal(bbngml10$nboot, 5)
+
+  bbngml11 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 5, n.ahead = 30, nc = 2, signrest = NULL)
+  expect_length(bbngml11, 17)
+  expect_equal(bbngml11$nboot, 5)
+>>>>>>> cppImplementation
 })
 
 test_that("wild.boot returns valid object for id.garch", {
   skip_on_cran()
   set.seed(23211)
-  v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
+  v1 <- vars::VAR(USA, p = 3)
   x1 <- id.garch(v1)
 
   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
@@ -899,6 +996,7 @@ test_that("wild.boot returns valid object for id.garch", {
   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
   bbgarch17 <- wild.boot(x1, distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
 
+<<<<<<< HEAD
   expect_length(bbgarch17, 17)
   expect_equal(bbgarch17$nboot, 10)
 
@@ -925,4 +1023,81 @@ test_that("wild.boot returns valid object for id.garch", {
 
   expect_length(bbgarch19, 17)
   expect_equal(bbgarch19$nboot, 10)
+=======
+  expect_length(bbgarch4, 17)
+  expect_equal(bbgarch4$nboot, 10)
+>>>>>>> cppImplementation
+})
+
+test_that("wild.boot returns valid object with different deterministic terms", {
+  skip_on_cran()
+  set.seed(23211)
+
+  # With constant + trend ---------
+  # DC
+  v1 <- vars::VAR(USA[, -3], p = 2, type = 'both')
+  x1 <- id.dc(v1)
+
+  bbdc <- wild.boot(x1, design = 'fixed', distr = "mammen", nboot = 10,
+                    n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbdc, 17)
+  expect_equal(bbdc$nboot, 10)
+
+  bbdc2 <- wild.boot(x1, design = 'recursive', distr = "mammen", nboot = 10,
+                    n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbdc2, 17)
+  expect_equal(bbdc2$nboot, 10)
+
+  # Without constant or trend ---------
+  # DC
+  v1 <- vars::VAR(USA[, -3], p = 2, type = 'none')
+  x1 <- id.dc(v1)
+
+  bbdc3 <- wild.boot(x1, design = 'fixed', distr = "mammen", nboot = 10,
+                    n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbdc3, 17)
+  expect_equal(bbdc3$nboot, 10)
+
+  bbdc4 <- wild.boot(x1, design = 'recursive', distr = "mammen", nboot = 10,
+                     n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbdc4, 17)
+  expect_equal(bbdc4$nboot, 10)
+
+  # CV
+  # With constant + trend ---------
+  v1 <- vars::VAR(USA[, -3], p = 2, type = 'both')
+  x1 <- id.cv(v1, SB = 70)
+
+  bbcv <- wild.boot(x1, design = 'fixed', distr = "mammen", nboot = 10,
+                     n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbcv, 17)
+  expect_equal(bbcv$nboot, 10)
+
+  bbcv2 <- wild.boot(x1, design = 'recursive', distr = "mammen", nboot = 10,
+                     n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbcv2, 17)
+  expect_equal(bbcv2$nboot, 10)
+
+  # CV
+  # Without constant + trend ---------
+  v1 <- vars::VAR(USA[, -3], p = 2, type = 'none')
+  x1 <- id.cv(v1, SB = 70)
+
+  bbcv3 <- wild.boot(x1, design = 'fixed', distr = "mammen", nboot = 10,
+                    n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbcv3, 17)
+  expect_equal(bbcv3$nboot, 10)
+
+  bbcv4 <- wild.boot(x1, design = 'recursive', distr = "mammen", nboot = 10,
+                     n.ahead = 30, nc = 2, signrest = NULL)
+
+  expect_length(bbcv4, 17)
+  expect_equal(bbcv4$nboot, 10)
 })
