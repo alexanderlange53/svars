@@ -42,7 +42,7 @@ Note that the smooth transition model is computationally extremely demanding.}
 
 \item{crit}{Numeric. Critical value for the precision of the GLS estimation}
 
-\item{restriction_matrix}{Matrix or vector. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*J (or J*K^2) matrix can be passed, where J is the number of restrictions and K the number of time series. (as suggested in Luetkepohl, 2017, section 5.2.1).}
+\item{restriction_matrix}{Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*K^2 matrix can be passed, where ones on the diagonal designate unrestricted and zeros restricted coefficients. (as suggested in Luetkepohl, 2017, section 5.2.1).}
 
 \item{lr_test}{Logical. Indicates whether the restricted model should be tested against the unrestricted model via a likelihood ratio test}
 }
