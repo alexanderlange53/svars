@@ -65,5 +65,5 @@ Lanne, M., Meitz, M., Saikkonen, P., 2017. Identification and estimation of non-
 Comon, P., 1994. Independent component analysis, A new concept?, Signal Processing, 36, 287-314
 }
 \seealso{
-For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.cv}}
+For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.garch}}, \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.cv}}
 }

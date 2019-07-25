@@ -32,7 +32,7 @@
 #'@references Lanne, M., Meitz, M., Saikkonen, P., 2017. Identification and estimation of non-Gaussian structural vector autoregressions. J. Econometrics 196 (2), 288-304.\cr
 #'Comon, P., 1994. Independent component analysis, A new concept?, Signal Processing, 36, 287-314
 #'
-#' @seealso For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.cv}}
+#' @seealso For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.garch}}, \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.cv}}
 #'
 #' @examples
 #' # data contains quarterly observations from 1965Q1 to 2008Q3

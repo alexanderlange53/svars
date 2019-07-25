@@ -1,24 +1,23 @@
 #' GARCH identification of SVAR models
 #'
-#' Given an estimated VAR model, this function applies changes in volatility to identify the structural impact matrix B of the corresponding SVAR model
+#' Given an estimated VAR model, this function uses GARCH-type variances to identify the structural impact matrix B of the corresponding SVAR model
 #' \deqn{y_t=c_t+A_1 y_{t-1}+...+A_p y_{t-p}+u_t
 #' =c_t+A_1 y_{t-1}+...+A_p y_{t-p}+B \epsilon_t.}
-#' Matrix B corresponds to the decomposition of the pre-break covariance matrix \eqn{\Sigma_1=B B'}.
-#' The post-break covariance corresponds to \eqn{\Sigma_2=B\Lambda B'} where \eqn{\Lambda} is the estimated unconditional heteroskedasticity matrix.
+#' Matrix B corresponds to the decomposition of the least squares covariance matrix \eqn{\Sigma_u=B\Lambda_t B'}, where \eqn{\Lambda_t} is the estimated conditional heteroskedasticity matrix.
 #'
 #' @param x An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object
 #' @param restriction_matrix Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*K^2 matrix can be passed, where ones on the diagonal designate unrestricted and zeros restricted coefficients. (as suggested in Luetkepohl, 2017, section 5.2.1).
-#' @param max.iter Integer. Number of maximum GLS iterations
+#' @param max.iter Integer. Number of maximum likelihood optimizations
 #' @param crit Numeric. Critical value for the precision of the GLS estimation
 #' @return A list of class "svars" with elements
-#' \item{Lambda}{Estimated unconditional heteroscedasticity matrix \eqn{\Lambda}}
-#' \item{Lambda_SE}{Matrix of standard errors of Lambda}
 #' \item{B}{Estimated structural impact matrix B, i.e. unique decomposition of the covariance matrix of reduced form residuals}
 #' \item{B_SE}{Standard errors of matrix B}
+#' \item{GARCH_parameter}{Estimated GARCH parameters of univariate GARCH models}
+#' \item{GARCH_SE}{Standard errors of GARCH parameters}
 #' \item{n}{Number of observations}
 #' \item{Fish}{Observed Fisher information matrix}
 #' \item{Lik}{Function value of likelihood}
-#' \item{iteration}{Number of GLS estimations}
+#' \item{iteration}{Number of likelihood optimizations}
 #' \item{method}{Method applied for identification}
 #' \item{A_hat}{Estimated VAR parameter via GLS}
 #' \item{type}{Type of the VAR model, e.g. 'const'}
@@ -28,10 +27,10 @@
 #' \item{p}{Number of lags}
 #' \item{K}{Dimension of the VAR}
 #'
-#' @references Rigobon, R., 2003. Identification through Heteroskedasticity. The Review of Economics and Statistics, 85, 777-792.\cr
-#'  Herwartz, H. & Ploedt, M., 2016. Simulation Evidence on Theory-based and Statistical Identification under Volatility Breaks Oxford Bulletin of Economics and Statistics, 78, 94-112.
+#' @references Normadin, M. & Phaneuf, L., 2004. Monetary Policy Shocks: Testing Identification Conditionsunder Time-Varying Conditional Volatility. Journal of Monetary Economics, 51(6), 1217-1243.\cr
+#'  Lanne, M. & Saikkonen, P., 2007. A Multivariate Generalized Orthogonal Factor GARCH Model. Journal of Business & Economic Statistics, 25(1), 61-75.
 #'
-#' @seealso For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
+#' @seealso For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.cvm}}, \code{\link{id.cv}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
 #'
 #' @examples
 #' \donttest{

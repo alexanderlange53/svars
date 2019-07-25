@@ -109,10 +109,10 @@ plot(x1)
 }
 }
 \references{
-Luetkepohl H., Netsunajev A., 2017. "Structural vector autoregressions with smooth transition \cr
-  in variances." Journal of Economic Dynamics and Control, 84, 43 - 57. ISSN 0165-1889.
+Luetkepohl H., Netsunajev A., 2017. Structural vector autoregressions with smooth transition \cr
+  in variances. Journal of Economic Dynamics and Control, 84, 43 - 57. ISSN 0165-1889.
 }
 \seealso{
-For alternative identification approaches see \code{\link{id.cv}}, \code{\link{id.cvm}}, \code{\link{id.dc}},
+For alternative identification approaches see \code{\link{id.cv}}, \code{\link{id.garch}}, \code{\link{id.cvm}}, \code{\link{id.dc}},
          or \code{\link{id.ngml}}
 }
