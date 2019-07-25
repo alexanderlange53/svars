@@ -11,7 +11,7 @@ id.garch(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL)
 
 \item{max.iter}{Integer. Number of maximum likelihood optimizations}
 
-\item{crit}{Numeric. Critical value for the precision of the GLS estimation}
+\item{crit}{Numeric. Critical value for the precision of the iterative procedure}
 
 \item{restriction_matrix}{Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*K^2 matrix can be passed, where ones on the diagonal designate unrestricted and zeros restricted coefficients. (as suggested in Luetkepohl, 2017, section 5.2.1).}
 }
