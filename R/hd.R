@@ -3,13 +3,14 @@
 #' Calculation of historical decomposition for an identified SVAR object 'svars' derived by function id.st( ), id.cvm( ),id.cv( ),id.dc( ) or id.ngml( ).
 #'
 #' @param x SVAR object of class "svars"
-#' @param series Integer indicating the series that should be decomposed.
+#' @param series Integer. indicating the series that should be decomposed.
+#' @param transition Numeric. Value from [0, 1] indicating how many initial values should be discarded, i.e., 0.1 means that the first 10 per cent observations of the sample are considered as transient.
 #'
 #' @return A list with class attribute "hd" holding the historical decomposition as data frame.
 #'
 #' @references Kilian, L., Luetkepohl, H., 2017. Structural Vector Autoregressive Analysis, Cambridge University Press.
 #'
-#' @seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}}, \code{\link{id.cv}} or \code{\link{id.st}}
+#' @seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}}, \code{\link{id.cv}}, \code{\link{id.garch}} or \code{\link{id.st}}
 #'
 #' @examples
 #' \donttest{
@@ -21,7 +22,7 @@
 #'
 #' @export
 
-hd <- function(x, series = 1){
+hd <- function(x, series = 1, transition = 0.1){
 
   # Function to calculate matrix potence
   "%^%" <- function(A, n){
@@ -119,9 +120,9 @@ hd <- function(x, series = 1){
   # Step 3: Match up structural shocks with appropriate impuslse response
   impulse <- impulse[,-1]
   y_hat <- matrix(NA, nrow = obs, ncol = k)
-  for(i in 1:obs){
+  for(i in (obs - floor(obs * (1 - transition))):obs){
     for(j in 1:k){
-      y_hat[i,j] <- impulse[1:i, j+series-1] %*% t(s.errors)[i:1,j]
+      y_hat[i, j] <- impulse[(obs - floor(obs * (1 - transition))):i, j + series - 1] %*% t(s.errors)[i:(obs - floor(obs * (1 - transition))), j]
     }
   }
 
@@ -135,9 +136,10 @@ hd <- function(x, series = 1){
     colnames(yhat)[i] <- paste("Cumulative effect of flow ", colnames(y)[i-2], "shock on ", colnames(y)[series])
   }
   if(inherits(x$y, "ts")){
-  histdecomp <- list(hidec = ts(yhat[, -grep("V1", colnames(yhat))], start = start(lag(x$y, k = -x$p)), end = end(x$y), frequency = frequency(x$y)))
+    hidec <- ts(yhat[, -grep("V1", colnames(yhat))], start = start(lag(x$y, k = -x$p)), end = end(x$y), frequency = frequency(x$y))
+    histdecomp <- list(hidec = na.omit(hidec))
 }else{
-  histdecomp <- list(hidec = as.data.frame(yhat))
+   histdecomp <- list(hidec = as.data.frame(na.omit(yhat)))
 }
   class(histdecomp) <- "hd"
   return(histdecomp)
