@@ -128,13 +128,15 @@ hd <- function(x, series = 1, transition = 0.1){
 
   y_hat_a <- rowSums(y_hat)
 
-  yhat <- as.data.frame(cbind(seq(1, length(y_hat_a)), y_hat_a, y_hat))
+  yhat <- as.data.frame(cbind(seq(1, length(y_hat_a)), (y[-c(1:p), series] - mean(y[-c(1:p), series])) / sd(y[-c(1:p), series]), y_hat_a, y_hat))
 
-  colnames(yhat)[2] <- colnames(y)[series]
+  colnames(yhat)[3] <- paste("Constructed series ", colnames(y)[series])
+  colnames(yhat)[2] <- paste("Demeaned and scaled observed series ", colnames(y)[series])
 
-  for(i in 3:ncol(yhat)){
-    colnames(yhat)[i] <- paste("Cumulative effect of flow ", colnames(y)[i-2], "shock on ", colnames(y)[series])
+  for(i in 4:ncol(yhat)){
+    colnames(yhat)[i] <- paste("Cumulative effect of flow ", colnames(y)[i-3], "shock on ", colnames(y)[series])
   }
+
   if(inherits(x$y, "ts")){
     hidec <- ts(yhat[, -grep("V1", colnames(yhat))], start = start(lag(x$y, k = -x$p)), end = end(x$y), frequency = frequency(x$y))
     histdecomp <- list(hidec = na.omit(hidec))
