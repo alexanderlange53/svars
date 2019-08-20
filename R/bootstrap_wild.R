@@ -379,6 +379,7 @@ wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20,
                  A_hat_boot_mean = A_hat_boot_mean,
                  Omodel = x,
                  boot_B = Bs,
+                 rest_mat = restriction_matrix,
                  method = 'Wild bootstrap')
   class(result) <- 'sboot'
   return(result)
