@@ -370,6 +370,7 @@ mb.boot <- function(x, design = "recursive", b.length = 15, n.ahead = 20, nboot 
                  A_hat_boot_mean = A_hat_boot_mean,
                  Omodel = x,
                  boot_B = Bs,
+                 rest_mat = restriction_matrix,
                  method = 'Moving block bootstrap')
   class(result) <- 'sboot'
   return(result)
