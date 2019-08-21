@@ -9,6 +9,10 @@ plot.sboot <- function(x, scales = "free_y", lowerq = 0.16, upperq = 0.84, perce
   nboot <- length(confidence)
   rest <- x$rest_mat
 
+  rest <- matrix(t(rest), nrow = 1)
+  rest[is.na(rest)] <- 1
+  rest <- c(1, rest)
+
   intervals <- array(0, c(horizon, kk, nboot))
   for(i in 1:nboot){
     intervals[,,i] <- as.matrix(confidence[[i]]$irf)
@@ -36,9 +40,6 @@ plot.sboot <- function(x, scales = "free_y", lowerq = 0.16, upperq = 0.84, perce
       upper <- 2*x$true$irf - upper
     }
   }else if(percentile == 'bonferroni'){
-    rest <- matrix(t(rest), nrow = 1)
-    rest[is.na(rest)] <- 1
-    rest[kk] <- 1
     lower <- matrix(0, horizon, kk)
     for(i in 1:horizon){
       for(j in 1:kk){
