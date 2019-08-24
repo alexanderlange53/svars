@@ -142,7 +142,7 @@ hd <- function(x, series = 1, transition = 0){
   yhat <- as.data.frame(cbind(seq(1, length(y_hat_a)), (y[-c(1:p), series] - mean(y[-c(1:p), series])), y_hat_a, y_hat))
 
   colnames(yhat)[3] <- paste("Constructed series ", colnames(y)[series])
-  colnames(yhat)[2] <- paste("Demeaned and scaled observed series ", colnames(y)[series])
+  colnames(yhat)[2] <- paste("Demeaned series ", colnames(y)[series])
 
   for(i in 4:ncol(yhat)){
     colnames(yhat)[i] <- paste("Cumulative effect of flow ", colnames(y)[i-3], "shock on ", colnames(y)[series])
