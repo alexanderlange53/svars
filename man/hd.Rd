@@ -4,7 +4,7 @@
 \alias{hd}
 \title{Historical decomposition for SVAR Models}
 \usage{
-hd(x, series = 1, transition = 0.1)
+hd(x, series = 1, transition = 0)
 }
 \arguments{
 \item{x}{SVAR object of class "svars"}

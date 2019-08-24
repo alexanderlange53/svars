@@ -22,7 +22,7 @@
 #'
 #' @export
 
-hd <- function(x, series = 1, transition = 0.1){
+hd <- function(x, series = 1, transition = 0){
 
   # Function to calculate matrix potence
   "%^%" <- function(A, n){
@@ -120,15 +120,26 @@ hd <- function(x, series = 1, transition = 0.1){
   # Step 3: Match up structural shocks with appropriate impuslse response
   impulse <- impulse[,-1]
   y_hat <- matrix(NA, nrow = obs, ncol = k)
-  for(i in (obs - floor(obs * (1 - transition))):obs){
-    for(j in 1:k){
-      y_hat[i, j] <- impulse[(obs - floor(obs * (1 - transition))):i, j + series - 1] %*% t(s.errors)[i:(obs - floor(obs * (1 - transition))), j]
+
+  if (transition == 0) {
+    for (i in 1:obs) {
+      for (j in 1:k) {
+        y_hat[i, j] <- impulse[1:i, j + series * k - k] %*% t(s.errors)[i:1, j]
+      }
+    }
+  } else {
+    for (i in (obs - floor(obs * (1 - transition))):obs) {
+      for (j in 1:k) {
+        y_hat[i, j] <- impulse[(obs - floor(obs * (1 - transition))):i, j + series * k - k] %*% t(s.errors)[i:(obs - floor(obs * (1 - transition))), j]
+      }
     }
   }
 
+
+
   y_hat_a <- rowSums(y_hat)
 
-  yhat <- as.data.frame(cbind(seq(1, length(y_hat_a)), (y[-c(1:p), series] - mean(y[-c(1:p), series])) / sd(y[-c(1:p), series]), y_hat_a, y_hat))
+  yhat <- as.data.frame(cbind(seq(1, length(y_hat_a)), (y[-c(1:p), series] - mean(y[-c(1:p), series])), y_hat_a, y_hat))
 
   colnames(yhat)[3] <- paste("Constructed series ", colnames(y)[series])
   colnames(yhat)[2] <- paste("Demeaned and scaled observed series ", colnames(y)[series])
