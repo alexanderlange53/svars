@@ -35,11 +35,11 @@ id.cv_boot <- function(x, SB, max.iter = 50, crit = 0.001, restriction_matrix = 
     yret <- y
     y <- y[,-c(1:p)]
 
-    if(x$type == 'const'){
+    if(type == 'const'){
       Z_t <- rbind(rep(1, ncol(yl)), yl)
-    }else if(x$type == 'trend'){
+    }else if(type == 'trend'){
       Z_t <- rbind(seq(p + 1, ncol(yret)), yl)
-    }else if(x$type == 'both'){
+    }else if(type == 'both'){
       Z_t <- rbind(rep(1, ncol(yl)), seq(p + 1, ncol(yret)), yl)
     }else{
       Z_t <- yl
@@ -52,7 +52,7 @@ id.cv_boot <- function(x, SB, max.iter = 50, crit = 0.001, restriction_matrix = 
   Regime1 <- which(SB == 0) - 1
   Regime2 <- which(SB == 1) - 1
 
-best_estimation = IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k, type = x$type,
+best_estimation = IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k, type = type,
                                      Regime1 = Regime1, Regime2 = Regime2,
                                      RestrictionMatrix = restriction_matrix, restrictions = restrictions,
                                      Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, Zt = Z_t, y = y,
@@ -64,7 +64,7 @@ best_estimation$Lik <- -(Tob * (k / 2) * log(2 * pi) + best_estimation$Lik)
 if(restrictions > 0 ){
 
 
-  unrestricted_estimation <- IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k, type = x$type,
+  unrestricted_estimation <- IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k, type = type,
                                                 Regime1 = Regime1, Regime2 = Regime2,
                                                 RestrictionMatrix = matrix(NA, k, k), restrictions = 0,
                                                 Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, Zt = Z_t, y = y,

@@ -125,16 +125,16 @@ if (!is.numeric(SB)) {
     SBcharacter <- SB
     SB <- getStructuralBreak(SB = SB, start = start, end = end,
                              frequency = frequency, format = format, dateVector = dateVector, Tob = Tob, p = p)
-} else if(length(SB) != 1 & inherits(x$y, "ts") & length(SB) < 4){
+} else if(length(SB) != 1 & inherits(y, "ts") & length(SB) < 4){
         SBts = SB
-        SB = dim(window(x$y, end = SB))[1]
-      if(frequency(x$y == 4)){
+        SB = dim(window(y, end = SB))[1]
+      if(frequency(y == 4)){
         SBcharacter = paste(SBts[1], " Q", SBts[2], sep = "")
-     }else if(frequency(x$y == 12)){
+     }else if(frequency(y == 12)){
         SBcharacter = paste(SBts[1], " M", SBts[2], sep = "")
-     }else if(frequency(x$y == 52)){
+     }else if(frequency(y == 52)){
         SBcharacter = paste(SBts[1], " W", SBts[2], sep = "")
-     }else if(frequency(x$y == 365.25)){
+     }else if(frequency(y == 365.25)){
         SBcharacter = paste(SBts[1], "-", SBts[2], "-", SBts[3], sep = "")
      }else{
         SBcharacter = NULL
@@ -166,11 +166,11 @@ yl <- t(YLagCr(t(y), p))
 yret <- y
 y <- y[, -c(1:p)]
 
-  if(x$type == 'const'){
+  if(type == 'const'){
     Z_t <- rbind(rep(1, ncol(yl)), yl)
-  }else if(x$type == 'trend'){
+  }else if(type == 'trend'){
     Z_t <- rbind(seq(p + 1, ncol(yret)), yl)
-  }else if(x$type == 'both'){
+  }else if(type == 'both'){
     Z_t <- rbind(rep(1, ncol(yl)), seq(p + 1, ncol(yret)), yl)
   }else{
     Z_t <- yl
@@ -186,7 +186,7 @@ y <- y[, -c(1:p)]
   Regime1 <- which(SB == 0) - 1
   Regime2 <- which(SB == 1) - 1
 
-  best_estimation <- IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k, type = x$type,
+  best_estimation <- IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k, type = type,
                                        Regime1 = Regime1, Regime2 = Regime2,
                                        RestrictionMatrix = restriction_matrix, restrictions = restrictions,
                                        Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, Zt = Z_t, y = y,
@@ -197,7 +197,7 @@ y <- y[, -c(1:p)]
   if(restrictions > 0 ){
 
 
-    unrestricted_estimation <- IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k, type = x$type,
+    unrestricted_estimation <- IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k, type = type,
                                                   Regime1 = Regime1, Regime2 = Regime2,
                                                   RestrictionMatrix = matrix(NA, k, k), restrictions = 0,
                                                   Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, Zt = Z_t, y = y,

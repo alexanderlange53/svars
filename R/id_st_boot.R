@@ -30,11 +30,11 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
     #yret <- y
     y_loop <- y[,-c(1:p)]
 
-    if(x$type == 'const'){
+    if(type == 'const'){
       Z_t <- rbind(rep(1, ncol(yl)), yl)
-    }else if(x$type == 'trend'){
+    }else if(type == 'trend'){
       Z_t <- rbind(seq(p + 1, Tob), yl)
-    }else if(x$type == 'both'){
+    }else if(type == 'both'){
       Z_t <- rbind(rep(1, ncol(yl)), seq(p + 1, Tob), yl)
     }else{
       Z_t <- yl
@@ -73,7 +73,7 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
     comb = comb,                 # number of all evaluated combinations of gamma and c
     transition_function = transition_function,
     A_hat = best_estimation$A_hat,          # VAR parameter estimated with gls
-    type = x$type,          # type of the VAR model e.g 'const'
+    type = type,          # type of the VAR model e.g 'const'
     y = yOut,                # Data
     p = p,                # number of lags
     K = k,                 # number of time series

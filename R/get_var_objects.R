@@ -39,6 +39,7 @@ get_var_objects <- function(x){
     assign("coef_x", t(coef(x)), envir = parent.frame())
     coef_x = t(coef(x))
     if(inherits(x, "VECM")){
+      assign("p", x$lag + 1, envir = parent.frame())
       assign("coef_x", t(VARrep(x)), envir = parent.frame())
       coef_x = t(VARrep(x))
     }
@@ -57,19 +58,25 @@ get_var_objects <- function(x){
     }
     assign("type", x$include, envir = parent.frame())
     assign("coef_x", split(coef_x, rep(1:ncol(coef_x), each = nrow(coef_x))), envir = parent.frame())
+    coef_x = split(coef_x, rep(1:ncol(coef_x), each = nrow(coef_x)))
     assign("coef_x", lapply(coef_x, as.matrix), envir = parent.frame())
+    coef_x = lapply(coef_x, as.matrix)
 
   }else if(inherits(x, "list")){
     assign("p", x$order, envir = parent.frame())
     assign("y", t(x$data), envir = parent.frame())
     assign("coef_x", x$coef, envir = parent.frame())
+    assign("yOut", x$data, envir = parent.frame())
+    coef_x = x$coef
 
     if(x$cnst == TRUE){
       assign("coef_x", coef_x[c(2:nrow(coef_x),1),], envir = parent.frame())
       assign("type", "const", envir = parent.frame())
     }
     assign("coef_x", split(coef_x, rep(1:ncol(coef_x), each = nrow(coef_x))), envir = parent.frame())
+    coef_x = split(coef_x, rep(1:ncol(coef_x), each = nrow(coef_x)))
     assign("coef_x", lapply(coef_x, as.matrix), envir = parent.frame())
+    coef_x = lapply(coef_x, as.matrix)
 
   }else if(inherits(x, "vec2var")){
     assign("k", ncol(x$resid), envir = parent.frame())
