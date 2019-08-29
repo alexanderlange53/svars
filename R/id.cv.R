@@ -125,16 +125,16 @@ if (!is.numeric(SB)) {
     SBcharacter <- SB
     SB <- getStructuralBreak(SB = SB, start = start, end = end,
                              frequency = frequency, format = format, dateVector = dateVector, Tob = Tob, p = p)
-} else if(length(SB) != 1 & inherits(y, "ts") & length(SB) < 4){
+} else if(length(SB) != 1 & inherits(yOut, "ts") & length(SB) < 4){
         SBts = SB
-        SB = dim(window(y, end = SB))[1]
-      if(frequency(y == 4)){
+        SB = dim(window(yOut, end = SB))[1]
+      if(frequency(yOut) == 4){
         SBcharacter = paste(SBts[1], " Q", SBts[2], sep = "")
-     }else if(frequency(y == 12)){
+     }else if(frequency(yOut) == 12){
         SBcharacter = paste(SBts[1], " M", SBts[2], sep = "")
-     }else if(frequency(y == 52)){
+     }else if(frequency(yOut) == 52){
         SBcharacter = paste(SBts[1], " W", SBts[2], sep = "")
-     }else if(frequency(y == 365.25)){
+     }else if(frequency(yOut) == 365.25){
         SBcharacter = paste(SBts[1], "-", SBts[2], "-", SBts[3], sep = "")
      }else{
         SBcharacter = NULL
@@ -145,7 +145,7 @@ if (length(SB) > 4 & length(SB) != Tob) {
   stop('Wrong length of SB')
 }
 
-if (length(SB) == Tob) {
+if (length(SB) == Tob & length(SB) > 3) {
   SB_out <- SB
   TB <- Tob - sum(SB) + 1
   resid1 <- u[SB == 0,]
