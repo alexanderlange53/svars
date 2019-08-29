@@ -79,7 +79,12 @@ mb.boot <- function(x, design = "recursive", b.length = 15, n.ahead = 20, nboot 
 
   # gathering informations from vars object
 
-  y <- x$y
+  # in case original data came in different format than matrix or ts
+  if(!inherits(x$y, c("matrix", "ts"))){
+    y = as.matrix(x$y)
+  }else{
+    y <- x$y
+  }
   p <- x$p
   obs <- x$n
   k <- x$K

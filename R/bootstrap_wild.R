@@ -86,7 +86,12 @@ wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20,
 
 
   # gathering informations from vars object
-  y <- x$y
+  # in case original data came in different format than matrix or ts
+  if(!inherits(x$y, c("matrix", "ts"))){
+    y = as.matrix(x$y)
+  }else{
+    y <- x$y
+  }
   p <- x$p
   obs <- x$n
   k <- x$K

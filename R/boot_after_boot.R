@@ -52,7 +52,7 @@
 ba.boot <- function(x, nc = 1){
 
   if(class(x) != "sboot"){
-    stop("THe bootstrap-after-bootstrap can only be applied to already bootstrapped objects.")
+    stop("The bootstrap-after-bootstrap can only be applied to already bootstrapped objects.")
   }
   # Calculating difference between sample estimate and bootstrap estimate
   Psi <- x$A_hat_boot_mean - x$A_hat
