@@ -23,9 +23,27 @@
 #     FEVD = fevd(x1)
 #     expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
 #
+#     # mb boot
+#     signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#     bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#     expect_length(bb, 18)
+#     expect_equal(bb$nboot, 10)
+#
+#     # wild boot
+#     bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#     expect_length(bb2, 18)
+#     expect_equal(bb2$nboot, 10)
+#
+#     # ba boot
+#     bb3 <- ba.boot(bb, nc = 1)
+#     expect_equal(bb3$count, 0)
+#     expect_equal(round(bb3$root, 2), 0.98)
+#
 # })
 #
 # test_that("id.dc works for varest object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   v1 <- vars::VAR(USA, p = 6, ic = "AIC" )
 #     #id.st
 #     x1 <- id.st(v1)
 #
@@ -36,6 +54,23 @@
 #     expect_equal(round(sum(HD$hidec), 4), 2.0775)
 #     FEVD = fevd(x1)
 #     expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
+#
+#     # mb boot
+#     signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#     bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#     expect_length(bb, 18)
+#     expect_equal(bb$nboot, 10)
+#
+#     # wild boot
+#     bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#     expect_length(bb2, 18)
+#     expect_equal(bb2$nboot, 10)
+#
+#     # ba boot
+#     bb3 <- ba.boot(bb, nc = 1)
+#     expect_equal(bb3$count, 0)
+#     expect_equal(round(bb3$root, 1), 1)
+#
 #
 # })
 #
@@ -59,9 +94,27 @@
 #   FEVD = fevd(x1)
 #   expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
 #
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 0)
+#   expect_equal(round(bb3$root, 1), 1)
+#
 # })
 #
 # test_that("id.st works for nlVars object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   v1 <-lineVar(USA, lag = 6)
 #   #id.st
 #   x1 <- id.st(v1)
 #
@@ -72,22 +125,62 @@
 #   expect_equal(round(sum(HD$hidec), 4), 2.0775)
 #   FEVD = fevd(x1)
 #   expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
+#
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 0)
+#   expect_equal(round(bb3$root, 1), 1)
 # })
 #
-# # test_that("id.cvm works for nlVars object and analysis (bootstrap, irf, hd fevd)", {
-# #   #id.cvm
-# #   x1 <- id.cvm(v1)
-# #
-# #   expect_equal(round(sum(x1$B),3), 2.498)
-# #   IRF = irf(x1)
-# #   expect_equal(round(sum(IRF$irf),4), 231.1769)
-# #   HD = hd(x1)
-# #   expect_equal(round(sum(HD$hidec), 4), -3.5012)
-# #   FEVD = fevd(x1)
-# #   expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
-# # })
+# test_that("id.cvm works for nlVars object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   v1 <-lineVar(USA, lag = 6)
+#   #id.cvm
+#   cob <- copula::indepTestSim(v1$T - v1$lag, v1$k, verbose=FALSE)
+#   x1 <- id.cvm(v1)
+#
+#   expect_equal(round(sum(x1$B),3), 0.864)
+#   IRF = irf(x1)
+#   expect_equal(round(sum(IRF$irf),4), 206.2219)
+#   HD = hd(x1)
+#   expect_equal(round(sum(HD$hidec), 4), -3.5012)
+#   FEVD = fevd(x1)
+#   expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
+#
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 0)
+#   expect_equal(round(bb3$root, 1), 1)
+#
+# })
 #
 # test_that("id.dc works for nlVars object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   v1 <-lineVar(USA, lag = 6)
 #   #id.dc
 #   x1 <- id.dc(v1)
 #
@@ -99,9 +192,28 @@
 #   FEVD = fevd(x1)
 #   expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
 #
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 0)
+#   expect_equal(round(bb3$root, 1), 1)
+#
 # })
 #
 # test_that("id.garch works for nlVars object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   v1 <-lineVar(USA, lag = 6)
 #   # id.garch
 #   x1 <- id.garch(v1)
 #
@@ -114,9 +226,28 @@
 #   expect_equal(round(sum(HD$hidec), 4), -3.5012)
 #   FEVD = fevd(x1)
 #   expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
+#
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 0)
+#   expect_equal(round(bb3$root, 1), 1)
 # })
 #
 # test_that("id.ngml works for nlVars object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   v1 <-lineVar(USA, lag = 6)
 #   # id.ngml
 #   x1 <- id.ngml(v1)
 #   x2 <- id.ngml_boot(v1)
@@ -129,6 +260,23 @@
 #   expect_equal(round(sum(HD$hidec), 4), -3.5012)
 #   FEVD = fevd(x1)
 #   expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
+#
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 0)
+#   expect_equal(round(bb3$root, 1), 1)
 #   })
 #
 #
@@ -148,9 +296,28 @@
 #   expect_equal(round(sum(HD$hidec), 4), 63.635)
 #   FEVD = fevd(x3)
 #   expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
+#
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 0)
+#   expect_equal(round(bb3$root, 1), 1)
 # })
 #
 # test_that("id.st works for MTS list object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   v3 <- invisible(MTS::VAR(USA, p = 6))
 #   #id.st
 #   x1 <- id.st(v3)
 #
@@ -161,36 +328,94 @@
 #   expect_equal(round(sum(HD$hidec), 4), 2.0775)
 #   FEVD = fevd(x1)
 #   expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
+#
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 0)
+#   expect_equal(round(bb3$root, 1), 1)
 # })
 #
-# # test_that("id.cvm works for MTS list object and analysis (bootstrap, irf, hd fevd)", {
-# #   #id.cvm
-# #   x1 <- id.cvm(v3)
-# #
-# #   expect_equal(round(sum(x1$B), 4), -0.4718)
-# #   IRF = irf(x1)
-# #   expect_equal(round(sum(IRF$irf),4), 28.3943)
-# #   # HD = hd(x1)
-# #   # expect_equal(round(sum(HD$hidec), 4), -1.196476e+17)
-# #   FEVD = fevd(x1)
-# #   expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
-# # })
+# test_that("id.cvm works for MTS list object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   v3 <- invisible(MTS::VAR(USA, p = 6))
+#   #id.cvm
+#   cob <- copula::indepTestSim(length(v3$residuals[,1]), ncol(v3$data), verbose=FALSE)
+#   x1 <- id.cvm(v3)
+#
+#   expect_equal(round(sum(x1$B), 4), 0.8641)
+#   IRF = irf(x1)
+#   expect_equal(round(sum(IRF$irf),4), 392.0223)
+#   #HD = hd(x1)
+#   #expect_equal(round(sum(HD$hidec), 4), -1.196476e+17)
+#   FEVD = fevd(x1)
+#   expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
+#
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 0)
+#   expect_equal(round(bb3$root, 1), 1)
+# })
 #
 # test_that("id.dc works for MTS list object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   v3 <- invisible(MTS::VAR(USA, p = 6))
 #   #id.dc
 #   x1 <- id.dc(v3)
 #
 #   expect_equal(sum(round(x1$B, 4)), 2.8498)
 #   IRF = irf(x1)
 #   expect_equal(round(sum(IRF$irf),4), 891.1648)
-#   # HD = hd(x1)
-#   # expect_equal(round(sum(HD$hidec), 4), -3.5012)
+#   #HD = hd(x1)
+#   #expect_equal(round(sum(HD$hidec), 4), -3.5012)
 #   FEVD = fevd(x1)
 #   expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
+#
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 0)
+#   expect_equal(round(bb3$root, 1), 1)
 #
 # })
 #
 # test_that("id.garch works for MTS list object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   v3 <- invisible(MTS::VAR(USA, p = 6))
 #   # id.garch
 #   x1 <- id.garch(v3)
 #
@@ -203,9 +428,28 @@
 #   # expect_equal(round(sum(HD$hidec), 4), -3.5012)
 #   FEVD = fevd(x1)
 #   expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
+#
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 0)
+#   expect_equal(round(bb3$root, 1), 1)
 # })
 #
 # test_that("id.ngml works for MTS list object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   v3 <- invisible(MTS::VAR(USA, p = 6))
 #   # id.ngml
 #   x1 <- id.ngml(v3)
 #   x2 <- id.ngml_boot(v3)
@@ -219,7 +463,22 @@
 #   FEVD = fevd(x1)
 #   expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
 #
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
 #
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 0)
+#   expect_equal(round(bb3$root, 1), 1)
 # })
 #
 # # test VECMs (vec2var, VECM)
@@ -230,8 +489,6 @@
 #   set.seed(23211)
 #   data(finland)
 #   sjf <- finland
-#
-#
 #   sjf.vecm <- ca.jo(sjf, ecdet = "none", type = "eigen", K = 2,
 #                     spec = "longrun", season = 4)
 #   v5 <- vec2var(sjf.vecm, r = 2)
@@ -246,9 +503,32 @@
 #   expect_equal(round(sum(HD$hidec), 3), 5452.361)
 #   FEVD = fevd(x1)
 #   expect_equal(c(sum(FEVD$lrm1),sum(FEVD$lnmr), sum(FEVD$lny), sum(FEVD$difp)), c(1000,1000,1000, 1000))
+#
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 0)
+#   expect_equal(round(bb3$root, 1), 1)
 # })
 #
 # test_that("id.st works for vec2var object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   data(finland)
+#   sjf <- finland
+#   sjf.vecm <- ca.jo(sjf, ecdet = "none", type = "eigen", K = 2,
+#                     spec = "longrun", season = 4)
+#   v5 <- vec2var(sjf.vecm, r = 2)
 #   #id.st
 #   x1 <- id.st(v5)
 #
@@ -259,22 +539,70 @@
 #   expect_equal(round(sum(HD$hidec), 3), 5452.301)
 #   FEVD = fevd(x1)
 #   expect_equal(c(sum(FEVD$lrm1),sum(FEVD$lnmr), sum(FEVD$lny), sum(FEVD$difp)), c(1000,1000,1000, 1000))
+#
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 0)
+#   expect_equal(round(bb3$root, 1), 1)
+#
 # })
 #
-# # test_that("id.cvm works for vec2var object and analysis (bootstrap, irf, hd fevd)", {
-# #   #id.cvm
-# #   x1 <- id.cvm(v5)
-# #
-# #   expect_equal(round(sum(x1$B), 4), -0.0387)
-# #   IRF = irf(x1)
-# #   expect_equal(round(sum(IRF$irf),4), 208.7843)
-# #   HD = hd(x1)
-# #   expect_equal(round(sum(HD$hidec), 3), 5469.519)
-# #   FEVD = fevd(x1)
-# #   expect_equal(c(sum(FEVD$lrm1),sum(FEVD$lnmr), sum(FEVD$lny), sum(FEVD$difp)), c(1000,1000,1000, 1000))
-# # })
+# test_that("id.cvm works for vec2var object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   data(finland)
+#   sjf <- finland
+#   sjf.vecm <- ca.jo(sjf, ecdet = "none", type = "eigen", K = 2,
+#                   spec = "longrun", season = 4)
+#   v5 <- vec2var(sjf.vecm, r = 2)
+#   #id.cvm
+#   cob <- copula::indepTestSim(v5$obs, v5$K, verbose=FALSE)
+#   x1 <- id.cvm(v5)
+#
+#   expect_equal(round(sum(x1$B), 4), -0.0847)
+#   IRF = irf(x1)
+#   expect_equal(round(sum(IRF$irf),4), 207.8637)
+#   HD = hd(x1)
+#   expect_equal(round(sum(HD$hidec), 3), 5469.519)
+#   FEVD = fevd(x1)
+#   expect_equal(c(sum(FEVD$lrm1),sum(FEVD$lnmr), sum(FEVD$lny), sum(FEVD$difp)), c(1000,1000,1000, 1000))
+#
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 0)
+#   expect_equal(round(bb3$root, 1), 1)
+# })
 #
 # test_that("id.dc works for vec2var object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   data(finland)
+#   sjf <- finland
+#   sjf.vecm <- ca.jo(sjf, ecdet = "none", type = "eigen", K = 2,
+#                     spec = "longrun", season = 4)
+#   v5 <- vec2var(sjf.vecm, r = 2)
 #   #id.dc
 #   x1 <- id.dc(v5)
 #
@@ -286,9 +614,32 @@
 #   FEVD = fevd(x1)
 #   expect_equal(c(sum(FEVD$lrm1),sum(FEVD$lnmr), sum(FEVD$lny), sum(FEVD$difp)), c(1000,1000,1000, 1000))
 #
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 101)
+#   expect_equal(round(bb3$root, 1), 1)
+#
 # })
 #
 # test_that("id.garch works for vec2var object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   data(finland)
+#   sjf <- finland
+#   sjf.vecm <- ca.jo(sjf, ecdet = "none", type = "eigen", K = 2,
+#                     spec = "longrun", season = 4)
+#   v5 <- vec2var(sjf.vecm, r = 2)
 #   # id.garch
 #   x1 <- id.garch(v5)
 #
@@ -301,9 +652,32 @@
 #   # expect_equal(round(sum(HD$hidec), 4), -3.5012)
 #   FEVD = fevd(x1)
 #   expect_equal(c(sum(FEVD$lrm1),sum(FEVD$lnmr), sum(FEVD$lny), sum(FEVD$difp)), c(1000,1000,1000, 1000))
+#
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 101)
+#   expect_equal(round(bb3$root, 1), 1)
 # })
 #
 # test_that("id.ngml works for vec2var object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   data(finland)
+#   sjf <- finland
+#   sjf.vecm <- ca.jo(sjf, ecdet = "none", type = "eigen", K = 2,
+#                     spec = "longrun", season = 4)
+#   v5 <- vec2var(sjf.vecm, r = 2)
 #   # id.ngml
 #   x1 <- id.ngml(v5)
 #   x2 <- id.ngml_boot(v5)
@@ -318,7 +692,22 @@
 #   expect_equal(c(sum(FEVD$lrm1),sum(FEVD$lnmr), sum(FEVD$lny), sum(FEVD$difp)), c(1000,1000,1000, 1000))
 #
 #
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
 #
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 101)
+#   expect_equal(round(bb3$root, 1), 1)
 #
 # })
 #
@@ -339,10 +728,30 @@
 #   expect_equal(round(sum(HD$hidec), 3), 5349.796)
 #   FEVD = fevd(x1)
 #   expect_equal(c(sum(FEVD$lrm1),sum(FEVD$lnmr), sum(FEVD$lny), sum(FEVD$difp)), c(1000,1000,1000, 1000))
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 109)
+#   expect_equal(round(bb3$root, 1), 1)
+#
 #
 # })
 #
 # test_that("id.st works for VECM object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   data(finland)
+#   v6 <-VECM(finland, lag=2, estim="ML")
 #   #id.st
 #   x1 <- id.st(v6)
 #
@@ -353,22 +762,63 @@
 #   expect_equal(round(sum(HD$hidec), 3), 5348.792)
 #   FEVD = fevd(x1)
 #   expect_equal(c(sum(FEVD$lrm1),sum(FEVD$lnmr), sum(FEVD$lny), sum(FEVD$difp)), c(1000,1000,1000, 1000))
+#
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 111)
+#   expect_equal(round(bb3$root, 1), 1)
 # })
 #
-# # test_that("id.cvm works for VECM object and analysis (bootstrap, irf, hd fevd)", {
-# #   #id.cvm
-# #   x1 <- id.cvm(v6)
-# #
-# #   expect_equal(round(sum(x1$B), 4), -0.1596)
-# #   IRF = irf(x1)
-# #   expect_equal(round(sum(IRF$irf),4), 208.5466)
-# #   HD = hd(x1)
-# #   expect_equal(round(sum(HD$hidec), 3), 5362.275)
-# #   FEVD = fevd(x1)
-# #   expect_equal(c(sum(FEVD$lrm1),sum(FEVD$lnmr), sum(FEVD$lny), sum(FEVD$difp)), c(1000,1000,1000, 1000))
-# # })
+# test_that("id.cvm works for VECM object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   data(finland)
+#   v6 <-VECM(finland, lag=2, estim="ML")
+#   #id.cvm
+#   cob <- copula::indepTestSim(v6$t, v6$k, verbose=FALSE)
+#   x1 <- id.cvm(v6)
+#
+#   expect_equal(round(sum(x1$B), 4), -0.0774)
+#   IRF = irf(x1)
+#   expect_equal(round(sum(IRF$irf),4), 209.9281)
+#   HD = hd(x1)
+#   expect_equal(round(sum(HD$hidec), 3), 5362.275)
+#   FEVD = fevd(x1)
+#   expect_equal(c(sum(FEVD$lrm1),sum(FEVD$lnmr), sum(FEVD$lny), sum(FEVD$difp)), c(1000,1000,1000, 1000))
+#
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 102)
+#   expect_equal(round(bb3$root, 1), 1)
+# })
 #
 # test_that("id.dc works for VECM object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   data(finland)
+#   v6 <-VECM(finland, lag=2, estim="ML")
 #   #id.dc
 #   x1 <- id.dc(v6)
 #
@@ -380,29 +830,59 @@
 #   FEVD = fevd(x1)
 #   expect_equal(c(sum(FEVD$lrm1),sum(FEVD$lnmr), sum(FEVD$lny), sum(FEVD$difp)), c(1000,1000,1000, 1000))
 #
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
 # })
 #
 # test_that("id.garch works for VECM object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   data(finland)
+#   v6 <-VECM(finland, lag=2, estim="ML")
 #   # id.garch
 #   x1 <- id.garch(v6)
 #
-#   expect_equal(round(x1$Lik, 1),  877.7)
-#   expect_equal(round(sum(x1$B), 3), -0.041)
+#   expect_equal(round(x1$Lik, 3),  877.558)
+#   expect_equal(round(sum(x1$B), 3), -0.044)
 #
 #   IRF = irf(x1)
-#   expect_equal(round(sum(IRF$irf),3), 210.717)
+#   expect_equal(round(sum(IRF$irf),3), 210.666)
 #   HD = hd(x1)
 #   expect_equal(round(sum(HD$hidec), 4), 5362.275)
 #   FEVD = fevd(x1)
 #   expect_equal(c(sum(FEVD$lrm1),sum(FEVD$lnmr), sum(FEVD$lny), sum(FEVD$difp)), c(1000,1000,1000, 1000))
+#
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
 # })
 #
 # test_that("id.ngml works for VECM object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   data(finland)
+#   v6 <-VECM(finland, lag=2, estim="ML")
 #   # id.ngml
 #   x1 <- id.ngml(v6)
-#   x2 <- id.ngml_boot(v6)
+#   #x2 <- id.ngml_boot(v6)
 #
-#   expect_equal(c(round(x1$Lik, 4),round(x2$Lik, 4)), rep(868.0276,2))
+#   expect_equal(round(x1$Lik, 4), 868.0276)
 #
 #   IRF = irf(x1)
 #   expect_equal(round(sum(IRF$irf),4), 211.2099)
@@ -410,5 +890,21 @@
 #   expect_equal(round(sum(HD$hidec), 4), 5362.275)
 #   FEVD = fevd(x1)
 #   expect_equal(c(sum(FEVD$lrm1),sum(FEVD$lnmr), sum(FEVD$lny), sum(FEVD$difp)), c(1000,1000,1000, 1000))
+#
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 102)
+#   expect_equal(round(bb3$root, 3), 1)
 # })
-
+#
