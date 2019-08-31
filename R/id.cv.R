@@ -15,7 +15,7 @@
 #' @param end Character. End of the time series (only if dateVector is empty)
 #' @param frequency Character. Frequency of the time series (only if dateVector is empty)
 #' @param format Character. Date format (only if dateVector is empty)
-#' @param restriction_matrix Matrix or vector. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*J (or J*K^2) matrix can be passed, where J is the number of restrictions and K the number of time series. (as suggested in Luetkepohl, 2017, section 5.2.1).
+#' @param restriction_matrix Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*K^2 matrix can be passed, where ones on the diagonal designate unrestricted and zeros restricted coefficients. (as suggested in Luetkepohl, 2017, section 5.2.1).
 #' @param max.iter Integer. Number of maximum GLS iterations
 #' @param crit Numeric. Critical value for the precision of the GLS estimation
 #' @return A list of class "svars" with elements
@@ -42,7 +42,7 @@
 #' @references Rigobon, R., 2003. Identification through Heteroskedasticity. The Review of Economics and Statistics, 85, 777-792.\cr
 #'  Herwartz, H. & Ploedt, M., 2016. Simulation Evidence on Theory-based and Statistical Identification under Volatility Breaks Oxford Bulletin of Economics and Statistics, 78, 94-112.
 #'
-#' @seealso For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
+#' @seealso For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.garch}}, \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
 #'
 #' @examples
 #' #' # data contains quartlery observations from 1965Q1 to 2008Q2
@@ -71,7 +71,8 @@
 #' summary(x2)
 #'
 #' # In alternative Form
-#' restMat <- c(rep(0,6), 1, 0,0)
+#' restMat <- diag(rep(1,9))
+#' restMat[7,7]= 0
 #' x2 <- id.cv(v1, SB = 59, restriction_matrix = restMat)
 #' summary(x2)
 #'

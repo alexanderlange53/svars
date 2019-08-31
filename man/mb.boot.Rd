@@ -76,10 +76,10 @@ plot(bb, lowerq = 0.16, upperq = 0.84)
 
 }
 \references{
-Brueggemann, R., Jentsch, C., and Trenkler, C. (2016). Inference in VARs with conditional heteroskedasticity of unknown form. Journal of Econometrics 191, 69-85.\cr
+Brueggemann, R., Jentsch, C., and Trenkler, C., 2016. Inference in VARs with conditional heteroskedasticity of unknown form. Journal of Econometrics 191, 69-85.\cr
   Herwartz, H., 2017. Hodges Lehmann detection of structural shocks -
        An analysis of macroeconomic dynamics in the Euro Area, Oxford Bulletin of Economics and Statistics.
 }
 \seealso{
-\code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}}, \code{\link{id.cv}} or \code{\link{id.st}}
+\code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}}, \code{\link{id.garch}}, \code{\link{id.cv}} or \code{\link{id.st}}
 }

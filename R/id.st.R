@@ -25,7 +25,7 @@
 #'           Note that the smooth transition model is computationally extremely demanding.
 #' @param max.iter Integer. Number of maximum GLS iterations
 #' @param crit Numeric. Critical value for the precision of the GLS estimation
-#' @param restriction_matrix Matrix or vector. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*J (or J*K^2) matrix can be passed, where J is the number of restrictions and K the number of time series. (as suggested in Luetkepohl, 2017, section 5.2.1).
+#' @param restriction_matrix Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*K^2 matrix can be passed, where ones on the diagonal designate unrestricted and zeros restricted coefficients. (as suggested in Luetkepohl, 2017, section 5.2.1).
 #' @param lr_test Logical. Indicates whether the restricted model should be tested against the unrestricted model via a likelihood ratio test
 #' @return A list of class "svars" with elements
 #' \item{Lambda}{Estimated heteroscedasticity matrix \eqn{\Lambda}}
@@ -53,10 +53,10 @@
 #' \item{lr_test}{Logical, whether a likelihood ratio test is performed}
 #' \item{lRatioTest}{Results of likelihood ratio test}
 #'
-#' @references Luetkepohl H., Netsunajev A., 2017. "Structural vector autoregressions with smooth transition \cr
-#'   in variances." Journal of Economic Dynamics and Control, 84, 43 - 57. ISSN 0165-1889.
+#' @references Luetkepohl H., Netsunajev A., 2017. Structural vector autoregressions with smooth transition \cr
+#'   in variances. Journal of Economic Dynamics and Control, 84, 43 - 57. ISSN 0165-1889.
 #'
-#' @seealso For alternative identification approaches see \code{\link{id.cv}}, \code{\link{id.cvm}}, \code{\link{id.dc}},
+#' @seealso For alternative identification approaches see \code{\link{id.cv}}, \code{\link{id.garch}}, \code{\link{id.cvm}}, \code{\link{id.dc}},
 #'          or \code{\link{id.ngml}}
 #'
 #' @examples

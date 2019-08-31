@@ -7,7 +7,7 @@
 #'
 #' @param x An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object
 #' @param stage3 Logical. If stage3="TRUE", the VAR parameters are estimated via non-gaussian maximum likelihood (computationally demanding)
-#' @param restriction_matrix Matrix or vector. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*J (or J*K^2) matrix can be passed, where J is the number of restrictions and K the number of time series. (as suggested in Luetkepohl, 2017, section 5.2.1).
+#' @param restriction_matrix Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*K^2 matrix can be passed, where ones on the diagonal designate unrestricted and zeros restricted coefficients. (as suggested in Luetkepohl, 2017, section 5.2.1).
 #' @return A list of class "svars" with elements
 #' \item{B}{Estimated structural impact matrix B, i.e. unique decomposition of the covariance matrix of reduced form errors}
 #' \item{sigma}{Estimated scale of the standardized matrix B_stand, i.e. \eqn{B=B_stand*diag(\sigma_1,...,\sigma_K)}}
@@ -32,7 +32,7 @@
 #'@references Lanne, M., Meitz, M., Saikkonen, P., 2017. Identification and estimation of non-Gaussian structural vector autoregressions. J. Econometrics 196 (2), 288-304.\cr
 #'Comon, P., 1994. Independent component analysis, A new concept?, Signal Processing, 36, 287-314
 #'
-#' @seealso For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.cv}}
+#' @seealso For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.garch}}, \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.cv}}
 #'
 #' @examples
 #' # data contains quarterly observations from 1965Q1 to 2008Q3

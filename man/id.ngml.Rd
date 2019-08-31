@@ -11,7 +11,7 @@ id.ngml(x, stage3 = FALSE, restriction_matrix = NULL)
 
 \item{stage3}{Logical. If stage3="TRUE", the VAR parameters are estimated via non-gaussian maximum likelihood (computationally demanding)}
 
-\item{restriction_matrix}{Matrix or vector. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*J (or J*K^2) matrix can be passed, where J is the number of restrictions and K the number of time series. (as suggested in Luetkepohl, 2017, section 5.2.1).}
+\item{restriction_matrix}{Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*K^2 matrix can be passed, where ones on the diagonal designate unrestricted and zeros restricted coefficients. (as suggested in Luetkepohl, 2017, section 5.2.1).}
 }
 \value{
 A list of class "svars" with elements
@@ -65,5 +65,5 @@ Lanne, M., Meitz, M., Saikkonen, P., 2017. Identification and estimation of non-
 Comon, P., 1994. Independent component analysis, A new concept?, Signal Processing, 36, 287-314
 }
 \seealso{
-For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.cv}}
+For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.garch}}, \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.cv}}
 }

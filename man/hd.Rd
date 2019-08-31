@@ -4,12 +4,14 @@
 \alias{hd}
 \title{Historical decomposition for SVAR Models}
 \usage{
-hd(x, series = 1)
+hd(x, series = 1, transition = 0.1)
 }
 \arguments{
 \item{x}{SVAR object of class "svars"}
 
-\item{series}{Integer indicating the series that should be decomposed.}
+\item{series}{Integer. indicating the series that should be decomposed.}
+
+\item{transition}{Numeric. Value from [0, 1] indicating how many initial values should be discarded, i.e., 0.1 means that the first 10 per cent observations of the sample are considered as transient.}
 }
 \value{
 A list with class attribute "hd" holding the historical decomposition as data frame.
@@ -30,5 +32,5 @@ plot(x2)
 Kilian, L., Luetkepohl, H., 2017. Structural Vector Autoregressive Analysis, Cambridge University Press.
 }
 \seealso{
-\code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}}, \code{\link{id.cv}} or \code{\link{id.st}}
+\code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}}, \code{\link{id.cv}}, \code{\link{id.garch}} or \code{\link{id.st}}
 }

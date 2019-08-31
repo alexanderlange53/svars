@@ -69,5 +69,5 @@ Herwartz, H., 2018. Hodges Lehmann detection of structural shocks - An Analysis 
  Genest, C. & Remillard, B., 2004. Tests of independence and randomness based on the empirical copula process, Test, 13, 335-370\cr
 }
 \seealso{
-For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.cv}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
+For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.garch}}, \code{\link{id.cv}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
 }
