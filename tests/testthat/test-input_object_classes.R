@@ -177,176 +177,176 @@
 #   expect_equal(round(bb3$root, 1), 1)
 #
 # })
-
-test_that("id.dc works for nlVars object and analysis (bootstrap, irf, hd fevd)", {
-  set.seed(23211)
-  v1 <-lineVar(USA, lag = 6)
-  #id.dc
-  x1 <- id.dc(v1)
-
-  expect_equal(sum(round(x1$B, 4)), 2.8497)
-  IRF = irf(x1)
-  expect_equal(round(sum(IRF$irf),4), 238.629)
-  HD = hd(x1)
-  expect_equal(round(sum(HD$hidec), 4), -3.5012)
-  FEVD = fevd(x1)
-  expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
-
-  # mb boot
-  signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
-  bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
-
-  expect_length(bb, 18)
-  expect_equal(bb$nboot, 10)
-
-  # wild boot
-  bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
-  expect_length(bb2, 18)
-  expect_equal(bb2$nboot, 10)
-
-  # ba boot
-  bb3 <- ba.boot(bb, nc = 1)
-  expect_equal(bb3$count, 0)
-  expect_equal(round(bb3$root, 1), 1)
-
-})
-
-test_that("id.garch works for nlVars object and analysis (bootstrap, irf, hd fevd)", {
-  set.seed(23211)
-  v1 <-lineVar(USA, lag = 6)
-  # id.garch
-  x1 <- id.garch(v1)
-
-  expect_equal(round(x1$Lik, 1),  -547.2)
-  expect_equal(round(sum(x1$B), 2), 1.83)
-
-  IRF = irf(x1)
-  expect_equal(round(sum(IRF$irf),2), 219.62)
-  HD = hd(x1)
-  expect_equal(round(sum(HD$hidec), 4), -3.5012)
-  FEVD = fevd(x1)
-  expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
-
-  # mb boot
-  signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
-  bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
-
-  expect_length(bb, 18)
-  expect_equal(bb$nboot, 10)
-
-  # wild boot
-  bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
-  expect_length(bb2, 18)
-  expect_equal(bb2$nboot, 10)
-
-  # ba boot
-  bb3 <- ba.boot(bb, nc = 1)
-  expect_equal(bb3$count, 0)
-  expect_equal(round(bb3$root, 1), 1)
-})
-
-test_that("id.ngml works for nlVars object and analysis (bootstrap, irf, hd fevd)", {
-  set.seed(23211)
-  v1 <-lineVar(USA, lag = 6)
-  # id.ngml
-  x1 <- id.ngml(v1)
-  x2 <- id.ngml_boot(v1)
-
-  expect_equal(round(x1$Lik, 4),round(x2$Lik, 4), -548.1502)
-
-  IRF = irf(x1)
-  expect_equal(round(sum(IRF$irf),4), 239.0778)
-  HD = hd(x1)
-  expect_equal(round(sum(HD$hidec), 4), -3.5012)
-  FEVD = fevd(x1)
-  expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
-
-  # mb boot
-  signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
-  bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
-
-  expect_length(bb, 18)
-  expect_equal(bb$nboot, 10)
-
-  # wild boot
-  bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
-  expect_length(bb2, 18)
-  expect_equal(bb2$nboot, 10)
-
-  # ba boot
-  bb3 <- ba.boot(bb, nc = 1)
-  expect_equal(bb3$count, 0)
-  expect_equal(round(bb3$root, 1), 1)
-  })
-
-
-## test MTS model classes
-test_that("id.cv works for MTS list object and analysis (bootstrap, irf, hd fevd)", {
-  skip_on_cran()
-  set.seed(23211)
-  v3 <- invisible(MTS::VAR(USA, p = 6))
-
-  #id.cv
-  x3 <- id.cv(v3, SB = 59)
-  x4 <- id.cv_boot(v3, SB = 59)
-  expect_equal(round(x3$Lik, 4), round(x4$Lik, 4), -564.2994)
-  IRF = irf(x3)
-  expect_equal(round(sum(IRF$irf),4), 241.5486)
-  HD = hd(x3)
-  expect_equal(round(sum(HD$hidec), 4), 63.635)
-  FEVD = fevd(x3)
-  expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
-
-  # mb boot
-  signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
-  bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
-
-  expect_length(bb, 18)
-  expect_equal(bb$nboot, 10)
-
-  # wild boot
-  bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
-  expect_length(bb2, 18)
-  expect_equal(bb2$nboot, 10)
-
-  # ba boot
-  bb3 <- ba.boot(bb, nc = 2)
-  expect_equal(bb3$count, 0)
-  expect_equal(round(bb3$root, 1), 1)
-})
-
-test_that("id.st works for MTS list object and analysis (bootstrap, irf, hd fevd)", {
-  set.seed(23211)
-  v3 <- invisible(MTS::VAR(USA, p = 6))
-  #id.st
-  x1 <- id.st(v3)
-
-  expect_equal(round(x1$Lik, 4), -508.7511)
-  IRF = irf(x1)
-  expect_equal(round(sum(IRF$irf),4), 248.6993)
-  HD = hd(x1)
-  expect_equal(round(sum(HD$hidec), 4), 2.0775)
-  FEVD = fevd(x1)
-  expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
-
-  # mb boot
-  signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
-  bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
-
-  expect_length(bb, 18)
-  expect_equal(bb$nboot, 10)
-
-  # wild boot
-  bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
-  expect_length(bb2, 18)
-  expect_equal(bb2$nboot, 10)
-
-  # ba boot
-  bb3 <- ba.boot(bb, nc = 1)
-  expect_equal(bb3$count, 0)
-  expect_equal(round(bb3$root, 1), 1)
-})
-
+#
+# test_that("id.dc works for nlVars object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   v1 <-lineVar(USA, lag = 6)
+#   #id.dc
+#   x1 <- id.dc(v1)
+#
+#   expect_equal(sum(round(x1$B, 4)), 2.8497)
+#   IRF = irf(x1)
+#   expect_equal(round(sum(IRF$irf),4), 238.629)
+#   HD = hd(x1)
+#   expect_equal(round(sum(HD$hidec), 4), -3.5012)
+#   FEVD = fevd(x1)
+#   expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
+#
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 0)
+#   expect_equal(round(bb3$root, 1), 1)
+#
+# })
+#
+# test_that("id.garch works for nlVars object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   v1 <-lineVar(USA, lag = 6)
+#   # id.garch
+#   x1 <- id.garch(v1)
+#
+#   expect_equal(round(x1$Lik, 1),  -547.2)
+#   expect_equal(round(sum(x1$B), 2), 1.83)
+#
+#   IRF = irf(x1)
+#   expect_equal(round(sum(IRF$irf),2), 219.62)
+#   HD = hd(x1)
+#   expect_equal(round(sum(HD$hidec), 4), -3.5012)
+#   FEVD = fevd(x1)
+#   expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
+#
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 0)
+#   expect_equal(round(bb3$root, 1), 1)
+# })
+#
+# test_that("id.ngml works for nlVars object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   v1 <-lineVar(USA, lag = 6)
+#   # id.ngml
+#   x1 <- id.ngml(v1)
+#   x2 <- id.ngml_boot(v1)
+#
+#   expect_equal(round(x1$Lik, 4),round(x2$Lik, 4), -548.1502)
+#
+#   IRF = irf(x1)
+#   expect_equal(round(sum(IRF$irf),4), 239.0778)
+#   HD = hd(x1)
+#   expect_equal(round(sum(HD$hidec), 4), -3.5012)
+#   FEVD = fevd(x1)
+#   expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
+#
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 0)
+#   expect_equal(round(bb3$root, 1), 1)
+#   })
+#
+#
+# ## test MTS model classes
+# test_that("id.cv works for MTS list object and analysis (bootstrap, irf, hd fevd)", {
+#   skip_on_cran()
+#   set.seed(23211)
+#   v3 <- invisible(MTS::VAR(USA, p = 6))
+#
+#   #id.cv
+#   x3 <- id.cv(v3, SB = 59)
+#   x4 <- id.cv_boot(v3, SB = 59)
+#   expect_equal(round(x3$Lik, 4), round(x4$Lik, 4), -564.2994)
+#   IRF = irf(x3)
+#   expect_equal(round(sum(IRF$irf),4), 241.5486)
+#   HD = hd(x3)
+#   expect_equal(round(sum(HD$hidec), 4), 63.635)
+#   FEVD = fevd(x3)
+#   expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
+#
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 2)
+#   expect_equal(bb3$count, 0)
+#   expect_equal(round(bb3$root, 1), 1)
+# })
+#
+# test_that("id.st works for MTS list object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   v3 <- invisible(MTS::VAR(USA, p = 6))
+#   #id.st
+#   x1 <- id.st(v3)
+#
+#   expect_equal(round(x1$Lik, 4), -508.7511)
+#   IRF = irf(x1)
+#   expect_equal(round(sum(IRF$irf),4), 248.6993)
+#   HD = hd(x1)
+#   expect_equal(round(sum(HD$hidec), 4), 2.0775)
+#   FEVD = fevd(x1)
+#   expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
+#
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 0)
+#   expect_equal(round(bb3$root, 1), 1)
+# })
+#
 # test_that("id.cvm works for MTS list object and analysis (bootstrap, irf, hd fevd)", {
 #   set.seed(23211)
 #   v3 <- invisible(MTS::VAR(USA, p = 6))
@@ -379,40 +379,40 @@ test_that("id.st works for MTS list object and analysis (bootstrap, irf, hd fevd
 #   expect_equal(bb3$count, 0)
 #   expect_equal(round(bb3$root, 1), 1)
 # })
-
-test_that("id.dc works for MTS list object and analysis (bootstrap, irf, hd fevd)", {
-  set.seed(23211)
-  v3 <- invisible(MTS::VAR(USA, p = 6))
-  #id.dc
-  x1 <- id.dc(v3)
-
-  expect_equal(sum(round(x1$B, 4)), 2.8498)
-  IRF = irf(x1)
-  expect_equal(round(sum(IRF$irf),4), 891.1648)
-  #HD = hd(x1)
-  #expect_equal(round(sum(HD$hidec), 4), -3.5012)
-  FEVD = fevd(x1)
-  expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
-
-  # mb boot
-  signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
-  bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
-
-  expect_length(bb, 18)
-  expect_equal(bb$nboot, 10)
-
-  # wild boot
-  bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
-  expect_length(bb2, 18)
-  expect_equal(bb2$nboot, 10)
-
-  # ba boot
-  bb3 <- ba.boot(bb, nc = 1)
-  expect_equal(bb3$count, 0)
-  expect_equal(round(bb3$root, 1), 1)
-
-})
-
+#
+# test_that("id.dc works for MTS list object and analysis (bootstrap, irf, hd fevd)", {
+#   set.seed(23211)
+#   v3 <- invisible(MTS::VAR(USA, p = 6))
+#   #id.dc
+#   x1 <- id.dc(v3)
+#
+#   expect_equal(sum(round(x1$B, 4)), 2.8498)
+#   IRF = irf(x1)
+#   expect_equal(round(sum(IRF$irf),4), 891.1648)
+#   #HD = hd(x1)
+#   #expect_equal(round(sum(HD$hidec), 4), -3.5012)
+#   FEVD = fevd(x1)
+#   expect_equal(c(sum(FEVD$x),sum(FEVD$pi),sum(FEVD$i)), c(1000,1000,1000))
+#
+#   # mb boot
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bb <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bb, 18)
+#   expect_equal(bb$nboot, 10)
+#
+#   # wild boot
+#   bb2 <- wild.boot(x1, design = "recursive", distr = "rademacher", nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bb2, 18)
+#   expect_equal(bb2$nboot, 10)
+#
+#   # ba boot
+#   bb3 <- ba.boot(bb, nc = 1)
+#   expect_equal(bb3$count, 0)
+#   expect_equal(round(bb3$root, 1), 1)
+#
+# })
+#
 # test_that("id.garch works for MTS list object and analysis (bootstrap, irf, hd fevd)", {
 #   set.seed(23211)
 #   v3 <- invisible(MTS::VAR(USA, p = 6))
@@ -446,7 +446,7 @@ test_that("id.dc works for MTS list object and analysis (bootstrap, irf, hd fevd
 #   expect_equal(bb3$count, 0)
 #   expect_equal(round(bb3$root, 1), 1)
 # })
-
+#
 # test_that("id.ngml works for MTS list object and analysis (bootstrap, irf, hd fevd)", {
 #   set.seed(23211)
 #   v3 <- invisible(MTS::VAR(USA, p = 6))
