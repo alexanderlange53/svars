@@ -92,8 +92,14 @@ hd <- function(x, series = 1, transition = 0){
 
   # Step 2: Calculate structural errors
 
-  # gathering informations from vars object
+  # gathering informations from 'svars' object
+
+  # in case original data came in different format than matrix or ts
+  if(!inherits(x$y, c("matrix", "ts"))){
+    y = as.matrix(x$y)
+  }else{
   y <- x$y
+  }
   p <- x$p
   obs <- x$n
   k <- x$K
@@ -101,7 +107,7 @@ hd <- function(x, series = 1, transition = 0){
 
   # calculating covariance from actual VAR
   A <- x$A_hat
-  Z <- t(YLagCr(y, p))
+  Z <- t(YLagCr(as.matrix(y), p))
 
   if(x$type == "const"){
     Z <- rbind(rep(1, ncol(Z)), Z)

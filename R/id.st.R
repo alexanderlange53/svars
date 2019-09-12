@@ -161,11 +161,11 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
   #yret <- y
   y_loop <- y[,-c(1:p)]
 
-  if(x$type == 'const'){
+  if(type == 'const'){
     Z_t <- rbind(rep(1, ncol(yl)), yl)
-  }else if(x$type == 'trend'){
+  }else if(type == 'trend'){
     Z_t <- rbind(seq(p + 1, Tob + p), yl)
-  }else if(x$type == 'both'){
+  }else if(type == 'both'){
     Z_t <- rbind(rep(1, ncol(yl)), seq(p + 1, Tob + p), yl)
   }else{
     Z_t <- yl
@@ -274,7 +274,7 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     comb = comb,                 # number of all evaluated combinations of gamma and c
     transition_function = transition_function,
     A_hat = best_estimation$A_hat,          # VAR parameter estimated with gls
-    type = x$type,          # type of the VAR model e.g 'const'
+    type = type,          # type of the VAR model e.g 'const'
     y = yOut,                # Data
     p = p,                # number of lags
     K = k,                 # number of time series
