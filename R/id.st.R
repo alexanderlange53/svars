@@ -1,4 +1,4 @@
-#' Identification of SVAR models by means of a smooth transition of volatility
+#' Identification of SVAR models by means of a smooth transition (st) in covariance
 #'
 #' Given an estimated VAR model, this function uses a smooth transition in the covariance to identify the structural impact matrix B of the corresponding SVAR model
 #' \deqn{y_t=c_t+A_1 y_{t-1}+...+A_p y_{t-p}+u_t

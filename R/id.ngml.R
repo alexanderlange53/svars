@@ -1,4 +1,4 @@
-#' Non-Gaussian maximum likelihood identification of SVAR models
+#' Non-Gaussian maximum likelihood (ngml) identification of SVAR models
 #'
 #' Given an estimated VAR model, this function applies identification by means of a non-Gaussian likelihood for the structural impact matrix B of the corresponding SVAR model
 #' \deqn{y_t=c_t+A_1 y_{t-1}+...+A_p y_{t-p}+u_t   =c_t+A_1 y_{t-1}+...+A_p y_{t-p}+B \epsilon_t.}

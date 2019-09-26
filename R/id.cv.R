@@ -1,4 +1,4 @@
-#' Changes in volatility identification of SVAR models
+#' Identification of SVAR models based on Changes in volatility (cv)
 #'
 #' Given an estimated VAR model, this function applies changes in volatility to identify the structural impact matrix B of the corresponding SVAR model
 #' \deqn{y_t=c_t+A_1 y_{t-1}+...+A_p y_{t-p}+u_t
