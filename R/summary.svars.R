@@ -11,8 +11,10 @@ summary.svars <- function(object, ...){
   cat("\nSample size: ")
   cat(svarsObject$n)
   if(!svarsObject$method %in% c("Distance covariances", "Cramer-von Mises distance")){
-  cat("\nLikelihood: ")
+  cat("\nLog-Likelihood: ")
   cat(svarsObject$Lik)
+  cat("\nAIC: ")
+  cat(svarsObject$AIC)
 }
   if(svarsObject$method ==  "Changes in Volatility"){
   cat("\nStructural Break: At Observation Number ")

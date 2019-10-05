@@ -325,7 +325,8 @@ y <- y[, -c(1:p)]
     y = yOut,                # Data
     p = unname(p),                # number of lags
     K = k,# number of time series
-    lRatioTest = lRatioTest
+    lRatioTest = lRatioTest,
+    AIC = (-2) * best_estimation$Lik + 2*(k + p * k^2 + (k + 1) * k + 1)
   )
   class(result) <- "svars"
  return(result)

@@ -92,6 +92,7 @@ id.ngml <- function(x, stage3 = FALSE, restriction_matrix = NULL){
   }
 
   result$restriction_matrix = rmOut
+  result$AIC <- (-2) * result$Lik + 2*(k + p * k^2 + (k + 1) * k + 1)
 
   class(result) <- "svars"
   return(result)
