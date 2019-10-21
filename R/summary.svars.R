@@ -10,7 +10,7 @@ summary.svars <- function(object, ...){
   cat(svarsObject$method)
   cat("\nSample size: ")
   cat(svarsObject$n)
-  if(!svarsObject$method %in% c("Distance covariances", "Cramer-von Mises distance")){
+  if(!svarsObject$method %in% c("Distance covariances", "Cramer-von Mises distance", "Cholesky")){
   cat("\nLog-Likelihood: ")
   cat(svarsObject$Lik)
   cat("\nAIC: ")
@@ -113,7 +113,7 @@ summary.svars <- function(object, ...){
      #cat(svarsObject$lRatioTestPValue)
      printCoefmat(svarsObject$lRatioTest, has.Pvalue = T)
    }
- }else if(svarsObject$method == "Distance covariances"){
+ }else if(svarsObject$method == "Distance covariances" | svarsObject$method == "Cholesky"){
    cat("\n")
    cat("\nEstimated B Matrix (unique decomposition of the covariance matrix): \n")
    print(svarsObject$B)
