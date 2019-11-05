@@ -2,7 +2,7 @@
 % Please edit documentation in R/id.cvm.R
 \name{id.cvm}
 \alias{id.cvm}
-\title{Independence-based identification of SVAR models based on Cramer-von Mises distance}
+\title{Independence-based identification of SVAR models via Cramer-von Mises (cvm) distance}
 \usage{
 id.cvm(x, dd = NULL, itermax = 500, steptol = 100, iter2 = 75)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/id.garch.R
 \name{id.garch}
 \alias{id.garch}
-\title{GARCH identification of SVAR models}
+\title{Identification of SVAR models through patterns of GARCH}
 \usage{
 id.garch(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL)
 }
