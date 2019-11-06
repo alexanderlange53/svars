@@ -1,4 +1,4 @@
-#' Independence-based identification of SVAR models via Cramer-von Mises (cvm) distance
+#' Independence-based identification of SVAR models via Cramer-von Mises (CVM) distance
 #'
 #'Given an estimated VAR model, this function applies independence-based identification for the structural impact matrix B of the corresponding SVAR model
 #' \deqn{y_t=c_t+A_1 y_{t-1}+...+A_p y_{t-p}+u_t   =c_t+A_1 y_{t-1}+...+A_p y_{t-p}+B \epsilon_t.}

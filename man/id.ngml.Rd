@@ -2,7 +2,7 @@
 % Please edit documentation in R/id.ngml.R
 \name{id.ngml}
 \alias{id.ngml}
-\title{Non-Gaussian maximum likelihood (ngml) identification of SVAR models}
+\title{Non-Gaussian maximum likelihood (NGML) identification of SVAR models}
 \usage{
 id.ngml(x, stage3 = FALSE, restriction_matrix = NULL)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/id.dc.R
 \name{id.dc}
 \alias{id.dc}
-\title{Independence-based identification of SVAR models build on distance covariances (dc) statistic}
+\title{Independence-based identification of SVAR models build on distance covariances (DC) statistic}
 \usage{
 id.dc(x, PIT = FALSE)
 }

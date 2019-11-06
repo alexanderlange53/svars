@@ -2,7 +2,7 @@
 % Please edit documentation in R/id.cv.R
 \name{id.cv}
 \alias{id.cv}
-\title{Identification of SVAR models based on Changes in volatility (cv)}
+\title{Identification of SVAR models based on Changes in volatility (CV)}
 \usage{
 id.cv(x, SB, start = NULL, end = NULL, frequency = NULL,
   format = NULL, dateVector = NULL, max.iter = 50, crit = 0.001,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/id.st.R
 \name{id.st}
 \alias{id.st}
-\title{Identification of SVAR models by means of a smooth transition (st) in covariance}
+\title{Identification of SVAR models by means of a smooth transition (ST) in covariance}
 \usage{
 id.st(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL,
   transition_variable = NULL, gamma_lower = -3, gamma_upper = 2,
