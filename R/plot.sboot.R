@@ -1,78 +1,73 @@
 #' @S3method plot sboot
 
 plot.sboot <- function(x, scales = "free_y", lowerq = 0.16, upperq = 0.84, percentile = 'standard', ..., base){
-
-  impulse <- melt(x$true$irf, id = 'V1')
-  confidence <- x$bootstrap
-  horizon <- nrow(confidence[[1]]$irf)
-  kk <- ncol(confidence[[1]]$irf)
-  nboot <- length(confidence)
+  # define
+  n.ahead <- nrow(x$true$irf)
+  kk <- ncol(x$true$irf)
+  bootstrap <- x$bootstrap
+  nboot <- length(bootstrap)
   rest <- x$rest_mat
-
-  intervals <- array(0, c(horizon, kk, nboot))
-  for(i in 1:nboot){
-    intervals[,,i] <- as.matrix(confidence[[i]]$irf)
+  
+  n.probs <- length(lowerq)
+  if(length(lowerq) != length(upperq)){ 
+    stop("Vectors 'lowerq' and 'upperq' must be of same length!") 
   }
-
+  
+  intervals <- array(0, c(n.ahead, kk, nboot))
+  for(i in 1:nboot){
+    intervals[,,i] <- as.matrix(bootstrap[[i]]$irf)
+  }
+  
+  # find quantiles for lower and upper bounds
+  lower <- array(0, dim = c(n.ahead, kk, n.probs))
+  upper <- array(0, dim = c(n.ahead, kk, n.probs))
   if(percentile == 'standard' | percentile == 'hall'){
-    lower <- matrix(0, horizon, kk)
-      for(i in 1:horizon){
-        for(j in 1:kk){
-          lower[i,j] <- quantile(intervals[i,j,], probs = lowerq)
-        }
-      }
-
-
-    upper <- matrix(0, horizon, kk)
-    for(i in 1:horizon){
+    for(i in 1:n.ahead){
       for(j in 1:kk){
-        upper[i,j] <- quantile(intervals[i,j,], probs = upperq)
+        lower[i,j, ] <- quantile(intervals[i,j, ], probs = lowerq)
+        upper[i,j, ] <- quantile(intervals[i,j, ], probs = upperq)
       }
     }
-    lower <- as.data.frame(lower)
-    upper <- as.data.frame(upper)
+    
     if(percentile == 'hall'){
-      lower <- 2*x$true$irf - lower
-      upper <- 2*x$true$irf - upper
+      for(p in 1:n.probs){
+        lower[ ,-1, p] <- as.matrix(2*x$true$irf)[ ,-1] - lower[ ,-1, p]
+        upper[ ,-1, p] <- as.matrix(2*x$true$irf)[ ,-1] - upper[ ,-1, p]
+      }
     }
+    
   }else if(percentile == 'bonferroni'){
     rest <- matrix(t(rest), nrow = 1)
     rest[is.na(rest)] <- 1
     rest[kk] <- 1
-    lower <- matrix(0, horizon, kk)
-    for(i in 1:horizon){
+    for(i in 1:n.ahead){
       for(j in 1:kk){
         if(rest[j] == 0){
-          lower[i,j] <- quantile(intervals[i,j,], probs = (lowerq/horizon))
-        } else{
-          lower[i,j] <- quantile(intervals[i,j,], probs = (lowerq/(horizon + 1)))
-          }
-      }
-    }
-
-
-    upper <- matrix(0, horizon, kk)
-    for(i in 1:horizon){
-      for(j in 1:kk){
-        if(rest[j] == 0){
-          upper[i,j] <- quantile(intervals[i,j,], probs = 1 + (((upperq - 1)/horizon)))
+          lower[i,j, ] <- quantile(intervals[i,j, ], probs = (lowerq/n.ahead))
+          upper[i,j, ] <- quantile(intervals[i,j, ], probs = 1 + (((upperq - 1)/n.ahead)))
         }else{
-          upper[i,j] <- quantile(intervals[i,j,], probs = 1 + (((upperq - 1)/(horizon + 1))))
+          lower[i,j, ] <- quantile(intervals[i,j, ], probs = (lowerq/(n.ahead + 1)))
+          upper[i,j, ] <- quantile(intervals[i,j, ], probs = 1 + (((upperq - 1)/(n.ahead + 1))))
         }
       }
     }
-    lower <- as.data.frame(lower)
-    upper <- as.data.frame(upper)
-  }else {
-    print("Invalid choice of percentile; choose between standard, hall and bonferroni")
+  }else{
+    stop("Invalid choice of percentile; choose between standard, hall and bonferroni")
   }
-
-  lower <- melt(lower, id = 'V1')
-  upper <- melt(upper, id = 'V1')
-
-  ggplot(impulse, aes_(x = ~V1, y = ~value)) +  geom_ribbon(aes(x = lower$V1, ymin= lower$value, ymax= upper$value), alpha=.7, fill = 'grey') +
-    geom_line() + geom_hline(yintercept = 0, color = 'red') +
+  
+  # plot IRF with confidence bands
+  alp <- 0.7 * (1+log(n.probs, 10))/n.probs
+  irf <- melt(x$true$irf, id = 'V1')
+  cbs <- data.frame(V1 = rep(irf$V1, times=n.probs),
+               variable = rep(irf$variable, times=n.probs), 
+               probs = rep(1:n.probs, each=(kk-1)*n.ahead),
+               lower = c(lower[,-1,]), 
+               upper = c(upper[,-1,]))
+  ggplot() +  
+    geom_ribbon(data=cbs, aes(x=V1, ymin=lower, ymax=upper, group=probs), alpha=alp, fill='darkgrey') +
+    geom_line(data=irf, aes(x=V1, y=value)) + 
+    geom_hline(yintercept = 0, color = 'red') +
     facet_wrap(~variable, scales = scales, labeller = label_parsed) +
-    xlab("Observation Time") + ylab("Response") +
+    xlab("Horizon") + ylab("Response") +
     theme_bw()
 }
