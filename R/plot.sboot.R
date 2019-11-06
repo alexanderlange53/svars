@@ -39,7 +39,7 @@ plot.sboot <- function(x, scales = "free_y", lowerq = 0.16, upperq = 0.84, perce
   }else if(percentile == 'bonferroni'){
     rest <- matrix(t(rest), nrow = 1)
     rest[is.na(rest)] <- 1
-    rest[kk] <- 1
+    rest <- c(1, rest)
     for(i in 1:n.ahead){
       for(j in 1:kk){
         if(rest[j] == 0){
