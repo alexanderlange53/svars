@@ -196,6 +196,8 @@ wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20,
         temp <- tryCatch(id.garch(varb, restriction_matrix = x$restriction_matrix, max.iter = x$max.iter,
                                   crit = x$crit),
                          error = function(e) NULL)
+      }else if(x$method == "Cholesky"){
+        temp <- id.chol(varb)
       }else{
         temp <- tryCatch(id.st_boot(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,
                                     gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01, Z = Z),
@@ -254,23 +256,27 @@ wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20,
         temp <- tryCatch(id.garch(varb, restriction_matrix = x$restriction_matrix, max.iter = x$max.iter,
                                   crit = x$crit),
                          error = function(e) NULL)
+      }else if(x$method == "Cholesky"){
+        temp <- id.chol(varb)
       }
     }
 
     if(!is.null(temp)){
       Pstar <- temp$B
 
-      if(restrictions > 0){
-        Pstar1 <- Pstar
-        frobP <- frobICA_mod(Pstar1, B, standardize=TRUE)
-      }else{
-        Pstar1 <- sqrt.f(Pstar, Sigma_u_star)
-        diag_sigma_root <- diag(diag(suppressMessages(sqrtm(Sigma_u_hat_old))))
+      if (x$method != "Cholesky") {
+        if(!is.null(x$restriction_matrix)){
+          Pstar1 <- Pstar
+          frobP <- frobICA_mod(Pstar1, B, standardize=TRUE)
+        }else{
+          Pstar1 <- sqrt.f(Pstar, Sigma_u_star)
+          diag_sigma_root <- diag(diag(suppressMessages(sqrtm(Sigma_u_hat_old))))
 
-        frobP <- frobICA_mod(t(solve(diag_sigma_root)%*%Pstar1), t(solve(diag_sigma_root)%*%B), standardize=TRUE)
+          frobP <- frobICA_mod(t(solve(diag_sigma_root)%*%Pstar1), t(solve(diag_sigma_root)%*%B), standardize=TRUE)
+        }
+        Pstar <- Pstar1%*%frobP$perm
+        temp$B <- Pstar
       }
-      Pstar <- Pstar1%*%frobP$perm
-      temp$B <- Pstar
 
     ip <- irf(temp, n.ahead = n.ahead)
     return(list(ip, Pstar, temp$A_hat))
@@ -320,7 +326,7 @@ wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20,
   rownames(boot.mean) <- rownames(x$B)
 
   # Checking for signs
-  if(restrictions > 0){
+  if(restrictions > 0 | x$method == 'Cholesky'){
     if(!is.null(signrest)){
       cat('Testing signs only possible for unrestricted model \n')
     }
