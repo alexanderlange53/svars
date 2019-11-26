@@ -7,6 +7,7 @@ plot.cf <- function(x, ...){
 
   Index <- NULL
   value <- NULL
+  group <- NULL
   actual <- as.data.frame(x$actual)
   counter <- as.data.frame(x$counter)
 

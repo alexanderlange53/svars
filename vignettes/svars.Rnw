@@ -76,6 +76,7 @@
 
 \begin{document}
 %\VignettePackage{svars}
+% \VignetteIndexEntry{Data-Driven Identification of SVAR Models }
 %% -- Introduction -------------------------------------------------------------
 
 %% - In principle "as usual".
