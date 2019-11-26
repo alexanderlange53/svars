@@ -1,0 +1,519 @@
+\begin{thebibliography}{61}
+\newcommand{\enquote}[1]{``#1''}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+\providecommand{\eprint}[2][]{\url{#2}}
+
+\bibitem[{Ardia \emph{et~al.}(2016)Ardia, Mullen, Peterson, and
+  Ulrich}]{DEoptim}
+Ardia D, Mullen KM, Peterson BG, Ulrich J (2016).
+\newblock \emph{\pkg{DEoptim}: Differential Evolution in \proglang{R}}.
+\newblock Version 2.2-4,
+  \urlprefix\url{https://CRAN.R-project.org/package=DEoptim}.
+
+\bibitem[{Blanchard and Quah(1989)}]{BlacnchardQuah1989}
+Blanchard OJ, Quah D (1989).
+\newblock \enquote{The Dynamic Effects of Aggregate Demand and Supply
+  Disturbances.}
+\newblock \emph{American Economic Review}, \textbf{79}(4), 655--673.
+\newblock
+  \urlprefix\url{https://ideas.repec.org/a/aea/aecrev/v79y1989i4p655-73.html}.
+
+\bibitem[{Bouakez and Normandin(2010)}]{BouakezNormadin2010}
+Bouakez H, Normandin M (2010).
+\newblock \enquote{Fluctuations in the Foreign Exchange Market: How Important
+  are Monetary Policy Shocks?}
+\newblock \emph{Journal of International Economics}, \textbf{81}(1), 139--153.
+\newblock \doi{https://doi.org/10.1016/j.jinteco.2009.11.007}.
+\newblock
+  \urlprefix\url{https://EconPapers.repec.org/RePEc:eee:inecon:v:81:y:2010:i:1:p:139-153}.
+
+\bibitem[{Br\"uggemann \emph{et~al.}(2016)Br\"uggemann, Jentsch, and
+  Trenkler}]{BJT2016}
+Br\"uggemann R, Jentsch C, Trenkler C (2016).
+\newblock \enquote{Inference in VARs with Conditional Heteroskedasticity of
+  Unknown Form.}
+\newblock \emph{Journal of Econometrics}, \textbf{191}(1), 69--85.
+\newblock \doi{https://doi.org/10.1016/j.jeconom.2015.10.004}.
+\newblock
+  \urlprefix\url{http://www.sciencedirect.com/science/article/pii/S0304407615002547}.
+
+\bibitem[{Candelon and L\"utkepohl(2001)}]{Luetchowtest}
+Candelon B, L\"utkepohl H (2001).
+\newblock \enquote{On the Reliability of Chow-Type Tests for Parameter
+  Constancy in Multivariate Dynamic Models.}
+\newblock \emph{Economics Letters}, \textbf{73}(2), 155--160.
+\newblock ISSN 0165-1765.
+\newblock \doi{https://doi.org/10.1016/S0165-1765(01)00478-5}.
+\newblock
+  \urlprefix\url{https://EconPapers.repec.org/RePEc:eee:ecolet:v:73:y:2001:i:2:p:155-160}.
+
+\bibitem[{Comon(1994)}]{Comon1994}
+Comon P (1994).
+\newblock \enquote{Independent Component Analysis, a New Concept?}
+\newblock \emph{Signal Processing}, \textbf{36}(3), 287--314.
+\newblock ISSN 0165-1684.
+\newblock \doi{https://doi.org/10.1016/0165-1684(94)90029-9}.
+\newblock
+  \urlprefix\url{http://www.sciencedirect.com/science/article/pii/0165168494900299}.
+
+\bibitem[{Danne(2015)}]{VARsignR}
+Danne C (2015).
+\newblock \emph{\pkg{VARsignR}: Sign Restrictions, Bayesian, Vector
+  Autoregression Models}.
+\newblock \proglang{R} package version 0.1.3,
+  \urlprefix\url{https://CRAN.R-project.org/package=VARsignR}.
+
+\bibitem[{Eddelbuettel and Fran\c{c}ois(2011)}]{Rcpp}
+Eddelbuettel D, Fran\c{c}ois R (2011).
+\newblock \enquote{{Rcpp}: Seamless \proglang{R} and \proglang{C++}
+  Integration.}
+\newblock \emph{Journal of Statistical Software}, \textbf{40}(8), 1--18.
+\newblock \doi{10.18637/jss.v040.i08}.
+\newblock \urlprefix\url{http://www.jstatsoft.org/v40/i08/}.
+
+\bibitem[{Eddelbuettel and Sanderson(2014)}]{arma2014}
+Eddelbuettel D, Sanderson C (2014).
+\newblock \enquote{RcppArmadillo: Accelerating \proglang{R} with
+  High-Performance \proglang{C++} Linear Algebra.}
+\newblock \emph{Computational Statistics and Data Analysis}, \textbf{71},
+  1054--1063.
+\newblock \urlprefix\url{http://dx.doi.org/10.1016/j.csda.2013.02.005}.
+
+\bibitem[{Eichenbaum(1992)}]{E1992}
+Eichenbaum M (1992).
+\newblock \enquote{Interpreting the Macroeconomic Time Series Facts: The
+  Effects of Monetary Policy': by Christopher Sims.}
+\newblock \emph{European Economic Review}, \textbf{36}(5), 1001--1011.
+\newblock ISSN 0014-2921.
+\newblock \doi{https://doi.org/10.1016/0014-2921(92)90042-U}.
+\newblock
+  \urlprefix\url{http://www.sciencedirect.com/science/article/pii/001429219290042U}.
+
+\bibitem[{Gavrilov and Pusev(2015)}]{normtest}
+Gavrilov I, Pusev R (2015).
+\newblock \emph{\pkg{normtest}: Tests for the Composite Hypothesis of
+  Normality}.
+\newblock \proglang{R} package version 1.1,
+  \urlprefix\url{https://CRAN.R-project.org/package=normtest}.
+
+\bibitem[{Genest \emph{et~al.}(2007)Genest, Quessy, and
+  R\'emillard}]{Genest2007}
+Genest C, Quessy JF, R\'emillard B (2007).
+\newblock \enquote{Asymptotic Local Efficiency of Cram\'er-von Mises Tests for
+  Multivariate Independence.}
+\newblock \emph{The Annals of Statistics}, \textbf{35}(1), 166--1991.
+\newblock ISSN 00905364.
+\newblock \urlprefix\url{http://www.jstor.org/stable/25463552}.
+
+\bibitem[{Goncalves and Kilian(2004)}]{GK2004}
+Goncalves S, Kilian L (2004).
+\newblock \enquote{Bootstrapping Autoregressions with Conditional
+  Heteroskedasticity of Unknown Form.}
+\newblock \emph{Journal of Econometrics}, \textbf{123}(1), 89--120.
+\newblock ISSN 0304-4076.
+\newblock \doi{https://doi.org/10.1016/j.jeconom.2003.10.030}.
+
+\bibitem[{Gourieroux \emph{et~al.}(2017)Gourieroux, Monfort, and Renne}]{PML}
+Gourieroux C, Monfort A, Renne JP (2017).
+\newblock \enquote{Statistical Inference for Independent Component Analysis:
+  Application to Structural VAR Models.}
+\newblock \emph{Journal of Econometrics}, \textbf{196}(1), 111--126.
+\newblock ISSN 0304-4076.
+\newblock \doi{https://doi.org/10.1016/j.jeconom.2016.09.007}.
+\newblock
+  \urlprefix\url{https://EconPapers.repec.org/RePEc:eee:econom:v:196:y:2017:i:1:p:111-126}.
+
+\bibitem[{Hafner and Herwartz(2009)}]{HAHE2009}
+Hafner CM, Herwartz H (2009).
+\newblock \enquote{Testing for Linear Vector Autoregressive Dynamics under
+  Multivariate Generalized Autoregressive Heteroskedasticity.}
+\newblock \emph{Statistica Neerlandica}, \textbf{63}(3), 294--323.
+\newblock \doi{10.1111/j.1467-9574.2009.00424.x}.
+\newblock
+  \eprint{https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1467-9574.2009.00424.x},
+  \urlprefix\url{https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-9574.2009.00424.x}.
+
+\bibitem[{Hamilton(1994)}]{Hamilton1994}
+Hamilton JD (1994).
+\newblock \emph{Time Series Analysis}.
+\newblock Princeton University Press.
+
+\bibitem[{Herwartz(2018)}]{HerwartzLDI2018}
+Herwartz H (2018).
+\newblock \enquote{Hodges Lehmann Detection of Structural Shocks - An Analysis
+  of Macroeconomic Dynamics in the Euro Area.}
+\newblock \emph{Oxford Bulletin of Economics and Statistics}, \textbf{80}(4),
+  736--754.
+\newblock \doi{10.1111/obes.12234}.
+\newblock
+  \urlprefix\url{https://onlinelibrary.wiley.com/doi/abs/10.1111/obes.12234}.
+
+\bibitem[{Herwartz \emph{et~al.}(2019)Herwartz, Lange, and Maxand}]{HLM2019}
+Herwartz H, Lange A, Maxand S (2019).
+\newblock \enquote{Statistical Identification in SVARs - Monte Carlo
+  Experiments and a Comparative Assessment of the Role of Economic
+  Uncertainties for the US Business Cycle.}
+\newblock \emph{CEGE Discussion Paper}, (375).
+\newblock \urlprefix\url{https://ssrn.com/abstract=3418405}.
+
+\bibitem[{Herwartz and L\"utkepohl(2014)}]{HerwartzLuetkepohl2014}
+Herwartz H, L\"utkepohl H (2014).
+\newblock \enquote{Structural Vector Autoregressions with Markov Switching:
+  Combining Conventional with Statistical Identification of Shocks.}
+\newblock \emph{Journal of Econometrics}, \textbf{183}(1), 104--116.
+\newblock ISSN 0304-4076.
+\newblock \doi{https://doi.org/10.1016/j.jeconom.2014.06.012}.
+\newblock
+  \urlprefix\url{http://www.sciencedirect.com/science/article/pii/S0304407614001535}.
+
+\bibitem[{Herwartz and Pl\"odt(2016{\natexlab{a}})}]{HerwartPloedt2016II}
+Herwartz H, Pl\"odt M (2016{\natexlab{a}}).
+\newblock \enquote{The Macroeconomic Effects of Oil Price Shocks: Evidence from
+  a Statistical Identification Approach.}
+\newblock \emph{Journal of International Money and Finance}, \textbf{61}(C),
+  30--44.
+\newblock ISSN 0261-5606.
+\newblock \doi{https://doi.org/10.1016/j.jimonfin.2015.11.001}.
+\newblock
+  \urlprefix\url{http://www.sciencedirect.com/science/article/pii/S0261560615001904}.
+
+\bibitem[{Herwartz and Pl\"odt(2016{\natexlab{b}})}]{HerwartzPloedt2016}
+Herwartz H, Pl\"odt M (2016{\natexlab{b}}).
+\newblock \enquote{Simulation Evidence on Theory-based and Statistical
+  Identification under Volatility Breaks.}
+\newblock \emph{Oxford Bulletin of Economics and Statistics}, \textbf{78}(1),
+  94--112.
+\newblock ISSN 1468-0084.
+\newblock \doi{10.1111/obes.12098}.
+\newblock \urlprefix\url{http://dx.doi.org/10.1111/obes.12098}.
+
+\bibitem[{Hodges and Lehmann(2006)}]{HodgesLehman2006}
+Hodges J, Lehmann E (2006).
+\newblock \emph{Hodges-Lehmann Estimators}.
+\newblock Encyclopedia of Statistical Sciences.
+
+\bibitem[{Hofert \emph{et~al.}(2017)Hofert, Kojadinovic, Maechler, and
+  Yan}]{copula}
+Hofert M, Kojadinovic I, Maechler M, Yan J (2017).
+\newblock \emph{\pkg{copula}: Multivariate Dependence with Copulas}.
+\newblock \proglang{R} package version 0.999-18,
+  \urlprefix\url{https://CRAN.R-project.org/package=copula}.
+
+\bibitem[{Kilian(1998)}]{Kilian1998}
+Kilian L (1998).
+\newblock \enquote{Small-sample Confidence Intervals for Impulse Response
+  Functions.}
+\newblock \emph{The Review of Economics and Statistics}, \textbf{80}(2),
+  218--230.
+\newblock \doi{10.1162/003465398557465}.
+\newblock \eprint{https://doi.org/10.1162/003465398557465},
+  \urlprefix\url{https://doi.org/10.1162/003465398557465}.
+
+\bibitem[{Kilian and L\"utkepohl(2017)}]{LK17}
+Kilian L, L\"utkepohl H (2017).
+\newblock \emph{Structural Vector Autoregressive Analysis}.
+\newblock Cambridge University Press.
+
+\bibitem[{Lahiri(2003)}]{Lahiri2003}
+Lahiri SN (2003).
+\newblock \emph{Resampling Methods for Dependent Data}.
+\newblock New York: Springer-Verlag.
+
+\bibitem[{Lanne and L\"utkepohl(2008)}]{LanneLuetkepohl2008}
+Lanne M, L\"utkepohl H (2008).
+\newblock \enquote{Identifying Monetary Policy Shocks via Changes in
+  Volatility.}
+\newblock \emph{Journal of Money, Credit and Banking}, \textbf{40}(9),
+  1131--1149.
+\newblock \doi{10.1111/j.1538-4616.2008.00151.x}.
+\newblock
+  \urlprefix\url{https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1538-4616.2008.00151.x}.
+
+\bibitem[{Lanne \emph{et~al.}(2010)Lanne, L\"utkepohl, and
+  Maciejowska}]{LanneLuetMac2010}
+Lanne M, L\"utkepohl H, Maciejowska K (2010).
+\newblock \enquote{Structural Vector Autoregressions with Markov Switching.}
+\newblock \emph{Journal of Economic Dynamics and Control}, \textbf{34}(2),
+  121--131.
+\newblock ISSN 0165-1889.
+\newblock \doi{https://doi.org/10.1016/j.jedc.2009.08.002}.
+\newblock
+  \urlprefix\url{https://EconPapers.repec.org/RePEc:eee:dyncon:v:34:y:2010:i:2:p:121-131}.
+
+\bibitem[{Lanne \emph{et~al.}(2017)Lanne, Meitz, and Saikkonen}]{LMS2017}
+Lanne M, Meitz M, Saikkonen P (2017).
+\newblock \enquote{Identification and Estimation of Non-Gaussian Structural
+  Vector Autoregressions.}
+\newblock \emph{Journal of Econometrics}, \textbf{196}(2), 121--131.
+\newblock ISSN 0304-4076.
+\newblock \doi{https://doi.org/10.1016/j.jeconom.2016.06.002}.
+\newblock
+  \urlprefix\url{http://www.sciencedirect.com/science/article/pii/S0304407616301828}.
+
+\bibitem[{Lanne and Saikkonen(2007)}]{LS2007}
+Lanne M, Saikkonen P (2007).
+\newblock \enquote{A Multivariate Generalized Orthogonal Factor {G}{A}{R}{C}{H}
+  Model.}
+\newblock \emph{Journal of Business \& Economic Statistics}, \textbf{25}(1),
+  61--75.
+\newblock \doi{10.1198/073500106000000404}.
+\newblock \eprint{https://doi.org/10.1198/073500106000000404},
+  \urlprefix\url{https://doi.org/10.1198/073500106000000404}.
+
+\bibitem[{Liu(1988)}]{Liu1988}
+Liu RY (1988).
+\newblock \enquote{Bootstrap Procedures under some non-i.i.d. Models.}
+\newblock \emph{The Annals of Statistics}, \textbf{16}(4), 1696--1708.
+\newblock ISSN 0378-3758.
+\newblock \doi{https://doi.org/10.1016/0378-3758(94)00008-J}.
+\newblock
+  \urlprefix\url{http://www.sciencedirect.com/science/article/pii/037837589400008J}.
+
+\bibitem[{L\"utkepohl(2005)}]{IntroductionMultipleTS}
+L\"utkepohl H (2005).
+\newblock \emph{New Introduction to Multiple Time Series Analysis}.
+\newblock Springer-Verlag, Berlin [u.a.].
+\newblock ISBN 3540262393.
+\newblock
+  \urlprefix\url{http://gso.gbv.de/DB=2.1/CMD?ACT=SRCHA&SRT=YOP&IKT=1016&TRM=ppn+366296310&sourceid=fbw_bibsonomy}.
+
+\bibitem[{L{\"u}tkepohl(2011)}]{Lkp11}
+L{\"u}tkepohl H (2011).
+\newblock \enquote{Vector Autoregressive Models.}
+\newblock \emph{{EUI Working Paper ECO 2011/30}}, European University
+  Institute, Florence.
+
+\bibitem[{L\"utkepohl and Kraetzig(2004)}]{appliedtimeseries}
+L\"utkepohl H, Kraetzig M (2004).
+\newblock \emph{Applied Time Series Econometrics}.
+\newblock Cambridge University Press.
+\newblock
+  \urlprefix\url{https://EconPapers.repec.org/RePEc:cup:cbooks:9780521839198}.
+
+\bibitem[{L\"utkepohl and
+  Milunovich(2016)}]{RePEc:eee:dyncon:v:73:y:2016:i:c:p:241-258}
+L\"utkepohl H, Milunovich G (2016).
+\newblock \enquote{Testing for Identification in SVAR-GARCH Models.}
+\newblock \emph{Journal of Economic Dynamics and Control}, \textbf{73}(C),
+  241--258.
+\newblock \doi{10.1016/j.jedc.2016.09.01}.
+\newblock
+  \urlprefix\url{https://ideas.repec.org/a/eee/dyncon/v73y2016icp241-258.html}.
+
+\bibitem[{L\"utkepohl and Netsunajev(2017{\natexlab{a}})}]{LUTKEPOHL20172}
+L\"utkepohl H, Netsunajev A (2017{\natexlab{a}}).
+\newblock \enquote{Structural Vector Autoregressions with Heteroskedasticity: A
+  Review of Different Volatility Models.}
+\newblock \emph{Econometrics and Statistics}, \textbf{1}(C), 2 -- 18.
+\newblock ISSN 2452-3062.
+\newblock \doi{https://doi.org/10.1016/j.ecosta.2016.05.001}.
+\newblock
+  \urlprefix\url{http://www.sciencedirect.com/science/article/pii/S2452306216300223}.
+
+\bibitem[{L\"utkepohl and Netsunajev(2017{\natexlab{b}})}]{LUTKEPOHL201743}
+L\"utkepohl H, Netsunajev A (2017{\natexlab{b}}).
+\newblock \enquote{Structural Vector Autoregressions with Smooth Transition in
+  Variances.}
+\newblock \emph{Journal of Economic Dynamics and Control}, \textbf{84}(C), 43
+  -- 57.
+\newblock ISSN 0165-1889.
+\newblock \doi{https://doi.org/10.1016/j.jedc.2017.09.001}.
+\newblock
+  \urlprefix\url{http://www.sciencedirect.com/science/article/pii/S0165188917301811}.
+
+\bibitem[{L{\"u}tkepohl and Schlaak(2018)}]{LS2018}
+L{\"u}tkepohl H, Schlaak T (2018).
+\newblock \enquote{Choosing Between Different Time-Varying Volatility Models
+  for Structural Vector Autoregressive Analysis.}
+\newblock \emph{Oxford Bulletin of Economics and Statistics}, \textbf{80}(4),
+  715--735.
+\newblock \doi{10.1111/obes.12238}.
+\newblock \eprint{https://onlinelibrary.wiley.com/doi/pdf/10.1111/obes.12238},
+  \urlprefix\url{https://onlinelibrary.wiley.com/doi/abs/10.1111/obes.12238}.
+
+\bibitem[{L{\"u}tkepohl and Schlaak(2019)}]{LS2019}
+L{\"u}tkepohl H, Schlaak T (2019).
+\newblock \enquote{Bootstrapping Impulse Responses of Structural Vector
+  Autoregressive Models Identified through GARCH.}
+\newblock \emph{Journal of Economic Dynamics and Control}, \textbf{101}, 41 --
+  61.
+\newblock ISSN 0165-1889.
+\newblock \doi{https://doi.org/10.1016/j.jedc.2019.01.008}.
+\newblock
+  \urlprefix\url{http://www.sciencedirect.com/science/article/pii/S0165188918302276}.
+
+\bibitem[{L\"utkepohl and Velinov(2016)}]{LV2016}
+L\"utkepohl H, Velinov A (2016).
+\newblock \enquote{Structural Vector Autoregressions: Checking Identifying
+  Long-Run Restrictions via Heteroskedasticity.}
+\newblock \emph{Journal of Economic Surveys}, \textbf{30}(2), 377--392.
+\newblock \doi{10.1111/joes.12100}.
+\newblock
+  \urlprefix\url{https://onlinelibrary.wiley.com/doi/abs/10.1111/joes.12100}.
+
+\bibitem[{Maddala(1977)}]{Maddala1977}
+Maddala GS (1977).
+\newblock \emph{Econometrics}.
+\newblock McGraw-Hill, New York.
+
+\bibitem[{Mammen(1993)}]{Mammen1993}
+Mammen E (1993).
+\newblock \enquote{Bootstrap and Wild Bootstrap for High Dimensional Linear
+  Models.}
+\newblock \emph{The Annals of Statistics}, \textbf{21}(1), 255--285.
+\newblock ISSN 00905364.
+\newblock \urlprefix\url{http://www.jstor.org/stable/3035590}.
+
+\bibitem[{Matteson and Tsay(2017)}]{Matteson2017}
+Matteson DS, Tsay RS (2017).
+\newblock \enquote{Independent Component Analysis via Distance Covariance.}
+\newblock \emph{Journal of the American Statistical Association},
+  \textbf{112}(518), 623--637.
+\newblock \doi{10.1080/01621459.2016.1150851}.
+\newblock \urlprefix\url{https://doi.org/10.1080/01621459.2016.1150851}.
+
+\bibitem[{Maxand(2019)}]{MAXAND2018}
+Maxand S (2019).
+\newblock \enquote{Identification of Independent Structural Shocks in the
+  Presence of Multiple Gaussian Components.}
+\newblock \emph{Econometrics and Statistics}.
+\newblock ISSN 2452-3062.
+\newblock \doi{https://doi.org/10.1016/j.ecosta.2018.10.005}.
+\newblock (to appear),
+  \urlprefix\url{http://www.sciencedirect.com/science/article/pii/S2452306218300923}.
+
+\bibitem[{Milunovich and Yang(2013)}]{MY2013}
+Milunovich G, Yang M (2013).
+\newblock \enquote{On Identifying Structural {VAR} Models via {ARCH} Effects.}
+\newblock \emph{Journal of Time Series Econometrics}, \textbf{5}(2), 117--131.
+\newblock
+  \urlprefix\url{https://EconPapers.repec.org/RePEc:bpj:jtsmet:v:5:y:2013:i:2:p:117-131:n:5}.
+
+\bibitem[{Nordhausen \emph{et~al.}(2018)Nordhausen, Oja, Tyler, and
+  Virta}]{ICtest}
+Nordhausen K, Oja H, Tyler DE, Virta J (2018).
+\newblock \emph{\pkg{ICtest}: Estimating and Testing the Number of Interesting
+  Components in Linear Dimension Reduction}.
+\newblock \proglang{R} package version 0.3-1,
+  \urlprefix\url{https://CRAN.R-project.org/package=ICtest}.
+
+\bibitem[{Normadin and Phaneuf(2004)}]{NP2004}
+Normadin M, Phaneuf L (2004).
+\newblock \enquote{Monetary Policy Shocks: Testing Identification Conditions
+  under Time-Varying Conditional Volatility.}
+\newblock \emph{Journal of Monetary Economics}, \textbf{51}(6), 1217--1243.
+\newblock ISSN 0304-3932.
+\newblock \doi{https://doi.org/10.1016/j.jmoneco.2003.11.002}.
+\newblock
+  \urlprefix\url{http://www.sciencedirect.com/science/article/pii/S0304393204000698}.
+
+\bibitem[{Pfaff(2008)}]{pfaff2008}
+Pfaff B (2008).
+\newblock \enquote{VAR, SVAR and SVEC Models: Implementation Within
+  \proglang{R} Package \pkg{vars}.}
+\newblock \emph{Journal of Statistical Software}, \textbf{27}(4).
+\newblock \urlprefix\url{http://www.jstatsoft.org/v27/i04/}.
+
+\bibitem[{{\proglang{R} Core Team}(2017)}]{R}
+{\proglang{R} Core Team} (2017).
+\newblock \emph{\proglang{R}: {A} Language and Environment for Statistical
+  Computing}.
+\newblock \proglang{R} Foundation for Statistical Computing, Vienna, Austria.
+\newblock \urlprefix\url{https://www.R-project.org/}.
+
+\bibitem[{Rigobon(2003)}]{Rigobon2003}
+Rigobon R (2003).
+\newblock \enquote{Identification through Heteroskedasticty.}
+\newblock \emph{Review of Economics and Statistics}, \textbf{28}(1), 777--792.
+\newblock ISSN 00346535, 15309142.
+\newblock \urlprefix\url{http://www.jstor.org/stable/3211805}.
+
+\bibitem[{Rigobon and Sack(2004)}]{RS2004}
+Rigobon R, Sack B (2004).
+\newblock \enquote{The Impact of Monetary Policy on Asset Prices.}
+\newblock \emph{Journal of Monetary Economics}, \textbf{51}(8), 1553--1575.
+\newblock
+  \urlprefix\url{https://ideas.repec.org/a/eee/moneco/v51y2004i8p1553-1575.html}.
+
+\bibitem[{Risk \emph{et~al.}(2015)Risk, James, and Matteson}]{steadyICA}
+Risk BB, James NA, Matteson DS (2015).
+\newblock \emph{\pkg{steadyICA}: ICA and Tests of Independence via Multivariate
+  Distance Covariance}.
+\newblock \proglang{R} package version 1.0,
+  \urlprefix\url{https://CRAN.R-project.org/package=steadyICA}.
+
+\bibitem[{Sentana and Fiorentini(2001)}]{SF2001}
+Sentana E, Fiorentini G (2001).
+\newblock \enquote{Identification, Estimation and Testing of Conditionally
+  Heteroskedastic Factor Models.}
+\newblock \emph{Journal of Econometrics}, \textbf{102}(2), 143--164.
+\newblock
+  \urlprefix\url{https://EconPapers.repec.org/RePEc:eee:econom:v:102:y:2001:i:2:p:143-164}.
+
+\bibitem[{Sims(1980)}]{Sims1980}
+Sims CA (1980).
+\newblock \enquote{Macroeconomics and Reality.}
+\newblock \emph{Econometrica}, \textbf{48}(1), 1--48.
+\newblock ISSN 00129682, 14680262.
+\newblock \urlprefix\url{http://www.jstor.org/stable/1912017}.
+
+\bibitem[{Stigler(2010)}]{tsDyn}
+Stigler M (2010).
+\newblock \emph{Threshold Cointegration: Overview and Implementation in
+  \proglang{R}}.
+\newblock \proglang{R} package version 0.7-2,
+  \urlprefix\url{https://cran.r-project.org/web/packages/tsDyn/vignettes/ThCointOverview.pdf}.
+
+\bibitem[{Stock and Watson(2003)}]{SW2003}
+Stock J, Watson M (2003).
+\newblock \enquote{Has the Business Cycle Changed and Why?}
+\newblock \emph{NBER Macroeconomics Annual 2002}, \textbf{17}, 159--230.
+
+\bibitem[{Sz{\'e}kely \emph{et~al.}(2007)Sz{\'e}kely, Rizzo, and
+  Bakirov}]{Szek07}
+Sz{\'e}kely GJ, Rizzo ML, Bakirov NK (2007).
+\newblock \enquote{Measuring and Testing Dependence by Correlation of
+  Distances.}
+\newblock \emph{The Annals of Statistics}, \textbf{35}(6), 2769--2794.
+\newblock ISSN 0090-5364.
+\newblock \doi{10.1214/009053607000000505}.
+
+\bibitem[{Tsay(2015)}]{MTS}
+Tsay RS (2015).
+\newblock \emph{\pkg{MTS}: All-Purpose Toolkit for Analyzing Multivariate Time
+  Series (MTS) and Estimating Multivariate Volatility Models}.
+\newblock \proglang{R} package version 0.33,
+  \urlprefix\url{https://CRAN.R-project.org/package=MTS}.
+
+\bibitem[{Uhlig(2005)}]{Uhlig2005}
+Uhlig H (2005).
+\newblock \enquote{What Are the Effects of Monetary Policy on Output? Results
+  from an Agnostic Identification Procedure.}
+\newblock \emph{Journal of Monetary Economics}, \textbf{52}(2), 381--419.
+\newblock ISSN 0304-3932.
+\newblock \doi{https://doi.org/10.1016/j.jmoneco.2004.05.007}.
+\newblock
+  \urlprefix\url{http://www.sciencedirect.com/science/article/pii/S0304393205000073}.
+
+\bibitem[{Wickham(2009)}]{ggplot2}
+Wickham H (2009).
+\newblock \emph{ggplot2: Elegant Graphics for Data Analysis}.
+\newblock Springer-Verlag New York.
+\newblock ISBN 978-0-387-98140-6.
+\newblock \urlprefix\url{http://ggplot2.org}.
+
+\bibitem[{Zeileis \emph{et~al.}(2002)Zeileis, Leisch, Hornik, and
+  Kleiber}]{zeileis2002}
+Zeileis A, Leisch F, Hornik K, Kleiber C (2002).
+\newblock \enquote{\pkg{strucchange}: An \proglang{R} Package for Testing for
+  Structural Change in Linear Regression Models.}
+\newblock \emph{Journal of Statistical Software}, \textbf{7}(2), 1--38.
+\newblock \urlprefix\url{http://www.jstatsoft.org/v07/i02/}.
+
+\end{thebibliography}
