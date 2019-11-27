@@ -111,7 +111,14 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
 
 u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
 get_var_objects(x)
+# check if varest object is restricted
+if(inherits(x,"varest")){
+  if(!is.null(x$restrictions)){
+    stop("id.cv currently supports identification of unrestricted VARs only. Consider using id.dc, id.cvm or id.chol instead.")
+  }
+}
 
+# set up restrictions passed by user
 rmOut = restriction_matrix
 restriction_matrix <- get_restriction_matrix(restriction_matrix, k)
 
