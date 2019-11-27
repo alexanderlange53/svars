@@ -46,7 +46,7 @@ test_that("unrestricted id.cv estimation with 3-dim works with constant +  trend
   expect_match(x1$method, x2$method, "Changes in Volatility")
 })
 
-test_that("unrestricted id.cv estimation with 3-dim works without any detrmininstic term", {
+test_that("unrestricted id.cv estimation with 3-dim works without any determininstic term", {
   skip_on_cran()
   set.seed(23211)
   v1 <- vars::VAR(USA, p = 6, ic = "AIC", type = 'none')
