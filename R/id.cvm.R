@@ -79,10 +79,6 @@ id.cvm <- function(x, dd = NULL, itermax = 500, steptol = 100, iter2 = 75){
 
   ########### starting the computations ------------------------------------------------------------------------
 
-  if (is.null(dd)) {
-    dd <- indepTestSim(Tob, k, N = 100, verbose = FALSE)
-  }
-
   lower <- rep(0, k * (k - 1) / 2)
   upper <- rep(pi, k * (k - 1) / 2)
 
