@@ -1,11 +1,11 @@
-svars <img src = "man/figures/sticker.png" align = "right" width = "200px"/>
+svars <img src = "man/figures/sticker.png" align = "right" width = "180px"/>
 =====
 
 [![Build Status](https://travis-ci.org/alexanderlange53/svars.svg?branch=master)](https://travis-ci.org/alexanderlange53/svars) 
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/svars)](https://cran.r-project.org/package=svars) 
 [![rstudio mirror downloads](http://cranlogs.r-pkg.org/badges/grand-total/svars)](https://cran.r-project.org/package=svars)
 
-Analysing causal relationships among time series.
+Analysing causal relationships among time series in R.
 
 ## Overview
 
