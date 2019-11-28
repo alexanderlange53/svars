@@ -15,6 +15,7 @@
 \usepackage{xcolor}
 \usepackage{color}
 \usepackage{footnote}
+\usepackage[utf8]{inputenc}
 %\usepackage{ulem}
 %% new custom commands
 \newcommand{\class}[1]{`\code{#1}'}
