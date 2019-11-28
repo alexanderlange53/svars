@@ -1,11 +1,11 @@
-svars <img src = "man/figures/sticker.png" align = "right" width = "160px"/>
+svars <img src = "man/figures/sticker.png" align = "right" width = "200px"/>
 =====
 
 [![Build Status](https://travis-ci.org/alexanderlange53/svars.svg?branch=master)](https://travis-ci.org/alexanderlange53/svars) 
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/svars)](https://cran.r-project.org/package=svars) 
 [![rstudio mirror downloads](http://cranlogs.r-pkg.org/badges/grand-total/svars)](https://cran.r-project.org/package=svars)
 
-Unravelling causal relationships among time series.
+Analysing causal relationships among time series.
 
 ## Overview
 
@@ -21,7 +21,7 @@ The cornerstone functions identify the structural errors
 -   `id.ngml()` by means of non-Gaussian maximum likelihood.
 -   `id.st()` by means of smooth transition in covariance.
 
-Moreover, classical recursive identification scheme is easy accesable via
+Moreover, the classical recursive identification scheme is easy accessible via
 
 -  `id.chol()` identification via cholesky decomposition.
 
@@ -138,4 +138,11 @@ plot(hist.decomp)
 
 ![](man/figures/hd_viz.png)
 
+Directly related to the historical decomposition is the concept auf counterfactuals. This method allows to analyze hypothetical scenarios in which effects of specific shocks are neglected.  
 
+```r
+counterfactuals <- cf(structural.form, series = 1)
+plot(counterfactuals)
+```
+
+![](man/figures/cf_viz.png)
