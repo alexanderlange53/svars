@@ -25,7 +25,7 @@ Moreover, the classical recursive identification scheme is easy accessible via
 
 -  `id.chol()` identification via cholesky decomposition.
 
-These functions return an estimated svars object with identified structural shocks and decomposition of the covariance matrix of the reduced form errors. Additionally, the package contains various tools for SVAR analysis. Below find schematic overview of the package functions and how they can be used. 
+These functions return an estimated svars object with identified structural shocks and decomposition of the covariance matrix of the reduced form errors. Additionally, the package contains various tools for SVAR analysis. Below find a schematic overview of the package functions and how they can be used. 
 
 ![](man/figures/flow.png)
 
