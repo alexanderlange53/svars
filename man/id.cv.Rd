@@ -52,6 +52,7 @@ A list of class "svars" with elements
 \item{y}{Data matrix}
 \item{p}{Number of lags}
 \item{K}{Dimension of the VAR}
+\item{VAR}{Estimated input VAR object}
 }
 \description{
 Given an estimated VAR model, this function applies changes in volatility to identify the structural impact matrix B of the corresponding SVAR model

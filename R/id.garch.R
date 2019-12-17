@@ -26,6 +26,7 @@
 #' \item{y}{Data matrix}
 #' \item{p}{Number of lags}
 #' \item{K}{Dimension of the VAR}
+#' \item{VAR}{Estimated input VAR object}
 #'
 #' @references Normadin, M. & Phaneuf, L., 2004. Monetary Policy Shocks: Testing Identification Conditionsunder Time-Varying Conditional Volatility. Journal of Monetary Economics, 51(6), 1217-1243.\cr
 #'  Lanne, M. & Saikkonen, P., 2007. A Multivariate Generalized Orthogonal Factor GARCH Model. Journal of Business & Economic Statistics, 25(1), 61-75.
@@ -126,6 +127,8 @@ id.garch <- function(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL){
                             parameter_ini_univ = parameter_ini_univ, max.iter = max.iter, crit = crit, u = u, p = p, yOut = yOut, type = type)
   }
   result$AIC <- (-2) * result$Lik + 2*(k + p * k^2 + (k + 1) * k + 1)
+  result$VAR <- x
+
   class(result) <- "svars"
 
   return(result)

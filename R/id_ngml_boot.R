@@ -179,7 +179,8 @@ id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL, restriction_matrix = NULL)
                  p = p,                # number of lags
                  restrictions = restrictions, # number of restrictions
                  K = k,                # number of time series
-                 stage3 = stage3
+                 stage3 = stage3,
+                 VAR = x
   )
   class(result) <- "svars"
   return(result)

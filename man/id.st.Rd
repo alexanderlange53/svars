@@ -72,6 +72,7 @@ A list of class "svars" with elements
 \item{restriction_matrix}{Specified restriction matrix}
 \item{lr_test}{Logical, whether a likelihood ratio test is performed}
 \item{lRatioTest}{Results of likelihood ratio test}
+\item{VAR}{Estimated input VAR object}
 }
 \description{
 Given an estimated VAR model, this function uses a smooth transition in the covariance to identify the structural impact matrix B of the corresponding SVAR model

@@ -33,6 +33,7 @@ A list of class "svars" with elements
 \item{iter1}{Number of iterations of first optimization}
 \item{test1}{Minimum test statistic from first optimization}
 \item{test2}{Minimum test statistic from second optimization}
+\item{VAR}{Estimated input VAR object}
 }
 \description{
 Given an estimated VAR model, this function applies independence-based identification for the structural impact matrix B of the corresponding SVAR model

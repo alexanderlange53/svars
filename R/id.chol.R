@@ -15,6 +15,8 @@
 #' \item{y}{Data matrix}
 #' \item{p}{Number of lags}
 #' \item{K}{Dimension of the VAR}
+#' \item{VAR}{Estimated input VAR object}
+#'
 #'
 #' @references Luetkepohl, H., 2005. New introduction to multiple time series analysis, Springer-Verlag, Berlin.
 #'
@@ -75,7 +77,8 @@ id.chol <- function(x){
                  type = type,    # type of the VAR model e.g 'const'
                  y = yOut,       # Data
                  p = unname(p),  # number of lags
-                 K = k          # number of time series
+                 K = k, # number of time series
+                 VAR = x
   )
   class(result) <- "svars"
   return(result)

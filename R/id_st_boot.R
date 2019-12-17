@@ -84,7 +84,8 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
     p = p,                # number of lags
     K = k,                 # number of time series
     restrictions = restrictions,
-    restriction_matrix = rmOut
+    restriction_matrix = rmOut,
+    VAR = x
   )
 
   class(result) <- 'svars'

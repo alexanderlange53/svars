@@ -201,7 +201,8 @@ result <- list(
   y = yOut,                # Data
   p = unname(p),                # number of lags
   K = k,# number of time series
-  lRatioTest = lRatioTest
+  lRatioTest = lRatioTest,
+  VAR = x
 )
 
   class(result) <- "svars"

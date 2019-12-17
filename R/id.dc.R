@@ -17,6 +17,7 @@
 #' \item{p}{Number of lags}
 #' \item{K}{Dimension of the VAR}
 #' \item{PIT}{Logical, if PIT is used}
+#' \item{VAR}{Estimated input VAR object}
 #'
 #' @seealso For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.garch}}, \code{\link{id.cvm}}, \code{\link{id.cv}} or \code{\link{id.ngml}}
 #'
@@ -139,7 +140,8 @@ id.dc <- function(x, PIT = FALSE){
               y = yOut,       # Data
               p = unname(p),  # number of lags
               K = k,          # number of time series
-              PIT=PIT         #
+              PIT=PIT,        #
+              VAR = x
               )
   class(result) <- "svars"
   return(result)
