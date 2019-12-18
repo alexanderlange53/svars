@@ -34,6 +34,7 @@
 #' \item{sign_part}{Frequency of single shocks in all bootstrapped covariance decompositions which accord to a specific predetermined sign pattern}
 #' \item{cov_bs}{Covariance matrix of bootstrapped parameter in impact relations matrix}
 #' \item{method}{Used bootstrap method}
+#' \item{VAR}{Estimated input VAR object}
 #'
 #'@references Goncalves, S., Kilian, L., 2004. Bootstrapping autoregressions with conditional heteroskedasticity of unknown form. Journal of Econometrics 123, 89-120.\cr
 #'   Herwartz, H., 2017. Hodges Lehmann detection of structural shocks -
@@ -402,7 +403,8 @@ wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20,
                  Omodel = x,
                  boot_B = Bs,
                  rest_mat = restriction_matrix,
-                 method = 'Wild bootstrap')
+                 method = 'Wild bootstrap',
+                 VAR = x$VAR)
   class(result) <- 'sboot'
   return(result)
 }

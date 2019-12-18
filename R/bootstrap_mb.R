@@ -32,6 +32,7 @@
 #' \item{sign_part}{Frequency of single shocks in all bootstrapped covariance decompositions which accord to a specific predetermined sign pattern}
 #' \item{cov_bs}{Covariance matrix of bootstrapped parameter in impact relations matrix}
 #' \item{method}{Used bootstrap method}
+#' \item{VAR}{Estimated input VAR object}
 #'
 #' @references Brueggemann, R., Jentsch, C., and Trenkler, C., 2016. Inference in VARs with conditional heteroskedasticity of unknown form. Journal of Econometrics 191, 69-85.\cr
 #'   Herwartz, H., 2017. Hodges Lehmann detection of structural shocks -
@@ -393,7 +394,8 @@ mb.boot <- function(x, design = "recursive", b.length = 15, n.ahead = 20, nboot 
                  Omodel = x,
                  boot_B = Bs,
                  rest_mat = restriction_matrix,
-                 method = 'Moving block bootstrap')
+                 method = 'Moving block bootstrap',
+                 VAR = x$VAR)
   class(result) <- 'sboot'
   return(result)
 }

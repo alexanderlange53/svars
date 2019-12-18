@@ -54,6 +54,7 @@ A list of class "sboot" with elements
 \item{sign_part}{Frequency of single shocks in all bootstrapped covariance decompositions which accord to a specific predetermined sign pattern}
 \item{cov_bs}{Covariance matrix of bootstrapped parameter in impact relations matrix}
 \item{method}{Used bootstrap method}
+\item{VAR}{Estimated input VAR object}
 }
 \description{
 Calculating confidence bands for impulse response functions via wild bootstrap techniques (Goncalves and Kilian, 2004).
