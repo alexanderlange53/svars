@@ -34,6 +34,7 @@
 #' \item{sign_part}{Frequency of single shocks in all bootstrapped covariance decompositions which accord to a specific predetermined sign pattern}
 #' \item{cov_bs}{Covariance matrix of bootstrapped parameter in impact relations matrix}
 #' \item{method}{Used bootstrap method}
+#' \item{VAR}{Estimated input VAR object}
 #'
 #'@references Goncalves, S., Kilian, L., 2004. Bootstrapping autoregressions with conditional heteroskedasticity of unknown form. Journal of Econometrics 123, 89-120.\cr
 #'   Herwartz, H., 2017. Hodges Lehmann detection of structural shocks -
@@ -57,7 +58,18 @@
 #' signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
 #' bb <- wild.boot(x1, nboot = 500, n.ahead = 30, nc = 1, signrest = signrest)
 #' summary(bb)
+#'
+#' # Plotting IRFs with confidance bands
 #' plot(bb, lowerq = 0.16, upperq = 0.84)
+#'
+#' # With different confidence levels
+#' plot(bb, lowerq = c(0.05, 0.1, 0.16), upperq = c(0.95, 0.9, 0.84))
+#'
+#' # Halls percentile
+#' plot(bb, lowerq = 0.16, upperq = 0.84, percentile = 'hall')
+#'
+#' # Bonferroni bands
+#' plot(bb, lowerq = 0.16, upperq = 0.84, percentile = 'bonferroni')
 #' }
 #'
 #'
@@ -185,6 +197,8 @@ wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20,
         temp <- tryCatch(id.garch(varb, restriction_matrix = x$restriction_matrix, max.iter = x$max.iter,
                                   crit = x$crit),
                          error = function(e) NULL)
+      }else if(x$method == "Cholesky"){
+        temp <- id.chol(varb)
       }else{
         temp <- tryCatch(id.st_boot(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,
                                     gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01, Z = Z),
@@ -243,23 +257,27 @@ wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20,
         temp <- tryCatch(id.garch(varb, restriction_matrix = x$restriction_matrix, max.iter = x$max.iter,
                                   crit = x$crit),
                          error = function(e) NULL)
+      }else if(x$method == "Cholesky"){
+        temp <- id.chol(varb)
       }
     }
 
     if(!is.null(temp)){
       Pstar <- temp$B
 
-      if(restrictions > 0){
-        Pstar1 <- Pstar
-        frobP <- frobICA_mod(Pstar1, B, standardize=TRUE)
-      }else{
-        Pstar1 <- sqrt.f(Pstar, Sigma_u_star)
-        diag_sigma_root <- diag(diag(suppressMessages(sqrtm(Sigma_u_hat_old))))
+      if (x$method != "Cholesky") {
+        if(!is.null(x$restriction_matrix)){
+          Pstar1 <- Pstar
+          frobP <- frobICA_mod(Pstar1, B, standardize=TRUE)
+        }else{
+          Pstar1 <- sqrt.f(Pstar, Sigma_u_star)
+          diag_sigma_root <- diag(diag(suppressMessages(sqrtm(Sigma_u_hat_old))))
 
-        frobP <- frobICA_mod(t(solve(diag_sigma_root)%*%Pstar1), t(solve(diag_sigma_root)%*%B), standardize=TRUE)
+          frobP <- frobICA_mod(t(solve(diag_sigma_root)%*%Pstar1), t(solve(diag_sigma_root)%*%B), standardize=TRUE)
+        }
+        Pstar <- Pstar1%*%frobP$perm
+        temp$B <- Pstar
       }
-      Pstar <- Pstar1%*%frobP$perm
-      temp$B <- Pstar
 
     ip <- irf(temp, n.ahead = n.ahead)
     return(list(ip, Pstar, temp$A_hat))
@@ -309,7 +327,7 @@ wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20,
   rownames(boot.mean) <- rownames(x$B)
 
   # Checking for signs
-  if(restrictions > 0){
+  if(restrictions > 0 | x$method == 'Cholesky'){
     if(!is.null(signrest)){
       cat('Testing signs only possible for unrestricted model \n')
     }
@@ -385,7 +403,8 @@ wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20,
                  Omodel = x,
                  boot_B = Bs,
                  rest_mat = restriction_matrix,
-                 method = 'Wild bootstrap')
+                 method = 'Wild bootstrap',
+                 VAR = x$VAR)
   class(result) <- 'sboot'
   return(result)
 }

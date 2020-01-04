@@ -1,0 +1,18 @@
+citHeader("To cite svars in publications use:")
+
+citEntry(
+  entry    ="Article",
+  title    = "{svars}: An {R} Package for Data-Driven Identification in Multivariate Time Series Analysis",
+  author   = personList(as.person("Alexander Lange"), as.person("Bernhard Dalheimer") , as.person("Helmut Herwartz"), as.person("Simone Maxand")),,
+  journal  = "Journal of Statistical Software",
+  year     = "forthcoming",
+  volume   = "",
+  number   = "",
+  pages    = "",
+  url      = "",
+  textVersion = paste("Lange, A., B. Dalheimer, H. Herwartz and S. Maxand. (forthcoming).",
+        "svars: An R Package for Data-Driven Identification in Multivariate Time Series Analysis.",
+        "Journal of Statistical Software."
+
+  )
+)

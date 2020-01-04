@@ -28,6 +28,7 @@
 #' \item{restrictions}{Number of specified restrictions}
 #' \item{restriction_matrix}{Specified restriction matrix}
 #' \item{stage3}{Logical, whether Stage 3 is performed}
+#' \item{VAR}{Estimated input VAR object}
 #'
 #'@references Lanne, M., Meitz, M., Saikkonen, P., 2017. Identification and estimation of non-Gaussian structural vector autoregressions. J. Econometrics 196 (2), 288-304.\cr
 #'Comon, P., 1994. Independent component analysis, A new concept?, Signal Processing, 36, 287-314
@@ -65,6 +66,15 @@ id.ngml <- function(x, stage3 = FALSE, restriction_matrix = NULL){
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
   get_var_objects(x)
   rmOut = restriction_matrix
+
+  # check if varest object is restricted
+  if(inherits(x,"varest")){
+    if(!is.null(x$restrictions)){
+      stop("id.ngml currently supports identification of unrestricted VARs only. Consider using id.dc, id.cvm or id.chol instead.")
+    }
+  }
+
+  # set up restrictions paassed by user
   restriction_matrix = get_restriction_matrix(restriction_matrix, k)
   restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
 
@@ -92,6 +102,8 @@ id.ngml <- function(x, stage3 = FALSE, restriction_matrix = NULL){
   }
 
   result$restriction_matrix = rmOut
+  result$AIC <- (-2) * result$Lik + 2*(k + p * k^2 + (k + 1) * k + 1)
+  result$VAR <- x
 
   class(result) <- "svars"
   return(result)

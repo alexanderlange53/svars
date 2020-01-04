@@ -55,7 +55,7 @@ js.test <- function(x, R, r = NULL){
       }
         df <- nrow(R)
 
-    v <- t(R%*%c(x$point_estimate) - r)%*%R%*%solve(x$cov_bs)%*%t(R)%*%(R%*%c(x$point_estimate) - r)
+    v <- t(R%*%c(x$point_estimate) - r)%*%solve(R%*%x$cov_bs%*%t(R))%*%(R%*%c(x$point_estimate) - r)
 
   p.value <- 1 - pchisq(v, df)
   ctest <- list(

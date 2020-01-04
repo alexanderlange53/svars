@@ -25,6 +25,7 @@
 #' \item{iter1}{Number of iterations of first optimization}
 #' \item{test1}{Minimum test statistic from first optimization}
 #' \item{test2}{Minimum test statistic from second optimization}
+#' \item{VAR}{Estimated input VAR object}
 #'
 #'@references Herwartz, H., 2018. Hodges Lehmann detection of structural shocks - An Analysis of macroeconomic dynamics in the Euro Area, Oxford Bulletin of Economics and Statistics\cr
 #'  Herwartz, H. & Ploedt, M., 2016. The macroeconomic effects of oil price shocks: Evidence from a statistical identification approach, Journal of International Money and Finance, 61, 30-44\cr
@@ -78,10 +79,6 @@ id.cvm <- function(x, dd = NULL, itermax = 500, steptol = 100, iter2 = 75){
   faklow1 <- t(chol(sigg1))
 
   ########### starting the computations ------------------------------------------------------------------------
-
-  if (is.null(dd)) {
-    dd <- indepTestSim(Tob, k, N = 100, verbose = FALSE)
-  }
 
   lower <- rep(0, k * (k - 1) / 2)
   upper <- rep(pi, k * (k - 1) / 2)
@@ -137,45 +134,14 @@ id.cvm <- function(x, dd = NULL, itermax = 500, steptol = 100, iter2 = 75){
   if(inherits(x, "var.boot")){
     A_hat <- coef_x
   }else{
-    A <- matrix(0, nrow = k, ncol = k*p)
-    for(i in 1:k){
-      A[i,] <- coef_x[[i]][1:(k*p),1]
-    }
-
-    A_hat <- A
-
-    if(type == "const"){
-      v <- rep(1, k)
-
-      for(i in 1:k){
-        v[i] <- coef_x[[i]][(k*p+1), 1]
-      }
-
-      A_hat <- cbind(v, A)
-    }else if (type == "trend"){
-      trend <- rep(1, k)
-
-      for(i in 1:k){
-        trend[i] <- coef_x[[i]][(k*p+1), 1]
-      }
-
-      A_hat <- cbind(trend, A)
-    }else if(type == "both"){
-      v <- rep(1, k)
-
-      for(i in 1:k){
-        v[i] <- coef_x[[i]][(k*p+1), 1]
-      }
-
-      trend <- rep(1, k)
-
-      for(i in 1:k){
-        trend[i] <- coef_x[[i]][(k*p+2), 1]
-      }
-
-      A_hat <- cbind(v, trend, A)
+    if(type == "none"){
+      A_hat <- vars::Bcoef(x)
+    }else{
+      A_hat <- vars::Bcoef(x)[, c((k * p+1):ncol(vars::Bcoef(x)),1:(k * p))]
     }
   }
+
+
   rownames(B_hat) = colnames(u)
 
   result <- list(B = B_hat,        # estimated B matrix (unique decomposition of the covariance matrix)
@@ -191,7 +157,8 @@ id.cvm <- function(x, dd = NULL, itermax = 500, steptol = 100, iter2 = 75){
                  test.stats = logs,# minimum teststatistic obtained
                  iter1 =  de_res$optim$iter, # number of iterations of first optimization
                  test1 = de_res$optim$bestval, # minimum teststatistic from first optimization
-                 test2 = min(logliks) # minimum teststatistic from second optimization
+                 test2 = min(logliks), # minimum teststatistic from second optimization
+                 VAR = x
   )
 
   class(result) <- "svars"

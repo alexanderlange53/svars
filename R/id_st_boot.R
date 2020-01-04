@@ -5,6 +5,12 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
   get_var_objects(x)
 
+  # check if varest object is restricted
+  if(inherits(x,"varest")){
+    if(!is.null(x$restrictions)){
+      stop("id.st currently supports identification of unrestricted VARs only. Consider using id.dc, id.cvm or id.chol instead.")
+    }
+  }
   rmOut = restriction_matrix
   restriction_matrix <- get_restriction_matrix(restriction_matrix, k)
   restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
@@ -78,7 +84,8 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
     p = p,                # number of lags
     K = k,                 # number of time series
     restrictions = restrictions,
-    restriction_matrix = rmOut
+    restriction_matrix = rmOut,
+    VAR = x
   )
 
   class(result) <- 'svars'

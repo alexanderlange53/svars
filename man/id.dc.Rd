@@ -22,6 +22,7 @@ A list of class "svars" with elements
 \item{p}{Number of lags}
 \item{K}{Dimension of the VAR}
 \item{PIT}{Logical, if PIT is used}
+\item{VAR}{Estimated input VAR object}
 }
 \description{
 Given an estimated VAR model, this function applies independence-based identification for the structural impact matrix B of the corresponding SVAR model

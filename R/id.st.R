@@ -52,6 +52,7 @@
 #' \item{restriction_matrix}{Specified restriction matrix}
 #' \item{lr_test}{Logical, whether a likelihood ratio test is performed}
 #' \item{lRatioTest}{Results of likelihood ratio test}
+#' \item{VAR}{Estimated input VAR object}
 #'
 #' @references Luetkepohl H., Netsunajev A., 2017. Structural vector autoregressions with smooth transition \cr
 #'   in variances. Journal of Economic Dynamics and Control, 84, 43 - 57. ISSN 0165-1889.
@@ -96,6 +97,15 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
   # Gathering information from reduced form model
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
   get_var_objects(x)
+
+  # check if varest object is restricted
+  if(inherits(x,"varest")){
+    if(!is.null(x$restrictions)){
+      stop("id.st currently supports identification of unrestricted VARs only. Consider using id.dc, id.cvm or id.chol instead.")
+    }
+  }
+
+  # set up restrictions paassed by user
 
   # preparing restriction amtrix format and get no of restrictions
   rmOut = restriction_matrix
@@ -281,7 +291,9 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     restrictions = restrictions,
     restriction_matrix = rmOut,
     lr_test = lr_test,
-    lRatioTest = lRatioTest
+    lRatioTest = lRatioTest,
+    AIC = (-2) * best_estimation$Lik + 2*(k + p * k^2 + (k + 1) * k + 1),
+    VAR = x
   )
 
   class(result) <- 'svars'

@@ -51,6 +51,7 @@ A list of class "sboot" with elements
 \item{sign_part}{Frequency of single shocks in all bootstrapped covariance decompositions which accord to a specific predetermined sign pattern}
 \item{cov_bs}{Covariance matrix of bootstrapped parameter in impact relations matrix}
 \item{method}{Used bootstrap method}
+\item{VAR}{Estimated input VAR object}
 }
 \description{
 Calculating confidence bands for impulse response via moving block bootstrap
@@ -71,7 +72,18 @@ summary(x1)
 signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
 bb <- mb.boot(x1, b.length = 15, nboot = 500, n.ahead = 30, nc = 1, signrest = signrest)
 summary(bb)
+
+# Plotting IRFs with confidance bands
 plot(bb, lowerq = 0.16, upperq = 0.84)
+
+# With different confidence levels
+plot(bb, lowerq = c(0.05, 0.1, 0.16), upperq = c(0.95, 0.9, 0.84))
+
+# Halls percentile
+plot(bb, lowerq = 0.16, upperq = 0.84, percentile = 'hall')
+
+# Bonferroni bands
+plot(bb, lowerq = 0.16, upperq = 0.84, percentile = 'bonferroni')
 }
 
 }

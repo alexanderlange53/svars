@@ -20,6 +20,7 @@
 #' \item{sign_part}{Frequency of single shocks in all bootstrapped covariance decompositions which accord to a specific predetermined sign pattern}
 #' \item{cov_bs}{Covariance matrix of bootstrapped parameter in impact relations matrix}
 #' \item{method}{Used bootstrap method}
+#' \item{VAR}{Estimated input VAR object}
 #'
 #' @references Kilian, L. (1998). Small-sample confidence intervals for impulse response functions. Review of Economics and Statistics 80, 218-230.
 #'
@@ -54,6 +55,11 @@ ba.boot <- function(x, nc = 1){
   if(class(x) != "sboot"){
     stop("The bootstrap-after-bootstrap can only be applied to already bootstrapped objects.")
   }
+
+  if(!is.null(x$VAR$restrictions)){
+    stop("Bootstrap after Bootstrap is not available for restricted VARs.")
+  }
+
   # Calculating difference between sample estimate and bootstrap estimate
   Psi <- x$A_hat_boot_mean - x$A_hat
 
@@ -93,6 +99,7 @@ ba.boot <- function(x, nc = 1){
   result$root <- Oroots(A, x$Omodel$K, x$Omodel$p)[1] # Modulus of highest root
 
   result$true <- x$true # Using original point estimate
+  result$VAR <- x$VAR
 
   return(result)
 }
