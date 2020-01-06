@@ -53,7 +53,6 @@
 #' i1 <- irf(x1, n.ahead = 30)
 #' plot(i1, scales = 'free_y')
 #'
-#' @importFrom tsDyn VARrep
 #' @export
 
 

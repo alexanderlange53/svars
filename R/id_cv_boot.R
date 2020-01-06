@@ -105,7 +105,7 @@ if(is.null(best_estimation$A_hat)){
     coef_x <- t(coef(x))
 
     if(inherits(x, "VECM")){
-      coef_x <- t(VARrep(x))
+      coef_x <- t(tsDyn::VARrep(x))
     }
 
     if(rownames(coef_x)[1] %in% c("Intercept", "constant")){

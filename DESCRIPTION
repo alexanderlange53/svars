@@ -16,7 +16,7 @@ Description: Implements data-driven identification methods for structural vector
              independent component analysis (Matteson, D. S, Tsay, R. S., (2013) <doi:10.1080/01621459.2016.1150851>), least dependent innovations (Herwartz, H., Ploedt, M., (2016) <doi:10.1016/j.jimonfin.2015.11.001>), 
              smooth transition in variances (Luetkepohl, H., Netsunajev, A. (2017) <doi:10.1016/j.jedc.2017.09.001>) or non-Gaussian maximum likelihood (Lanne, M., Meitz, M., Saikkonen, P. (2017) <doi:10.1016/j.jeconom.2016.06.002>)).
 Depends: R (>= 2.10), vars (>= 1.5.3)
-Imports: expm, reshape2, ggplot2, copula, clue, pbapply, steadyICA, tsDyn, DEoptim, zoo, strucchange, Rcpp
+Imports: expm, reshape2, ggplot2, copula, clue, pbapply, steadyICA, DEoptim, zoo, strucchange, Rcpp
 LinkingTo: Rcpp, RcppArmadillo
 NeedsCompilation: yes
 License: MIT + file LICENSE
@@ -25,5 +25,6 @@ RoxygenNote: 6.1.1
 Suggests: 
     testthat (>= 2.1.0),
     knitr,
-    rmarkdown
+    rmarkdown,
+    tsDyn
 VignetteBuilder: knitr

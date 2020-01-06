@@ -40,8 +40,8 @@ get_var_objects <- function(x){
     coef_x = t(coef(x))
     if(inherits(x, "VECM")){
       assign("p", x$lag + 1, envir = parent.frame())
-      assign("coef_x", t(VARrep(x)), envir = parent.frame())
-      coef_x = t(VARrep(x))
+      assign("coef_x", t(tsDyn::VARrep(x)), envir = parent.frame())
+      coef_x = t(tsDyn::VARrep(x))
     }
 
     if(rownames(coef_x)[1] %in% c("Intercept", "constant")){
