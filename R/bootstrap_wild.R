@@ -198,7 +198,7 @@ wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20,
                                   crit = x$crit),
                          error = function(e) NULL)
       }else if(x$method == "Cholesky"){
-        temp <- id.chol(varb)
+        temp <- id.chol(varb, order_k = x$order_k)
       }else{
         temp <- tryCatch(id.st_boot(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,
                                     gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01, Z = Z),
@@ -258,7 +258,7 @@ wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20,
                                   crit = x$crit),
                          error = function(e) NULL)
       }else if(x$method == "Cholesky"){
-        temp <- id.chol(varb)
+        temp <- id.chol(varb, order_k = x$order_k)
       }
     }
 
