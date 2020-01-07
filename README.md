@@ -5,7 +5,7 @@ svars <img src = "man/figures/sticker.png" align = "right" width = "180px"/>
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/svars)](https://cran.r-project.org/package=svars) 
 [![rstudio mirror downloads](http://cranlogs.r-pkg.org/badges/grand-total/svars)](https://cran.r-project.org/package=svars)
 
-Analysing causal relationships among time series in R.
+Analyzing causal relationships among time series in R.
 
 ## Overview
 
@@ -138,7 +138,7 @@ plot(hist.decomp)
 
 ![](man/figures/hd_viz.png)
 
-Directly related to the historical decomposition is the concept auf counterfactuals. This method allows to analyze hypothetical scenarios in which effects of specific shocks are neglected.  
+Directly related to the historical decomposition is the concept of counterfactuals. This method allows to analyze hypothetical scenarios in which effects of specific shocks are neglected.  
 
 ```r
 counterfactuals <- cf(structural.form, series = 1)

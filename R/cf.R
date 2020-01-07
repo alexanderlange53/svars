@@ -3,7 +3,7 @@
 #' Calculation of Counterfactuals for an identified SVAR object 'svars' derived by function id.st( ), id.cvm( ),id.cv( ),id.dc( ) or id.ngml( ).
 #'
 #' @param x SVAR object of class "svars"
-#' @param series Integer. indicating the series for which the counterfactuals should be clalculated.
+#' @param series Integer. indicating the series for which the counterfactuals should be calculated.
 #' @param transition Numeric. Value from [0, 1] indicating how many initial values should be discarded, i.e., 0.1 means that the first 10 per cent observations of the sample are considered as transient.
 #'
 #' @return A list with class attribute "hd" holding the Counterfactuals as data frame.

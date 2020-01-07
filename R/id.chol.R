@@ -1,4 +1,4 @@
-#' Recursuve identification of SVAR models via Cholesky decomposition
+#' Recursive identification of SVAR models via Cholesky decomposition
 #'
 #' Given an estimated VAR model, this function uses the Cholesky decomposition to identify the structural impact matrix B of the corresponding SVAR model
 #' \deqn{y_t=c_t+A_1 y_{t-1}+...+A_p y_{t-p}+u_t
@@ -34,7 +34,7 @@
 #' set.seed(23211)
 #' v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
 #' x1 <- id.chol(v1)
-#' x2 <- id.chol(v1, order_k = c("pi", "x", "i")) ## order_k = c(2,1,3) 
+#' x2 <- id.chol(v1, order_k = c("pi", "x", "i")) ## order_k = c(2,1,3)
 #' summary(x1)
 #'
 #'
@@ -72,7 +72,7 @@ id.chol <- function(x, order_k = NULL){
 
   # Choleski decomposition
   perm <- diag(k)[ , order_k, drop=FALSE] # permutation matrix
-  psig <- t(perm) %*% sigg %*% perm  # permute in accordance with recursive causalitiy
+  psig <- t(perm) %*% sigg %*% perm  # permute in accordance with recursive causality
   P <- t(chol(psig))
   B <- perm %*% P %*% t(perm) # repermute via inverse using solve(perm) == t(perm)
   rownames(B) <- names_k

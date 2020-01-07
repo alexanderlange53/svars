@@ -9,7 +9,7 @@ cf(x, series = 3, transition = 0)
 \arguments{
 \item{x}{SVAR object of class "svars"}
 
-\item{series}{Integer. indicating the series for which the counterfactuals should be clalculated.}
+\item{series}{Integer. indicating the series for which the counterfactuals should be calculated.}
 
 \item{transition}{Numeric. Value from [0, 1] indicating how many initial values should be discarded, i.e., 0.1 means that the first 10 per cent observations of the sample are considered as transient.}
 }

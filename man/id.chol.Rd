@@ -2,7 +2,7 @@
 % Please edit documentation in R/id.chol.R
 \name{id.chol}
 \alias{id.chol}
-\title{Recursuve identification of SVAR models via Cholesky decomposition}
+\title{Recursive identification of SVAR models via Cholesky decomposition}
 \usage{
 id.chol(x, order_k = NULL)
 }
@@ -40,7 +40,7 @@ Matrix B corresponds to the decomposition of the least squares covariance matrix
 set.seed(23211)
 v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
 x1 <- id.chol(v1)
-x2 <- id.chol(v1, order_k = c("pi", "x", "i")) ## order_k = c(2,1,3) 
+x2 <- id.chol(v1, order_k = c("pi", "x", "i")) ## order_k = c(2,1,3)
 summary(x1)
 
 
