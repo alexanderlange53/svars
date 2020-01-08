@@ -1,4 +1,5 @@
 #' @import ggplot2
+#' @method plot chowpretest
 #' @export
 
 plot.chowpretest <- function(x, ...){

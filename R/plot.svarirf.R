@@ -1,5 +1,6 @@
 #' @import ggplot2
 #' @importFrom reshape2 melt
+#' @method plot svarirf
 #' @export
 
 plot.svarirf <- function(x, base, scales = "free_y", ...){

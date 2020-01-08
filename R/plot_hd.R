@@ -1,6 +1,7 @@
 #' @import ggplot2
 #' @importFrom reshape2 melt
 #' @import zoo
+#' @method plot hd
 #' @export
 
 plot.hd <- function(x, ...){

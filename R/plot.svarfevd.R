@@ -1,5 +1,6 @@
 #' @import ggplot2
 #' @importFrom reshape2 melt
+#' @method plot svarfevd
 #' @export
 
 plot.svarfevd <- function(x, ...){

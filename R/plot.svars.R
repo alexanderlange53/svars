@@ -1,4 +1,5 @@
 #' @import ggplot2
+#' @method plot svars
 #' @export
 
 plot.svars <- function(x, ...){

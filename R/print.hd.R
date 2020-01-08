@@ -1,4 +1,4 @@
-#' @S3method print hd
+#' @export
 
 print.hd <- function(x, ...){
 

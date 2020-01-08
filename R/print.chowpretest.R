@@ -1,4 +1,4 @@
-#' @S3method print chowpretest
+#' @export
 
 print.chowpretest <- function(x,...){
   cat("\nEmpirical Fluctuation Process: Multivariate Chow test\n\n")
