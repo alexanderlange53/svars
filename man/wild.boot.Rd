@@ -4,9 +4,20 @@
 \alias{wild.boot}
 \title{Wild bootstrap for IRFs of identified SVARs}
 \usage{
-wild.boot(x, design = "fixed", distr = "rademacher", n.ahead = 20,
-  nboot = 500, nc = 1, dd = NULL, signrest = NULL, itermax = 300,
-  steptol = 200, iter2 = 50, rademacher = "deprecated")
+wild.boot(
+  x,
+  design = "fixed",
+  distr = "rademacher",
+  n.ahead = 20,
+  nboot = 500,
+  nc = 1,
+  dd = NULL,
+  signrest = NULL,
+  itermax = 300,
+  steptol = 200,
+  iter2 = 50,
+  rademacher = "deprecated"
+)
 }
 \arguments{
 \item{x}{SVAR object of class "svars"}

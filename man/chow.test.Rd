@@ -4,8 +4,16 @@
 \alias{chow.test}
 \title{Chow Test for Structural Break}
 \usage{
-chow.test(x, SB, nboot = 500, start = NULL, end = NULL,
-  frequency = NULL, format = NULL, dateVector = NULL)
+chow.test(
+  x,
+  SB,
+  nboot = 500,
+  start = NULL,
+  end = NULL,
+  frequency = NULL,
+  format = NULL,
+  dateVector = NULL
+)
 }
 \arguments{
 \item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object. Or an object of class 'chowpretest' from stability()}

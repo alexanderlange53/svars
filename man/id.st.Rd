@@ -4,10 +4,23 @@
 \alias{id.st}
 \title{Identification of SVAR models by means of a smooth transition (ST) in covariance}
 \usage{
-id.st(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL,
-  transition_variable = NULL, gamma_lower = -3, gamma_upper = 2,
-  gamma_step = 0.5, gamma_fix = NULL, nc = 1, max.iter = 5,
-  crit = 0.001, restriction_matrix = NULL, lr_test = FALSE)
+id.st(
+  x,
+  c_lower = 0.3,
+  c_upper = 0.7,
+  c_step = 5,
+  c_fix = NULL,
+  transition_variable = NULL,
+  gamma_lower = -3,
+  gamma_upper = 2,
+  gamma_step = 0.5,
+  gamma_fix = NULL,
+  nc = 1,
+  max.iter = 5,
+  crit = 0.001,
+  restriction_matrix = NULL,
+  lr_test = FALSE
+)
 }
 \arguments{
 \item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object}

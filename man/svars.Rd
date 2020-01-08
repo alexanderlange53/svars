@@ -3,7 +3,6 @@
 \docType{package}
 \name{svars}
 \alias{svars}
-\alias{svars-package}
 \title{svars: Data-driven identification of structural VAR models}
 \description{
 This package implements data-driven identification methods for structural vector autoregressive (SVAR) models.

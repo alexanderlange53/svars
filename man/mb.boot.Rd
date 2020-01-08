@@ -4,9 +4,19 @@
 \alias{mb.boot}
 \title{Moving block bootstrap for IRFs of identified SVARs}
 \usage{
-mb.boot(x, design = "recursive", b.length = 15, n.ahead = 20,
-  nboot = 500, nc = 1, dd = NULL, signrest = NULL, itermax = 300,
-  steptol = 200, iter2 = 50)
+mb.boot(
+  x,
+  design = "recursive",
+  b.length = 15,
+  n.ahead = 20,
+  nboot = 500,
+  nc = 1,
+  dd = NULL,
+  signrest = NULL,
+  itermax = 300,
+  steptol = 200,
+  iter2 = 50
+)
 }
 \arguments{
 \item{x}{SVAR object of class "svars"}
