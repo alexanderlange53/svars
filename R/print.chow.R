@@ -1,4 +1,4 @@
-#' @S3method print chow
+#' @export
 
 print.chow <- function(x, ...){
 

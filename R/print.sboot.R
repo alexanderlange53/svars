@@ -1,4 +1,4 @@
-#' @S3method print sboot
+#' @export
 
 print.sboot <- function(x, ...){
 

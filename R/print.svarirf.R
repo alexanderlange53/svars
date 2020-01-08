@@ -1,4 +1,4 @@
-#' @S3method print svarirf
+#' @export
 
 print.svarirf <- function(x, ...){
 

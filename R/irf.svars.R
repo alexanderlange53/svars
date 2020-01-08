@@ -24,7 +24,7 @@
 #' @name irf
 #' @aliases irf.svars
 #' @import vars
-#' @S3method irf svars
+#' @export
 
 irf.svars <- function(x, ..., n.ahead = 20){
   if(!(class(x)=="svars")){

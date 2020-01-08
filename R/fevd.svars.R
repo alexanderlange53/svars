@@ -24,7 +24,7 @@
 #' @name fevd
 #' @aliases fevd.svars
 #' @import  vars
-#' @S3method fevd svars
+#' @export
 
 fevd.svars <- function(x, n.ahead = 10, ...){
   if(!(class(x)=="svars")){

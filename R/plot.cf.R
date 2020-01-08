@@ -1,7 +1,7 @@
 #' @import ggplot2
 #' @importFrom reshape2 melt
 #' @import zoo
-#' @S3method plot cf
+#' @export
 
 plot.cf <- function(x, ...){
 

@@ -1,6 +1,6 @@
 #' @import ggplot2
 #' @importFrom reshape2 melt
-#' @S3method plot svarfevd
+#' @export
 
 plot.svarfevd <- function(x, ...){
 

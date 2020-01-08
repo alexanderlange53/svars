@@ -1,4 +1,4 @@
-#' @S3method print jstest
+#' @export
 
 print.jstest <- function(x, ...){
 

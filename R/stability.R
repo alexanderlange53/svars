@@ -64,7 +64,7 @@
 #' @name stability
 #' @aliases stability.varest
 #' @importFrom strucchange efp
-#' @S3method stability varest
+#' @export
 
 stability.varest <- function(x, type = c("OLS-CUSUM", "Rec-CUSUM", "Rec-MOSUM",
                                   "OLS-MOSUM", "RE", "ME", "Score-CUSUM",

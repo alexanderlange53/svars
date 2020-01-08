@@ -1,4 +1,4 @@
-#' @S3method print svars
+#' @export
 
 print.svars <- function(x, ...){
 

@@ -1,4 +1,4 @@
-#' @S3method plot sboot
+#' @export
 
 plot.sboot <- function(x, scales = "free_y", lowerq = 0.16, upperq = 0.84, percentile = 'standard', ..., base){
   # define

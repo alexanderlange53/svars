@@ -1,4 +1,4 @@
-#' @S3method print svarfevd
+#' @export
 
 print.svarfevd <- function(x, ...){
 
