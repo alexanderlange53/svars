@@ -22,7 +22,7 @@
 #'
 #' @export
 
-cf <- function(x, series = 3, transition = 0){
+cf <- function(x, series = 1, transition = 0){
 
   # Function to calculate matrix potence
   "%^%" <- function(A, n){

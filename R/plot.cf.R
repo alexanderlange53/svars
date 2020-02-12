@@ -36,7 +36,7 @@ plot.cf <- function(x, ...){
   dat$group[(nrow(dat_a) + 1):nrow(dat)] <- 'Counterfactual'
 
   ggplot(dat) + geom_line(aes(x = Index, y = value, group = group, linetype = group)) +
-    facet_wrap(~variable, ncol = 1) +
+    facet_wrap(~variable, ncol = 1) + ylab('') +
     xlab("Time") +  theme_bw()  + theme(legend.position="bottom", legend.title = element_blank())
 
 }
