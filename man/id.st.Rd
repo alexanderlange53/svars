@@ -120,6 +120,13 @@ x1 <- id.st(v1, c_fix = 167, gamma_fix = -2.77)
 summary(x1)
 plot(x1)
 
+# Using a lagged endogenous transition variable
+# In this example inflation with two lags
+inf <- LN[-c(1, 449, 450), 2]*(1/sd(LN[-c(1, 449, 450), 2]))
+x1_inf <- id.st(v1, c_fix = 4.41, gamma_fix = 0.49, transition_variable = inf)
+summary(x1_inf)
+plot(x1_inf)
+
 }
 }
 \references{

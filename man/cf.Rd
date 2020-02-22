@@ -4,7 +4,7 @@
 \alias{cf}
 \title{Counterfactuals for SVAR Models}
 \usage{
-cf(x, series = 3, transition = 0)
+cf(x, series = 1, transition = 0)
 }
 \arguments{
 \item{x}{SVAR object of class "svars"}
