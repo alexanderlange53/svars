@@ -1,14 +1,57 @@
 #' @method plot sboot
 #' @export
 
-plot.sboot <- function(x, scales = "free_y", lowerq = 0.16, upperq = 0.84, percentile = 'standard', ..., base){
+plot.sboot <- function(x, scales = "free_y", lowerq = 0.16, upperq = 0.84, percentile = 'standard', selection = NULL,
+                       cumulative = NULL, ..., base){
   # define
   probs <- NULL
   V1 <- NULL
   value <- NULL
 
-  n.ahead <- nrow(x$true$irf)
+  # Auxiliary functions
+  cutt <- function(x, selind){
+    x$irf <- x$irf[selind]  ## account for the first column being "V1" the horizon counter
+    return(x)
+  }
+
+  agg <- function(x, aggind){
+    x$irf[,aggind] <- cumsum(x$irf[aggind])
+    return(x)
+  }
+
+  # To select shocks and variables to plot
   kk <- ncol(x$true$irf)
+  k <- sqrt(kk - 1)
+
+  ### Calculate cumulated irfs if necessary
+  if(!is.null(cumulative)){
+      aggind <- list()
+      temp <- (k * cumulative) + 1
+      for(i in 1:length(temp)){
+        aggind[[i]] <- temp[i] - (k - c(1:k))
+      }
+      aggind <- unlist(aggind)
+
+    x$true      <- agg(x$true, aggind)
+    x$bootstrap <- lapply(x$bootstrap, agg, aggind)
+  }
+
+  if(!is.null(selection)){
+    selind <- list()
+    temp <- (k * selection[[1]]) + 1 ## for the column V1
+    for(i in 1:length(temp)){
+      selind[[i]] <- temp[i] - (k - selection[[2]])
+    }
+    selind <- c(1, unlist(selind))
+
+    x$true      <- cutt(x$true, selind)
+    x$bootstrap <- lapply(x$bootstrap, cutt, selind)
+
+    kk <- ncol(x$true$irf)
+  }
+
+  n.ahead <- nrow(x$true$irf)
+
   bootstrap <- x$bootstrap
   nboot <- length(bootstrap)
   rest <- x$rest_mat
