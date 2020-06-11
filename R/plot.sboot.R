@@ -36,6 +36,7 @@ plot.sboot <- function(x, scales = "free_y", lowerq = 0.16, upperq = 0.84, perce
     x$bootstrap <- lapply(x$bootstrap, agg, aggind)
   }
 
+  # Select specific shocks or series
   if(!is.null(selection)){
     selind <- list()
     temp <- (k * selection[[1]]) + 1 ## for the column V1
