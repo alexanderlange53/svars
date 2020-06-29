@@ -167,7 +167,7 @@ cf <- function(x, series = 1, transition = 0){
     count <- ts(yhat[, -grep("V1", colnames(yhat))], start = start(lag(x$y, k = -x$p)), end = end(x$y), frequency = frequency(x$y))
     counterfac <- list(actual = na.omit(count), counter = yhat_counter)
   }else{
-    counterfac <- list(counter = as.data.frame(na.omit(yhat)), counter = yhat_counter)
+    counterfac <- list(actual = as.data.frame(na.omit(yhat)), counter = yhat_counter)
   }
   class(counterfac) <- "cf"
   return(counterfac)
