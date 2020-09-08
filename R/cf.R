@@ -152,11 +152,11 @@ cf <- function(x, series = 1, transition = 0){
   colnames(yhat)[2] <- paste("Demeaned series ", colnames(y)[series])
 
   for(i in 4:ncol(yhat)){
-    colnames(yhat)[i] <- paste("Cumulative effect of flow ", colnames(y)[i-3], "shock on ", colnames(y)[series])
+    colnames(yhat)[i] <- paste("Cumulative effect of ", colnames(y)[i-3], "shock on ", colnames(y)[series])
   }
 
   for(i in 1:ncol(yhat_counter)){
-    colnames(yhat_counter)[i] <- paste(colnames(y)[series], "with and without cumulative effect of flow", colnames(y)[i], "shock")
+    colnames(yhat_counter)[i] <- paste(colnames(y)[series], "with and without cumulative effect of ", colnames(y)[i], "shock")
   }
 
   yhat_counter <- yhat_counter[,-series]

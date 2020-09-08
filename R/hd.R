@@ -151,7 +151,7 @@ hd <- function(x, series = 1, transition = 0){
   colnames(yhat)[2] <- paste("Demeaned series ", colnames(y)[series])
 
   for(i in 4:ncol(yhat)){
-    colnames(yhat)[i] <- paste("Cumulative effect of flow ", colnames(y)[i-3], "shock on ", colnames(y)[series])
+    colnames(yhat)[i] <- paste("Cumulative effect of ", colnames(y)[i-3], "shock on ", colnames(y)[series])
   }
 
   if(inherits(x$y, "ts")){
