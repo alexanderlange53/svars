@@ -72,7 +72,7 @@ id.cvm <- function(x, dd = NULL, itermax = 500, steptol = 100, iter2 = 75){
   # if(is.null(residuals(x))){
   #   stop("No residuals retrieved from model")
   # }
-  u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
+  u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  A_hat <- NULL
   get_var_objects(x)
 
   sigg1 <- crossprod(u)/(Tob-1-k*p)
@@ -131,15 +131,15 @@ id.cvm <- function(x, dd = NULL, itermax = 500, steptol = 100, iter2 = 75){
   B_hat <- rotmat(par_o, faklow1)
 
   # obtaining VAR parameter
-  if(inherits(x, "var.boot")){
-    A_hat <- coef_x
-  }else{
-    if(type == "none"){
-      A_hat <- vars::Bcoef(x)
-    }else{
-      A_hat <- vars::Bcoef(x)[, c((k * p+1):ncol(vars::Bcoef(x)),1:(k * p))]
-    }
-  }
+  # if(inherits(x, "var.boot")){
+  #   A_hat <- coef_x
+  # }else{
+  #   if(type == "none"){
+  #     A_hat <- vars::Bcoef(x)
+  #   }else{
+  #     A_hat <- vars::Bcoef(x)[, c((k * p+1):ncol(vars::Bcoef(x)),1:(k * p))]
+  #   }
+  # }
 
 
   rownames(B_hat) = colnames(u)

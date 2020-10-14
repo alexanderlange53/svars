@@ -67,7 +67,7 @@
 
 id.garch <- function(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL){
 
-  u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
+  u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <- A_hat <- NULL
   get_var_objects(x)
 
   # check if varest object is restricted

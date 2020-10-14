@@ -1,6 +1,6 @@
 id.ngml_boot <- function(x, stage3 = FALSE, Z = NULL, restriction_matrix = NULL){
 
-  u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
+  u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <- A_hat <- NULL
   get_var_objects(x)
 
   # check if varest object is restricted

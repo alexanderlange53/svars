@@ -2,7 +2,7 @@ id.st_boot <- function(x, c_fix = NULL, transition_variable = NULL,
                   gamma_fix = NULL, nc = 1, Z,
                   max.iter = 5, crit = 0.01, restriction_matrix = NULL){
 
-  u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
+  u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  A_hat <- NULL
   get_var_objects(x)
 
   # check if varest object is restricted

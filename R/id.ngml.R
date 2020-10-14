@@ -62,7 +62,7 @@
 
 id.ngml <- function(x, stage3 = FALSE, restriction_matrix = NULL){
 
-  u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
+  u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <- A_hat <-  NULL
   get_var_objects(x)
   rmOut = restriction_matrix
 

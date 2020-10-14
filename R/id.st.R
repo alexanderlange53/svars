@@ -103,7 +103,7 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
                   max.iter = 5, crit = 0.001, restriction_matrix = NULL, lr_test = FALSE){
 
   # Gathering information from reduced form model
-  u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
+  u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  A_hat <- NULL
   get_var_objects(x)
 
   # check if varest object is restricted

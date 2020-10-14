@@ -1,6 +1,6 @@
 id.cv_boot <- function(x, SB, max.iter = 50, crit = 0.001, restriction_matrix = NULL, Z = NULL){
 
-  u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
+  u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  A_hat <- NULL
  get_var_objects(x)
 
  rmOut = restriction_matrix
