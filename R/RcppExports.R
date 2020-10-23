@@ -41,6 +41,14 @@ GARCHiterativeP <- function(parameter, SigmaUniv, k, parameterIniu, u, Restricti
     .Call('_svars_GARCHiterativeP', PACKAGE = 'svars', parameter, SigmaUniv, k, parameterIniu, u, RestrictionMatrix, restrictions, maxIter, Tob, crit)
 }
 
+matexp <- function(X, n) {
+    .Call('_svars_matexp', PACKAGE = 'svars', X, n)
+}
+
+IRF <- function(A_hat, B_hat, horizon) {
+    .Call('_svars_IRF', PACKAGE = 'svars', A_hat, B_hat, horizon)
+}
+
 LikelihoodNGMLStage2 <- function(theta, u, Tob, k, RestrictionMatrix, restrictions) {
     .Call('_svars_LikelihoodNGMLStage2', PACKAGE = 'svars', theta, u, Tob, k, RestrictionMatrix, restrictions)
 }

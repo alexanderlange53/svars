@@ -30,40 +30,6 @@ fevd.svars <- function(x, n.ahead = 10, ...){
   if(!(class(x)=="svars")){
     stop("\nPlease provide an object of class 'svars'.\n")
   }
-  # Function to calculate matrix potence
-  "%^%" <- function(A, n){
-    if(n == 1){
-      A
-    }else{
-      A %*% (A %^% (n-1))
-    }
-  }
-
-  # function to calculate impulse response
-  IrF <- function(A_hat, B_hat, n.ahead){
-    k <- nrow(A_hat)
-    p <- ncol(A_hat)/k
-    if(p == 1){
-      irfa <- array(0, c(k, k, n.ahead))
-      irfa[,,1] <- B_hat
-      for(i in 1:n.ahead){
-        irfa[,,i] <- (A_hat%^%i)%*%B_hat
-      }
-      return(irfa)
-    }else{
-      irfa <- array(0, c(k, k, n.ahead))
-      irfa[,,1] <- B_hat
-      Mm <- matrix(0, nrow = k*p, ncol = k*p)
-      Mm[1:k, 1:(k*p)] <- A_hat
-      Mm[(k+1):(k*p), 1 : ((p-1)*k)] <- diag(k*(p-1))
-      Mm1 <- diag(k*p)
-      for(i in 1:(n.ahead-1)){
-        Mm1 <- Mm1%*%Mm
-        irfa[,,(i+1)] <- Mm1[1:k, 1:k]%*%B_hat
-      }
-      return(irfa)
-    }
-  }
 
   if(x$type == 'const'){
     A_hat <- x$A_hat[,-1]
@@ -77,7 +43,7 @@ fevd.svars <- function(x, n.ahead = 10, ...){
 
   B_hat <- x$B
 
-  IR <- IrF(A_hat, B_hat, n.ahead)
+  IR <-  array(unlist(IRF(A_hat, B_hat, n.ahead)), c(x$K, x$K, n.ahead))
 
   fe <- list()
   for(i in 1:nrow(B_hat)){

@@ -177,6 +177,31 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// matexp
+arma::mat matexp(arma::mat X, int n);
+RcppExport SEXP _svars_matexp(SEXP XSEXP, SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type X(XSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(matexp(X, n));
+    return rcpp_result_gen;
+END_RCPP
+}
+// IRF
+List IRF(arma::mat& A_hat, arma::mat& B_hat, int& horizon);
+RcppExport SEXP _svars_IRF(SEXP A_hatSEXP, SEXP B_hatSEXP, SEXP horizonSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type A_hat(A_hatSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type B_hat(B_hatSEXP);
+    Rcpp::traits::input_parameter< int& >::type horizon(horizonSEXP);
+    rcpp_result_gen = Rcpp::wrap(IRF(A_hat, B_hat, horizon));
+    return rcpp_result_gen;
+END_RCPP
+}
 // LikelihoodNGMLStage2
 double LikelihoodNGMLStage2(const arma::vec& theta, const arma::mat& u, int Tob, int& k, arma::mat& RestrictionMatrix, int& restrictions);
 RcppExport SEXP _svars_LikelihoodNGMLStage2(SEXP thetaSEXP, SEXP uSEXP, SEXP TobSEXP, SEXP kSEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP) {
@@ -306,6 +331,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_svars_LikelihoodGARCHm", (DL_FUNC) &_svars_LikelihoodGARCHm, 7},
     {"_svars_nlmGARCHm", (DL_FUNC) &_svars_nlmGARCHm, 7},
     {"_svars_GARCHiterativeP", (DL_FUNC) &_svars_GARCHiterativeP, 10},
+    {"_svars_matexp", (DL_FUNC) &_svars_matexp, 2},
+    {"_svars_IRF", (DL_FUNC) &_svars_IRF, 3},
     {"_svars_LikelihoodNGMLStage2", (DL_FUNC) &_svars_LikelihoodNGMLStage2, 6},
     {"_svars_LikelihoodNGMLStage3", (DL_FUNC) &_svars_LikelihoodNGMLStage3, 8},
     {"_svars_LikelihoodST", (DL_FUNC) &_svars_LikelihoodST, 7},
