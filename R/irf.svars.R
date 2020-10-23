@@ -46,8 +46,8 @@ irf.svars <- function(x, ..., n.ahead = 20){
     if(p == 1){
       irfa <- array(0, c(k, k, n.ahead))
       irfa[,,1] <- B_hat
-      for(i in 1:n.ahead){
-        irfa[,,i] <- (A_hat%^%i)%*%B_hat
+      for(i in 2:n.ahead){
+        irfa[,,i] <- (A_hat%^%(i-1))%*%B_hat
       }
       return(irfa)
     }else{
