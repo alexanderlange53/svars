@@ -19,7 +19,7 @@ test_that("irf works with 3-dims and p = 1", {
 
   expect_equivalent(x1$B,  B_irf)
   expect_equal(dim(x2$irf), c(20, 10))
-  expect_equal(round(mean(unlist(x2$irf)), 5), 1.20898)
+  expect_equal(round(mean(unlist(x2$irf)), 3), 1.209)
 })
 
 test_that("irf works with 2-dims and p = 3", {
