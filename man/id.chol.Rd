@@ -16,7 +16,7 @@ A list of class "svars" with elements
 \item{B}{Estimated structural impact matrix B, i.e. unique decomposition of the covariance matrix of reduced form residuals}
 \item{n}{Number of observations}
 \item{method}{Method applied for identification}
-\item{order_k}{Ordering of the variables as assumed for recursive causalitiy}
+\item{order_k}{Ordering of the variables as assumed for recursive causality}
 \item{A_hat}{Estimated VAR parameter}
 \item{type}{Type of the VAR model, e.g. 'const'}
 \item{y}{Data matrix}
