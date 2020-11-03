@@ -38,7 +38,7 @@
 #'
 #' @references Zeileis, A., F. Leisch, K. Hornik and C. Kleiber (2002), strucchange: An R Package for Testing for Structural Change in Linear Regression
 #' Models, \emph{Journal of Statistical Software}, \bold{7(2)}: 1-38,
-#' \url{http://www.jstatsoft.org/v07/i02/}\cr
+#' \url{https://www.jstatsoft.org/article/view/v007i02}\cr
 #'
 #' and see the references provided in the reference section of \code{\link[strucchange]{efp}} and \code{\link[svars]{chow.test}}, too.
 #'
