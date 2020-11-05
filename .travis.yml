@@ -8,11 +8,15 @@ notifications:
 
 addons:
   apt:
+    update: true
     packages:
       - libgsl-dev
+      - qpdf
+      - ghostscript
+
 
 script:
-  - R CMD build . --compact-vignettes="both"
+  - R CMD build . --compact-vignettes=gs+qpdf
   - R CMD check *tar.gz --as-cran
   - |
     R CMD build .
