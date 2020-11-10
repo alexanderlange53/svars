@@ -24,7 +24,5 @@ LazyData: TRUE
 RoxygenNote: 7.0.2
 Suggests: 
     testthat (>= 2.1.0),
-    knitr,
-    rmarkdown,
     tsDyn
-VignetteBuilder: knitr
+
