@@ -16,8 +16,10 @@ addons:
 
 
 script:
-  - R CMD build . --compact-vignettes=gs+qpdf
-  - R CMD check *tar.gz --as-cran
+  - |
+    R CMD build . --compact-vignettes=gs+gdpdf
+  - |
+    R CMD check *tar.gz --as-cran
   - |
     R CMD build .
     travis_wait 100 R CMD check *tar.gz
