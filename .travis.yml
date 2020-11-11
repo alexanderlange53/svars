@@ -17,7 +17,7 @@ addons:
 
 script:
   - |
-    R CMD build . --compact-vignettes=gs+gdpdf
+    R CMD build . --compact-vignettes=both
   - |
     R CMD check *tar.gz --as-cran
   - |
