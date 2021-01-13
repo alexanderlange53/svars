@@ -123,7 +123,7 @@ cf <- function(x, series = 1, transition = 0){
     colnames(yhat_counter)[i] <- paste(colnames(y)[series], "with and without cumulative effect of ", colnames(y)[i], "shock")
   }
 
-  yhat_counter <- yhat_counter[,-series]
+  yhat_counter <- as.matrix(yhat_counter[,-series])
   yhat <- yhat[,c(1, rep(2, ncol(yhat_counter)))]
 
 
