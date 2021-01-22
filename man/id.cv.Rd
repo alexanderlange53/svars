@@ -7,6 +7,7 @@
 id.cv(
   x,
   SB,
+  SB2 = NULL,
   start = NULL,
   end = NULL,
   frequency = NULL,

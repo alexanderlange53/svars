@@ -104,7 +104,7 @@
 # SB : structural break
 
 
-id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
+id.cv <- function(x, SB, SB2 = NULL, start = NULL, end = NULL, frequency = NULL,
                         format = NULL, dateVector = NULL, max.iter = 50, crit = 0.001,
                   restriction_matrix = NULL){
 
@@ -129,46 +129,115 @@ restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
     SBcharacter <- NULL
   }
 
-if (!is.numeric(SB)) {
+
+if (is.null(SB2)) {
+  if (!is.numeric(SB)) {
     SBcharacter <- SB
     SB <- getStructuralBreak(SB = SB, start = start, end = end,
                              frequency = frequency, format = format, dateVector = dateVector, Tob = Tob, p = p)
-} else if(length(SB) != 1 & inherits(yOut, "ts") & length(SB) < 4){
-        SBts = SB
-        SB = dim(window(yOut, end = SB))[1]
-      if(frequency(yOut) == 4){
-        SBcharacter = paste(SBts[1], " Q", SBts[2], sep = "")
-     }else if(frequency(yOut) == 12){
-        SBcharacter = paste(SBts[1], " M", SBts[2], sep = "")
-     }else if(frequency(yOut) == 52){
-        SBcharacter = paste(SBts[1], " W", SBts[2], sep = "")
-     }else if(frequency(yOut) == 365.25){
-        SBcharacter = paste(SBts[1], "-", SBts[2], "-", SBts[3], sep = "")
-     }else{
-        SBcharacter = NULL
+  } else if(length(SB) != 1 & inherits(yOut, "ts") & length(SB) < 4){
+    SBts = SB
+    SB = dim(window(yOut, end = SB))[1]
+    if(frequency(yOut) == 4){
+      SBcharacter = paste(SBts[1], " Q", SBts[2], sep = "")
+    }else if(frequency(yOut) == 12){
+      SBcharacter = paste(SBts[1], " M", SBts[2], sep = "")
+    }else if(frequency(yOut) == 52){
+      SBcharacter = paste(SBts[1], " W", SBts[2], sep = "")
+    }else if(frequency(yOut) == 365.25){
+      SBcharacter = paste(SBts[1], "-", SBts[2], "-", SBts[3], sep = "")
+    }else{
+      SBcharacter = NULL
+    }
   }
-}
 
-if (length(SB) > 4 & length(SB) != Tob) {
-  stop('Wrong length of SB')
-}
+  if (length(SB) > 4 & length(SB) != Tob) {
+    stop('Wrong length of SB')
+  }
 
-if (length(SB) == Tob & length(SB) > 3) {
-  SB_out <- SB
-  TB <- Tob - sum(SB) + 1
-  resid1 <- u[SB == 0,]
-  resid2 <- u[SB,]
+  if (length(SB) == Tob & length(SB) > 3) {
+    SB_out <- SB
+    TB <- Tob - sum(SB) + 1
+    resid1 <- u[SB == 0,]
+    resid2 <- u[SB,]
+  } else {
+    SB_out <- SB
+    TB <- SB - p
+    SB <- rep(0, Tob)
+    SB[TB:Tob] <- 1
+    resid1 <- u[1:TB - 1, ]
+    resid2 <- u[TB:Tob, ]
+  }
+
+  Sigma_hat1 <- (crossprod(resid1)) / (TB - 1)
+  Sigma_hat2 <- (crossprod(resid2)) / (Tob - TB + 1)
 } else {
-  SB_out <- SB
-  TB <- SB - p
-  SB <- rep(0, Tob)
-  SB[TB:Tob] <- 1
-  resid1 <- u[1:TB - 1, ]
-  resid2 <- u[TB:Tob, ]
-}
+  if (!is.numeric(SB)) {
+    SBcharacter <- SB
+    SB <- getStructuralBreak(SB = SB, start = start, end = end,
+                             frequency = frequency, format = format, dateVector = dateVector, Tob = Tob, p = p)
+    SBcharacter2 <- SB2
+    SB2 <- getStructuralBreak(SB = SB2, start = start, end = end,
+                             frequency = frequency, format = format, dateVector = dateVector, Tob = Tob, p = p)
+  } else if(length(SB) != 1 & inherits(yOut, "ts") & length(SB) < 4){
+    SBts = SB
+    SB = dim(window(yOut, end = SB))[1]
+    if(frequency(yOut) == 4){
+      SBcharacter = paste(SBts[1], " Q", SBts[2], sep = "")
+    }else if(frequency(yOut) == 12){
+      SBcharacter = paste(SBts[1], " M", SBts[2], sep = "")
+    }else if(frequency(yOut) == 52){
+      SBcharacter = paste(SBts[1], " W", SBts[2], sep = "")
+    }else if(frequency(yOut) == 365.25){
+      SBcharacter = paste(SBts[1], "-", SBts[2], "-", SBts[3], sep = "")
+    }else{
+      SBcharacter = NULL
+    }
+    SBts2 = SB
+    SB2 = dim(window(yOut, end = SB2))[1]
+    if(frequency(yOut) == 4){
+      SBcharacter2 = paste(SBts2[1], " Q", SBts2[2], sep = "")
+    }else if(frequency(yOut) == 12){
+      SBcharacter2 = paste(SBts2[1], " M", SBts2[2], sep = "")
+    }else if(frequency(yOut) == 52){
+      SBcharacter2 = paste(SBts2[1], " W", SBts2[2], sep = "")
+    }else if(frequency(yOut) == 365.25){
+      SBcharacter2 = paste(SBts2[1], "-", SBts2[2], "-", SBts2[3], sep = "")
+    }else{
+      SBcharacter2 = NULL
+    }
+  }
 
-Sigma_hat1 <- (crossprod(resid1)) / (TB - 1)
-Sigma_hat2 <- (crossprod(resid2)) / (Tob - TB + 1)
+  if (length(SB) > 4 & length(SB) != Tob) {
+    stop('Wrong length of SB')
+  }
+
+  if (length(SB) == Tob & length(SB) > 3) {
+    SB_out <- SB
+    TB <- Tob - sum(SB) + 1
+    resid1 <- u[SB == 0,]
+    resid2 <- u[SB,]
+  } else {
+    SB_out <- SB
+    SB_out2 <- SB2
+    TB1 <- SB - p
+    TB2 <- SB2 - SB - p
+    SB <- rep(0, Tob)
+    SB[1:TB1] <- 1
+    SB2 <- rep(0, Tob)
+    SB2[(TB1+1):(TB1+TB2)] <- 1
+    SB3 <- rep(0, Tob)
+    SB3[(TB1+TB2+1):Tob] <- 1
+    resid1 <- u[which(SB == 1), ]
+    resid2 <- u[which(SB2 == 1), ]
+    resid3 <- u[which(SB3 == 1), ]
+    TB3 <- nrow(resid3)
+  }
+
+  Sigma_hat1 <- (crossprod(resid1)) / nrow(resid1)
+  Sigma_hat2 <- (crossprod(resid2)) / nrow(resid2)
+  Sigma_hat3 <- (crossprod(resid3)) / nrow(resid3)
+}
 
 yl <- t(YLagCr(t(y), p))
 yret <- y
@@ -184,21 +253,15 @@ y <- y[, -c(1:p)]
     Z_t <- yl
   }
 
-  # if (!is.null(restriction_matrix)) {
-  #   restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
-  # } else {
-  #   restrictions <- 0
-  #   restriction_matrix <- matrix(NA, k, k)
-  # }
-
+if(is.null(SB2)){
   Regime1 <- which(SB == 0) - 1
   Regime2 <- which(SB == 1) - 1
 
   best_estimation <- IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k, type = type,
-                                       Regime1 = Regime1, Regime2 = Regime2,
-                                       RestrictionMatrix = restriction_matrix, restrictions = restrictions,
-                                       Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, Zt = Z_t, y = y,
-                                       maxIter = max.iter)
+                                         Regime1 = Regime1, Regime2 = Regime2,
+                                         RestrictionMatrix = restriction_matrix, restrictions = restrictions,
+                                         Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, Zt = Z_t, y = y,
+                                         maxIter = max.iter)
   # Adding normalizing constant
   best_estimation$Lik <- -(Tob * (k / 2) * log(2 * pi) + best_estimation$Lik)
 
@@ -222,6 +285,43 @@ y <- y[, -c(1:p)]
   }else{
     lRatioTest <- NULL
   }
+} else {
+  Regime1 <- which(SB == 1) - 1
+  Regime2 <- which(SB2 == 1) - 1
+  Regime3 <- which(SB3 == 1) - 1
+
+  best_estimation <- IdentifyVolatility3(crit = crit, u = u, TB1 = TB1, TB2 = TB2, TB3 = TB3, p = p, k = k, type = type,
+                                        Regime1 = Regime1, Regime2 = Regime2, Regime3 = Regime3,
+                                        RestrictionMatrix = restriction_matrix, restrictions = restrictions,
+                                        Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, SigmaHat3 = Sigma_hat3,
+                                        Zt = Z_t, y = y,
+                                        maxIter = max.iter)
+  # Adding normalizing constant
+  best_estimation$Lik <- -(Tob * (k / 2) * log(2 * pi) + best_estimation$Lik)
+
+  if(restrictions > 0 ){
+
+
+    unrestricted_estimation <- IdentifyVolatility3(crit = crit, u = u, TB1 = TB1, TB2 = TB2, TB3 = TB3, p = p, k = k, type = type,
+                                                  Regime1 = Regime1, Regime2 = Regime2, Regime3 = Regime3,
+                                                  RestrictionMatrix = matrix(NA, k, k), restrictions = 0,
+                                                  Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, SigmaHat3 = Sigma_hat3,
+                                                  Zt = Z_t, y = y,
+                                                  maxIter = max.iter)
+    # Adding normalizing constant
+    unrestricted_estimation$Lik <- -(Tob*(k/2)*log(2*pi) + unrestricted_estimation$Lik)
+
+    lRatioTestStatistic = 2 * (unrestricted_estimation$Lik - best_estimation$Lik)
+    restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
+    pValue = round(1 - pchisq(lRatioTestStatistic, restrictions), 4)
+    lRatioTest <- data.frame(testStatistic = lRatioTestStatistic, p.value = pValue)
+    rownames(lRatioTest) <- ""
+    colnames(lRatioTest) <- c("Test statistic", "p-value")
+  }else{
+    lRatioTest <- NULL
+  }
+}
+
 
 
   #result$restriction_matrix = rmOut
@@ -313,30 +413,64 @@ y <- y[, -c(1:p)]
   rownames(best_estimation$Lambda_SE) <- colnames(u)
   rownames(best_estimation$B_SE) <- colnames(u)
 
-  result <- list(
-    Lambda = best_estimation$Lambda,    # estimated Lambda matrix (unconditional heteroscedasticity)
-    Lambda_SE = best_estimation$Lambda_SE,  # standard errors of Lambda matrix
-    B = best_estimation$B,              # estimated B matrix (unique decomposition of the covariance matrix)
-    B_SE = best_estimation$B_SE,            # standard errors of B matrix
-    n = Tob,                # number of observations
-    Fish = best_estimation$Fish,            # observerd fisher information matrix
-    Lik = best_estimation$Lik,             # function value of likelihood
-    wald_statistic = wald,  # results of wald test
-    iteration = best_estimation$iteration,     # number of gls estimations
-    method = "Changes in Volatility",
-    SB = SB_out,                # Structural Break in number format
-    A_hat = best_estimation$A_hat,            # VAR parameter estimated with gls
-    type = type,          # type of the VAR model e.g 'const'
-    SBcharacter = SBcharacter,             # Structural Break in input character format
-    restrictions = restrictions, # number of restrictions
-    restriction_matrix = rmOut,
-    y = yOut,                # Data
-    p = unname(p),                # number of lags
-    K = k,# number of time series
-    lRatioTest = lRatioTest,
-    AIC = (-2) * best_estimation$Lik + 2*(k + p * k^2 + (k + 1) * k + 1),
-    VAR = x
-  )
+  if (!is.null(SB2)) {
+    rownames(best_estimation$Lambda2) <- colnames(u)
+    rownames(best_estimation$Lambda2_SE) <- colnames(u)
+  }
+
+  if (is.null(SB2)) {
+    result <- list(
+      Lambda = best_estimation$Lambda,    # estimated Lambda matrix (unconditional heteroscedasticity)
+      Lambda_SE = best_estimation$Lambda_SE,  # standard errors of Lambda matrix
+      B = best_estimation$B,              # estimated B matrix (unique decomposition of the covariance matrix)
+      B_SE = best_estimation$B_SE,            # standard errors of B matrix
+      n = Tob,                # number of observations
+      Fish = best_estimation$Fish,            # observerd fisher information matrix
+      Lik = best_estimation$Lik,             # function value of likelihood
+      wald_statistic = wald,  # results of wald test
+      iteration = best_estimation$iteration,     # number of gls estimations
+      method = "Changes in Volatility",
+      SB = SB_out,                # Structural Break in number format
+      A_hat = best_estimation$A_hat,            # VAR parameter estimated with gls
+      type = type,          # type of the VAR model e.g 'const'
+      SBcharacter = SBcharacter,             # Structural Break in input character format
+      restrictions = restrictions, # number of restrictions
+      restriction_matrix = rmOut,
+      y = yOut,                # Data
+      p = unname(p),                # number of lags
+      K = k,# number of time series
+      lRatioTest = lRatioTest,
+      AIC = (-2) * best_estimation$Lik + 2*(k + p * k^2 + (k + 1) * k + 1),
+      VAR = x
+    )
+  } else {
+    result <- list(
+      Lambda = best_estimation$Lambda,    # estimated Lambda matrix (unconditional heteroscedasticity)
+      Lambda_SE = best_estimation$Lambda_SE,  # standard errors of Lambda matrix
+      Lambda2 = best_estimation$Lambda2,    # estimated Lambda matrix (unconditional heteroscedasticity)
+      Lambda2_SE = best_estimation$Lambda2_SE,  # standard errors of Lambda matrix
+      B = best_estimation$B,              # estimated B matrix (unique decomposition of the covariance matrix)
+      B_SE = best_estimation$B_SE,            # standard errors of B matrix
+      n = Tob,                # number of observations
+      Fish = best_estimation$Fish,            # observerd fisher information matrix
+      Lik = best_estimation$Lik,             # function value of likelihood
+      wald_statistic = wald,  # results of wald test
+      iteration = best_estimation$iteration,     # number of gls estimations
+      method = "Changes in Volatility",
+      SB = SB_out,                # Structural Break in number format
+      A_hat = best_estimation$A_hat,            # VAR parameter estimated with gls
+      type = type,          # type of the VAR model e.g 'const'
+      SBcharacter = SBcharacter,             # Structural Break in input character format
+      restrictions = restrictions, # number of restrictions
+      restriction_matrix = rmOut,
+      y = yOut,                # Data
+      p = unname(p),                # number of lags
+      K = k,# number of time series
+      lRatioTest = lRatioTest,
+      AIC = (-2) * best_estimation$Lik + 2*(k + p * k^2 + (k + 1) * k + 1),
+      VAR = x
+    )
+  }
   class(result) <- "svars"
  return(result)
 }
