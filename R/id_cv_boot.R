@@ -1,4 +1,4 @@
-id.cv_boot <- function(x, SB, max.iter = 50, crit = 0.001, restriction_matrix = NULL, Z = NULL){
+id.cv_boot <- function(x, SB, SB2, max.iter = 50, crit = 0.001, restriction_matrix = NULL, Z = NULL){
 
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  A_hat <- NULL
  get_var_objects(x)
@@ -20,22 +20,44 @@ id.cv_boot <- function(x, SB, max.iter = 50, crit = 0.001, restriction_matrix = 
     SBcharacter <- NULL
   }
 
- if (length(SB) == Tob) {
-   SB_out <- SB
-   TB <- Tob - sum(SB) + 1
-   resid1 <- u[SB == 0,]
-   resid2 <- u[SB,]
+ if (is.null(SB2)) {
+   if (length(SB) == Tob) {
+     SB_out <- SB
+     TB <- Tob - sum(SB) + 1
+     resid1 <- u[SB == 0,]
+     resid2 <- u[SB,]
+   } else {
+     SB_out <- SB
+     TB <- SB - p
+     SB <- rep(0, Tob)
+     SB[TB:Tob] <- 1
+     resid1 <- u[1:TB - 1, ]
+     resid2 <- u[TB:Tob, ]
+   }
+
+   Sigma_hat1 <- (crossprod(resid1)) / (TB - 1)
+   Sigma_hat2 <- (crossprod(resid2)) / (Tob - TB + 1)
  } else {
-   SB_out <- SB
-   TB <- SB - p
-   SB <- rep(0, Tob)
-   SB[TB:Tob] <- 1
-   resid1 <- u[1:TB - 1, ]
-   resid2 <- u[TB:Tob, ]
+     SB_out <- SB
+     SB_out2 <- SB2
+     TB1 <- SB - p
+     TB2 <- SB2 - SB - p
+     SB <- rep(0, Tob)
+     SB[1:TB1] <- 1
+     SB2 <- rep(0, Tob)
+     SB2[(TB1+1):(TB1+TB2)] <- 1
+     SB3 <- rep(0, Tob)
+     SB3[(TB1+TB2+1):Tob] <- 1
+     resid1 <- u[which(SB == 1), ]
+     resid2 <- u[which(SB2 == 1), ]
+     resid3 <- u[which(SB3 == 1), ]
+     TB3 <- nrow(resid3)
+
+   Sigma_hat1 <- (crossprod(resid1)) / nrow(resid1)
+   Sigma_hat2 <- (crossprod(resid2)) / nrow(resid2)
+   Sigma_hat3 <- (crossprod(resid3)) / nrow(resid3)
  }
 
-  Sigma_hat1 <- (crossprod(resid1)) / (TB - 1)
-  Sigma_hat2 <- (crossprod(resid2)) / (Tob - TB + 1)
 
 
 
@@ -59,39 +81,77 @@ id.cv_boot <- function(x, SB, max.iter = 50, crit = 0.001, restriction_matrix = 
     yret <- y
   }
 
+ if(is.null(SB2)){
   Regime1 <- which(SB == 0) - 1
   Regime2 <- which(SB == 1) - 1
 
-best_estimation = IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k, type = type,
+  best_estimation = IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k, type = type,
                                      Regime1 = Regime1, Regime2 = Regime2,
                                      RestrictionMatrix = restriction_matrix, restrictions = restrictions,
                                      Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, Zt = Z_t, y = y,
                                      maxIter = max.iter)
 
-# Adding normalizing constant
-best_estimation$Lik <- -(Tob * (k / 2) * log(2 * pi) + best_estimation$Lik)
+  # Adding normalizing constant
+  best_estimation$Lik <- -(Tob * (k / 2) * log(2 * pi) + best_estimation$Lik)
 
-if(restrictions > 0 ){
+  if(restrictions > 0 ){
 
 
-  unrestricted_estimation <- IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k, type = type,
+    unrestricted_estimation <- IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k, type = type,
                                                 Regime1 = Regime1, Regime2 = Regime2,
                                                 RestrictionMatrix = matrix(NA, k, k), restrictions = 0,
                                                 Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, Zt = Z_t, y = y,
                                                 maxIter = max.iter)
 
-  # Adding normalizing constant
-  unrestricted_estimation$Lik <- -(Tob * (k / 2) * log(2 * pi) + unrestricted_estimation$Lik)
+   # Adding normalizing constant
+    unrestricted_estimation$Lik <- -(Tob * (k / 2) * log(2 * pi) + unrestricted_estimation$Lik)
 
-  lRatioTestStatistic = 2 * (unrestricted_estimation$Lik - best_estimation$Lik)
-  restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
-  pValue = round(1 - pchisq(lRatioTestStatistic, restrictions), 4)
-  lRatioTest <- data.frame(testStatistic = lRatioTestStatistic, p.value = pValue)
-  rownames(lRatioTest) <- ""
-  colnames(lRatioTest) <- c("Test statistic", "p-value")
-}else{
-  lRatioTest <- NULL
-}
+    lRatioTestStatistic = 2 * (unrestricted_estimation$Lik - best_estimation$Lik)
+    restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
+    pValue = round(1 - pchisq(lRatioTestStatistic, restrictions), 4)
+    lRatioTest <- data.frame(testStatistic = lRatioTestStatistic, p.value = pValue)
+    rownames(lRatioTest) <- ""
+    colnames(lRatioTest) <- c("Test statistic", "p-value")
+  }else{
+    lRatioTest <- NULL
+  }
+ } else {
+   Regime1 <- which(SB == 1) - 1
+   Regime2 <- which(SB2 == 1) - 1
+   Regime3 <- which(SB3 == 1) - 1
+
+   best_estimation <- IdentifyVolatility3(crit = crit, u = u, TB1 = TB1, TB2 = TB2, TB3 = TB3, p = p, k = k, type = type,
+                                          Regime1 = Regime1, Regime2 = Regime2, Regime3 = Regime3,
+                                          RestrictionMatrix = restriction_matrix, restrictions = restrictions,
+                                          Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, SigmaHat3 = Sigma_hat3,
+                                          Zt = Z_t, y = y,
+                                          maxIter = max.iter)
+   # Adding normalizing constant
+   best_estimation$Lik <- -(Tob * (k / 2) * log(2 * pi) + best_estimation$Lik)
+
+   if(restrictions > 0 ){
+
+
+     unrestricted_estimation <- IdentifyVolatility3(crit = crit, u = u, TB1 = TB1, TB2 = TB2, TB3 = TB3, p = p, k = k, type = type,
+                                                    Regime1 = Regime1, Regime2 = Regime2, Regime3 = Regime3,
+                                                    RestrictionMatrix = matrix(NA, k, k), restrictions = 0,
+                                                    Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, SigmaHat3 = Sigma_hat3,
+                                                    Zt = Z_t, y = y,
+                                                    maxIter = max.iter)
+     # Adding normalizing constant
+     unrestricted_estimation$Lik <- -(Tob*(k/2)*log(2*pi) + unrestricted_estimation$Lik)
+
+     lRatioTestStatistic = 2 * (unrestricted_estimation$Lik - best_estimation$Lik)
+     restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
+     pValue = round(1 - pchisq(lRatioTestStatistic, restrictions), 4)
+     lRatioTest <- data.frame(testStatistic = lRatioTestStatistic, p.value = pValue)
+     rownames(lRatioTest) <- ""
+     colnames(lRatioTest) <- c("Test statistic", "p-value")
+   }else{
+     lRatioTest <- NULL
+   }
+ }
+
 
 if(is.null(best_estimation$A_hat)){
   if(inherits(x, "varest")){
@@ -193,6 +253,7 @@ result <- list(
   iteration = best_estimation$iteration,     # number of gls estimations
   method = "Changes in Volatility",
   SB = SB_out,                # Structural Break in number format
+  Sb2 = SB2,
   A_hat = best_estimation$A_hat,            # VAR parameter estimated with gls
   type = type,          # type of the VAR model e.g 'const'
   SBcharacter = SBcharacter,             # Structural Break in input character format

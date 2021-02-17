@@ -202,7 +202,7 @@ mb.boot <- function(x, design = "recursive", b.length = 15, n.ahead = 20, nboot 
         } else {
           SB <- x$SB
         }
-        temp <- tryCatch(id.cv_boot(varb, SB = SB, restriction_matrix = x$restriction_matrix),
+        temp <- tryCatch(id.cv_boot(varb, SB = SB, SB2 = x$SB2, restriction_matrix = x$restriction_matrix),
                          error = function(e) NULL)
       }else if(x$method == "Cramer-von Mises distance"){
         temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
@@ -234,7 +234,7 @@ mb.boot <- function(x, design = "recursive", b.length = 15, n.ahead = 20, nboot 
       if(x$method == "Non-Gaussian maximum likelihood"){
         temp <- id.ngml_boot(varb, stage3 = x$stage3, Z = Z, restriction_matrix = x$restriction_matrix)
       }else if(x$method == "Changes in Volatility"){
-        temp <- tryCatch(id.cv_boot(varb, SB = x$SB, Z = Z, restriction_matrix = x$restriction_matrix),
+        temp <- tryCatch(id.cv_boot(varb, SB = x$SB, SB2 = x$SB2, Z = Z, restriction_matrix = x$restriction_matrix),
                          error = function(e) NULL)
       }else if(x$method == "Cramer-von Mises distance"){
         temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)

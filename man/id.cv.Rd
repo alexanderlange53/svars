@@ -25,6 +25,11 @@ id.cv(
 a vector of ts() frequencies if a ts object is used in the VAR or a date character. If a date character is provided, either a date vector containing the whole time line
 in the corresponding format (see examples) or common time parameters need to be provided}
 
+\item{SB2}{Integer, vector or date character. Optional if the model should be estimated with two volatility regimes.
+The structural break is specified either by an integer (number of observations in the pre-break period),
+a vector of ts() frequencies if a ts object is used in the VAR or a date character. If a date character is provided, either a date vector containing the whole time line
+in the corresponding format (see examples) or common time parameters need to be provided}
+
 \item{start}{Character. Start of the time series (only if dateVector is empty)}
 
 \item{end}{Character. End of the time series (only if dateVector is empty)}

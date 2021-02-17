@@ -135,6 +135,7 @@ restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
 
 
 if (is.null(SB2)) {
+  SB_out2 <- SB2
   if (!is.numeric(SB)) {
     SBcharacter <- SB
     SB <- getStructuralBreak(SB = SB, start = start, end = end,
@@ -216,12 +217,6 @@ if (is.null(SB2)) {
     stop('Wrong length of SB')
   }
 
-  if (length(SB) == Tob & length(SB) > 3) {
-    SB_out <- SB
-    TB <- Tob - sum(SB) + 1
-    resid1 <- u[SB == 0,]
-    resid2 <- u[SB,]
-  } else {
     SB_out <- SB
     SB_out2 <- SB2
     TB1 <- SB - p
@@ -236,7 +231,6 @@ if (is.null(SB2)) {
     resid2 <- u[which(SB2 == 1), ]
     resid3 <- u[which(SB3 == 1), ]
     TB3 <- nrow(resid3)
-  }
 
   Sigma_hat1 <- (crossprod(resid1)) / nrow(resid1)
   Sigma_hat2 <- (crossprod(resid2)) / nrow(resid2)
@@ -420,6 +414,7 @@ if(is.null(SB2)){
   if (!is.null(SB2)) {
     rownames(best_estimation$Lambda2) <- colnames(u)
     rownames(best_estimation$Lambda2_SE) <- colnames(u)
+    wald2 <- wald.test(best_estimation$Lambda2, best_estimation$Fish, restrictions)
   }
 
   if (is.null(SB2)) {
@@ -435,6 +430,7 @@ if(is.null(SB2)){
       iteration = best_estimation$iteration,     # number of gls estimations
       method = "Changes in Volatility",
       SB = SB_out,                # Structural Break in number format
+      SB2 = SB_out2,
       A_hat = best_estimation$A_hat,            # VAR parameter estimated with gls
       type = type,          # type of the VAR model e.g 'const'
       SBcharacter = SBcharacter,             # Structural Break in input character format
@@ -462,6 +458,7 @@ if(is.null(SB2)){
       iteration = best_estimation$iteration,     # number of gls estimations
       method = "Changes in Volatility",
       SB = SB_out,                # Structural Break in number format
+      SB2 = SB_out2,
       A_hat = best_estimation$A_hat,            # VAR parameter estimated with gls
       type = type,          # type of the VAR model e.g 'const'
       SBcharacter = SBcharacter,             # Structural Break in input character format
