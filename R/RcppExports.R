@@ -5,12 +5,24 @@ LikelihoodCV <- function(S, Tob, TB, SigmaHat1, k, SigmaHat2, RestrictionMatrix,
     .Call('_svars_LikelihoodCV', PACKAGE = 'svars', S, Tob, TB, SigmaHat1, k, SigmaHat2, RestrictionMatrix, restrictions)
 }
 
+LikelihoodCV3regimes <- function(S, TB1, TB2, TB3, SigmaHat1, k, SigmaHat2, SigmaHat3, RestrictionMatrix, restrictions) {
+    .Call('_svars_LikelihoodCV3regimes', PACKAGE = 'svars', S, TB1, TB2, TB3, SigmaHat1, k, SigmaHat2, SigmaHat3, RestrictionMatrix, restrictions)
+}
+
 nlmCV <- function(S, Tob, TB, SigmaHat1, k, SigmaHat2, RestrictionMatrix, restrictions) {
     .Call('_svars_nlmCV', PACKAGE = 'svars', S, Tob, TB, SigmaHat1, k, SigmaHat2, RestrictionMatrix, restrictions)
 }
 
+nlmCV3 <- function(S, TB1, TB2, TB3, SigmaHat1, k, SigmaHat2, SigmaHat3, RestrictionMatrix, restrictions) {
+    .Call('_svars_nlmCV3', PACKAGE = 'svars', S, TB1, TB2, TB3, SigmaHat1, k, SigmaHat2, SigmaHat3, RestrictionMatrix, restrictions)
+}
+
 IdentifyVolatility <- function(crit, u, TB, Regime1, Regime2, p, k, RestrictionMatrix, type, restrictions, Tob, SigmaHat1, SigmaHat2, Zt, y, maxIter) {
     .Call('_svars_IdentifyVolatility', PACKAGE = 'svars', crit, u, TB, Regime1, Regime2, p, k, RestrictionMatrix, type, restrictions, Tob, SigmaHat1, SigmaHat2, Zt, y, maxIter)
+}
+
+IdentifyVolatility3 <- function(crit, u, TB1, TB2, TB3, Regime1, Regime2, Regime3, p, k, RestrictionMatrix, type, restrictions, Tob, SigmaHat1, SigmaHat2, SigmaHat3, Zt, y, maxIter) {
+    .Call('_svars_IdentifyVolatility3', PACKAGE = 'svars', crit, u, TB1, TB2, TB3, Regime1, Regime2, Regime3, p, k, RestrictionMatrix, type, restrictions, Tob, SigmaHat1, SigmaHat2, SigmaHat3, Zt, y, maxIter)
 }
 
 LikelihoodGARCHu <- function(parameter, est, Sigma1, Tob) {
@@ -75,5 +87,17 @@ IterativeSmoothTransition <- function(transition, u, Tob, k, p, crit, maxIter, Z
 
 YLagCr <- function(y, p) {
     .Call('_svars_YLagCr', PACKAGE = 'svars', y, p)
+}
+
+fact_it_c <- function(M) {
+    .Call('_svars_fact_it_c', PACKAGE = 'svars', M)
+}
+
+permute_vector <- function(x) {
+    .Call('_svars_permute_vector', PACKAGE = 'svars', x)
+}
+
+permutation <- function(mat) {
+    .Call('_svars_permutation', PACKAGE = 'svars', mat)
 }
 

@@ -7,6 +7,7 @@
 id.cv(
   x,
   SB,
+  SB2 = NULL,
   start = NULL,
   end = NULL,
   frequency = NULL,
@@ -21,6 +22,11 @@ id.cv(
 \item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object}
 
 \item{SB}{Integer, vector or date character. The structural break is specified either by an integer (number of observations in the pre-break period),
+a vector of ts() frequencies if a ts object is used in the VAR or a date character. If a date character is provided, either a date vector containing the whole time line
+in the corresponding format (see examples) or common time parameters need to be provided}
+
+\item{SB2}{Integer, vector or date character. Optional if the model should be estimated with two volatility regimes.
+The structural break is specified either by an integer (number of observations in the pre-break period),
 a vector of ts() frequencies if a ts object is used in the VAR or a date character. If a date character is provided, either a date vector containing the whole time line
 in the corresponding format (see examples) or common time parameters need to be provided}
 
@@ -116,6 +122,11 @@ summary(x4)
 # or provide ts date format (For quarterly, monthly, weekly and daily frequencies only)
 x5 <- id.cv(v1, SB = c(1979, 3))
 summary(x5)
+
+#-----# Example with three covariance regimes
+
+x6 <- id.cv(v1, SB = 59, SB2 = 110)
+summary(x6)
 
 }
 \references{

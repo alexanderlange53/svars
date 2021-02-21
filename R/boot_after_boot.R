@@ -88,10 +88,10 @@ ba.boot <- function(x, nc = 1){
   # Resample again
   if(x$method == "Wild bootstrap"){
     result <- wild.boot(x$Omodel, design = x$design, distr = x$distr, n.ahead = NROW(x$true$irf), signrest = x$signrest,
-                        nboot = x$nboot, nc = nc)
+                        signcheck = x$signcheck, nboot = x$nboot, nc = nc)
   }else{
     result <- mb.boot(x$Omodel, design = x$design, b.length =  x$b_length, n.ahead = NROW(x$true$irf), signrest = x$signrest,
-                        nboot = x$nboot, nc = nc)
+                      signcheck = x$signcheck, nboot = x$nboot, nc = nc)
   }
 
   result$BC <- Psi # Bias correction Term
