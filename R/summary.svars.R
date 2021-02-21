@@ -17,7 +17,7 @@ summary.svars <- function(object, ...){
   cat(svarsObject$AIC)
 }
   if(svarsObject$method ==  "Changes in Volatility"){
-    if(is.null(svarsObject$SB)) {
+    if(is.null(svarsObject$SB2)) {
       cat("\nStructural Break: At Observation Number ")
       cat(svarsObject$SB)
       if(!is.null(svarsObject$SBcharacter)){
@@ -33,6 +33,10 @@ summary.svars <- function(object, ...){
       }
       cat("\nSecond structural Break: At Observation Number ")
       cat(svarsObject$SB2)
+      if(!is.null(svarsObject$SBcharacter2)){
+        cat(" during ")
+        cat(svarsObject$SBcharacter2)
+      }
     }
 
  cat("\nNumber of GLS estimations: ")
@@ -44,7 +48,7 @@ summary.svars <- function(object, ...){
  print(svarsObject$Lambda)
  cat("\nStandard Errors of Lambda:\n")
  print(svarsObject$Lambda_SE)
- if(!is.null(svarsObject$SB)) {
+ if(!is.null(svarsObject$SB2)) {
    cat("\nSecond estimated unconditional Heteroscedasticity Matrix (Lambda2):\n")
    print(svarsObject$Lambda2)
    cat("\nStandard Errors of second Lambda:\n")

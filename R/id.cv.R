@@ -96,6 +96,11 @@
 #' x5 <- id.cv(v1, SB = c(1979, 3))
 #' summary(x5)
 #'
+#' #-----# Example with three covariance regimes
+#'
+#' x6 <- id.cv(v1, SB = 59, SB2 = 110)
+#' summary(x6)
+#'
 #' @importFrom steadyICA steadyICA
 #' @export
 
@@ -136,6 +141,7 @@ restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
 
 if (is.null(SB2)) {
   SB_out2 <- SB2
+  SBcharacter2 = NULL
   if (!is.numeric(SB)) {
     SBcharacter <- SB
     SB <- getStructuralBreak(SB = SB, start = start, end = end,
@@ -181,9 +187,6 @@ if (is.null(SB2)) {
     SBcharacter <- SB
     SB <- getStructuralBreak(SB = SB, start = start, end = end,
                              frequency = frequency, format = format, dateVector = dateVector, Tob = Tob, p = p)
-    SBcharacter2 <- SB2
-    SB2 <- getStructuralBreak(SB = SB2, start = start, end = end,
-                             frequency = frequency, format = format, dateVector = dateVector, Tob = Tob, p = p)
   } else if(length(SB) != 1 & inherits(yOut, "ts") & length(SB) < 4){
     SBts = SB
     SB = dim(window(yOut, end = SB))[1]
@@ -198,7 +201,18 @@ if (is.null(SB2)) {
     }else{
       SBcharacter = NULL
     }
-    SBts2 = SB
+  }
+
+  if (is.numeric(SB2)) {
+    SBcharacter2 <- NULL
+  }
+
+  if (!is.numeric(SB2)) {
+    SBcharacter2 <- SB2
+    SB2 <- getStructuralBreak(SB = SB2, start = start, end = end,
+                              frequency = frequency, format = format, dateVector = dateVector, Tob = Tob, p = p)
+  } else if(length(SB2) != 1 & inherits(yOut, "ts") & length(SB2) < 4){
+    SBts2 = SB2
     SB2 = dim(window(yOut, end = SB2))[1]
     if(frequency(yOut) == 4){
       SBcharacter2 = paste(SBts2[1], " Q", SBts2[2], sep = "")
@@ -215,6 +229,10 @@ if (is.null(SB2)) {
 
   if (length(SB) > 4 & length(SB) != Tob) {
     stop('Wrong length of SB')
+  }
+
+  if (length(SB2) > 4 & length(SB2) != Tob) {
+    stop('Wrong length of SB2')
   }
 
     SB_out <- SB
@@ -462,6 +480,7 @@ if(is.null(SB2)){
       A_hat = best_estimation$A_hat,            # VAR parameter estimated with gls
       type = type,          # type of the VAR model e.g 'const'
       SBcharacter = SBcharacter,             # Structural Break in input character format
+      SBcharacter2 = SBcharacter2,
       restrictions = restrictions, # number of restrictions
       restriction_matrix = rmOut,
       y = yOut,                # Data

@@ -123,6 +123,11 @@ summary(x4)
 x5 <- id.cv(v1, SB = c(1979, 3))
 summary(x5)
 
+#-----# Example with three covariance regimes
+
+x6 <- id.cv(v1, SB = 59, SB2 = 110)
+summary(x6)
+
 }
 \references{
 Rigobon, R., 2003. Identification through Heteroskedasticity. The Review of Economics and Statistics, 85, 777-792.\cr
