@@ -13,6 +13,7 @@ mb.boot(
   nc = 1,
   dd = NULL,
   signrest = NULL,
+  signcheck = TRUE,
   itermax = 300,
   steptol = 200,
   iter2 = 50
@@ -36,6 +37,10 @@ If not supplied, it will be calculated by the function}
 
 \item{signrest}{A list with vectors containing 1 and -1, e.g. c(1,-1,1), indicating a sign pattern of specific shocks to be tested
 with the help of the bootstrap samples.}
+
+\item{signcheck}{Boolean. Whether the sign pattern should be checked for each bootstrap iteration.
+Note that this procedure is computationally extremely demanding for high dimensional VARs, since the number of possible permutations of B is K!,
+ where K is the number of variables in the VAR.}
 
 \item{itermax}{Integer. Maximum number of iterations for DEoptim}
 

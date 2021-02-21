@@ -389,6 +389,39 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// fact_it_c
+int fact_it_c(int M);
+RcppExport SEXP _svars_fact_it_c(SEXP MSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type M(MSEXP);
+    rcpp_result_gen = Rcpp::wrap(fact_it_c(M));
+    return rcpp_result_gen;
+END_RCPP
+}
+// permute_vector
+arma::mat permute_vector(arma::vec x);
+RcppExport SEXP _svars_permute_vector(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(permute_vector(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// permutation
+Rcpp::List permutation(arma::mat mat);
+RcppExport SEXP _svars_permutation(SEXP matSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type mat(matSEXP);
+    rcpp_result_gen = Rcpp::wrap(permutation(mat));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_svars_LikelihoodCV", (DL_FUNC) &_svars_LikelihoodCV, 8},
@@ -413,6 +446,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_svars_mGLSst", (DL_FUNC) &_svars_mGLSst, 6},
     {"_svars_IterativeSmoothTransition", (DL_FUNC) &_svars_IterativeSmoothTransition, 11},
     {"_svars_YLagCr", (DL_FUNC) &_svars_YLagCr, 2},
+    {"_svars_fact_it_c", (DL_FUNC) &_svars_fact_it_c, 1},
+    {"_svars_permute_vector", (DL_FUNC) &_svars_permute_vector, 1},
+    {"_svars_permutation", (DL_FUNC) &_svars_permutation, 1},
     {NULL, NULL, 0}
 };
 

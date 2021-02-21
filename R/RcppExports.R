@@ -89,3 +89,15 @@ YLagCr <- function(y, p) {
     .Call('_svars_YLagCr', PACKAGE = 'svars', y, p)
 }
 
+fact_it_c <- function(M) {
+    .Call('_svars_fact_it_c', PACKAGE = 'svars', M)
+}
+
+permute_vector <- function(x) {
+    .Call('_svars_permute_vector', PACKAGE = 'svars', x)
+}
+
+permutation <- function(mat) {
+    .Call('_svars_permutation', PACKAGE = 'svars', mat)
+}
+
