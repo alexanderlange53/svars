@@ -17,7 +17,17 @@ plot.svars <- function(x, ...){
     Index <- seq(1:length(x$transition_function))
   }
 
-  trans <- data.frame(t = Index, c = x$transition_function)
-  ggplot(trans, aes(x = t, y = c)) + geom_line() + xlab("Time") + ylab("") + ggtitle('Transition Function') +
-    theme_bw()
+  if(length(x$est_c) > 1) {
+    trans <- data.frame(t = Index, c = x$transition_function, transition = 'Regime 1')
+    trans2 <- data.frame(t = Index, c = x$transition_function2, transition = 'Regime 2')
+    trans3 <- data.frame(t = Index, c = x$transition_function3, transition = 'Regime 3')
+    trans_all <- rbind(trans, trans2, trans3)
+    ggplot(trans_all, aes(x = t, y = c)) + geom_line() + xlab("Time") + ylab("") + ggtitle('Transition Functions') +
+      facet_wrap(~transition, ncol = 1) + theme_bw()
+  } else {
+    trans <- data.frame(t = Index, c = x$transition_function)
+    ggplot(trans, aes(x = t, y = c)) + geom_line() + xlab("Time") + ylab("") + ggtitle('Transition Function') +
+      theme_bw()
+  }
+
 }

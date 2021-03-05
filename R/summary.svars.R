@@ -83,12 +83,20 @@ summary.svars <- function(object, ...){
     print(svarsObject$Lambda)
     cat("\nStandard Errors of Lambda:\n")
     print(svarsObject$Lambda_SE)
+    if(length(svarsObject$est_c) > 1) {
+      cat("\nEstimated Heteroscedasticity Matrix (Lambda):\n")
+      print(svarsObject$Lambda2)
+      cat("\nStandard Errors of Lambda:\n")
+      print(svarsObject$Lambda2_SE)
+    }
     cat("\nEstimated B Matrix (unique decomposition of the covariance matrix): \n")
     print(svarsObject$B)
     cat("\nStandard Errors of B:\n")
     print(svarsObject$B_SE)
-    cat("\nPairwise Wald Test:\n")
-    printCoefmat(svarsObject$wald_statistic, has.Pvalue = T)
+    if(length(svarsObject$est_c)<2) {
+      cat("\nPairwise Wald Test:\n")
+      printCoefmat(svarsObject$wald_statistic, has.Pvalue = T)
+    }
     if(svarsObject$restrictions > 0 & svarsObject$lr_test == T){
       cat("\nLikelihood Ratio Test: \n")
       printCoefmat(svarsObject$lRatioTest, has.Pvalue = T)
