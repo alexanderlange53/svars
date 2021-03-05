@@ -323,6 +323,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// LikelihoodST2
+double LikelihoodST2(arma::vec& parameter, double& Tob, arma::mat& u, int& k, arma::vec& G1, arma::vec& G3, arma::mat& RestrictionMatrix, int& restrictions);
+RcppExport SEXP _svars_LikelihoodST2(SEXP parameterSEXP, SEXP TobSEXP, SEXP uSEXP, SEXP kSEXP, SEXP G1SEXP, SEXP G3SEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec& >::type parameter(parameterSEXP);
+    Rcpp::traits::input_parameter< double& >::type Tob(TobSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type u(uSEXP);
+    Rcpp::traits::input_parameter< int& >::type k(kSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type G1(G1SEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type G3(G3SEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type RestrictionMatrix(RestrictionMatrixSEXP);
+    Rcpp::traits::input_parameter< int& >::type restrictions(restrictionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(LikelihoodST2(parameter, Tob, u, k, G1, G3, RestrictionMatrix, restrictions));
+    return rcpp_result_gen;
+END_RCPP
+}
 // nlmST
 Rcpp::List nlmST(const arma::vec& S, double Tob, const arma::mat u, int k, const arma::vec transition, const arma::mat RestrictionMatrix, int restrictions);
 RcppExport SEXP _svars_nlmST(SEXP SSEXP, SEXP TobSEXP, SEXP uSEXP, SEXP kSEXP, SEXP transitionSEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP) {
@@ -340,6 +358,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// nlmST2
+Rcpp::List nlmST2(const arma::vec& S, double Tob, const arma::mat u, int k, const arma::vec transition1, const arma::vec transition2, const arma::mat RestrictionMatrix, int restrictions);
+RcppExport SEXP _svars_nlmST2(SEXP SSEXP, SEXP TobSEXP, SEXP uSEXP, SEXP kSEXP, SEXP transition1SEXP, SEXP transition2SEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type S(SSEXP);
+    Rcpp::traits::input_parameter< double >::type Tob(TobSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type u(uSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type transition1(transition1SEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type transition2(transition2SEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type RestrictionMatrix(RestrictionMatrixSEXP);
+    Rcpp::traits::input_parameter< int >::type restrictions(restrictionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(nlmST2(S, Tob, u, k, transition1, transition2, RestrictionMatrix, restrictions));
+    return rcpp_result_gen;
+END_RCPP
+}
 // mGLSst
 arma::vec mGLSst(const arma::vec transition, const arma::mat& B, const arma::mat& Lambda, const arma::mat Z_t, int k, const arma::mat Y);
 RcppExport SEXP _svars_mGLSst(SEXP transitionSEXP, SEXP BSEXP, SEXP LambdaSEXP, SEXP Z_tSEXP, SEXP kSEXP, SEXP YSEXP) {
@@ -353,6 +389,24 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type k(kSEXP);
     Rcpp::traits::input_parameter< const arma::mat >::type Y(YSEXP);
     rcpp_result_gen = Rcpp::wrap(mGLSst(transition, B, Lambda, Z_t, k, Y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// mGLSst2
+arma::vec mGLSst2(const arma::vec transition1, const arma::vec transition2, const arma::mat& B, const arma::mat& Lambda1, const arma::mat& Lambda2, const arma::mat Z_t, int k, const arma::mat Y);
+RcppExport SEXP _svars_mGLSst2(SEXP transition1SEXP, SEXP transition2SEXP, SEXP BSEXP, SEXP Lambda1SEXP, SEXP Lambda2SEXP, SEXP Z_tSEXP, SEXP kSEXP, SEXP YSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec >::type transition1(transition1SEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type transition2(transition2SEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type B(BSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Lambda1(Lambda1SEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Lambda2(Lambda2SEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type Z_t(Z_tSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type Y(YSEXP);
+    rcpp_result_gen = Rcpp::wrap(mGLSst2(transition1, transition2, B, Lambda1, Lambda2, Z_t, k, Y));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -374,6 +428,28 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::mat& >::type RestrictionMatrix(RestrictionMatrixSEXP);
     Rcpp::traits::input_parameter< int& >::type restrictions(restrictionsSEXP);
     rcpp_result_gen = Rcpp::wrap(IterativeSmoothTransition(transition, u, Tob, k, p, crit, maxIter, Z_t, Yloop, RestrictionMatrix, restrictions));
+    return rcpp_result_gen;
+END_RCPP
+}
+// IterativeSmoothTransition2
+Rcpp::List IterativeSmoothTransition2(const arma::vec& transition1, const arma::vec& transition2, const arma::mat& u, int& Tob, int& k, int& p, double& crit, int& maxIter, arma::mat& Z_t, arma::mat& Yloop, arma::mat& RestrictionMatrix, int& restrictions);
+RcppExport SEXP _svars_IterativeSmoothTransition2(SEXP transition1SEXP, SEXP transition2SEXP, SEXP uSEXP, SEXP TobSEXP, SEXP kSEXP, SEXP pSEXP, SEXP critSEXP, SEXP maxIterSEXP, SEXP Z_tSEXP, SEXP YloopSEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type transition1(transition1SEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type transition2(transition2SEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type u(uSEXP);
+    Rcpp::traits::input_parameter< int& >::type Tob(TobSEXP);
+    Rcpp::traits::input_parameter< int& >::type k(kSEXP);
+    Rcpp::traits::input_parameter< int& >::type p(pSEXP);
+    Rcpp::traits::input_parameter< double& >::type crit(critSEXP);
+    Rcpp::traits::input_parameter< int& >::type maxIter(maxIterSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type Z_t(Z_tSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type Yloop(YloopSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type RestrictionMatrix(RestrictionMatrixSEXP);
+    Rcpp::traits::input_parameter< int& >::type restrictions(restrictionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(IterativeSmoothTransition2(transition1, transition2, u, Tob, k, p, crit, maxIter, Z_t, Yloop, RestrictionMatrix, restrictions));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -442,9 +518,13 @@ static const R_CallMethodDef CallEntries[] = {
     {"_svars_LikelihoodNGMLStage2", (DL_FUNC) &_svars_LikelihoodNGMLStage2, 6},
     {"_svars_LikelihoodNGMLStage3", (DL_FUNC) &_svars_LikelihoodNGMLStage3, 8},
     {"_svars_LikelihoodST", (DL_FUNC) &_svars_LikelihoodST, 7},
+    {"_svars_LikelihoodST2", (DL_FUNC) &_svars_LikelihoodST2, 8},
     {"_svars_nlmST", (DL_FUNC) &_svars_nlmST, 7},
+    {"_svars_nlmST2", (DL_FUNC) &_svars_nlmST2, 8},
     {"_svars_mGLSst", (DL_FUNC) &_svars_mGLSst, 6},
+    {"_svars_mGLSst2", (DL_FUNC) &_svars_mGLSst2, 8},
     {"_svars_IterativeSmoothTransition", (DL_FUNC) &_svars_IterativeSmoothTransition, 11},
+    {"_svars_IterativeSmoothTransition2", (DL_FUNC) &_svars_IterativeSmoothTransition2, 12},
     {"_svars_YLagCr", (DL_FUNC) &_svars_YLagCr, 2},
     {"_svars_fact_it_c", (DL_FUNC) &_svars_fact_it_c, 1},
     {"_svars_permute_vector", (DL_FUNC) &_svars_permute_vector, 1},

@@ -73,16 +73,32 @@ LikelihoodST <- function(parameter, Tob, u, k, G, RestrictionMatrix, restriction
     .Call('_svars_LikelihoodST', PACKAGE = 'svars', parameter, Tob, u, k, G, RestrictionMatrix, restrictions)
 }
 
+LikelihoodST2 <- function(parameter, Tob, u, k, G1, G3, RestrictionMatrix, restrictions) {
+    .Call('_svars_LikelihoodST2', PACKAGE = 'svars', parameter, Tob, u, k, G1, G3, RestrictionMatrix, restrictions)
+}
+
 nlmST <- function(S, Tob, u, k, transition, RestrictionMatrix, restrictions) {
     .Call('_svars_nlmST', PACKAGE = 'svars', S, Tob, u, k, transition, RestrictionMatrix, restrictions)
+}
+
+nlmST2 <- function(S, Tob, u, k, transition1, transition2, RestrictionMatrix, restrictions) {
+    .Call('_svars_nlmST2', PACKAGE = 'svars', S, Tob, u, k, transition1, transition2, RestrictionMatrix, restrictions)
 }
 
 mGLSst <- function(transition, B, Lambda, Z_t, k, Y) {
     .Call('_svars_mGLSst', PACKAGE = 'svars', transition, B, Lambda, Z_t, k, Y)
 }
 
+mGLSst2 <- function(transition1, transition2, B, Lambda1, Lambda2, Z_t, k, Y) {
+    .Call('_svars_mGLSst2', PACKAGE = 'svars', transition1, transition2, B, Lambda1, Lambda2, Z_t, k, Y)
+}
+
 IterativeSmoothTransition <- function(transition, u, Tob, k, p, crit, maxIter, Z_t, Yloop, RestrictionMatrix, restrictions) {
     .Call('_svars_IterativeSmoothTransition', PACKAGE = 'svars', transition, u, Tob, k, p, crit, maxIter, Z_t, Yloop, RestrictionMatrix, restrictions)
+}
+
+IterativeSmoothTransition2 <- function(transition1, transition2, u, Tob, k, p, crit, maxIter, Z_t, Yloop, RestrictionMatrix, restrictions) {
+    .Call('_svars_IterativeSmoothTransition2', PACKAGE = 'svars', transition1, transition2, u, Tob, k, p, crit, maxIter, Z_t, Yloop, RestrictionMatrix, restrictions)
 }
 
 YLagCr <- function(y, p) {
