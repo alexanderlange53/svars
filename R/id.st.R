@@ -417,14 +417,35 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
 
       gg <- expand.grid(G_grid1_l, G_grid3_l)
 
+      pause = function()
+      {
+        if (interactive())
+        {
+          invisible(readline(prompt = "Press <Enter> to continue..."))
+        }
+        else
+        {
+          cat("Press <Enter> to continue...")
+          invisible(readLines(file("stdin"), 1))
+        }
+      }
+
+      if (object.size(x1)/1000000 > 1000) {
+        cat('Warning grid search creates large object of size: \n\n')
+        print(object.size(x1), units = 'Mb')
+        cat('With ', nrow(gg), 'grid combibnations \n')
+        cat('It might causes computer problems if you continue. Optionally, reduce the number of grid combinations first \n\n')
+        pause()
+      }
+
 
       grid_optimization <- pbapply::pbapply(gg, 1, function(x){
                             xx <- unlist(x[1])
                             yy <- unlist(x[2])
-                            IterativeSmoothTransition2(xx, yy, u = u, Tob = Tob, k = k, p = p,
+                            tryCatch(IterativeSmoothTransition2(xx, yy, u = u, Tob = Tob, k = k, p = p,
                                    crit = crit, Yloop = y_loop, maxIter = max.iter, Z_t = Z_t,
                                    RestrictionMatrix = restriction_matrix,
-                                   restrictions = restrictions)},
+                                   restrictions = restrictions), error = function(e) -1e25)},
                             cl = nc)
 
       max_likelihood <- which.max(sapply(grid_optimization, '[[', 'Lik'))
