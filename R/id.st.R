@@ -430,9 +430,9 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
         }
       }
 
-      if (object.size(x1)/1000000 > 1000) {
+      if (object.size(gg)/1000000 > 1000) {
         cat('Warning grid search creates large object of size: \n\n')
-        print(object.size(x1), units = 'Mb')
+        print(object.size(gg), units = 'Mb')
         cat('With ', nrow(gg), 'grid combibnations \n')
         cat('It might causes computer problems if you continue. Optionally, reduce the number of grid combinations first \n\n')
         pause()
