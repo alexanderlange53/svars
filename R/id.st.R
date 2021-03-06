@@ -372,12 +372,12 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     if (exists('G_grid')) {
       G_grid <- apply(G_grid, 2, list)
 
-      grid_optimization <- pblapply(G_grid, function(x){IterativeSmoothTransition(unlist(x),
+      grid_optimization <- pblapply(G_grid, function(x){tryCatch(IterativeSmoothTransition(unlist(x),
                                                                                   u = u, Tob = Tob, k = k,
                                                                                   p = p, crit = crit, Yloop = y_loop,
                                                                                   maxIter = max.iter, Z_t = Z_t,
                                                                                   RestrictionMatrix = restriction_matrix,
-                                                                                  restrictions = restrictions)},
+                                                                                  restrictions = restrictions),  error = function(e) -1e25)},
                                     cl = nc)
 
       max_likelihood <- which.max(sapply(grid_optimization, '[[', 'Lik'))
