@@ -410,6 +410,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// mGLSst2_tvar
+arma::vec mGLSst2_tvar(const arma::vec transition1, const arma::vec transition2, const arma::mat& B, const arma::mat& Lambda1, const arma::mat& Lambda2, const arma::mat Z_t, int Tob_beg, int k, const arma::mat Y);
+RcppExport SEXP _svars_mGLSst2_tvar(SEXP transition1SEXP, SEXP transition2SEXP, SEXP BSEXP, SEXP Lambda1SEXP, SEXP Lambda2SEXP, SEXP Z_tSEXP, SEXP Tob_begSEXP, SEXP kSEXP, SEXP YSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec >::type transition1(transition1SEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type transition2(transition2SEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type B(BSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Lambda1(Lambda1SEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Lambda2(Lambda2SEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type Z_t(Z_tSEXP);
+    Rcpp::traits::input_parameter< int >::type Tob_beg(Tob_begSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type Y(YSEXP);
+    rcpp_result_gen = Rcpp::wrap(mGLSst2_tvar(transition1, transition2, B, Lambda1, Lambda2, Z_t, Tob_beg, k, Y));
+    return rcpp_result_gen;
+END_RCPP
+}
 // IterativeSmoothTransition
 Rcpp::List IterativeSmoothTransition(const arma::vec& transition, const arma::mat& u, int& Tob, int& k, int& p, double& crit, int& maxIter, arma::mat& Z_t, arma::mat& Yloop, arma::mat& RestrictionMatrix, int& restrictions);
 RcppExport SEXP _svars_IterativeSmoothTransition(SEXP transitionSEXP, SEXP uSEXP, SEXP TobSEXP, SEXP kSEXP, SEXP pSEXP, SEXP critSEXP, SEXP maxIterSEXP, SEXP Z_tSEXP, SEXP YloopSEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP) {
@@ -552,6 +571,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_svars_nlmST2", (DL_FUNC) &_svars_nlmST2, 8},
     {"_svars_mGLSst", (DL_FUNC) &_svars_mGLSst, 6},
     {"_svars_mGLSst2", (DL_FUNC) &_svars_mGLSst2, 8},
+    {"_svars_mGLSst2_tvar", (DL_FUNC) &_svars_mGLSst2_tvar, 9},
     {"_svars_IterativeSmoothTransition", (DL_FUNC) &_svars_IterativeSmoothTransition, 11},
     {"_svars_IterativeSmoothTransition2", (DL_FUNC) &_svars_IterativeSmoothTransition2, 12},
     {"_svars_IterativeSmoothTransition2_TVAR", (DL_FUNC) &_svars_IterativeSmoothTransition2_TVAR, 19},

@@ -141,6 +141,26 @@ arma::vec mGLSst2(const arma::vec transition1, const arma::vec transition2, cons
   return arma::inv(arma::kron(Z_t, I) * W * arma::kron(Z_t.t(), I)) * arma::kron(Z_t, I) * W * arma::vectorise(Y);
 }
 
+// Multivariate GLS estimator for smooth transition model with 3 regimes and tvar
+// [[Rcpp::export]]
+arma::vec mGLSst2_tvar(const arma::vec transition1, const arma::vec transition2, const arma::mat& B, const arma::mat& Lambda1, const arma::mat& Lambda2,
+                  const arma::mat Z_t, int Tob_beg, int k, const arma::mat Y){
+
+  arma::mat W = arma::zeros(k * Z_t.n_cols, k * Z_t.n_cols);
+  arma::mat I = arma::eye(k, k);
+
+  int end = Tob_beg + Z_t.n_cols;
+
+  int j = 0;
+
+  for (auto i = Tob_beg; i < end; ++i) {
+    W(arma::span(j*k, (j + 1) * k - 1), arma::span(j*k, (j + 1) * k - 1)) = arma::inv(transition1(i) * B * B.t() + (1 - transition1(i) - transition2(i)) * B * Lambda1 * B.t() + transition2(i) * B * Lambda2 * B.t());
+    j +=1;
+  }
+
+  return arma::inv(arma::kron(Z_t, I) * W * arma::kron(Z_t.t(), I)) * arma::kron(Z_t, I) * W * arma::vectorise(Y);
+}
+
 // Algorithm from GLS estimation and likelihood optimization for ST model
 // [[Rcpp::export]]
 Rcpp::List IterativeSmoothTransition(const arma::vec& transition, const arma::mat& u, int& Tob, int& k, int& p,
@@ -449,9 +469,9 @@ Rcpp::List IterativeSmoothTransition2_TVAR(const arma::vec& transition1, const a
     hessian.push_back(mle[3]);
 
     // Step 2: Reestimation of VAR parameter with GLS
-    arma::vec BetaGLS1 = mGLSst2(transition1, transition2, BHat[count + 1], LambdaHat1[count + 1], LambdaHat2[count + 1], Z_t1, k, Yloop1);
-    arma::vec BetaGLS2 = mGLSst2(transition1, transition2, BHat[count + 1], LambdaHat1[count + 1], LambdaHat2[count + 1], Z_t2, k, Yloop2);
-    arma::vec BetaGLS3 = mGLSst2(transition1, transition2, BHat[count + 1], LambdaHat1[count + 1], LambdaHat2[count + 1], Z_t3, k, Yloop3);
+    arma::vec BetaGLS1 = mGLSst2_tvar(transition1, transition2, BHat[count + 1], LambdaHat1[count + 1], LambdaHat2[count + 1], Z_t1, 0, k, Yloop1);
+    arma::vec BetaGLS2 = mGLSst2_tvar(transition1, transition2, BHat[count + 1], LambdaHat1[count + 1], LambdaHat2[count + 1], Z_t2, Z_t1.n_cols-1, k, Yloop2);
+    arma::vec BetaGLS3 = mGLSst2_tvar(transition1, transition2, BHat[count + 1], LambdaHat1[count + 1], LambdaHat2[count + 1], Z_t3, Z_t2.n_cols-1, k, Yloop3);
 
 
 
