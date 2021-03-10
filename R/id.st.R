@@ -501,7 +501,7 @@ id.st <- function(x, x2 = NULL, x3 = NULL, c_lower = 0.3, c_upper = 0.7, c_step 
         cat('With ', nrow(gg), 'grid combibnations \n')
       }
 
-      if(!is.null(x1)) {
+      if(!is.null(x2)) {
         grid_optimization <- pbapply::pbapply(gg, 1, function(x){
           xx <- unlist(x[1])
           yy <- unlist(x[2])
