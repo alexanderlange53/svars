@@ -6,6 +6,8 @@
 \usage{
 id.st(
   x,
+  x2 = NULL,
+  x3 = NULL,
   c_lower = 0.3,
   c_upper = 0.7,
   c_step = 5,

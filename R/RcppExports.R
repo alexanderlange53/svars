@@ -101,6 +101,10 @@ IterativeSmoothTransition2 <- function(transition1, transition2, u, Tob, k, p, c
     .Call('_svars_IterativeSmoothTransition2', PACKAGE = 'svars', transition1, transition2, u, Tob, k, p, crit, maxIter, Z_t, Yloop, RestrictionMatrix, restrictions)
 }
 
+IterativeSmoothTransition2_TVAR <- function(transition1, transition2, u, Tob, Tob1, Tob2, Tob3, k, p, crit, maxIter, Z_t1, Z_t2, Z_t3, Yloop1, Yloop2, Yloop3, RestrictionMatrix, restrictions) {
+    .Call('_svars_IterativeSmoothTransition2_TVAR', PACKAGE = 'svars', transition1, transition2, u, Tob, Tob1, Tob2, Tob3, k, p, crit, maxIter, Z_t1, Z_t2, Z_t3, Yloop1, Yloop2, Yloop3, RestrictionMatrix, restrictions)
+}
+
 YLagCr <- function(y, p) {
     .Call('_svars_YLagCr', PACKAGE = 'svars', y, p)
 }

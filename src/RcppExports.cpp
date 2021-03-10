@@ -453,6 +453,35 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// IterativeSmoothTransition2_TVAR
+Rcpp::List IterativeSmoothTransition2_TVAR(const arma::vec& transition1, const arma::vec& transition2, const arma::mat& u, int& Tob, int Tob1, int Tob2, int Tob3, int& k, int& p, double& crit, int& maxIter, arma::mat& Z_t1, arma::mat& Z_t2, arma::mat& Z_t3, arma::mat& Yloop1, arma::mat& Yloop2, arma::mat& Yloop3, arma::mat& RestrictionMatrix, int& restrictions);
+RcppExport SEXP _svars_IterativeSmoothTransition2_TVAR(SEXP transition1SEXP, SEXP transition2SEXP, SEXP uSEXP, SEXP TobSEXP, SEXP Tob1SEXP, SEXP Tob2SEXP, SEXP Tob3SEXP, SEXP kSEXP, SEXP pSEXP, SEXP critSEXP, SEXP maxIterSEXP, SEXP Z_t1SEXP, SEXP Z_t2SEXP, SEXP Z_t3SEXP, SEXP Yloop1SEXP, SEXP Yloop2SEXP, SEXP Yloop3SEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type transition1(transition1SEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type transition2(transition2SEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type u(uSEXP);
+    Rcpp::traits::input_parameter< int& >::type Tob(TobSEXP);
+    Rcpp::traits::input_parameter< int >::type Tob1(Tob1SEXP);
+    Rcpp::traits::input_parameter< int >::type Tob2(Tob2SEXP);
+    Rcpp::traits::input_parameter< int >::type Tob3(Tob3SEXP);
+    Rcpp::traits::input_parameter< int& >::type k(kSEXP);
+    Rcpp::traits::input_parameter< int& >::type p(pSEXP);
+    Rcpp::traits::input_parameter< double& >::type crit(critSEXP);
+    Rcpp::traits::input_parameter< int& >::type maxIter(maxIterSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type Z_t1(Z_t1SEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type Z_t2(Z_t2SEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type Z_t3(Z_t3SEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type Yloop1(Yloop1SEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type Yloop2(Yloop2SEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type Yloop3(Yloop3SEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type RestrictionMatrix(RestrictionMatrixSEXP);
+    Rcpp::traits::input_parameter< int& >::type restrictions(restrictionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(IterativeSmoothTransition2_TVAR(transition1, transition2, u, Tob, Tob1, Tob2, Tob3, k, p, crit, maxIter, Z_t1, Z_t2, Z_t3, Yloop1, Yloop2, Yloop3, RestrictionMatrix, restrictions));
+    return rcpp_result_gen;
+END_RCPP
+}
 // YLagCr
 arma::mat YLagCr(arma::mat y, int p);
 RcppExport SEXP _svars_YLagCr(SEXP ySEXP, SEXP pSEXP) {
@@ -525,6 +554,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_svars_mGLSst2", (DL_FUNC) &_svars_mGLSst2, 8},
     {"_svars_IterativeSmoothTransition", (DL_FUNC) &_svars_IterativeSmoothTransition, 11},
     {"_svars_IterativeSmoothTransition2", (DL_FUNC) &_svars_IterativeSmoothTransition2, 12},
+    {"_svars_IterativeSmoothTransition2_TVAR", (DL_FUNC) &_svars_IterativeSmoothTransition2_TVAR, 19},
     {"_svars_YLagCr", (DL_FUNC) &_svars_YLagCr, 2},
     {"_svars_fact_it_c", (DL_FUNC) &_svars_fact_it_c, 1},
     {"_svars_permute_vector", (DL_FUNC) &_svars_permute_vector, 1},

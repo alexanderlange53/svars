@@ -98,13 +98,45 @@
 #' @importFrom steadyICA steadyICA
 #' @export
 
-id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, transition_variable = NULL,
+id.st <- function(x, x2 = NULL, x3 = NULL, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, transition_variable = NULL,
                   gamma_lower = -3, gamma_upper = 2, gamma_step = 0.5, gamma_fix = NULL,
                   nc = 1, max.iter = 5, crit = 0.001, restriction_matrix = NULL, lr_test = FALSE){
 
   # Gathering information from reduced form model
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  A_hat <- NULL
+  if(!is.null(x2)) {
+    get_var_objects(x3)
+    u3 <- u
+    Tob3 <- Tob
+    p3 <- p
+    residY3 <- residY
+    coef_x3 <- coef_x
+    yOut3 <- yOut
+    type3 <- type
+    y3 <- y
+    A_hat3 <- A_hat
+
+    get_var_objects(x2)
+    u2 <- u
+    Tob2 <- Tob
+    p2 <- p
+    residY2 <- residY
+    coef_x2 <- coef_x
+    yOut2 <- yOut
+    type2 <- type
+    y2 <- y
+    A_hat2 <- A_hat
+  }
+
   get_var_objects(x)
+
+  if(!is.null(x2)) {
+    Tob1 <- Tob
+    Tob <- Tob1+Tob2+Tob3
+    u1 <- u
+    u <- rbind(u1, u2, u3)
+  }
+
 
   # check if varest object is restricted
   if(inherits(x,"varest")){
@@ -130,32 +162,39 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     return(G)
   }
 
-  if (length(c_lower) !=  length(c_upper) | length(c_lower) != length(c_step)) {
-    stop('Specification of break points has to be of same length (one element for one break or two elements for two breaks)')
+  if(is.null(c_fix)) {
+    if (length(c_lower) !=  length(c_upper) | length(c_lower) != length(c_step)) {
+      stop('Specification of break points has to be of same length (one element for one break or two elements for two breaks)')
+    }
+
+    if(length(c_lower) == 2) {
+      if (c_lower[1] >= c_lower[2]) {
+        stop('Second element of c_lower must be larger than first element')
+      }
+      if (c_upper[1] >= c_upper[2]) {
+        stop('Second element of c_upper must be larger than first element')
+      }
+      if(c_upper[1] > c_lower[2]) {
+        stop('First break must be before second one')
+      }
+      if(c_lower[2] < c_upper[1]) {
+        stop('First break must be before second one')
+      }
+    }
   }
 
-  if (length(gamma_lower) !=  length(gamma_upper) | length(gamma_lower) != length(gamma_step)) {
-    stop('Specification of gamma has to be of same length (one element for one break or two elements for two breaks)')
+  if(is.null(gamma_fix)) {
+    if (length(gamma_lower) !=  length(gamma_upper) | length(gamma_lower) != length(gamma_step)) {
+      stop('Specification of gamma has to be of same length (one element for one break or two elements for two breaks)')
+    }
+
   }
 
   # if (length(c_lower) !=  length(gamma_lower)) {
   #   stop('length of c parameter and gamma parameter has to be equal')
   # }
 
-  if(length(c_lower) == 2) {
-    if (c_lower[1] >= c_lower[2]) {
-      stop('Second element of c_lower must be larger than first element')
-    }
-    if (c_upper[1] >= c_upper[2]) {
-      stop('Second element of c_upper must be larger than first element')
-    }
-    if(c_upper[1] > c_lower[2]) {
-      stop('First break must be before second one')
-    }
-    if(c_lower[2] < c_upper[1]) {
-      stop('First break must be before second one')
-    }
-  }
+
 
   if(is.null(gamma_fix) &  is.null(c_fix)){
     if (length(c_lower) == 1) {
@@ -292,8 +331,36 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
 
   #ylold <- t(y_lag_cr(t(y), p)$lags)
   yl <- t(YLagCr(t(y), p))
+  if(!is.null(x2)) {
+    yl2 <- t(YLagCr(t(y2), p))
+    yl3 <- t(YLagCr(t(y3), p))
+    y_loop2 <- y2[,-c(1:p)]
+    y_loop3 <- y3[,-c(1:p)]
+
+    if(type == 'const'){
+      Z_t2 <- rbind(rep(1, ncol(yl2)), yl2)
+    }else if(type == 'trend'){
+      Z_t2 <- rbind(seq(p + 1, Tob + p), yl2)
+    }else if(type == 'both'){
+      Z_t2 <- rbind(rep(1, ncol(yl2)), seq(p + 1, Tob + p), yl2)
+    }else{
+      Z_t2 <- yl2
+    }
+
+    if(type == 'const'){
+      Z_t3 <- rbind(rep(1, ncol(yl3)), yl3)
+    }else if(type == 'trend'){
+      Z_t3 <- rbind(seq(p + 1, Tob + p), yl3)
+    }else if(type == 'both'){
+      Z_t3 <- rbind(rep(1, ncol(yl3)), seq(p + 1, Tob + p), yl3)
+    }else{
+      Z_t3 <- yl3
+    }
+  }
+
   #yret <- y
   y_loop <- y[,-c(1:p)]
+
 
   if(type == 'const'){
     Z_t <- rbind(rep(1, ncol(yl)), yl)
@@ -339,9 +406,19 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
         lRatioTest <- NULL
       }
     } else {
-      best_estimation <- IterativeSmoothTransition2(transition1 = G_grid1, transition2 = G_grid3, u = u, Tob = Tob, k = k, p = p,
-                                                   crit = crit, maxIter = max.iter, Z_t = Z_t, Yloop = y_loop,
-                                                   RestrictionMatrix = restriction_matrix, restrictions = restrictions)
+
+      if(!is.null(x2)) {
+        best_estimation <- IterativeSmoothTransition2_TVAR(transition1 = G_grid1, transition2 = G_grid3, u = u, Tob = Tob, Tob1 = Tob1, Tob2 = Tob2, Tob3 = Tob3, k = k, p = p,
+                                                           crit = crit, Yloop1 = y_loop, Yloop2 = y_loop2, Yloop3 = y_loop3, maxIter = max.iter,
+                                                           Z_t1 = Z_t, Z_t2 = Z_t2, Z_t3 = Z_t3,
+                                                           RestrictionMatrix = restriction_matrix,
+                                                           restrictions = restrictions)
+      } else {
+        best_estimation <- IterativeSmoothTransition2(transition1 = G_grid1, transition2 = G_grid3, u = u, Tob = Tob, k = k, p = p,
+                                                      crit = crit, maxIter = max.iter, Z_t = Z_t, Yloop = y_loop,
+                                                      RestrictionMatrix = restriction_matrix, restrictions = restrictions)
+      }
+
       transition_function <- G_grid1
       transition_function3 <- G_grid3
       transition_function2 <- 1 - transition_function - transition_function3
@@ -424,15 +501,27 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
         cat('With ', nrow(gg), 'grid combibnations \n')
       }
 
+      if(!is.null(x1)) {
+        grid_optimization <- pbapply::pbapply(gg, 1, function(x){
+          xx <- unlist(x[1])
+          yy <- unlist(x[2])
+          tryCatch(IterativeSmoothTransition2_TVAR(xx, yy, u = u, Tob = Tob, Tob1 = Tob1, Tob2 = Tob2, Tob3 = Tob3, k = k, p = p,
+                                              crit = crit, Yloop1 = y_loop, Yloop2 = y_loop2, Yloop3 = y_loop3, maxIter = max.iter,
+                                              Z_t1 = Z_t, Z_t2 = Z_t2, Z_t3 = Z_t3,
+                                              RestrictionMatrix = restriction_matrix,
+                                              restrictions = restrictions), error = function(e) -1e25)},
+          cl = nc)
+      } else {
+        grid_optimization <- pbapply::pbapply(gg, 1, function(x){
+          xx <- unlist(x[1])
+          yy <- unlist(x[2])
+          tryCatch(IterativeSmoothTransition2(xx, yy, u = u, Tob = Tob, k = k, p = p,
+                                              crit = crit, Yloop = y_loop, maxIter = max.iter, Z_t = Z_t,
+                                              RestrictionMatrix = restriction_matrix,
+                                              restrictions = restrictions), error = function(e) -1e25)},
+          cl = nc)
+      }
 
-      grid_optimization <- pbapply::pbapply(gg, 1, function(x){
-                            xx <- unlist(x[1])
-                            yy <- unlist(x[2])
-                            tryCatch(IterativeSmoothTransition2(xx, yy, u = u, Tob = Tob, k = k, p = p,
-                                   crit = crit, Yloop = y_loop, maxIter = max.iter, Z_t = Z_t,
-                                   RestrictionMatrix = restriction_matrix,
-                                   restrictions = restrictions), error = function(e) -1e25)},
-                            cl = nc)
 
       max_likelihood <- which.max(sapply(grid_optimization, '[[', 'Lik'))
       best_estimation <- grid_optimization[[max_likelihood]]
@@ -530,38 +619,76 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
       VAR = x
     )
   } else {
-    result <- list(
-      Lambda = best_estimation$Lambda1,        # estimated Lambda matrix (unconditional heteroscedasticity)
-      Lambda2 = best_estimation$Lambda2,        # estimated Lambda matrix (unconditional heteroscedasticity)
-      Lambda_SE = best_estimation$Lambda1_SE,  # standard errors of Lambda matrix
-      Lambda2_SE = best_estimation$Lambda2_SE,  # standard errors of Lambda matrix
-      B = best_estimation$B,                  # estimated B matrix (unique decomposition of the covariance matrix)
-      B_SE = best_estimation$B_SE,            # standard errors of B matrix
-      n = Tob,                                # number of observations
-      Fish = best_estimation$Fish,            # observerd fisher information matrix
-      Lik = best_estimation$Lik,              # function value of likelihood
-      #wald_statistic = wald,                  # results of wald test
-      iteration = best_estimation$iteration,  # number of gls estimations
-      method = "Smooth transition",
-      est_c = c(SB, SB2),       # Structural Break point
-      est_g = c(transition_coefficient, transition_coefficient2), # Parameter which determines the shape of thetransition function
-      transition_variable = transition_variable,
-      comb = comb,                 # number of all evaluated combinations of gamma and c
-      transition_function = transition_function,
-      transition_function2 = transition_function2,
-      transition_function3 = transition_function3,
-      A_hat = best_estimation$A_hat,          # VAR parameter estimated with gls
-      type = type,          # type of the VAR model e.g 'const'
-      y = yOut,                # Data
-      p = p,                # number of lags
-      K = k,                 # number of time series
-      restrictions = restrictions,
-      restriction_matrix = rmOut,
-      lr_test = lr_test,
-      lRatioTest = lRatioTest,
-      AIC = (-2) * best_estimation$Lik + 2*(k + p * k^2 + (k + 1) * k + 1),
-      VAR = x
-    )
+    if (!is.null(x2)) {
+      result <- list(
+        Lambda = best_estimation$Lambda1,        # estimated Lambda matrix (unconditional heteroscedasticity)
+        Lambda2 = best_estimation$Lambda2,        # estimated Lambda matrix (unconditional heteroscedasticity)
+        Lambda_SE = best_estimation$Lambda1_SE,  # standard errors of Lambda matrix
+        Lambda2_SE = best_estimation$Lambda2_SE,  # standard errors of Lambda matrix
+        B = best_estimation$B,                  # estimated B matrix (unique decomposition of the covariance matrix)
+        B_SE = best_estimation$B_SE,            # standard errors of B matrix
+        n = Tob,                                # number of observations
+        Fish = best_estimation$Fish,            # observerd fisher information matrix
+        Lik = best_estimation$Lik,              # function value of likelihood
+        #wald_statistic = wald,                  # results of wald test
+        iteration = best_estimation$iteration,  # number of gls estimations
+        method = "Smooth transition",
+        est_c = c(SB, SB2),       # Structural Break point
+        est_g = c(transition_coefficient, transition_coefficient2), # Parameter which determines the shape of thetransition function
+        transition_variable = transition_variable,
+        comb = comb,                 # number of all evaluated combinations of gamma and c
+        transition_function = transition_function,
+        transition_function2 = transition_function2,
+        transition_function3 = transition_function3,
+        A_hat1 = best_estimation$A_hat1,          # VAR parameter estimated with gls
+        A_hat2 = best_estimation$A_hat2,          # VAR parameter estimated with gls
+        A_hat3 = best_estimation$A_hat3,          # VAR parameter estimated with gls
+        type = type,          # type of the VAR model e.g 'const'
+        y = yOut,                # Data
+        p = p,                # number of lags
+        K = k,                 # number of time series
+        restrictions = restrictions,
+        restriction_matrix = rmOut,
+        lr_test = lr_test,
+        lRatioTest = lRatioTest,
+        AIC = (-2) * best_estimation$Lik + 2*(k + p * k^2 + (k + 1) * k + 1),
+        VAR = x
+      )
+    } else {
+      result <- list(
+        Lambda = best_estimation$Lambda1,        # estimated Lambda matrix (unconditional heteroscedasticity)
+        Lambda2 = best_estimation$Lambda2,        # estimated Lambda matrix (unconditional heteroscedasticity)
+        Lambda_SE = best_estimation$Lambda1_SE,  # standard errors of Lambda matrix
+        Lambda2_SE = best_estimation$Lambda2_SE,  # standard errors of Lambda matrix
+        B = best_estimation$B,                  # estimated B matrix (unique decomposition of the covariance matrix)
+        B_SE = best_estimation$B_SE,            # standard errors of B matrix
+        n = Tob,                                # number of observations
+        Fish = best_estimation$Fish,            # observerd fisher information matrix
+        Lik = best_estimation$Lik,              # function value of likelihood
+        #wald_statistic = wald,                  # results of wald test
+        iteration = best_estimation$iteration,  # number of gls estimations
+        method = "Smooth transition",
+        est_c = c(SB, SB2),       # Structural Break point
+        est_g = c(transition_coefficient, transition_coefficient2), # Parameter which determines the shape of thetransition function
+        transition_variable = transition_variable,
+        comb = comb,                 # number of all evaluated combinations of gamma and c
+        transition_function = transition_function,
+        transition_function2 = transition_function2,
+        transition_function3 = transition_function3,
+        A_hat = best_estimation$A_hat,          # VAR parameter estimated with gls
+        type = type,          # type of the VAR model e.g 'const'
+        y = yOut,                # Data
+        p = p,                # number of lags
+        K = k,                 # number of time series
+        restrictions = restrictions,
+        restriction_matrix = rmOut,
+        lr_test = lr_test,
+        lRatioTest = lRatioTest,
+        AIC = (-2) * best_estimation$Lik + 2*(k + p * k^2 + (k + 1) * k + 1),
+        VAR = x
+      )
+    }
+
   }
 
 
