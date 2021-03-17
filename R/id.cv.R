@@ -432,7 +432,9 @@ if(is.null(SB2)){
   if (!is.null(SB2)) {
     rownames(best_estimation$Lambda2) <- colnames(u)
     rownames(best_estimation$Lambda2_SE) <- colnames(u)
-    wald2 <- wald.test(best_estimation$Lambda2, best_estimation$Fish[-c((k^2+1):(k^2+3)), -c((k^2+1):(k^2+3))], restrictions)
+    wald2 <- wald.test(best_estimation$Lambda2,
+                       best_estimation$Fish[-c((k^2+1-restrictions):(k^2+k-restrictions)), -c((k^2+1-restrictions):(k^2+k-restrictions))],
+                       restrictions)
   }
 
   if (is.null(SB2)) {
