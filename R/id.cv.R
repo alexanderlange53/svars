@@ -432,7 +432,7 @@ if(is.null(SB2)){
   if (!is.null(SB2)) {
     rownames(best_estimation$Lambda2) <- colnames(u)
     rownames(best_estimation$Lambda2_SE) <- colnames(u)
-    wald2 <- wald.test(best_estimation$Lambda2, best_estimation$Fish, restrictions)
+    wald2 <- wald.test(best_estimation$Lambda2, best_estimation$Fish[-c((k^2+1):(k^2+3)), -c((k^2+1):(k^2+3))], restrictions)
   }
 
   if (is.null(SB2)) {
@@ -473,6 +473,7 @@ if(is.null(SB2)){
       Fish = best_estimation$Fish,            # observerd fisher information matrix
       Lik = best_estimation$Lik,             # function value of likelihood
       wald_statistic = wald,  # results of wald test
+      wald_statistic2 = wald2,  # results of wald test
       iteration = best_estimation$iteration,     # number of gls estimations
       method = "Changes in Volatility",
       SB = SB_out,                # Structural Break in number format
