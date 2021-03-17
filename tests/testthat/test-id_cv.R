@@ -259,7 +259,7 @@ test_that("restricted id.cv estimation with 3-dim works with vector as SB", {
   expect_match(x1$method, x2$method, "Changes in Volatility")
 })
 
-#----------------------------------------------------------#  Tests for two loatility regimes #------------------------------------------------#
+#----------------------------------------------------------#  Tests for two volatility regimes #------------------------------------------------#
 
 
 test_that("unrestricted id.cv estimation with 3-dim works and 2 regimes", {
