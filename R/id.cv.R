@@ -460,9 +460,15 @@ if(is.null(SB2)){
       p = unname(p),                # number of lags
       K = k,# number of time series
       lRatioTest = lRatioTest,
-      AIC = (-2) * best_estimation$Lik + 2*(k + p * k^2 + (k + 1) * k + 1),
       VAR = x
     )
+    if (type == 'const' | type == 'trend') {
+      result$AIC <- (-2) * result$Lik + 2*(k + p * k^2 + (k + 1) * k + 1)
+    } else if (type == 'none') {
+      result$AIC <- (-2) * result$Lik + 2*(p * k^2 + (k + 1) * k + 1)
+    } else if (type == 'both') {
+      result$AIC <- (-2) * result$Lik + 2*(2*k + p * k^2 + (k + 1) * k + 1)
+    }
   } else {
     result <- list(
       Lambda = best_estimation$Lambda,    # estimated Lambda matrix (unconditional heteroscedasticity)
@@ -490,9 +496,15 @@ if(is.null(SB2)){
       p = unname(p),                # number of lags
       K = k,# number of time series
       lRatioTest = lRatioTest,
-      AIC = (-2) * best_estimation$Lik + 2*(k + p * k^2 + (k + 1) * k + 1),
       VAR = x
     )
+    if (type == 'const' | type == 'trend') {
+      result$AIC <- (-2) * result$Lik + 2*(k + p * k^2 + (k + 2) * k + 1)
+    } else if (type == 'none') {
+      result$AIC <- (-2) * result$Lik + 2*(p * k^2 + (k + 2) * k + 1)
+    } else if (type == 'both') {
+      result$AIC <- (-2) * result$Lik + 2*(2*k + p * k^2 + (k + 2) * k + 1)
+    }
   }
   class(result) <- "svars"
  return(result)

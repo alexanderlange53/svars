@@ -101,7 +101,14 @@ id.ngml <- function(x, stage3 = FALSE, restriction_matrix = NULL){
   }
 
   result$restriction_matrix = rmOut
-  result$AIC <- (-2) * result$Lik + 2*(k + p * k^2 + (k + 1) * k + 1)
+  if (type == 'const' | type == 'trend') {
+    result$AIC <- (-2) * result$Lik + 2*(k + p * k^2 + (k + 1) * k)
+  } else if (type == 'none') {
+    result$AIC <- (-2) * result$Lik + 2*(p * k^2 + (k + 1) * k)
+  } else if (type == 'both') {
+    result$AIC <- (-2) * result$Lik + 2*(2*k + p * k^2 + (k + 1) * k)
+  }
+
   result$VAR <- x
 
   class(result) <- "svars"

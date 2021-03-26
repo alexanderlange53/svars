@@ -5,7 +5,7 @@
 \alias{svars}
 \title{svars: Data-driven identification of structural VAR models}
 \description{
-This package implements data-driven identification methods for structural vector autoregressive (SVAR) models as described in Lange et al. (2021) \url{http://doi.org/10.18637/jss.v097.i05}.
+This package implements data-driven identification methods for structural vector autoregressive (SVAR) models as described in Lange et al. (2021) \doi{10.18637/jss.v097.i05}.
 Based on an existing VAR model object, the structural impact matrix B may be obtained
 via different forms of heteroskedasticity or independent components.\cr
 }
