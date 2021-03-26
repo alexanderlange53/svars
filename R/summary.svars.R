@@ -60,6 +60,10 @@ summary.svars <- function(object, ...){
  print(svarsObject$B_SE)
  cat("\nPairwise Wald Test:\n")
  printCoefmat(svarsObject$wald_statistic, has.Pvalue = T)
+ if(!is.null(svarsObject$SB2)){
+   cat("\nPairwise Wald Test for second Lambda:\n")
+   printCoefmat(svarsObject$wald_statistic2, has.Pvalue = T)
+ }
    if(svarsObject$restrictions > 0){
      cat("\nLikelihood Ratio Test: \n")
      #cat(svarsObject$lRatioTestStatistic)

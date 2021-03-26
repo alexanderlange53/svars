@@ -432,7 +432,9 @@ if(is.null(SB2)){
   if (!is.null(SB2)) {
     rownames(best_estimation$Lambda2) <- colnames(u)
     rownames(best_estimation$Lambda2_SE) <- colnames(u)
-    wald2 <- wald.test(best_estimation$Lambda2, best_estimation$Fish, restrictions)
+    wald2 <- wald.test(best_estimation$Lambda2,
+                       best_estimation$Fish[-c((k^2+1-restrictions):(k^2+k-restrictions)), -c((k^2+1-restrictions):(k^2+k-restrictions))],
+                       restrictions)
   }
 
   if (is.null(SB2)) {
@@ -458,9 +460,15 @@ if(is.null(SB2)){
       p = unname(p),                # number of lags
       K = k,# number of time series
       lRatioTest = lRatioTest,
-      AIC = (-2) * best_estimation$Lik + 2*(k + p * k^2 + (k + 1) * k + 1),
       VAR = x
     )
+    if (type == 'const' | type == 'trend') {
+      result$AIC <- (-2) * result$Lik + 2*(k + p * k^2 + (k + 1) * k + 1)
+    } else if (type == 'none') {
+      result$AIC <- (-2) * result$Lik + 2*(p * k^2 + (k + 1) * k + 1)
+    } else if (type == 'both') {
+      result$AIC <- (-2) * result$Lik + 2*(2*k + p * k^2 + (k + 1) * k + 1)
+    }
   } else {
     result <- list(
       Lambda = best_estimation$Lambda,    # estimated Lambda matrix (unconditional heteroscedasticity)
@@ -473,6 +481,7 @@ if(is.null(SB2)){
       Fish = best_estimation$Fish,            # observerd fisher information matrix
       Lik = best_estimation$Lik,             # function value of likelihood
       wald_statistic = wald,  # results of wald test
+      wald_statistic2 = wald2,  # results of wald test
       iteration = best_estimation$iteration,     # number of gls estimations
       method = "Changes in Volatility",
       SB = SB_out,                # Structural Break in number format
@@ -487,9 +496,15 @@ if(is.null(SB2)){
       p = unname(p),                # number of lags
       K = k,# number of time series
       lRatioTest = lRatioTest,
-      AIC = (-2) * best_estimation$Lik + 2*(k + p * k^2 + (k + 1) * k + 1),
       VAR = x
     )
+    if (type == 'const' | type == 'trend') {
+      result$AIC <- (-2) * result$Lik + 2*(k + p * k^2 + (k + 2) * k + 1)
+    } else if (type == 'none') {
+      result$AIC <- (-2) * result$Lik + 2*(p * k^2 + (k + 2) * k + 1)
+    } else if (type == 'both') {
+      result$AIC <- (-2) * result$Lik + 2*(2*k + p * k^2 + (k + 2) * k + 1)
+    }
   }
   class(result) <- "svars"
  return(result)

@@ -53,7 +53,9 @@ library("svars")
 To get started, use the example data set which is included in the package. The data set consists of three U.S. macroeconomic time series, i.e. output gap (x), inflation (pi) and interest rates (r). More details on the data set are provided in the description file `?USA`.
 
 ```r
-ggplot2::autoplot(USA, facet = TRUE) + ggplot2::theme_bw()
+library("ggplot2")
+library("ggfortify")
+autoplot(USA, facet = TRUE) + theme_bw()
 ```
 
 ![](man/figures/data_viz.png)

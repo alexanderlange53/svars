@@ -1,18 +1,21 @@
-citHeader("To cite svars in publications use:")
+bibentry(bibtype = "Article",
+  title        = "{svars}: An {R} Package for Data-Driven Identification in Multivariate Time Series Analysis",
+  author       = c(person(given = "Alexander",
+                          family = "Lange",
+                          email = "alexander.lange@uni-goettingen.de"),
+                   person(given = "Bernhard",
+                          family = "Dalheimer"),
+                   person(given = "Helmut",
+                          family = "Herwartz"),
+                   person(given = "Simone",
+                          family = "Maxand")),
+  journal      = "Journal of Statistical Software",
+  year         = "2021",
+  volume       = "97",
+  number       = "5",
+  pages        = "1--34",
+  doi          = "10.18637/jss.v097.i05",
 
-citEntry(
-  entry    ="Article",
-  title    = "{svars}: An {R} Package for Data-Driven Identification in Multivariate Time Series Analysis",
-  author   = personList(as.person("Alexander Lange"), as.person("Bernhard Dalheimer") , as.person("Helmut Herwartz"), as.person("Simone Maxand")),,
-  journal  = "Journal of Statistical Software",
-  year     = "forthcoming",
-  volume   = "",
-  number   = "",
-  pages    = "",
-  url      = "",
-  textVersion = paste("Lange, A., B. Dalheimer, H. Herwartz and S. Maxand. (forthcoming).",
-        "svars: An R Package for Data-Driven Identification in Multivariate Time Series Analysis.",
-        "Journal of Statistical Software."
-
-  )
+  header       = "To cite svars in publications use:"
 )
+

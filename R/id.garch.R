@@ -126,7 +126,14 @@ id.garch <- function(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL){
     result <- identifyGARCH(B0 = B0, k = k, Tob = Tob, restriction_matrix = restriction_matrix, Sigma_e_univ = Sigma_e_univ, coef_x = coef_x, x = x,
                             parameter_ini_univ = parameter_ini_univ, max.iter = max.iter, crit = crit, u = u, p = p, yOut = yOut, type = type)
   }
-  result$AIC <- (-2) * result$Lik + 2*(k + p * k^2 + (k + 1) * k + 1)
+  if (type == 'const' | type == 'trend') {
+    result$AIC <- (-2) * result$Lik + 2*(k + p * k^2 + 2*k + k^2)
+  } else if (type == 'none') {
+    result$AIC <- (-2) * result$Lik + 2*(p * k^2 + 2*k + k^2)
+  } else if (type == 'both') {
+    result$AIC <- (-2) * result$Lik + 2*(2*k + p * k^2 + 2*k + k^2)
+  }
+
   result$VAR <- x
 
   class(result) <- "svars"

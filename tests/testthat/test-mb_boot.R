@@ -376,6 +376,146 @@
 #   expect_equal(bbcv31$nboot, 10)
 # })
 #
+# test_that("mb.boot returns valid object for id.cv with with 3 regimes", {
+#   skip_on_cran()
+#   set.seed(231)
+#   v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
+#   x1 <- id.cv(v1, SB = 59, SB2 = 100)
+#
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bbcv <- mb.boot(x1, b.length = 20, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bbcv, 20)
+#   expect_equal(bbcv$nboot, 10)
+#
+#   bbcv1 <- mb.boot(x1, b.length = 10, nboot = 10, n.ahead = 30, nc = 2, signrest = NULL)
+#   expect_length(bbcv1, 20)
+#   expect_equal(bbcv1$nboot, 10)
+#
+#   bbcv2 <- mb.boot(x1, design = "fixed", b.length = 10, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bbcv2, 20)
+#   expect_equal(bbcv2$nboot, 10)
+#
+#   bbcv3 <- mb.boot(x1, design = "fixed", b.length = 10, nboot = 10, n.ahead = 30, nc = 2, signrest = NULL)
+#   expect_length(bbcv3, 20)
+#   expect_equal(bbcv3$nboot, 10)
+#
+#   v2 <- vars::VAR(USA, lag.max = 10, ic = "AIC", type = "trend")
+#   x2 <- id.cv(v2, SB = 59, SB2 = 106)
+#
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bbcv4 <- mb.boot(x2, b.length = 20, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bbcv4, 20)
+#   expect_equal(bbcv4$nboot, 10)
+#
+#   bbcv5 <- mb.boot(x2, b.length = 10, nboot = 10, n.ahead = 30, nc = 2, signrest = NULL)
+#   expect_length(bbcv5, 20)
+#   expect_equal(bbcv5$nboot, 10)
+#
+#   bbcv6 <- mb.boot(x2, design = "fixed", b.length = 10, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bbcv6, 20)
+#   expect_equal(bbcv6$nboot, 10)
+#
+#   bbcv7 <- mb.boot(x2, design = "fixed", b.length = 10, nboot = 10, n.ahead = 30, nc = 2, signrest = NULL)
+#   expect_length(bbcv7, 20)
+#   expect_equal(bbcv7$nboot, 10)
+#
+#   v3 <- vars::VAR(USA, lag.max = 10, ic = "AIC", type = "both")
+#   x3 <- id.cv(v3, SB = 59, SB2 = 110)
+#
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bbcv8 <- mb.boot(x3, b.length = 20, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bbcv8, 20)
+#   expect_equal(bbcv8$nboot, 10)
+#
+#   bbcv9 <- mb.boot(x3, b.length = 10, nboot = 10, n.ahead = 30, nc = 2, signrest = NULL)
+#   expect_length(bbcv9, 20)
+#   expect_equal(bbcv9$nboot, 10)
+#
+#   bbcv10 <- mb.boot(x3, design = "fixed", b.length = 10, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bbcv10, 20)
+#   expect_equal(bbcv10$nboot, 10)
+#
+#   bbcv11 <- mb.boot(x3, design = "fixed", b.length = 10, nboot = 10, n.ahead = 30, nc = 2, signrest = NULL)
+#   expect_length(bbcv11, 20)
+#   expect_equal(bbcv11$nboot, 10)
+#
+#   v4 <- vars::VAR(USA, lag.max = 10, ic = "AIC", type = "none")
+#   x4 <- id.cv(v4, SB = 59, SB2 = 102)
+#
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bbcv12 <- mb.boot(x4, b.length = 20, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bbcv12, 20)
+#   expect_equal(bbcv12$nboot, 10)
+#
+#   bbcv13 <- mb.boot(x4, b.length = 10, nboot = 10, n.ahead = 30, nc = 2, signrest = NULL)
+#   expect_length(bbcv13, 20)
+#   expect_equal(bbcv13$nboot, 10)
+#
+#   bbcv14 <- mb.boot(x4, design = "fixed", b.length = 10, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bbcv14, 20)
+#   expect_equal(bbcv14$nboot, 10)
+#
+#   bbcv15 <- mb.boot(x4, design = "fixed", b.length = 10, nboot = 10, n.ahead = 30, nc = 2, signrest = NULL)
+#   expect_length(bbcv15, 20)
+#   expect_equal(bbcv15$nboot, 10)
+#
+#   restmat <- matrix(NA, 3,3)
+#   restmat[1,c(2,3)] <- 0
+#   restmat[2,3] <- 0
+#   x1 <- id.cv(v1, SB = 59, SB2 = 110, restriction_matrix = restmat)
+#
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bbcv16 <- mb.boot(x1, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bbcv16, 20)
+#   expect_equal(bbcv16$nboot, 10)
+#
+#   bbcv18 <- mb.boot(x1, design ="fixed", b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bbcv18, 20)
+#   expect_equal(bbcv18$nboot, 10)
+#
+#   x2 <- id.cv(v2, SB = 59, SB2 = 120, restriction_matrix = restmat)
+#
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bbcv18 <- mb.boot(x2, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bbcv18, 20)
+#   expect_equal(bbcv18$nboot, 10)
+#
+#   bbcv20 <- mb.boot(x2, design ="fixed", b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bbcv20, 20)
+#   expect_equal(bbcv20$nboot, 10)
+#
+#   x3 <- id.cv(v3, SB = 59, SB2 = 120, restriction_matrix = restmat)
+#
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bbcv20 <- mb.boot(x3, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bbcv20, 20)
+#   expect_equal(bbcv20$nboot, 10)
+#
+#   bbcv21 <- mb.boot(x3, design ="fixed", b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bbcv21, 20)
+#   expect_equal(bbcv21$nboot, 10)
+#
+#   x4 <- id.cv(v4, SB = 59, SB2 = 110, restriction_matrix = restmat)
+#
+#   signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+#   bbcv22 <- mb.boot(x4, b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#
+#   expect_length(bbcv22, 20)
+#   expect_equal(bbcv22$nboot, 10)
+#
+#   bbcv23 <- mb.boot(x4, design ="fixed", b.length = 16, nboot = 10, n.ahead = 30, nc = 2, signrest = signrest)
+#   expect_length(bbcv23, 20)
+#   expect_equal(bbcv23$nboot, 10)
+#
+# })
+#
 # test_that("mb.boot returns valid object for id.st", {
 #   skip_on_cran()
 #   set.seed(231)

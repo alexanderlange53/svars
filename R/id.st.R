@@ -526,9 +526,15 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
       restriction_matrix = rmOut,
       lr_test = lr_test,
       lRatioTest = lRatioTest,
-      AIC = (-2) * best_estimation$Lik + 2*(k + p * k^2 + (k + 1) * k + 1),
       VAR = x
     )
+    if (type == 'const' | type == 'trend') {
+      result$AIC <- (-2) * result$Lik + 2*(k + p * k^2 + (k + 1) * k + 2)
+    } else if (type == 'none') {
+      result$AIC <- (-2) * result$Lik + 2*(p * k^2 + (k + 1) * k + 2)
+    } else if (type == 'both') {
+      result$AIC <- (-2) * result$Lik + 2*(2*k + p * k^2 + (k + 1) * k + 2)
+    }
   } else {
     result <- list(
       Lambda = best_estimation$Lambda1,        # estimated Lambda matrix (unconditional heteroscedasticity)
@@ -559,9 +565,15 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
       restriction_matrix = rmOut,
       lr_test = lr_test,
       lRatioTest = lRatioTest,
-      AIC = (-2) * best_estimation$Lik + 2*(k + p * k^2 + (k + 1) * k + 1),
       VAR = x
     )
+    if (type == 'const' | type == 'trend') {
+      result$AIC <- (-2) * result$Lik + 2*(k + p * k^2 + (k + 2) * k + 4)
+    } else if (type == 'none') {
+      result$AIC <- (-2) * result$Lik + 2*(p * k^2 + (k + 2) * k + 4)
+    } else if (type == 'both') {
+      result$AIC <- (-2) * result$Lik + 2*(2*k + p * k^2 + (k + 2) * k + 4)
+    }
   }
 
 
