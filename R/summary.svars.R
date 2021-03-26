@@ -97,9 +97,11 @@ summary.svars <- function(object, ...){
     print(svarsObject$B)
     cat("\nStandard Errors of B:\n")
     print(svarsObject$B_SE)
-    if(length(svarsObject$est_c)<2) {
+    cat("\nPairwise Wald Test:\n")
+    printCoefmat(svarsObject$wald_statistic, has.Pvalue = T)
+    if(length(svarsObject$est_c)>1) {
       cat("\nPairwise Wald Test:\n")
-      printCoefmat(svarsObject$wald_statistic, has.Pvalue = T)
+      printCoefmat(svarsObject$wald_statistic2, has.Pvalue = T)
     }
     if(svarsObject$restrictions > 0 & svarsObject$lr_test == T){
       cat("\nLikelihood Ratio Test: \n")

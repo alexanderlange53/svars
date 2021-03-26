@@ -491,6 +491,11 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
     rownames(best_estimation$Lambda_SE) <- colnames(u)
     rownames(best_estimation$B_SE) <- colnames(u)
   } else {
+    # Testing the estimated SVAR for identification by means of wald statistic
+    wald <- wald.test(best_estimation$Lambda1, best_estimation$Fish, restrictions)
+    wald2 <- wald.test(best_estimation$Lambda2,
+                       best_estimation$Fish[-c((k^2+1-restrictions):(k^2+k-restrictions)), -c((k^2+1-restrictions):(k^2+k-restrictions))],
+                       restrictions)
     rownames(best_estimation$B) <- colnames(u)
     rownames(best_estimation$Lambda1) <- colnames(u)
     rownames(best_estimation$Lambda1_SE) <- colnames(u)
@@ -546,7 +551,8 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
       n = Tob,                                # number of observations
       Fish = best_estimation$Fish,            # observerd fisher information matrix
       Lik = best_estimation$Lik,              # function value of likelihood
-      #wald_statistic = wald,                  # results of wald test
+      wald_statistic = wald,                  # results of wald test
+      wald_statistic2 = wald2,                  # results of wald test
       iteration = best_estimation$iteration,  # number of gls estimations
       method = "Smooth transition",
       est_c = c(SB, SB2),       # Structural Break point
