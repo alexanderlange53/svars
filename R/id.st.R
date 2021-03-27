@@ -380,6 +380,7 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
                                                                                   restrictions = restrictions),  error = function(e) -1e25)},
                                     cl = nc)
 
+      grid_optimization <- grid_optimization[lapply(grid_optimization, length) > 1]
       max_likelihood <- which.max(sapply(grid_optimization, '[[', 'Lik'))
       best_estimation <- grid_optimization[[max_likelihood]]
       transition_function <- unlist(G_grid[[max_likelihood]])
@@ -434,6 +435,7 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
                                    restrictions = restrictions), error = function(e) -1e25)},
                             cl = nc)
 
+      grid_optimization <- grid_optimization[lapply(grid_optimization, length) > 1]
       max_likelihood <- which.max(sapply(grid_optimization, '[[', 'Lik'))
       best_estimation <- grid_optimization[[max_likelihood]]
       transition_function <- unlist(gg[max_likelihood, 1])
