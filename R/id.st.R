@@ -436,7 +436,7 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
                                    restrictions = restrictions), error = function(e) -1e25)},
                             cl = nc)
 
-      gg <- gg[lapply(grid_optimization, length) > 1]
+      gg <- gg[lapply(grid_optimization, length) > 1,]
       grid_optimization <- grid_optimization[lapply(grid_optimization, length) > 1]
 
 
