@@ -380,7 +380,8 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
                                                                                   restrictions = restrictions),  error = function(e) -1e25)},
                                     cl = nc)
 
-      grid_comb <- grid_comb[lapply(grid_optimization, length) > 1]
+      G_grid <- G_grid[lapply(grid_optimization, length) > 1]
+      grid_comb <- grid_comb[lapply(grid_optimization, length) > 1,]
       grid_optimization <- grid_optimization[lapply(grid_optimization, length) > 1]
       max_likelihood <- which.max(sapply(grid_optimization, '[[', 'Lik'))
       best_estimation <- grid_optimization[[max_likelihood]]
@@ -388,7 +389,7 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
 
       transition_coefficient <- grid_comb[max_likelihood, 1]
       SB <- grid_comb[max_likelihood, 2]
-      comb <- nrow(grid_comb)
+      comb <- nrow(G_grid)
 
       if(lr_test == TRUE & !is.null(restriction_matrix)){
         grid_comb <- unique(expand.grid(transition_coefficient, SB))

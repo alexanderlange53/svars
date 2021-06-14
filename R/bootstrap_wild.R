@@ -176,16 +176,20 @@ wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20,
 
     if(design == "fixed"){
       Ystar <- t(A %*% Z + Ustar1)
-      Bstar <- t(Ystar) %*% t(Z) %*% solve(Z %*% t(Z))
-      Ustar <- Ystar - t(Bstar %*% Z)
+      #Bstar <- t(Ystar) %*% t(Z) %*% solve(Z %*% t(Z))
+      varb <- suppressWarnings(VAR(Ystar, p = p, type = x$type))
+      if (!is.null(x$VAR$restrictions)) {
+        varb <- restrict(method = "man", resmat = x$VAR$restrictions)
+      }
+      Ustar <- residuals(varb)#Ystar - t(Bstar %*% Z)
       Sigma_u_star <- crossprod(Ustar)/(ncol(Ustar1) - 1 - k * p)
 
-      varb <- list(y = Ystar,
-                   coef_x = Bstar,
-                   residuals = Ustar,
-                   p = p,
-                   type = x$type)
-      class(varb) <- 'var.boot'
+      # varb <- list(y = Ystar,
+      #              coef_x = Bstar,
+      #              residuals = Ustar,
+      #              p = p,
+      #              type = x$type)
+      # class(varb) <- 'var.boot'
 
       if(x$method == "Non-Gaussian maximum likelihood"){
         temp <- id.ngml_boot(varb, stage3 = x$stage3, Z = Z, restriction_matrix = x$restriction_matrix)
@@ -236,6 +240,9 @@ wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20,
       Ystar <- Ystar[-c(1:p), ]
 
       varb <- suppressWarnings(VAR(Ystar, p = x$p, type = x$type))
+      if (!is.null(x$VAR$restrictions)) {
+        varb <- restrict(method = "man", resmat = x$VAR$restrictions)
+      }
       Ustar <- residuals(varb)
       Sigma_u_star <- crossprod(Ustar)/(obs - 1 - k * p)
 
