@@ -179,7 +179,7 @@ wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20,
       #Bstar <- t(Ystar) %*% t(Z) %*% solve(Z %*% t(Z))
       varb <- suppressWarnings(VAR(Ystar, p = p, type = x$type))
       if (!is.null(x$VAR$restrictions)) {
-        varb <- restrict(method = "man", resmat = x$VAR$restrictions)
+        varb <- restrict(varb, method = "man", resmat = x$VAR$restrictions)
       }
       Ustar <- residuals(varb)#Ystar - t(Bstar %*% Z)
       Sigma_u_star <- crossprod(Ustar)/(ncol(Ustar1) - 1 - k * p)
@@ -241,7 +241,7 @@ wild.boot <- function(x, design = "fixed", distr = "rademacher", n.ahead = 20,
 
       varb <- suppressWarnings(VAR(Ystar, p = x$p, type = x$type))
       if (!is.null(x$VAR$restrictions)) {
-        varb <- restrict(method = "man", resmat = x$VAR$restrictions)
+        varb <- restrict(varb, method = "man", resmat = x$VAR$restrictions)
       }
       Ustar <- residuals(varb)
       Sigma_u_star <- crossprod(Ustar)/(obs - 1 - k * p)

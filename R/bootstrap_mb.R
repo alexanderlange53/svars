@@ -196,7 +196,7 @@ mb.boot <- function(x, design = "recursive", b.length = 15, n.ahead = 20, nboot 
 
       varb <- suppressWarnings(VAR(Ystar, p = x$p, type = x$type))
       if (!is.null(x$VAR$restrictions)) {
-        varb <- restrict(method = "man", resmat = x$VAR$restrictions)
+        varb <- restrict(varb, method = "man", resmat = x$VAR$restrictions)
       }
       Ustar <- residuals(varb)
       Sigma_u_star <- crossprod(Ustar)/(obs - 1 - k * p)
@@ -230,7 +230,7 @@ mb.boot <- function(x, design = "recursive", b.length = 15, n.ahead = 20, nboot 
       #Bstar <- t(Ystar) %*% t(Z) %*% solve(Z %*% t(Z))
       varb <- suppressWarnings(VAR(Ystar, p = p, type = x$type))
       if (!is.null(x$VAR$restrictions)) {
-        varb <- restrict(method = "man", resmat = x$VAR$restrictions)
+        varb <- restrict(varb, method = "man", resmat = x$VAR$restrictions)
       }
       Ustar <- residuals(varb)#Ystar - t(Bstar %*% Z)
       Sigma_u_star <- crossprod(Ustar)/(ncol(Ustar1) - 1 - k * p)
