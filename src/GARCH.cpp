@@ -11,7 +11,7 @@ double LikelihoodGARCHu(const arma::vec& parameter, arma::vec& est, double& Sigm
   double g      =  parameter(1);
 
   // Checking for input validity
-  if (gamma > 0.001 && g >= 0.001 && gamma + g < 0.999) {
+  if (gamma > 0.01 && g >= 0.01 && gamma + g < 0.99) {
 
     // Likelihood function
     double  L = 0;
@@ -71,21 +71,21 @@ Rcpp::List GarchStart(int& k, arma::mat& ste, int& Tob){
                                               Rcpp::Named("ConVariance") = arma::zeros(Tob, k));
   Rcpp::List parameterConsider = Rcpp::List::create(PiterBlind);
 
-  int StartIter = 1000;
+  int StartIter = 10;
 
   for (int i = 0; i < StartIter; i++) {
     // Stage 1: Univariate optimization of GARCH(1, 1) parameter
     // Initial values as in Luetkepohl + Schlaak (2018)
-    arma::vec initGamma = Rcpp::runif(k);
+    arma::vec initGamma = Rcpp::runif(k, 0.01, 0.4);
     arma::vec initG(k, arma::fill::zeros);
     double testG =  0;
     for (int j = 0; j < k; j++) {
-      testG = R::runif(0, 1);
+      testG = R::runif(0.6, 0.99);
       if (initGamma(j) + testG < 1) {
         initG(j) = testG;
       } else {
         while (initGamma(j) + testG > 1) {
-          testG = R::runif(0, 1);
+          testG = R::runif(0.6, 0.99);
         }
         initG(j) = testG;
       }
