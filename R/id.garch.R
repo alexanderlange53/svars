@@ -9,6 +9,7 @@
 #' @param restriction_matrix Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*K^2 matrix can be passed, where ones on the diagonal designate unrestricted and zeros restricted coefficients. (as suggested in Luetkepohl, 2017, section 5.2.1).
 #' @param max.iter Integer. Number of maximum likelihood optimizations
 #' @param crit Numeric. Critical value for the precision of the iterative procedure
+#' @param start_iter Numeric. Number of random candidate initial values for univariate GRACH(1,1) optimization.
 #' @return A list of class "svars" with elements
 #' \item{B}{Estimated structural impact matrix B, i.e. unique decomposition of the covariance matrix of reduced form residuals}
 #' \item{B_SE}{Standard errors of matrix B}
@@ -65,7 +66,7 @@
 ## Identification via GARCH ##
 #----------------------------#
 
-id.garch <- function(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL){
+id.garch <- function(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL, start_iter = 100){
 
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <- A_hat <- NULL
   get_var_objects(x)
@@ -99,7 +100,7 @@ id.garch <- function(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL){
   #### Finding optimal starting values ##
   ##***********************************##
 
-  parameter_consider <- GarchStart(k, ste, Tob)
+  parameter_consider <- GarchStart(k, ste, Tob, start_iter)
   parameter_ini_univ <- parameter_consider[[which.min(sapply(parameter_consider, '[[', 'Likelihoods'))]]$ParameterE
 
   Sigma_e_univ <- parameter_consider[[which.min(sapply(parameter_consider, '[[', 'Likelihoods'))]]$ConVariance

@@ -4,7 +4,13 @@
 \alias{id.garch}
 \title{Identification of SVAR models through patterns of GARCH}
 \usage{
-id.garch(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL)
+id.garch(
+  x,
+  max.iter = 5,
+  crit = 0.001,
+  restriction_matrix = NULL,
+  start_iter = 100
+)
 }
 \arguments{
 \item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object}

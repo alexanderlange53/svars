@@ -11,7 +11,7 @@ double LikelihoodGARCHu(const arma::vec& parameter, arma::vec& est, double& Sigm
   double g      =  parameter(1);
 
   // Checking for input validity
-  if (gamma > 0.001 && g >= 0.001 && gamma + g < 0.999) {
+  if (gamma > 0.01 && g >= 0.01 && gamma + g < 0.98) {
 
     // Likelihood function
     double  L = 0;
@@ -19,14 +19,14 @@ double LikelihoodGARCHu(const arma::vec& parameter, arma::vec& est, double& Sigm
     Sigma2(0) = Sigma1;
 
     for (int i = 1; i < Tob; i++) {
-      Sigma2(i) =  (1 - g - gamma) + gamma * pow(est(i - 1), 2) + g * Sigma2(i - 1);
-      L += 0.5 * (log(Sigma2(i - 1)) + pow(est(i - 1), 2) / Sigma2(i - 1));
+      Sigma2(i) =  (1 - gamma - g) + gamma * pow(est(i - 1), 2) + g * Sigma2(i - 1);
+      L += 0.5 * (Tob - 1) *(log(2 * M_PI) + log(Sigma2(i - 1)) + pow(est(i - 1), 2) / Sigma2(i - 1));
     }
 
     return L;
 
   } else {
-    return 1e25;
+    return 1000000000000;
   }
 }
 
@@ -41,6 +41,7 @@ Rcpp::List nlmGARCHu(const arma::vec parameter, const arma::vec est, double Sigm
                        Rcpp::_["p"] = parameter,
                        Rcpp::_["hessian"] = "T",
                        Rcpp::_["iterlim"] = 150,
+                       Rcpp::_["steptol"] = 1e-5,
                        Rcpp::_["est"] = est,
                        Rcpp::_["Sigma1"] = Sigma1,
                        Rcpp::_["Tob"] = Tob);
@@ -64,28 +65,33 @@ arma::vec SigmaGARCHuniv(const arma::vec& param, int Tob, double& SigmaE, const 
 
 // Finding start values -------------------------------------------------------------------------------------------
 // [[Rcpp::export]]
-Rcpp::List GarchStart(int& k, arma::mat& ste, int& Tob){
+Rcpp::List GarchStart(int& k, arma::mat& ste, int& Tob, int start_iter){
 
   Rcpp::List PiterBlind = Rcpp::List::create(Rcpp::Named("ParameterE") = arma::zeros(k, 3),
                                               Rcpp::Named("Likelihoods") = 1e25,
                                               Rcpp::Named("ConVariance") = arma::zeros(Tob, k));
   Rcpp::List parameterConsider = Rcpp::List::create(PiterBlind);
 
-  int StartIter = 1000;
+  //int StartIter = 100;
 
-  for (int i = 0; i < StartIter; i++) {
+  for (int i = 0; i < start_iter; i++) {
     // Stage 1: Univariate optimization of GARCH(1, 1) parameter
     // Initial values as in Luetkepohl + Schlaak (2018)
-    arma::vec initGamma = Rcpp::runif(k);
+    arma::vec initGamma = Rcpp::runif(k, 0.01, 0.3);
     arma::vec initG(k, arma::fill::zeros);
     double testG =  0;
     for (int j = 0; j < k; j++) {
-      testG = R::runif(0, 1);
-      if (initGamma(j) + testG < 1) {
+      testG = R::runif(0.6, 0.95);
+      if (initGamma(j) + testG < 0.991) {
         initG(j) = testG;
       } else {
-        while (initGamma(j) + testG > 1) {
-          testG = R::runif(0, 1);
+        int count = 0;
+        while (initGamma(j) + testG >= 0.991 | count >= 10) {
+          testG = R::runif(0.6, 0.95);
+          count += 1;
+        }
+        if (count >= 10) {
+          testG = 0.991 - initGamma(j);
         }
         initG(j) = testG;
       }
@@ -105,8 +111,14 @@ Rcpp::List GarchStart(int& k, arma::mat& ste, int& Tob){
 
     arma::vec likvalues(k);
 
+    //return Rcpp::List::create(parameterIni, SigmaE0);
+
     for (int l = 0; l < k; l++) {
       Rcpp::List maxL = nlmGARCHu(parameterIni.row(l).t(), ste.row(l).t(), SigmaE0(l), Tob);
+
+      /*if (l > 1) {
+        return maxL;
+      }*/
 
       // Likelihood values
       likvalues(l) = maxL[0];

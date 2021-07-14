@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // LikelihoodCV
 double LikelihoodCV(arma::vec& S, double& Tob, double& TB, arma::mat& SigmaHat1, int& k, arma::mat& SigmaHat2, arma::mat& RestrictionMatrix, int& restrictions);
 RcppExport SEXP _svars_LikelihoodCV(SEXP SSEXP, SEXP TobSEXP, SEXP TBSEXP, SEXP SigmaHat1SEXP, SEXP kSEXP, SEXP SigmaHat2SEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP) {
@@ -181,15 +186,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // GarchStart
-Rcpp::List GarchStart(int& k, arma::mat& ste, int& Tob);
-RcppExport SEXP _svars_GarchStart(SEXP kSEXP, SEXP steSEXP, SEXP TobSEXP) {
+Rcpp::List GarchStart(int& k, arma::mat& ste, int& Tob, int start_iter);
+RcppExport SEXP _svars_GarchStart(SEXP kSEXP, SEXP steSEXP, SEXP TobSEXP, SEXP start_iterSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< int& >::type k(kSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type ste(steSEXP);
     Rcpp::traits::input_parameter< int& >::type Tob(TobSEXP);
-    rcpp_result_gen = Rcpp::wrap(GarchStart(k, ste, Tob));
+    Rcpp::traits::input_parameter< int >::type start_iter(start_iterSEXP);
+    rcpp_result_gen = Rcpp::wrap(GarchStart(k, ste, Tob, start_iter));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -433,7 +439,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_svars_LikelihoodGARCHu", (DL_FUNC) &_svars_LikelihoodGARCHu, 4},
     {"_svars_nlmGARCHu", (DL_FUNC) &_svars_nlmGARCHu, 4},
     {"_svars_SigmaGARCHuniv", (DL_FUNC) &_svars_SigmaGARCHuniv, 4},
-    {"_svars_GarchStart", (DL_FUNC) &_svars_GarchStart, 3},
+    {"_svars_GarchStart", (DL_FUNC) &_svars_GarchStart, 4},
     {"_svars_LikelihoodGARCHm", (DL_FUNC) &_svars_LikelihoodGARCHm, 7},
     {"_svars_nlmGARCHm", (DL_FUNC) &_svars_nlmGARCHm, 7},
     {"_svars_GARCHiterativeP", (DL_FUNC) &_svars_GARCHiterativeP, 10},
