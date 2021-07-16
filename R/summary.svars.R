@@ -58,8 +58,14 @@ summary.svars <- function(object, ...){
  print(svarsObject$B)
  cat("\nStandard Errors of B:\n")
  print(svarsObject$B_SE)
- cat("\nPairwise Wald Test:\n")
- printCoefmat(svarsObject$wald_statistic, has.Pvalue = T)
+ if(is.null(svarsObject$SB2)) {
+   cat("\nIdentification Wald Test of equal Eigenvalues:\n")
+   print(sort(diag(svarsObject$Lambda), decreasing = TRUE))
+   printCoefmat(svarsObject$wald_statistic, has.Pvalue = T)
+ } else {
+   cat("\nPairwise Wald Test:\n")
+   printCoefmat(svarsObject$wald_statistic, has.Pvalue = T)
+ }
  if(!is.null(svarsObject$SB2)){
    cat("\nPairwise Wald Test for second Lambda:\n")
    printCoefmat(svarsObject$wald_statistic2, has.Pvalue = T)

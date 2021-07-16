@@ -55,7 +55,8 @@ A list of class "svars" with elements
 \item{n}{Number of observations}
 \item{Fish}{Observed Fisher information matrix}
 \item{Lik}{Function value of likelihood}
-\item{wald_statistic}{Results of pairwise Wald tests}
+\item{wald_statistic}{Results of sequential Wald-type identification test on equal eigenvalues as described in Luetkepohl et. al. (2021).
+In case of more than two regimes, pairwise Wald-type tests of eual diagonal elements in the Lambda matrices are performed.}
 \item{iteration}{Number of GLS estimations}
 \item{method}{Method applied for identification}
 \item{SB}{Structural break (number of observations)}
@@ -131,7 +132,10 @@ summary(x6)
 }
 \references{
 Rigobon, R., 2003. Identification through Heteroskedasticity. The Review of Economics and Statistics, 85, 777-792.\cr
- Herwartz, H. & Ploedt, M., 2016. Simulation Evidence on Theory-based and Statistical Identification under Volatility Breaks Oxford Bulletin of Economics and Statistics, 78, 94-112.
+
+ Herwartz, H. & Ploedt, M., 2016. Simulation Evidence on Theory-based and Statistical Identification under Volatility Breaks. Oxford Bulletin of Economics and Statistics, 78, 94-112.\cr
+
+ Luetkepohl, H. & Meitz, M. & Netsunajev, A. & and Saikkonen, P.,  2021. Testing identification via heteroskedasticity in structural vector autoregressive models. Econometrics Journal, 24, 1-22.
 }
 \seealso{
 For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.garch}}, \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
