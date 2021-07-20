@@ -49,7 +49,7 @@ irf.svars <- function(x, ..., n.ahead = 20){
   impulse <- matrix(0, ncol = dim(IR)[2]^2 + 1, nrow = dim(IR)[3])
   colnames(impulse) <- rep("V1", ncol(impulse))
   cc <- 1
-  impulse[,1] <- seq(1, dim(IR)[3])
+  impulse[,1] <- seq(0, dim(IR)[3]-1)
   for(i in 1:dim(IR)[2]){
     for(j in 1:dim(IR)[2]){
       cc <- cc + 1
