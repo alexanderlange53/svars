@@ -9,7 +9,7 @@ id.garch(
   max.iter = 5,
   crit = 0.001,
   restriction_matrix = NULL,
-  start_iter = 100
+  start_iter = 50
 )
 }
 \arguments{

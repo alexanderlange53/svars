@@ -23,7 +23,7 @@ test_that("Univariate GARCH likelihood 3dims works", {
 
   l <- LikelihoodGARCHu(parameter_ini_univ[1, ],  est = ste[1, ], Sigma1 = Sigma_e_0[1, 1], Tob = Tob)
 
-  expect_equal(round(l,3), 147.243)
+  expect_equal(round(l,2), 65692.17)
 })
 
 test_that("Univariate GARCH likelihood 5dims works", {
@@ -51,7 +51,7 @@ test_that("Univariate GARCH likelihood 5dims works", {
 
   l <- LikelihoodGARCHu(parameter_ini_univ[1, ], Sigma1 = Sigma_e_0[1, 1], est = ste[1, ], Tob = Tob)
 
-  expect_equal(round(l,3), 119.634)
+  expect_equal(round(l,2), 60198.07)
 })
 
 test_that("Multivariate GARCH likelihood 3dims works unrestricted", {

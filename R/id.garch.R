@@ -66,7 +66,7 @@
 ## Identification via GARCH ##
 #----------------------------#
 
-id.garch <- function(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL, start_iter = 100){
+id.garch <- function(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL, start_iter = 50){
 
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <- A_hat <- NULL
   get_var_objects(x)

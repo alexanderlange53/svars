@@ -1,5 +1,6 @@
 cv_ident_test <- function(x) {
-  test_count <- 1
+
+  # Noch anpassen an allgemeinere break varianten !! or Fix after relase kurva!
 
   y <- x$y
   p <- x$p
@@ -10,21 +11,40 @@ cv_ident_test <- function(x) {
 
   Lambda_ord <- diag(sort(diag(x$Lambda), decreasing = TRUE))
 
+  if (length(x$SB) == x$n & length(x$SB) > 3) {
+    SB_out <- x$SB
+    TB <- x$n - sum(x$SB) + 1
+    regime_realization <- rep(1, x$n)
+    regime_realization[x$SB == 1] <- 2
+  } else {
+    SB_out <- x$SB
+    TB <- x$SB - x$p
+    regime_realization <- rep(1, x$n)
+    regime_realization[TB:x$n] <- 2
+  }
+
 
   if(type == 'const'){
     Z_t <- rbind(rep(1, ncol(yl)), yl)
   }else if(type == 'trend'){
-    Z_t <- rbind(seq(p + 1, ncol(yret)), yl)
+    Z_t <- rbind(seq(p + 1, nrow(x$y)), yl)
   }else if(type == 'both'){
-    Z_t <- rbind(rep(1, ncol(yl)), seq(p + 1, ncol(yret)), yl)
+    Z_t <- rbind(rep(1, ncol(yl)), seq(p + 1, nrow(x$y)), yl)
   }else{
     Z_t <- yl
   }
 
   Y_fit <- t(matrix(kronecker(t(Z_t), diag(x$K)) %*% c(x$A_hat), x$K, ncol(Z_t)))
   resid <- y - Y_fit
-  regime_realization <- rep(1, x$n)
-  regime_realization[(x$SB+1):length(regime_realization)] <- 2
+
+  resid1 <- resid[regime_realization==1,]
+  resid2 <- resid[regime_realization==2,]
+
+  Sigma_hat1 <- (crossprod(resid1)) / (TB - 1)
+  Sigma_hat2 <- (crossprod(resid2)) / (x$n - TB + 1)
+
+  #regime_realization <- rep(1, x$n)
+  #regime_realization[(x$SB+1):length(regime_realization)] <- 2
 
   test_statistic_all <- NA
   p_value_all <- NA
@@ -39,28 +59,28 @@ cv_ident_test <- function(x) {
     for (k in 1:x$K) {
       z_m[k, regime] <- sum((resid[regime_realization == regime, k] - mean(resid[regime_realization == regime, k]))^4)
       if (regime == 1) {
-        sigma <- x$B %*% x$B
+        sigma <- Sigma_hat1 #x$B %*% t(x$B)
         z_m[k, regime] <- z_m[k, regime] - 6 * sigma[k,k]^2
-        z_m[k, regime] <- z_m[k, regime]/(x$SB - 4)
-        w_m_t <- x$SB/(x$SB - 1)
-        w_m[k, regime] <- w_m_t*(sigma[k,k]^2 - z_m[k, regime]/x$SB)
+        z_m[k, regime] <- z_m[k, regime]/(TB - 4)
+        w_m_t <- TB/(TB - 1)
+        w_m[k, regime] <- w_m_t*(sigma[k,k]^2 - z_m[k, regime]/TB)
       } else {
-        sigma <- x$B %*% x$Lambda %*% t(x$B)
+        sigma <- Sigma_hat2# x$B %*% x$Lambda %*% t(x$B)
         z_m[k, regime] <- z_m[k, regime] - 6 * sigma[k,k]^2
-        z_m[k, regime] <- z_m[k, regime]/(x$n - x$SB - 4)
-        w_m_t <- (x$n - x$SB)/((x$n - x$SB)- 1)
-        w_m[k, regime] <- w_m_t*(sigma[k,k]^2 - z_m[k, regime]/(x$n - x$SB))
+        z_m[k, regime] <- z_m[k, regime]/(x$n - TB - 4)
+        w_m_t <- (x$n - TB)/((x$n - TB)- 1)
+        w_m[k, regime] <- w_m_t*(sigma[k,k]^2 - z_m[k, regime]/(x$n - TB))
       }
 
     }
     kappa[regime] <- 1/(3 * x$K) * sum(z_m[, regime] / w_m[, regime]) - 1
   }
-  tau <- x$SB / (x$n - p)
+  tau <- TB / (x$n - p)
   c_tau2 <- solve((1 + kappa[1]) / tau + ( (1 + kappa[2]) /(1-tau)))
   c_tau2_nk <- solve(1/ tau + (1/(1-tau)))
 
     for (s in 0:(x$K-1)) {
-      if (s<2) {
+      if (s<(x$K-1)) {
         for (r in 2:(x$K-s)) {
           lambda_sum <- 0
           lambda2 <- Lambda_ord
