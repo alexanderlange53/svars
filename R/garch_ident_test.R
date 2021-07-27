@@ -1,19 +1,6 @@
 garch_ident_test <- function(x) {
 
-  # CC <- x$CC
-  # B <- x$B
-  # R1 <- solve(CC)%*%B[,1:r]
-  # R1 <- B%*%CC
-  # R1 <- R1[1:r,]
    u <- residuals(x$VAR)
-  #
-  # # Calculate orthogonal complement of R1
-   #R1_comp <- Null((R1))#qr.Q(qr(t(R1)),complete=TRUE)
-  #
-   #R2 <- R1_comp %*% solve(sqrtm(t(R1_comp) %*% R1_comp))
-  #
-   #A2 <- t(R2) %*% solve(CC)
- # A2 <- t(solve(x$B)[,(r+1):x$K])
 
    result <- data.frame(matrix(NA, nrow = (x$K-1), ncol = 9))
    hypothesis <- paste("r=", 1,sep = "")
@@ -24,11 +11,6 @@ garch_ident_test <- function(x) {
      # First test Q_1 test statistic
      AA <- crossprod(A2)
      csi <- rep(NA, nrow(u))
-     #eps <- matrix(t(solve(x$B) %*% t(u))[,(r+1):x$K], ncol = x$K-r)
-
-     # for (i in 1:nrow(u)) {
-     #   csi[i] <- crossprod(eps[i,])
-     # }
 
      for (i in 1:nrow(u)) {
        csi[i] <- u[i,] %*% AA %*% u[i,]
@@ -49,11 +31,6 @@ garch_ident_test <- function(x) {
        tempA <-A2 %*% tcrossprod(u[i,]) %*% t(A2)
        eta[i,] <- tempA[lower.tri(tempA , diag = TRUE)]
      }
-
-     # for (i in 1:nrow(u)) {
-     #   tempA <- tcrossprod(eps[i,])
-     #   eta[i,] <- tempA[lower.tri(tempA , diag = TRUE)]
-     # }
 
      eta_m <- matrix(NA, nrow(eta), ncol(eta))
 
