@@ -1,57 +1,94 @@
-garch_ident_test <- function(x, r) {
+garch_ident_test <- function(x) {
 
-  CC <- x$CC
-  B <- x$B
-  R1 <- (solve(CC)%*%B[,1:r])
-  u <- residuals(x$VAR)
+  # CC <- x$CC
+  # B <- x$B
+  # R1 <- solve(CC)%*%B[,1:r]
+  # R1 <- B%*%CC
+  # R1 <- R1[1:r,]
+   u <- residuals(x$VAR)
+  #
+  # # Calculate orthogonal complement of R1
+   #R1_comp <- Null((R1))#qr.Q(qr(t(R1)),complete=TRUE)
+  #
+   #R2 <- R1_comp %*% solve(sqrtm(t(R1_comp) %*% R1_comp))
+  #
+   #A2 <- t(R2) %*% solve(CC)
+ # A2 <- t(solve(x$B)[,(r+1):x$K])
 
-  # Calculate orthogonal complement of R1
-  R1_comp <- Null(R1)#qr.Q(qr(t(R1)),complete=TRUE)
+   result <- data.frame(matrix(NA, nrow = (x$K-1), ncol = 9))
+   hypothesis <- paste("r=", 1,sep = "")
 
-  R2 <- R1_comp %*% solve(sqrtm(t(R1_comp) %*% R1_comp))
+   for (r in 1:(x$K-1)) {
+     A2 <- matrix(solve(x$B)[(r+1):x$K,], ncol = x$K)
 
-  A2 <- t(R2) %*% solve(CC)
+     # First test Q_1 test statistic
+     AA <- crossprod(A2)
+     csi <- rep(NA, nrow(u))
+     #eps <- matrix(t(solve(x$B) %*% t(u))[,(r+1):x$K], ncol = x$K-r)
 
-  # First test Q_1 test statistic
-  AA <- crossprod(A2)
-  csi <- rep(NA, nrow(u))
-  for (i in 1:nrow(u)) {
-    csi[i] <- u[i,] %*% AA %*% u[i,]
-  }
+     # for (i in 1:nrow(u)) {
+     #   csi[i] <- crossprod(eps[i,])
+     # }
 
-  csi <- csi - mean(csi)
+     for (i in 1:nrow(u)) {
+       csi[i] <- u[i,] %*% AA %*% u[i,]
+     }
 
-  gamma_1 <- crossprod(csi[-1], csi[-length(csi)])/length(csi)
-  gamma_0 <- crossprod(csi, csi)/length(csi)
+     csi <- csi - mean(csi)
 
-  Q_1 <- (gamma_1/gamma_0)^2*length(csi)
-  p_val_q_1 <- 1 - pchisq(Q_1, 1)
+     gamma_1 <- crossprod(csi[-1], csi[-length(csi)])/length(csi)
+     gamma_0 <- crossprod(csi)/length(csi)
 
-  # Second test Q_2 test statistic
-  eta <- matrix(NA, nrow(u), 0.5*(x$K - r)*(x$K- r +1))
-  for (i in 1:nrow(u)) {
-    tempA <-A2 %*% tcrossprod(u[i,]) %*% t(A2)
-    eta[i,] <- tempA[lower.tri(tempA , diag = TRUE)]
-  }
+     Q_1 <- length(csi)*(gamma_1/gamma_0)^2
+     p_val_q_1 <- 1 - pchisq(Q_1, 1)
+     dof_q1 <- 1
 
-  eta_m <- eta - colMeans(eta)
-  gam_1 <- crossprod(eta_m[-1,], eta_m[-nrow(eta_m),])/nrow(eta_m)
-  gam_0 <- crossprod(eta_m, eta_m)/nrow(eta_m)
+     # Second test Q_2 test statistic
+     eta <- matrix(NA, nrow(u), 0.5*(x$K - r)*(x$K- r +1))
+     for (i in 1:nrow(u)) {
+       tempA <-A2 %*% tcrossprod(u[i,]) %*% t(A2)
+       eta[i,] <- tempA[lower.tri(tempA , diag = TRUE)]
+     }
 
-  Q_2 <- sum(diag(t(gam_1) %*% solve(gam_0) %*% gam_1 %*% solve(gam_0))) * nrow(u)
-  p_val_q_2 <- 1 - pchisq(Q_1, 0.25*((x$K - r)^2*(x$K - r+1)^2))
+     # for (i in 1:nrow(u)) {
+     #   tempA <- tcrossprod(eps[i,])
+     #   eta[i,] <- tempA[lower.tri(tempA , diag = TRUE)]
+     # }
 
-  # Third LM test
-  lm_model <- lm(eta[-1,] ~ eta[-nrow(eta),])
-  Sigam_lm <- crossprod(residuals(lm_model)) / nrow(eta)-1
-  LM_1 <- 0.5 * nrow(u) * (x$K - r)*(x$K - r+1) - nrow(u) * sum(diag(Sigam_lm%*%solve(gam_0)))
-  p_val_lm_1 <- 1 - pchisq(LM_1, 0.25*((x$K - r)^2*(x$K - r+1)^2))
+     eta_m <- matrix(NA, nrow(eta), ncol(eta))
+
+     for(i in 1:ncol(eta)) {
+       eta_m[,i] <- eta[,i] - colMeans(eta)[i]
+     }
+     #eta_m <- eta - colMeans(eta)
+     gam_1 <- crossprod(eta_m[-1,], eta_m[-nrow(eta_m),])/nrow(eta_m)
+     gam_0 <- crossprod(eta_m, eta_m)/nrow(eta_m)
+
+     Q_2 <- sum(diag(t(gam_1) %*% solve(gam_0) %*% gam_1 %*% solve(gam_0))) * nrow(u)
+     p_val_q_2 <- 1 - pchisq(Q_2, 0.25*((x$K - r)^2*(x$K - r+1)^2))
+     dof_q2 <- 0.25*((x$K - r)^2*(x$K - r+1)^2)
+
+     # Third LM test
+     if (ncol(eta) == 1) {
+       lm_model <- lm(eta[-1,] ~ eta[-nrow(eta),])
+     } else {
+       lm_model <- suppressWarnings(VAR(eta, p = 1, type = 'const'))
+     }
+     Sigam_lm <- crossprod(residuals(lm_model)) / (nrow(eta) - 1)
+     LM_1 <- 0.5 * nrow(u) * (x$K - r)*(x$K - r+1) - nrow(u) * sum(diag(Sigam_lm%*%solve(gam_0)))
+     p_val_lm_1 <- 1 - pchisq(LM_1, 0.25*((x$K - r)^2*(x$K - r+1)^2))
+     dof_lm1 <- 0.25*((x$K - r)^2*(x$K - r+1)^2)
 
 
 
-  result <- data.frame(test.stat = c(Q_1, Q_2, LM_1), p.value = c(p_val_q_1, p_val_q_2, p_val_lm_1))
-  colnames(result) = c("Test statistic", "p-value")
-  rownames(result) <- c('Q_1', 'Q_2', 'LM_1')
+     result[r,] <- c(Q_1, dof_q1, p_val_q_1, Q_2, dof_q2, p_val_q_2, LM_1,dof_lm1, p_val_lm_1)
+     if (r>1) {
+       hypothesis <- rbind(hypothesis, paste("r=", r, sep = ""))
+     }
+   }
+   colnames(result) = c("Q_1", "dof", "p-value", 'Q_2', "dof", "p-value", 'LM_1', "dof", "p-value")
+   rownames(result) <- hypothesis
+
 
   return(result)
 }
