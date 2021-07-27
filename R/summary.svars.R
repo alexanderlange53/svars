@@ -138,9 +138,10 @@ summary.svars <- function(object, ...){
    print(svarsObject$GARCH_parameter)
    cat("\nStandard errors of GARCH(1, 1) parameter: \n")
    print(svarsObject$GARCH_SE)
-   printCoefmat(svarsObject$I_test[,1:3], has.Pvalue = T)
-   printCoefmat(svarsObject$I_test[,4:6], has.Pvalue = T)
-   printCoefmat(svarsObject$I_test[,7:9], has.Pvalue = T)
+   cat("\nSequence of tests for the number of heteroskedastic shocks in the system: \n")
+   cbind(printCoefmat(svarsObject$I_tes[1:3], has.Pvalue = T,signif.legend =FALSE),
+         printCoefmat(svarsObject$I_tes[4:6], has.Pvalue = T,signif.legend =FALSE),
+         printCoefmat(svarsObject$I_tes[7:9], has.Pvalue = T))
    if(svarsObject$restrictions > 0){
      cat("\nLikelihood Ratio Test: \n")
      #cat(svarsObject$lRatioTestStatistic)
