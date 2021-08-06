@@ -56,7 +56,7 @@ A list of class "svars" with elements
 \item{Fish}{Observed Fisher information matrix}
 \item{Lik}{Function value of likelihood}
 \item{wald_statistic}{Results of sequential Wald-type identification test on equal eigenvalues as described in Luetkepohl et. al. (2021).
-In case of more than two regimes, pairwise Wald-type tests of eual diagonal elements in the Lambda matrices are performed.}
+In case of more than two regimes, pairwise Wald-type tests of equal diagonal elements in the Lambda matrices are performed.}
 \item{iteration}{Number of GLS estimations}
 \item{method}{Method applied for identification}
 \item{SB}{Structural break (number of observations)}

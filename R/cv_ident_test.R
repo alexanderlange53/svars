@@ -1,7 +1,5 @@
 cv_ident_test <- function(x) {
 
-  # Noch anpassen an allgemeinere break varianten !! or Fix after relase kurva!
-
   y <- x$y
   p <- x$p
   type <- x$type
@@ -43,9 +41,6 @@ cv_ident_test <- function(x) {
   Sigma_hat1 <- (crossprod(resid1)) / (TB - 1)
   Sigma_hat2 <- (crossprod(resid2)) / (x$n - TB + 1)
 
-  #regime_realization <- rep(1, x$n)
-  #regime_realization[(x$SB+1):length(regime_realization)] <- 2
-
   test_statistic_all <- NA
   p_value_all <- NA
   dof_all <-NA
@@ -59,13 +54,13 @@ cv_ident_test <- function(x) {
     for (k in 1:x$K) {
       z_m[k, regime] <- sum((resid[regime_realization == regime, k] - mean(resid[regime_realization == regime, k]))^4)
       if (regime == 1) {
-        sigma <- Sigma_hat1 #x$B %*% t(x$B)
+        sigma <- Sigma_hat1
         z_m[k, regime] <- z_m[k, regime] - 6 * sigma[k,k]^2
         z_m[k, regime] <- z_m[k, regime]/(TB - 4)
         w_m_t <- TB/(TB - 1)
         w_m[k, regime] <- w_m_t*(sigma[k,k]^2 - z_m[k, regime]/TB)
       } else {
-        sigma <- Sigma_hat2# x$B %*% x$Lambda %*% t(x$B)
+        sigma <- Sigma_hat2
         z_m[k, regime] <- z_m[k, regime] - 6 * sigma[k,k]^2
         z_m[k, regime] <- z_m[k, regime]/(x$n - TB - 4)
         w_m_t <- (x$n - TB)/((x$n - TB)- 1)
