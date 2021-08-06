@@ -136,6 +136,10 @@ id.garch <- function(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL, s
   }
 
   result$VAR <- x
+  result$CC <- CC
+
+  result$I_test <- garch_ident_test(result)
+
 
   class(result) <- "svars"
 
