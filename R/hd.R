@@ -63,7 +63,7 @@ hd <- function(x, series = 1, transition = 0){
   if(!inherits(x$y, c("matrix", "ts"))){
     y = as.matrix(x$y)
   }else{
-  y <- x$y
+    y <- x$y
   }
   p <- x$p
   obs <- x$n
@@ -92,21 +92,18 @@ hd <- function(x, series = 1, transition = 0){
   impulse <- impulse[,-1]
   y_hat <- matrix(NA, nrow = obs, ncol = k)
 
-  if (transition == 0) {
-    for (i in 1:obs) {
-      for (j in 1:k) {
-        y_hat[i, j] <- impulse[1:i, j + series * k - k] %*% t(s.errors)[i:1, j]
-      }
-    }
-  } else {
-    for (i in (obs - floor(obs * (1 - transition))):obs) {
-      for (j in 1:k) {
-        y_hat[i, j] <- impulse[(obs - floor(obs * (1 - transition))):i, j + series * k - k] %*% t(s.errors)[i:(obs - floor(obs * (1 - transition))), j]
-      }
+
+  for (i in 1:obs) {
+    for (j in 1:k) {
+      y_hat[i, j] <- impulse[1:i, j + series * k - k] %*% t(s.errors)[i:1, j]
     }
   }
 
-
+  if (transition != 0) {
+    y_hat_trans <- matrix(NA, nrow = obs, ncol = k)
+    y_hat_trans[(obs - floor(obs * (1 - transition))):nrow(y_hat_trans), ] <- y_hat[(obs - floor(obs * (1 - transition))):nrow(y_hat),]
+    y_hat <- y_hat_trans
+  }
 
   y_hat_a <- rowSums(y_hat)
 
@@ -122,9 +119,9 @@ hd <- function(x, series = 1, transition = 0){
   if(inherits(x$y, "ts")){
     hidec <- ts(yhat[, -grep("V1", colnames(yhat))], start = start(lag(x$y, k = -x$p)), end = end(x$y), frequency = frequency(x$y))
     histdecomp <- list(hidec = na.omit(hidec))
-}else{
-   histdecomp <- list(hidec = as.data.frame(na.omit(yhat)))
-}
+  }else{
+    histdecomp <- list(hidec = as.data.frame(na.omit(yhat)))
+  }
   class(histdecomp) <- "hd"
   return(histdecomp)
 }
