@@ -70,7 +70,7 @@ summary.svars <- function(object, ...){
    cat("\nPairwise Wald Test for second Lambda:\n")
    printCoefmat(svarsObject$wald_statistic2, has.Pvalue = T)
  }
-   if(svarsObject$restrictions > 0){
+   if(svarsObject$restrictions > 0 | svarsObject$restrictions_lambda > 0){
      cat("\nLikelihood Ratio Test: \n")
      #cat(svarsObject$lRatioTestStatistic)
      #cat(", p-value:")

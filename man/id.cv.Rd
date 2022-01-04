@@ -15,7 +15,8 @@ id.cv(
   dateVector = NULL,
   max.iter = 50,
   crit = 0.001,
-  restriction_matrix = NULL
+  restriction_matrix = NULL,
+  restriction_matrix_lambda = NULL
 )
 }
 \arguments{
@@ -45,6 +46,8 @@ in the corresponding format (see examples) or common time parameters need to be 
 \item{crit}{Numeric. Critical value for the precision of the GLS estimation}
 
 \item{restriction_matrix}{Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*K^2 matrix can be passed, where ones on the diagonal designate unrestricted and zeros restricted coefficients. (as suggested in Luetkepohl, 2017, section 5.2.1).}
+
+\item{restriction_matrix_lambda}{List. A list consisting of vectors according to the number of regimes containing presupposed entries for the main diagonal of matrix Lambda, i.e. the uncodnitonal volatility change.}
 }
 \value{
 A list of class "svars" with elements

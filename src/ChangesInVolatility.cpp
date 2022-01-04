@@ -4,11 +4,15 @@
 // [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::export]]
 double LikelihoodCV(arma::vec& S, double& Tob, double& TB,  arma::mat& SigmaHat1, int& k,
-                    arma::mat& SigmaHat2, arma::mat& RestrictionMatrix, int& restrictions){
+                    arma::mat& SigmaHat2, arma::mat& RestrictionMatrix, int& restrictions, arma::mat& RestrictionMatrixLambda, int& restrictionsLambda){
 
   arma::mat W(size(RestrictionMatrix), arma::fill::zeros);
   W.elem(find_nonfinite(RestrictionMatrix)) = S.subvec(0, (k * k - 1) - restrictions);
-  arma::mat Psi =  arma::diagmat(S.subvec((k * k - restrictions), (k * k + (k - 1) - restrictions)));
+
+  arma::mat Psi1 = arma::ones(k);
+  Psi1.elem(find_nonfinite(RestrictionMatrixLambda)) =  S.subvec((k * k - restrictions), (k * k + (k - 1) - restrictions - restrictionsLambda));
+  Psi1.elem(find_finite(RestrictionMatrixLambda)) =  RestrictionMatrixLambda.elem(find_finite(RestrictionMatrixLambda));
+  arma::mat Psi =  arma::diagmat(Psi1);
 
   arma::mat MMM = W * arma::trans(W);
   arma::mat MMM2 = W * Psi * arma::trans(W);
@@ -59,7 +63,7 @@ double LikelihoodCV3regimes(arma::vec& S, int& TB1, int& TB2, int& TB3, arma::ma
 // optimization of likelihood via nlm and exporting
 // [[Rcpp::export]]
 Rcpp::List nlmCV(const arma::vec& S, double Tob, double TB, const arma::mat SigmaHat1, int k,
-                    const arma::mat SigmaHat2, arma::mat RestrictionMatrix, int restrictions){
+                    const arma::mat SigmaHat2, arma::mat RestrictionMatrix, int restrictions, arma::vec RestrictionMatrixLambda, int restrictionsLambda){
 
   Rcpp::Environment stats("package:stats");
   Rcpp::Function nlm = stats["nlm"];
@@ -74,7 +78,9 @@ Rcpp::List nlmCV(const arma::vec& S, double Tob, double TB, const arma::mat Sigm
                           Rcpp::_["k"] = k,
                           Rcpp::_["SigmaHat2"] = SigmaHat2,
                           Rcpp::_["RestrictionMatrix"] = RestrictionMatrix,
-                          Rcpp::_["restrictions"] = restrictions);
+                          Rcpp::_["restrictions"] = restrictions,
+                          Rcpp::_["RestrictionMatrixLambda"] = RestrictionMatrixLambda,
+                          Rcpp::_["restrictionsLambda"] = restrictionsLambda);
 
   return MLE;
 }
@@ -107,7 +113,7 @@ Rcpp::List nlmCV3(const arma::vec& S, double TB1, double TB2, double TB3, const 
 
 // [[Rcpp::export]]
 Rcpp::List IdentifyVolatility(int crit, const arma::mat& u, double TB, arma::uvec& Regime1, arma::uvec& Regime2,
-                              int p, int k, arma::mat RestrictionMatrix, std::string type,
+                              int p, int k, arma::mat RestrictionMatrix, std::string type, arma::vec RestrictionMatrixLambda, int restrictionsLambda,
                               int restrictions, double Tob, arma::mat SigmaHat1, arma::mat SigmaHat2,
                               arma::mat Zt, arma::mat y, int maxIter){
 
@@ -120,6 +126,8 @@ Rcpp::List IdentifyVolatility(int crit, const arma::mat& u, double TB, arma::uve
    initBvec = initB.elem(find_nonfinite(RestrictionMatrix));
 
    arma::vec initLambda = arma::ones(k);
+   initLambda = initLambda.elem(find_nonfinite(RestrictionMatrixLambda));
+
    arma::vec S = arma::join_vert(initBvec, initLambda);
 
 
@@ -128,14 +136,17 @@ Rcpp::List IdentifyVolatility(int crit, const arma::mat& u, double TB, arma::uve
    Rcpp::List hessian = Rcpp::List::create(arma::ones(k * k, k * k));
    Rcpp::List GLSE = Rcpp::List::create(arma::ones(p * k * k));
 
-   Rcpp::List MLE = nlmCV(S, Tob, TB, SigmaHat1, k,  SigmaHat2, RestrictionMatrix, restrictions);
+   Rcpp::List MLE = nlmCV(S, Tob, TB, SigmaHat1, k,  SigmaHat2, RestrictionMatrix, restrictions, RestrictionMatrixLambda, restrictionsLambda);
    arma::vec Lestimates = MLE[1];
 
   arma::mat BLoop = arma::zeros(k, k);
   BLoop.elem(find_nonfinite(RestrictionMatrix)) = Lestimates.subvec(0, k * k - 1 - restrictions);
   Rcpp::List BHat = Rcpp::List::create(BLoop);
 
-  arma::mat LambdaFirst = arma::diagmat(Lestimates.subvec(k * k - restrictions, k * k + k - 1 - restrictions));
+  arma::mat LambdaFirstInit = arma::ones(k);
+  LambdaFirstInit.elem(find_nonfinite(RestrictionMatrixLambda)) = Lestimates.subvec(k * k - restrictions, k * k + k - 1 - restrictions - restrictionsLambda);
+  LambdaFirstInit.elem(find_finite(RestrictionMatrixLambda)) = RestrictionMatrixLambda.elem(find_finite(RestrictionMatrixLambda));
+  arma::mat LambdaFirst = arma::diagmat(LambdaFirstInit);
   Rcpp::List LambdaHat = Rcpp::List::create(LambdaFirst);
 
   int count = 0;
@@ -193,14 +204,22 @@ Rcpp::List IdentifyVolatility(int crit, const arma::mat& u, double TB, arma::uve
     arma::mat Sigma_hat1gls =  (arma::trans(resid1gls) * resid1gls) / (TB - 1);
     arma::mat Sigma_hat2gls = (arma::trans(resid2gls) * resid2gls) / (Zt.n_cols - TB + 1);
 
-    Rcpp::List MLEgls = nlmCV(S, Tob, TB, Sigma_hat1gls, k,  Sigma_hat2gls, RestrictionMatrix, restrictions);
+    Rcpp::List MLEgls = nlmCV(S, Tob, TB, Sigma_hat1gls, k,  Sigma_hat2gls, RestrictionMatrix, restrictions, RestrictionMatrixLambda, restrictionsLambda);
     arma::mat GLSBLoop = arma::zeros(k, k);
     arma::vec GLSestimates = MLEgls[1];
 
     GLSBLoop.elem(find_nonfinite(RestrictionMatrix)) = GLSestimates.subvec(0, k * k - 1 - restrictions);
-    arma::mat GLSLambdaLoop = arma::diagmat(GLSestimates.subvec(k * k - restrictions, k * k + k - 1 - restrictions));
     BHat.push_back(GLSBLoop);
+
+    arma::mat GLSLambdaLoopInit = arma::ones(k);
+    GLSLambdaLoopInit.elem(find_nonfinite(RestrictionMatrixLambda)) = GLSestimates.subvec(k * k - restrictions, k * k + k - 1 - restrictions - restrictionsLambda);
+    GLSLambdaLoopInit.elem(find_finite(RestrictionMatrixLambda)) = RestrictionMatrixLambda.elem(find_finite(RestrictionMatrixLambda));
+
+
+    arma::mat GLSLambdaLoop = arma::diagmat(GLSLambdaLoopInit);
     LambdaHat.push_back(GLSLambdaLoop);
+
+
     int sz = likelihoods.size();
     likelihoods.resize(sz + 1);
     likelihoods(sz) = MLEgls[0];
@@ -235,7 +254,10 @@ Rcpp::List IdentifyVolatility(int crit, const arma::mat& u, double TB, arma::uve
 
   arma::mat BSE = arma::zeros(k, k);
   BSE.elem(find_nonfinite(RestrictionMatrix)) = FishObs.subvec(0, k * k - 1 - restrictions);
-  arma::mat LambdaSE = arma::diagmat(FishObs.subvec(k * k - restrictions, k * k + k - 1 - restrictions));
+
+  arma::mat LambdaSE1 = arma::zeros(k);
+  LambdaSE1.elem(find_nonfinite(RestrictionMatrixLambda)) = FishObs.subvec(k * k - restrictions, k * k + k - 1 - restrictions - restrictionsLambda);
+  arma::mat LambdaSE = arma::diagmat(LambdaSE1);
 
   //Returning an R like list object with all results from optimization
   return Rcpp::List::create(Rcpp::Named("Lambda") = LambdaOpt,

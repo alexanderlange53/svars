@@ -20,6 +20,7 @@
 #' @param frequency Character. Frequency of the time series (only if dateVector is empty)
 #' @param format Character. Date format (only if dateVector is empty)
 #' @param restriction_matrix Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*K^2 matrix can be passed, where ones on the diagonal designate unrestricted and zeros restricted coefficients. (as suggested in Luetkepohl, 2017, section 5.2.1).
+#' @param restriction_matrix_lambda List. A list consisting of vectors according to the number of regimes containing presupposed entries for the main diagonal of matrix Lambda, i.e. the uncodnitonal volatility change.
 #' @param max.iter Integer. Number of maximum GLS iterations
 #' @param crit Numeric. Critical value for the precision of the GLS estimation
 #' @return A list of class "svars" with elements
@@ -119,7 +120,7 @@
 
 id.cv <- function(x, SB, SB2 = NULL, start = NULL, end = NULL, frequency = NULL,
                         format = NULL, dateVector = NULL, max.iter = 50, crit = 0.001,
-                  restriction_matrix = NULL){
+                  restriction_matrix = NULL, restriction_matrix_lambda = NULL){
 
 
 
@@ -138,10 +139,13 @@ restriction_matrix <- get_restriction_matrix(restriction_matrix, k)
 
 restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
 
-  if (is.numeric(SB)) {
-    SBcharacter <- NULL
-  }
+if (is.numeric(SB)) {
+  SBcharacter <- NULL
+}
 
+# restrictions in Lambda
+restriction_matrix_lambda <- get_restriction_matrix_lambda(restriction_matrix_lambda, k, SB, SB2)
+restrictions_Lambda <- length(unlist(restriction_matrix_lambda)[!is.na(unlist(restriction_matrix_lambda))])
 
 if (is.null(SB2)) {
   SB_out2 <- SB2
@@ -280,25 +284,27 @@ if(is.null(SB2)){
   best_estimation <- IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k, type = type,
                                          Regime1 = Regime1, Regime2 = Regime2,
                                          RestrictionMatrix = restriction_matrix, restrictions = restrictions,
+                                         RestrictionMatrixLambda = restriction_matrix_lambda[[1]], restrictionsLambda = restrictions_Lambda,
                                          Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, Zt = Z_t, y = y,
                                          maxIter = max.iter)
   # Adding normalizing constant
   best_estimation$Lik <- -(Tob * (k / 2) * log(2 * pi) + best_estimation$Lik)
 
-  if(restrictions > 0 ){
+  if(restrictions > 0 || restrictions_Lambda > 0){
 
 
     unrestricted_estimation <- IdentifyVolatility(crit = crit, u = u, TB = TB, p = p, k = k, type = type,
                                                   Regime1 = Regime1, Regime2 = Regime2,
                                                   RestrictionMatrix = matrix(NA, k, k), restrictions = 0,
+                                                  RestrictionMatrixLambda = rep(NA, k), restrictionsLambda = 0,
                                                   Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, Zt = Z_t, y = y,
                                                   maxIter = max.iter)
     # Adding normalizing constant
     unrestricted_estimation$Lik <- -(Tob*(k/2)*log(2*pi) + unrestricted_estimation$Lik)
 
     lRatioTestStatistic = 2 * (unrestricted_estimation$Lik - best_estimation$Lik)
-    restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
-    pValue = round(1 - pchisq(lRatioTestStatistic, restrictions), 4)
+    #restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
+    pValue = round(1 - pchisq(lRatioTestStatistic, restrictions + restrictions_Lambda), 4)
     lRatioTest <- data.frame(testStatistic = lRatioTestStatistic, p.value = pValue)
     rownames(lRatioTest) <- ""
     colnames(lRatioTest) <- c("Test statistic", "p-value")
@@ -427,7 +433,12 @@ if(is.null(SB2)){
     }
   }
 
-  wald <- wald.test(best_estimation$Lambda, best_estimation$Fish, restrictions)
+  if (restrictions_Lambda == 0) {
+    wald <- wald.test(best_estimation$Lambda, best_estimation$Fish, restrictions)
+  } else {
+    wald <- NULL
+  }
+
   rownames(best_estimation$B) <- colnames(u)
   rownames(best_estimation$Lambda) <- colnames(u)
   rownames(best_estimation$Lambda_SE) <- colnames(u)
@@ -436,9 +447,15 @@ if(is.null(SB2)){
   if (!is.null(SB2)) {
     rownames(best_estimation$Lambda2) <- colnames(u)
     rownames(best_estimation$Lambda2_SE) <- colnames(u)
-    wald2 <- wald.test(best_estimation$Lambda2,
-                       best_estimation$Fish[-c((k^2+1-restrictions):(k^2+k-restrictions)), -c((k^2+1-restrictions):(k^2+k-restrictions))],
-                       restrictions)
+
+    if (restrictions_Lambda == 0) {
+      wald2 <- wald.test(best_estimation$Lambda2,
+                        best_estimation$Fish[-c((k^2+1-restrictions):(k^2+k-restrictions)), -c((k^2+1-restrictions):(k^2+k-restrictions))],
+                         restrictions)
+    } else {
+      wald2 <- NULL
+    }
+
   }
 
   if (is.null(SB2)) {
@@ -464,6 +481,8 @@ if(is.null(SB2)){
       p = unname(p),                # number of lags
       K = k,# number of time series
       lRatioTest = lRatioTest,
+      restriction_matrix_lambda = restriction_matrix_lambda,
+      restrictions_lambda = restrictions_Lambda,
       VAR = x
     )
 

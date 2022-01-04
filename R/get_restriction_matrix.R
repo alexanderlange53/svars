@@ -24,3 +24,24 @@ get_restriction_matrix <- function(restriction_matrix, k){
 
   return(restriction_matrix)
 }
+
+get_restriction_matrix_lambda <- function(restriction_matrix_lambda, k, SB, SB2){
+
+  if(!is.null(restriction_matrix_lambda)){
+    if (is.null(SB2) & length(restriction_matrix_lambda) != 1) {
+      stop('restriction_matrix_lambda should be a list of length 1')
+    }else if (!is.null(SB2) & length(restriction_matrix_lambda) != 2){
+      stop('restriction_matrix_lambda should be a list of length 2')
+    }
+
+  }else{
+    if (is.null(SB2)) {
+      restriction_matrix_lambda <- list(rep(NA, k))
+    } else {
+      restriction_matrix_lambda <- list(rep(NA, k), rep(NA, k))
+    }
+
+  }
+
+  return(restriction_matrix_lambda)
+}
