@@ -319,18 +319,20 @@ if(is.null(SB2)){
   best_estimation <- IdentifyVolatility3(crit = crit, u = u, TB1 = TB1, TB2 = TB2, TB3 = TB3, p = p, k = k, type = type,
                                         Regime1 = Regime1, Regime2 = Regime2, Regime3 = Regime3,
                                         RestrictionMatrix = restriction_matrix, restrictions = restrictions,
+                                        RestrictionMatrixLambda1 = restriction_matrix_lambda[[1]], RestrictionMatrixLambda2 = restriction_matrix_lambda[[2]], restrictionsLambda = restrictions_Lambda,
                                         Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, SigmaHat3 = Sigma_hat3,
                                         Zt = Z_t, y = y,
                                         maxIter = max.iter)
   # Adding normalizing constant
   best_estimation$Lik <- -(Tob * (k / 2) * log(2 * pi) + best_estimation$Lik)
 
-  if(restrictions > 0 ){
+  if(restrictions > 0 || restrictions_Lambda > 0){
 
 
     unrestricted_estimation <- IdentifyVolatility3(crit = crit, u = u, TB1 = TB1, TB2 = TB2, TB3 = TB3, p = p, k = k, type = type,
                                                   Regime1 = Regime1, Regime2 = Regime2, Regime3 = Regime3,
                                                   RestrictionMatrix = matrix(NA, k, k), restrictions = 0,
+                                                  RestrictionMatrixLambda1 = rep(NA, k), RestrictionMatrixLambda2 = rep(NA, k), restrictionsLambda = 0,
                                                   Tob = Tob, SigmaHat1 = Sigma_hat1, SigmaHat2 = Sigma_hat2, SigmaHat3 = Sigma_hat3,
                                                   Zt = Z_t, y = y,
                                                   maxIter = max.iter)
@@ -338,8 +340,8 @@ if(is.null(SB2)){
     unrestricted_estimation$Lik <- -(Tob*(k/2)*log(2*pi) + unrestricted_estimation$Lik)
 
     lRatioTestStatistic = 2 * (unrestricted_estimation$Lik - best_estimation$Lik)
-    restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
-    pValue = round(1 - pchisq(lRatioTestStatistic, restrictions), 4)
+    #restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
+    pValue = round(1 - pchisq(lRatioTestStatistic, restrictions +  restrictions_Lambda), 4)
     lRatioTest <- data.frame(testStatistic = lRatioTestStatistic, p.value = pValue)
     rownames(lRatioTest) <- ""
     colnames(lRatioTest) <- c("Test statistic", "p-value")
@@ -525,6 +527,8 @@ if(is.null(SB2)){
       p = unname(p),                # number of lags
       K = k,# number of time series
       lRatioTest = lRatioTest,
+      restriction_matrix_lambda = restriction_matrix_lambda,
+      restrictions_lambda = restrictions_Lambda,
       VAR = x
     )
     if (type == 'const' | type == 'trend') {

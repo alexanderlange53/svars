@@ -62,11 +62,11 @@ summary.svars <- function(object, ...){
    cat("\nIdentification Wald Test of equal Eigenvalues:\n")
    print(sort(diag(svarsObject$Lambda), decreasing = TRUE))
    printCoefmat(svarsObject$wald_statistic, has.Pvalue = T)
- } else {
+ } else if(svarsObject$restrictions_lambda == 0) {
    cat("\nPairwise Wald Test:\n")
    printCoefmat(svarsObject$wald_statistic, has.Pvalue = T)
  }
- if(!is.null(svarsObject$SB2)){
+ if(!is.null(svarsObject$SB2) & svarsObject$restrictions_lambda == 0){
    cat("\nPairwise Wald Test for second Lambda:\n")
    printCoefmat(svarsObject$wald_statistic2, has.Pvalue = T)
  }

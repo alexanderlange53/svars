@@ -5,24 +5,24 @@ LikelihoodCV <- function(S, Tob, TB, SigmaHat1, k, SigmaHat2, RestrictionMatrix,
     .Call('_svars_LikelihoodCV', PACKAGE = 'svars', S, Tob, TB, SigmaHat1, k, SigmaHat2, RestrictionMatrix, restrictions, RestrictionMatrixLambda, restrictionsLambda)
 }
 
-LikelihoodCV3regimes <- function(S, TB1, TB2, TB3, SigmaHat1, k, SigmaHat2, SigmaHat3, RestrictionMatrix, restrictions) {
-    .Call('_svars_LikelihoodCV3regimes', PACKAGE = 'svars', S, TB1, TB2, TB3, SigmaHat1, k, SigmaHat2, SigmaHat3, RestrictionMatrix, restrictions)
+LikelihoodCV3regimes <- function(S, TB1, TB2, TB3, SigmaHat1, k, SigmaHat2, SigmaHat3, RestrictionMatrix, restrictions, RestrictionMatrixLambda1, RestrictionMatrixLambda2, restrictionsLambda) {
+    .Call('_svars_LikelihoodCV3regimes', PACKAGE = 'svars', S, TB1, TB2, TB3, SigmaHat1, k, SigmaHat2, SigmaHat3, RestrictionMatrix, restrictions, RestrictionMatrixLambda1, RestrictionMatrixLambda2, restrictionsLambda)
 }
 
 nlmCV <- function(S, Tob, TB, SigmaHat1, k, SigmaHat2, RestrictionMatrix, restrictions, RestrictionMatrixLambda, restrictionsLambda) {
     .Call('_svars_nlmCV', PACKAGE = 'svars', S, Tob, TB, SigmaHat1, k, SigmaHat2, RestrictionMatrix, restrictions, RestrictionMatrixLambda, restrictionsLambda)
 }
 
-nlmCV3 <- function(S, TB1, TB2, TB3, SigmaHat1, k, SigmaHat2, SigmaHat3, RestrictionMatrix, restrictions) {
-    .Call('_svars_nlmCV3', PACKAGE = 'svars', S, TB1, TB2, TB3, SigmaHat1, k, SigmaHat2, SigmaHat3, RestrictionMatrix, restrictions)
+nlmCV3 <- function(S, TB1, TB2, TB3, SigmaHat1, k, SigmaHat2, SigmaHat3, RestrictionMatrix, restrictions, RestrictionMatrixLambda1, RestrictionMatrixLambda2, restrictionsLambda) {
+    .Call('_svars_nlmCV3', PACKAGE = 'svars', S, TB1, TB2, TB3, SigmaHat1, k, SigmaHat2, SigmaHat3, RestrictionMatrix, restrictions, RestrictionMatrixLambda1, RestrictionMatrixLambda2, restrictionsLambda)
 }
 
 IdentifyVolatility <- function(crit, u, TB, Regime1, Regime2, p, k, RestrictionMatrix, type, RestrictionMatrixLambda, restrictionsLambda, restrictions, Tob, SigmaHat1, SigmaHat2, Zt, y, maxIter) {
     .Call('_svars_IdentifyVolatility', PACKAGE = 'svars', crit, u, TB, Regime1, Regime2, p, k, RestrictionMatrix, type, RestrictionMatrixLambda, restrictionsLambda, restrictions, Tob, SigmaHat1, SigmaHat2, Zt, y, maxIter)
 }
 
-IdentifyVolatility3 <- function(crit, u, TB1, TB2, TB3, Regime1, Regime2, Regime3, p, k, RestrictionMatrix, type, restrictions, Tob, SigmaHat1, SigmaHat2, SigmaHat3, Zt, y, maxIter) {
-    .Call('_svars_IdentifyVolatility3', PACKAGE = 'svars', crit, u, TB1, TB2, TB3, Regime1, Regime2, Regime3, p, k, RestrictionMatrix, type, restrictions, Tob, SigmaHat1, SigmaHat2, SigmaHat3, Zt, y, maxIter)
+IdentifyVolatility3 <- function(crit, u, TB1, TB2, TB3, Regime1, Regime2, Regime3, p, k, RestrictionMatrix, type, RestrictionMatrixLambda1, RestrictionMatrixLambda2, restrictionsLambda, restrictions, Tob, SigmaHat1, SigmaHat2, SigmaHat3, Zt, y, maxIter) {
+    .Call('_svars_IdentifyVolatility3', PACKAGE = 'svars', crit, u, TB1, TB2, TB3, Regime1, Regime2, Regime3, p, k, RestrictionMatrix, type, RestrictionMatrixLambda1, RestrictionMatrixLambda2, restrictionsLambda, restrictions, Tob, SigmaHat1, SigmaHat2, SigmaHat3, Zt, y, maxIter)
 }
 
 LikelihoodGARCHu <- function(parameter, est, Sigma1, Tob) {

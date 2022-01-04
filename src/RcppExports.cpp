@@ -32,8 +32,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // LikelihoodCV3regimes
-double LikelihoodCV3regimes(arma::vec& S, int& TB1, int& TB2, int& TB3, arma::mat& SigmaHat1, int& k, arma::mat& SigmaHat2, arma::mat& SigmaHat3, arma::mat& RestrictionMatrix, int& restrictions);
-RcppExport SEXP _svars_LikelihoodCV3regimes(SEXP SSEXP, SEXP TB1SEXP, SEXP TB2SEXP, SEXP TB3SEXP, SEXP SigmaHat1SEXP, SEXP kSEXP, SEXP SigmaHat2SEXP, SEXP SigmaHat3SEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP) {
+double LikelihoodCV3regimes(arma::vec& S, int& TB1, int& TB2, int& TB3, arma::mat& SigmaHat1, int& k, arma::mat& SigmaHat2, arma::mat& SigmaHat3, arma::mat& RestrictionMatrix, int& restrictions, arma::mat& RestrictionMatrixLambda1, arma::mat& RestrictionMatrixLambda2, int& restrictionsLambda);
+RcppExport SEXP _svars_LikelihoodCV3regimes(SEXP SSEXP, SEXP TB1SEXP, SEXP TB2SEXP, SEXP TB3SEXP, SEXP SigmaHat1SEXP, SEXP kSEXP, SEXP SigmaHat2SEXP, SEXP SigmaHat3SEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP, SEXP RestrictionMatrixLambda1SEXP, SEXP RestrictionMatrixLambda2SEXP, SEXP restrictionsLambdaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -47,7 +47,10 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::mat& >::type SigmaHat3(SigmaHat3SEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type RestrictionMatrix(RestrictionMatrixSEXP);
     Rcpp::traits::input_parameter< int& >::type restrictions(restrictionsSEXP);
-    rcpp_result_gen = Rcpp::wrap(LikelihoodCV3regimes(S, TB1, TB2, TB3, SigmaHat1, k, SigmaHat2, SigmaHat3, RestrictionMatrix, restrictions));
+    Rcpp::traits::input_parameter< arma::mat& >::type RestrictionMatrixLambda1(RestrictionMatrixLambda1SEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type RestrictionMatrixLambda2(RestrictionMatrixLambda2SEXP);
+    Rcpp::traits::input_parameter< int& >::type restrictionsLambda(restrictionsLambdaSEXP);
+    rcpp_result_gen = Rcpp::wrap(LikelihoodCV3regimes(S, TB1, TB2, TB3, SigmaHat1, k, SigmaHat2, SigmaHat3, RestrictionMatrix, restrictions, RestrictionMatrixLambda1, RestrictionMatrixLambda2, restrictionsLambda));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -72,8 +75,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // nlmCV3
-Rcpp::List nlmCV3(const arma::vec& S, double TB1, double TB2, double TB3, const arma::mat SigmaHat1, int k, const arma::mat SigmaHat2, const arma::mat SigmaHat3, arma::mat RestrictionMatrix, int restrictions);
-RcppExport SEXP _svars_nlmCV3(SEXP SSEXP, SEXP TB1SEXP, SEXP TB2SEXP, SEXP TB3SEXP, SEXP SigmaHat1SEXP, SEXP kSEXP, SEXP SigmaHat2SEXP, SEXP SigmaHat3SEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP) {
+Rcpp::List nlmCV3(const arma::vec& S, double TB1, double TB2, double TB3, const arma::mat SigmaHat1, int k, const arma::mat SigmaHat2, const arma::mat SigmaHat3, arma::mat RestrictionMatrix, int restrictions, arma::mat& RestrictionMatrixLambda1, arma::mat& RestrictionMatrixLambda2, int restrictionsLambda);
+RcppExport SEXP _svars_nlmCV3(SEXP SSEXP, SEXP TB1SEXP, SEXP TB2SEXP, SEXP TB3SEXP, SEXP SigmaHat1SEXP, SEXP kSEXP, SEXP SigmaHat2SEXP, SEXP SigmaHat3SEXP, SEXP RestrictionMatrixSEXP, SEXP restrictionsSEXP, SEXP RestrictionMatrixLambda1SEXP, SEXP RestrictionMatrixLambda2SEXP, SEXP restrictionsLambdaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -87,7 +90,10 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::mat >::type SigmaHat3(SigmaHat3SEXP);
     Rcpp::traits::input_parameter< arma::mat >::type RestrictionMatrix(RestrictionMatrixSEXP);
     Rcpp::traits::input_parameter< int >::type restrictions(restrictionsSEXP);
-    rcpp_result_gen = Rcpp::wrap(nlmCV3(S, TB1, TB2, TB3, SigmaHat1, k, SigmaHat2, SigmaHat3, RestrictionMatrix, restrictions));
+    Rcpp::traits::input_parameter< arma::mat& >::type RestrictionMatrixLambda1(RestrictionMatrixLambda1SEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type RestrictionMatrixLambda2(RestrictionMatrixLambda2SEXP);
+    Rcpp::traits::input_parameter< int >::type restrictionsLambda(restrictionsLambdaSEXP);
+    rcpp_result_gen = Rcpp::wrap(nlmCV3(S, TB1, TB2, TB3, SigmaHat1, k, SigmaHat2, SigmaHat3, RestrictionMatrix, restrictions, RestrictionMatrixLambda1, RestrictionMatrixLambda2, restrictionsLambda));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -120,8 +126,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // IdentifyVolatility3
-Rcpp::List IdentifyVolatility3(int crit, const arma::mat& u, double TB1, double TB2, double TB3, arma::uvec& Regime1, arma::uvec& Regime2, arma::uvec& Regime3, int p, int k, arma::mat RestrictionMatrix, std::string type, int restrictions, double Tob, arma::mat SigmaHat1, arma::mat SigmaHat2, arma::mat SigmaHat3, arma::mat Zt, arma::mat y, int maxIter);
-RcppExport SEXP _svars_IdentifyVolatility3(SEXP critSEXP, SEXP uSEXP, SEXP TB1SEXP, SEXP TB2SEXP, SEXP TB3SEXP, SEXP Regime1SEXP, SEXP Regime2SEXP, SEXP Regime3SEXP, SEXP pSEXP, SEXP kSEXP, SEXP RestrictionMatrixSEXP, SEXP typeSEXP, SEXP restrictionsSEXP, SEXP TobSEXP, SEXP SigmaHat1SEXP, SEXP SigmaHat2SEXP, SEXP SigmaHat3SEXP, SEXP ZtSEXP, SEXP ySEXP, SEXP maxIterSEXP) {
+Rcpp::List IdentifyVolatility3(int crit, const arma::mat& u, double TB1, double TB2, double TB3, arma::uvec& Regime1, arma::uvec& Regime2, arma::uvec& Regime3, int p, int k, arma::mat RestrictionMatrix, std::string type, arma::vec RestrictionMatrixLambda1, arma::vec RestrictionMatrixLambda2, int restrictionsLambda, int restrictions, double Tob, arma::mat SigmaHat1, arma::mat SigmaHat2, arma::mat SigmaHat3, arma::mat Zt, arma::mat y, int maxIter);
+RcppExport SEXP _svars_IdentifyVolatility3(SEXP critSEXP, SEXP uSEXP, SEXP TB1SEXP, SEXP TB2SEXP, SEXP TB3SEXP, SEXP Regime1SEXP, SEXP Regime2SEXP, SEXP Regime3SEXP, SEXP pSEXP, SEXP kSEXP, SEXP RestrictionMatrixSEXP, SEXP typeSEXP, SEXP RestrictionMatrixLambda1SEXP, SEXP RestrictionMatrixLambda2SEXP, SEXP restrictionsLambdaSEXP, SEXP restrictionsSEXP, SEXP TobSEXP, SEXP SigmaHat1SEXP, SEXP SigmaHat2SEXP, SEXP SigmaHat3SEXP, SEXP ZtSEXP, SEXP ySEXP, SEXP maxIterSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -137,6 +143,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type k(kSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type RestrictionMatrix(RestrictionMatrixSEXP);
     Rcpp::traits::input_parameter< std::string >::type type(typeSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type RestrictionMatrixLambda1(RestrictionMatrixLambda1SEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type RestrictionMatrixLambda2(RestrictionMatrixLambda2SEXP);
+    Rcpp::traits::input_parameter< int >::type restrictionsLambda(restrictionsLambdaSEXP);
     Rcpp::traits::input_parameter< int >::type restrictions(restrictionsSEXP);
     Rcpp::traits::input_parameter< double >::type Tob(TobSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type SigmaHat1(SigmaHat1SEXP);
@@ -145,7 +154,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::mat >::type Zt(ZtSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type y(ySEXP);
     Rcpp::traits::input_parameter< int >::type maxIter(maxIterSEXP);
-    rcpp_result_gen = Rcpp::wrap(IdentifyVolatility3(crit, u, TB1, TB2, TB3, Regime1, Regime2, Regime3, p, k, RestrictionMatrix, type, restrictions, Tob, SigmaHat1, SigmaHat2, SigmaHat3, Zt, y, maxIter));
+    rcpp_result_gen = Rcpp::wrap(IdentifyVolatility3(crit, u, TB1, TB2, TB3, Regime1, Regime2, Regime3, p, k, RestrictionMatrix, type, RestrictionMatrixLambda1, RestrictionMatrixLambda2, restrictionsLambda, restrictions, Tob, SigmaHat1, SigmaHat2, SigmaHat3, Zt, y, maxIter));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -437,11 +446,11 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_svars_LikelihoodCV", (DL_FUNC) &_svars_LikelihoodCV, 10},
-    {"_svars_LikelihoodCV3regimes", (DL_FUNC) &_svars_LikelihoodCV3regimes, 10},
+    {"_svars_LikelihoodCV3regimes", (DL_FUNC) &_svars_LikelihoodCV3regimes, 13},
     {"_svars_nlmCV", (DL_FUNC) &_svars_nlmCV, 10},
-    {"_svars_nlmCV3", (DL_FUNC) &_svars_nlmCV3, 10},
+    {"_svars_nlmCV3", (DL_FUNC) &_svars_nlmCV3, 13},
     {"_svars_IdentifyVolatility", (DL_FUNC) &_svars_IdentifyVolatility, 18},
-    {"_svars_IdentifyVolatility3", (DL_FUNC) &_svars_IdentifyVolatility3, 20},
+    {"_svars_IdentifyVolatility3", (DL_FUNC) &_svars_IdentifyVolatility3, 23},
     {"_svars_LikelihoodGARCHu", (DL_FUNC) &_svars_LikelihoodGARCHu, 4},
     {"_svars_nlmGARCHu", (DL_FUNC) &_svars_nlmGARCHu, 4},
     {"_svars_SigmaGARCHuniv", (DL_FUNC) &_svars_SigmaGARCHuniv, 4},
