@@ -86,7 +86,7 @@ Rcpp::List GarchStart(int& k, arma::mat& ste, int& Tob, int start_iter){
         initG(j) = testG;
       } else {
         int count = 0;
-        while (initGamma(j) + testG >= 0.991 | count >= 10) {
+        while ((initGamma(j) + testG >= 0.991) | (count >= 10)) {
           testG = R::runif(0.6, 0.95);
           count += 1;
         }
