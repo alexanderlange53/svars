@@ -37,8 +37,7 @@
 #' @author Bernhard Pfaff, Alexander Lange, Bernhard Dalheimer, Simone Maxand, Helmut Herwartz
 #'
 #' @references Zeileis, A., F. Leisch, K. Hornik and C. Kleiber (2002), strucchange: An R Package for Testing for Structural Change in Linear Regression
-#' Models, \emph{Journal of Statistical Software}, \bold{7(2)}: 1-38,
-#' \doi{10.18637/jss.v007.i02}}\cr
+#' Models, \emph{Journal of Statistical Software}, \bold{7(2)}: 1-38, \doi{10.18637/jss.v007.i02}\cr
 #'
 #' and see the references provided in the reference section of \code{\link[strucchange]{efp}} and \code{\link[svars]{chow.test}}, too.
 #'
