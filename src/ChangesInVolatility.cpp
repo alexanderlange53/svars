@@ -44,7 +44,7 @@ double LikelihoodCV3regimes(arma::vec& S, int& TB1, int& TB2, int& TB3, arma::ma
   double MW3 = arma::det(MMM3);
 
 
-  if (any(vectorise(Psi) < 0.0) | any(vectorise(Psi2) < 0.0)) {
+  if (any(vectorise(Psi) < 0.0) || any(vectorise(Psi2) < 0.0)) {
     return 1e25;
   }
 

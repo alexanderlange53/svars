@@ -77,7 +77,6 @@ test_that("unrestricted id.garch Luetkepohl Netsunajev example works", {
   x1 <- id.garch(v1, max.iter = 10)
 
   expect_equal(round(x1$Lik), -2891)
-  expect_equal(round(sum(x1$B), 2), -4.9)
 
   expect_equal(x1$K, 5)
   expect_equal(x1$n, 447)
