@@ -22,6 +22,7 @@ NeedsCompilation: yes
 License: MIT + file LICENSE
 LazyData: TRUE
 RoxygenNote: 7.2.3
+SystemRequirements: C++17
 Suggests: 
     testthat (>= 2.1.0),
     tsDyn
