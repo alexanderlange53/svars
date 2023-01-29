@@ -1,7 +1,7 @@
 /*#include <RcppArmadillo.h>
 
 // [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::plugins(cpp11)]]
+// [[Rcpp::plugins(cpp17)]]
 
 
 arma::mat sign_check(arma::cube Bs, int boot_length) {

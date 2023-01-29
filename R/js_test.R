@@ -39,6 +39,8 @@
 #' summary(c.test)
 #' }
 #'
+#' @importFrom methods is
+#'
 #' @export
 #'
 

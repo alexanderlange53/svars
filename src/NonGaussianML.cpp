@@ -1,7 +1,7 @@
 #include <RcppArmadillo.h>
 
 // [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::plugins(cpp11)]]
+// [[Rcpp::plugins(cpp17)]]
 
 // Likelihood for Non-Gaussian ML Model (Structural parameter estimation)
 // [[Rcpp::export]]

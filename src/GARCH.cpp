@@ -1,7 +1,7 @@
 #include <RcppArmadillo.h>
 
 // [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::plugins(cpp11)]]
+// [[Rcpp::plugins(cpp17)]]
 
 // Likelihood for GARCH Model (univariate optimization) ---------------------------------------------------------------
 // [[Rcpp::export]]

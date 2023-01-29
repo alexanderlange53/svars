@@ -24,6 +24,8 @@
 #' @name fevd
 #' @aliases fevd.svars
 #' @import  vars
+#' @importFrom methods is
+#'
 #' @export
 
 fevd.svars <- function(x, n.ahead = 10, ...){

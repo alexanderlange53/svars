@@ -72,6 +72,7 @@
 #' @importFrom utils combn
 #' @importFrom vars VAR
 #' @importFrom expm sqrtm
+#' @importFrom methods is
 #'
 #' @export
 #'

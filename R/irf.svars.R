@@ -24,6 +24,8 @@
 #' @name irf
 #' @aliases irf.svars
 #' @import vars
+#' @importFrom methods is
+#'
 #' @export
 
 irf.svars <- function(x, ..., n.ahead = 20){

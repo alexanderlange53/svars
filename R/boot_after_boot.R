@@ -47,6 +47,8 @@
 #' plot(bb2, lowerq = 0.16, upperq = 0.84)
 #' }
 #'
+#' @importFrom methods is
+#'
 #' @export
 
 
