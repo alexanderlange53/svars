@@ -46,7 +46,7 @@
 
 js.test <- function(x, R, r = NULL){
 
-  if(is(x, 'sboot')){
+  if(!is(x, 'sboot')){
     stop("Please provide an object of class 'sboot'")
   }
   if(!is.matrix(R)){
