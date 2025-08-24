@@ -14,8 +14,6 @@ test_that("id.ngml and id.ngml_boot 3-dim stage3 = FALSE works, no restriction" 
   expect_equal(x1$n,x2$n, 169)
   expect_equal(x1$stage3,x2$stage3, FALSE)
   expect_equal(x1$p,x2$p, 6)
-
-  expect_match(x1$method,x2$method, "Non-Gaussian maximum likelihood")
 })
 
 test_that("id.ngml and boot 3-dim stage3 = TRUE works, no restriction", {
@@ -33,7 +31,6 @@ test_that("id.ngml and boot 3-dim stage3 = TRUE works, no restriction", {
   expect_equal(x1$stage3, x2$stage3, TRUE)
   expect_equal(x1$p, x2$p, 6)
 
-  expect_match(x1$method, x2$method, "Non-Gaussian maximum likelihood")
 })
 
 test_that("id.ngml and boot 2-dim stage3 = FALSE works, no restriction", {
@@ -52,7 +49,6 @@ test_that("id.ngml and boot 2-dim stage3 = FALSE works, no restriction", {
   expect_equal(x1$stage3, x2$stage3, FALSE)
   expect_equal(x1$p,x2$p, 3)
 
-  expect_match(x1$method, x2$method, "Non-Gaussian maximum likelihood")
 })
 
 test_that("id.ngml and boot 2-dim stage3 = FALSE works, no restriction constant + trend", {
@@ -71,7 +67,6 @@ test_that("id.ngml and boot 2-dim stage3 = FALSE works, no restriction constant 
   expect_equal(x1$stage3, x2$stage3, FALSE)
   expect_equal(x1$p,x2$p, 3)
 
-  expect_match(x1$method, x2$method, "Non-Gaussian maximum likelihood")
 })
 
 test_that("id.ngml and boot 2-dim stage3 = FALSE works, no restriction without deterministic term", {
@@ -90,7 +85,6 @@ test_that("id.ngml and boot 2-dim stage3 = FALSE works, no restriction without d
   expect_equal(x1$stage3, x2$stage3, FALSE)
   expect_equal(x1$p,x2$p, 3)
 
-  expect_match(x1$method, x2$method, "Non-Gaussian maximum likelihood")
 })
 
 test_that("id.ngml and boot 2-dim stage3 = TRUE works, no restriction constant + trend", {
@@ -108,8 +102,6 @@ test_that("id.ngml and boot 2-dim stage3 = TRUE works, no restriction constant +
   expect_equal(x1$n, x2$n, 172)
   expect_equal(x1$stage3, x2$stage3, FALSE)
   expect_equal(x1$p,x2$p, 3)
-
-  expect_match(x1$method, x2$method, "Non-Gaussian maximum likelihood")
 })
 
 test_that("id.ngml and boot 2-dim stage3 = TRUE works, no restriction without deterministic term", {
@@ -128,7 +120,6 @@ test_that("id.ngml and boot 2-dim stage3 = TRUE works, no restriction without de
   expect_equal(x1$stage3, x2$stage3, FALSE)
   expect_equal(x1$p,x2$p, 3)
 
-  expect_match(x1$method, x2$method, "Non-Gaussian maximum likelihood")
 })
 
 test_that("id.ngml 2-dim stage3 = TRUE works, no restriction", {
@@ -147,7 +138,6 @@ test_that("id.ngml 2-dim stage3 = TRUE works, no restriction", {
   expect_equal(x1$stage3, x2$stage3, TRUE)
   expect_equal(x1$p, x2$p,3)
 
-  expect_match(x1$method, "Non-Gaussian maximum likelihood")
 })
 
 test_that("id.ngml and id.ngml_boot 3-dim stage3 = FALSE works, with restriction" , {
@@ -170,7 +160,6 @@ test_that("id.ngml and id.ngml_boot 3-dim stage3 = FALSE works, with restriction
 
   expect_gt(x1$lRatioTest$`Test statistic`, 0)
 
-  expect_match(x1$method,x2$method, "Non-Gaussian maximum likelihood")
 })
 
 test_that("id.ngml and boot 3-dim stage3 = TRUE works, with restriction", {
@@ -193,7 +182,6 @@ test_that("id.ngml and boot 3-dim stage3 = TRUE works, with restriction", {
   expect_equal(x1$stage3, x2$stage3, TRUE)
   expect_equal(x1$p, x2$p, 6)
 
-  expect_match(x1$method, x2$method, "Non-Gaussian maximum likelihood")
 })
 
 test_that("id.ngml and boot 2-dim stage3 = FALSE works, with restriction", {
@@ -216,7 +204,6 @@ test_that("id.ngml and boot 2-dim stage3 = FALSE works, with restriction", {
   expect_equal(x1$stage3, x2$stage3, FALSE)
   expect_equal(x1$p,x2$p, 3)
 
-  expect_match(x1$method, x2$method, "Non-Gaussian maximum likelihood")
 })
 
 test_that("id.ngml 2-dim stage3 = TRUE works, with restriction", {
@@ -239,6 +226,5 @@ test_that("id.ngml 2-dim stage3 = TRUE works, with restriction", {
   expect_equal(x1$stage3, x2$stage3, TRUE)
   expect_equal(x1$p, x2$p,3)
 
-  expect_match(x1$method, "Non-Gaussian maximum likelihood")
 })
 

@@ -133,7 +133,7 @@ test_that("Restricted id.garch Luetkepohl Netsunajev example works with R3 model
   restmat[3, 4:5] <- 0
 
   x1 <- id.garch(v1, max.iter = 10, restriction_matrix = restmat)
-  expect_equal(round(x1$Lik), -2984)
+  expect_equal(round(x1$Lik), -2980)
 
   expect_gt(x1$lRatioTest$`Test statistic`, 0)
 

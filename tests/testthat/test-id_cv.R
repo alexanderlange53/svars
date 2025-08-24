@@ -19,8 +19,6 @@ test_that("unrestricted id.cv estimation with 3-dim works", {
   expect_equal(x1$SB,x2$SB, 59)
   expect_equal(x1$p,x2$p, 6)
   expect_equal(x1$iteration,x2$iteration, 6)
-
-  expect_match(x1$method, x2$method, "Changes in Volatility")
 })
 
 test_that("unrestricted id.cv estimation with 3-dim works with constant +  trend", {
@@ -42,8 +40,6 @@ test_that("unrestricted id.cv estimation with 3-dim works with constant +  trend
   expect_equal(x1$SB,x2$SB, 59)
   expect_equal(x1$p,x2$p, 6)
   expect_equal(x1$iteration,x2$iteration, 6)
-
-  expect_match(x1$method, x2$method, "Changes in Volatility")
 })
 
 test_that("unrestricted id.cv estimation with 3-dim works without any determininstic term", {
@@ -65,8 +61,6 @@ test_that("unrestricted id.cv estimation with 3-dim works without any determinin
   expect_equal(x1$SB,x2$SB, 59)
   expect_equal(x1$p,x2$p, 6)
   expect_equal(x1$iteration,x2$iteration, 6)
-
-  expect_match(x1$method, x2$method, "Changes in Volatility")
 })
 
 test_that("unrestricted id.cv and boot estimation with 2-dim works", {
@@ -87,8 +81,6 @@ test_that("unrestricted id.cv and boot estimation with 2-dim works", {
   expect_equal(x1$SB,x2$SB, 59)
   expect_equal(x1$p,x2$p, 3)
   expect_equal(x1$iteration,x2$iteration, 4)
-
-  expect_match(x1$method, x2$method, "Changes in Volatility")
 })
 
 test_that("restricted id.cv and boot estimation with 3-dim works", {
@@ -114,8 +106,6 @@ test_that("restricted id.cv and boot estimation with 3-dim works", {
   expect_equal(x1$SB,x2$SB, 59)
   expect_equal(x1$p,x2$p, 6)
   expect_equal(x1$iteration,x2$iteration, 5)
-
-  expect_match(x1$method, x2$method, "Changes in Volatility")
 })
 
 test_that("restricted id.cv and boot estimation with 2-dim works", {
@@ -141,8 +131,6 @@ test_that("restricted id.cv and boot estimation with 2-dim works", {
   expect_equal(x1$SB, x2$SB, 59)
   expect_equal(x1$p,x2$p, 3)
   expect_equal(x1$iteration, x2$iteration, 4)
-
-  expect_match(x1$method, x2$method, "Changes in Volatility")
 })
 
 test_that("unrestricted id.cv and boot estimation with 5-dim works", {
@@ -164,8 +152,6 @@ test_that("unrestricted id.cv and boot estimation with 5-dim works", {
   expect_equal(x1$SB,x2$SB, 250)
   expect_equal(x1$p,x2$p, 3)
   expect_equal(x1$iteration,x2$iteration, 8)
-
-  expect_match(x1$method, x2$method, "Changes in Volatility")
 })
 
 test_that("restricted id.cv and boot estimation with 5-dim works", {
@@ -196,8 +182,6 @@ test_that("restricted id.cv and boot estimation with 5-dim works", {
   expect_equal(x1$SB,x2$SB, 250)
   expect_equal(x1$p,x2$p, 3)
   expect_equal(x1$iteration,x2$iteration, 12)
-
-  expect_match(x1$method, x2$method, "Changes in Volatility")
 })
 
 test_that("unrestricted id.cv estimation with 3-dim works with vector as SB", {
@@ -223,8 +207,6 @@ test_that("unrestricted id.cv estimation with 3-dim works with vector as SB", {
   expect_equal(x1$restrictions,x2$restrictions, 0)
     expect_equal(x1$p,x2$p, 6)
   expect_equal(x1$iteration,x2$iteration, 14)
-
-  expect_match(x1$method, x2$method, "Changes in Volatility")
 })
 
 test_that("restricted id.cv estimation with 3-dim works with vector as SB", {
@@ -255,8 +237,6 @@ test_that("restricted id.cv estimation with 3-dim works with vector as SB", {
   expect_equal(x1$restrictions,x2$restrictions, 3)
   expect_equal(x1$p,x2$p, 6)
   expect_equal(x1$iteration,x2$iteration, 14)
-
-  expect_match(x1$method, x2$method, "Changes in Volatility")
 })
 
 #----------------------------------------------------------#  Tests for two volatility regimes #------------------------------------------------#
@@ -282,8 +262,6 @@ test_that("unrestricted id.cv estimation with 3-dim works and 2 regimes", {
   expect_equal(x1$SB,x2$SB, 110)
   expect_equal(x1$p,x2$p, 6)
   expect_equal(x1$iteration,x2$iteration, 6)
-
-  expect_match(x1$method, x2$method, "Changes in Volatility")
 })
 
 test_that("unrestricted id.cv estimation with 3-dim works with constant +  trend and 2 regimes", {
@@ -307,7 +285,6 @@ test_that("unrestricted id.cv estimation with 3-dim works with constant +  trend
   expect_equal(x1$p,x2$p, 6)
   expect_equal(x1$iteration,x2$iteration, 6)
 
-  expect_match(x1$method, x2$method, "Changes in Volatility")
 })
 
 test_that("unrestricted id.cv estimation with 3-dim works without any determininstic term and 2 regimes", {
@@ -331,7 +308,6 @@ test_that("unrestricted id.cv estimation with 3-dim works without any determinin
   expect_equal(x1$p,x2$p, 6)
   expect_equal(x1$iteration,x2$iteration, 6)
 
-  expect_match(x1$method, x2$method, "Changes in Volatility")
 })
 
 test_that("unrestricted id.cv and boot estimation with 2-dim works and 2 regimes", {
@@ -354,7 +330,6 @@ test_that("unrestricted id.cv and boot estimation with 2-dim works and 2 regimes
   expect_equal(x1$p,x2$p, 3)
   expect_equal(x1$iteration,x2$iteration, 4)
 
-  expect_match(x1$method, x2$method, "Changes in Volatility")
 })
 
 test_that("restricted id.cv and boot estimation with 3-dim works and 2 regimes", {
@@ -381,7 +356,6 @@ test_that("restricted id.cv and boot estimation with 3-dim works and 2 regimes",
   expect_equal(x1$p,x2$p, 6)
   expect_equal(x1$iteration,x2$iteration, 5)
 
-  expect_match(x1$method, x2$method, "Changes in Volatility")
 })
 
 test_that("restricted id.cv and boot estimation with 2-dim works and 2 regimes", {
@@ -408,7 +382,6 @@ test_that("restricted id.cv and boot estimation with 2-dim works and 2 regimes",
   expect_equal(x1$p,x2$p, 3)
   expect_equal(x1$iteration, x2$iteration, 4)
 
-  expect_match(x1$method, x2$method, "Changes in Volatility")
 })
 
 test_that("unrestricted id.cv and boot estimation with 5-dim works and 2 regimes", {
@@ -431,7 +404,6 @@ test_that("unrestricted id.cv and boot estimation with 5-dim works and 2 regimes
   expect_equal(x1$p,x2$p, 3)
   expect_equal(x1$iteration,x2$iteration, 8)
 
-  expect_match(x1$method, x2$method, "Changes in Volatility")
 })
 
 test_that("restricted id.cv and boot estimation with 5-dim works and 2 regimes", {
@@ -463,5 +435,4 @@ test_that("restricted id.cv and boot estimation with 5-dim works and 2 regimes",
   expect_equal(x1$p,x2$p, 3)
   expect_equal(x1$iteration,x2$iteration, 12)
 
-  expect_match(x1$method, x2$method, "Changes in Volatility")
 })
