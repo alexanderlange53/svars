@@ -1,6 +1,5 @@
 #' svars: Data-driven identification of structural VAR models
 #'
-#' @docType package
 #' @name svars
 #' @author \itemize{
 #' \item Alexander Lange \email{alexander.lange@uni-goettingen.de}
@@ -31,4 +30,4 @@
 #'  functionalities in examples throughout the package.
 #' @useDynLib svars
 #' @importFrom Rcpp sourceCpp
-NULL
+"_PACKAGE"

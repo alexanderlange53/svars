@@ -2,6 +2,7 @@
 % Please edit documentation in R/svars.R
 \docType{package}
 \name{svars}
+\alias{svars-package}
 \alias{svars}
 \title{svars: Data-driven identification of structural VAR models}
 \description{
