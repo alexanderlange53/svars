@@ -1,15 +1,15 @@
 Package: svars
 Type: Package
 Title: Data-Driven Identification of SVAR Models
-Version: 1.3.12
+Version: 1.3.13
 Date: 2025-08-24
 Author: Alexander Lange [aut, cre],
         Bernhard Dalheimer [aut],
         Helmut Herwartz [aut],
         Simone Maxand [aut],
         Hannes Riebl [ctb]
-Authors@R: c(person("Alexander", "Lange", role = c("aut", "cre"), email = "alexander.lange@uni-goettingen.de"), person("Bernhard", "Dalheimer", role = c("aut"), email = "bernhard.dalheimer@uni-goettingen.de"), person("Helmut", "Herwartz", role = c("aut"), email = "hherwartz@uni-goettingen.de"), person("Simone", "Maxand", role = c("aut"), email = "smaxand@uni-goettingen.de"), person("Hannes", "Riebl", role = c("ctb")))
-Maintainer: Alexander Lange <alexander.lange@uni-goettingen.de>
+Authors@R: c(person("Alexander", "Lange", role = c("aut", "cre"), email = "alexanderlange328@gmail.com"), person("Bernhard", "Dalheimer", role = c("aut"), email = "bernhard.dalheimer@uni-goettingen.de"), person("Helmut", "Herwartz", role = c("aut"), email = "hherwartz@uni-goettingen.de"), person("Simone", "Maxand", role = c("aut"), email = "smaxand@uni-goettingen.de"), person("Hannes", "Riebl", role = c("ctb")))
+Maintainer: Alexander Lange <alexanderlange328@gmail.com>
 Description: Implements data-driven identification methods for structural vector autoregressive (SVAR) models as described in Lange et al. (2021) <doi:10.18637/jss.v097.i05>. 
              Based on an existing VAR model object (provided by e.g. VAR() from the 'vars' package), the structural 
              impact matrix is obtained via data-driven identification techniques (i.e. changes in volatility (Rigobon, R. (2003) <doi:10.1162/003465303772815727>),  patterns of GARCH (Normadin, M., Phaneuf, L. (2004) <doi:10.1016/j.jmoneco.2003.11.002>),
